@@ -41,7 +41,8 @@ If using CUDA 11.1: `pip3 install torch==1.8.1+cu111 torchvision==0.9.1+cu111 to
 
 #### Branches
 
-* master branch - most recent stable version
+* main branch - most recent stable version
+* develop branch
 
 #### Folders
 

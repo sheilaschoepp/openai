@@ -1,0 +1,21 @@
+MuJoCo Pro Lab license activation key, number 7130, type 6.
+
+Issued to Prof. Martha White, University of Alberta.
+
+Expires May 28, 2021.
+
+Do not share this file with anyone other than the users covered
+by your license agreement with Roboti LLC. This file activates
+MuJoCo Pro on any computer running any supported OS.
+
+Do not modify this file. Its entire content, including the
+plain text section, is used by the activation manager.
+
+ff7c2eb65b4cbe1385bcf1fc88fff0385dedda242b021f21c3d73cd340ffbb38
+20f696f4f5bbf15f1ace6eab12efbf3583f4980ddde7de80e23b990d582f3bd1
+3ba98fc8de08d932bc84f170762d26002a86df02a2549192f740835842c0be07
+06b6f6f1083b5533e7b894556a37e7c207c65f46dcd26d10d120e3cbee4c1a84
+75b3d912ee5bcbf50825e291c8ff825c64c80cf53544c1fda810788daafb61e7
+70cfeb46872e79c556e13903608ac6b1fcc95afe4a7460cc8fdcc3c0bc4c74eb
+9f2d357efd883e6e67b15b320f2c420c3a52b82dc446a8600e4cc90eb3b55bf5
+fd83326d7209eb90bdedd5c99bffb75fb6da6140b974214f1dfec9f662b2cb62

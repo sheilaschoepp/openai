@@ -1,0 +1,7 @@
+ppov4 sources:
+https://arxiv.org/abs/1707.06347
+https://sites.ualberta.ca/~amw8/rlglue.pdf
+https://spinningup.openai.com/en/latest/algorithms/ppo.html
+https://github.com/nikhilbarhate99/PPO-PyTorch
+https://github.com/Khrylx/PyTorch-RL
+https://github.com/ikostrikov/pytorch-a2c-ppo-acktr-gail

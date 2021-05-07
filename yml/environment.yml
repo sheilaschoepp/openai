@@ -1,0 +1,55 @@
+name: openai
+channels:
+  - defaults
+dependencies:
+  - _libgcc_mutex=0.1=main
+  - ca-certificates=2021.1.19=h06a4308_0
+  - certifi=2020.12.5=py37h06a4308_0
+  - ld_impl_linux-64=2.33.1=h53a641e_7
+  - libedit=3.1.20191231=h14c3975_1
+  - libffi=3.3=he6710b0_2
+  - libgcc-ng=9.1.0=hdf63c60_0
+  - libstdcxx-ng=9.1.0=hdf63c60_0
+  - ncurses=6.2=he6710b0_1
+  - openssl=1.1.1i=h27cfd23_0
+  - pip=20.3.3=py37h06a4308_0
+  - python=3.7.9=h7579374_0
+  - readline=8.1=h27cfd23_0
+  - setuptools=52.0.0=py37h06a4308_0
+  - sqlite=3.33.0=h62c20be_0
+  - tk=8.6.10=hbc83047_0
+  - wheel=0.36.2=pyhd3eb1b0_0
+  - xz=5.2.5=h7b6447c_0
+  - zlib=1.2.11=h7b6447c_3
+  - pip:
+    - atari-py==0.2.6
+    - box2d-py==2.3.8
+    - cffi==1.14.5
+    - cloudpickle==1.6.0
+    - cycler==0.10.0
+    - cython==0.29.21
+    - future==0.18.2
+    - glfw==2.0.0
+    - gym==0.18.0
+    - imageio==2.9.0
+    - kiwisolver==1.3.1
+    - lockfile==0.12.2
+    - matplotlib==3.3.4
+    - mujoco-py==1.50.1.68
+    - numpy==1.20.1
+    - opencv-python==4.5.1.48
+    - pandas==1.2.2
+    - pillow==7.2.0
+    - pycparser==2.20
+    - pyglet==1.5.0
+    - pyparsing==2.4.7
+    - python-dateutil==2.8.1
+    - pytz==2021.1
+    - scipy==1.6.0
+    - six==1.15.0
+    - termcolor==1.1.0
+    - torch==1.7.1+cu110
+    - torchaudio==0.7.2
+    - torchvision==0.8.2+cu110
+    - typing-extensions==3.7.4.3
+prefix: /home/sschoepp/anaconda3/envs/openai

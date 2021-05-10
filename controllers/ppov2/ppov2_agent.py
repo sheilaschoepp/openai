@@ -126,7 +126,7 @@ class PPOv2(BaseAgent):
         self.total_num_updates = self.time_steps // self.num_samples
 
         # number of full updates of the network(s)
-        self.num_updates = 0  # total number of updates
+        self.num_updates = 0  # number of updates
         self.num_old_updates = 0  # number of updates with n_controller
 
         # number of epochs to update the network(s)

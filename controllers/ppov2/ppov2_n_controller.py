@@ -74,8 +74,8 @@ parser.add_argument("-ef", "--time_step_eval_frequency", type=int, default=10000
                     help="frequency of policy evaluation during learning (default: 10000)")
 parser.add_argument("-ee", "--eval_episodes", type=int, default=10, metavar="N",
                     help="number of episodes in policy evaluation roll-out (default: 10)")
-parser.add_argument("-msf", "--time_step_model_save_frequency", type=int, default=10000, metavar="N",
-                    help="frequency of saving models during learning (default: 10000)")
+parser.add_argument("-msf", "--time_step_model_save_frequency", type=int, default=100000, metavar="N",
+                    help="frequency of saving models during learning (default: 100000)")
 
 parser.add_argument("-c", "--cuda", default=False, action="store_true",
                     help="if true, run on GPU (default: False)")

@@ -32,8 +32,8 @@ parser = argparse.ArgumentParser(description="PyTorch Proximal Policy Optimizati
 
 parser.add_argument("-e", "--n_env_name", default="Ant-v2",
                     help="name of normal (non-malfunctioning) MuJoCo Gym environment (default: Ant-v2)")
-parser.add_argument("-t", "--n_time_steps", type=int, default=200000000, metavar="N",
-                    help="number of time steps in normal (non-malfunctioning) MuJoCo Gym environment (default: 200000000)")
+parser.add_argument("-t", "--n_time_steps", type=int, default=400000000, metavar="N",
+                    help="number of time steps in normal (non-malfunctioning) MuJoCo Gym environment (default: 400000000)")
 
 parser.add_argument("--lr", type=float, default=0.00025, metavar="G",
                     help="learning rate (default: 0.00025)")

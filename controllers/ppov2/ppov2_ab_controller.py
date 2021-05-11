@@ -33,7 +33,7 @@ parser = argparse.ArgumentParser(description="PyTorch Proximal Policy Optimizati
 parser.add_argument("-e", "--ab_env_name", default="Ant-v2",
                     help="name of abnormal (malfunctioning) MuJoCo Gym environment (default: Ant-v2)")
 parser.add_argument("-t", "--ab_time_steps", type=int, default=400000000, metavar="N",
-                    help="number of time steps in abnormal (malfunctioning) MuJoCo Gym environment (default: 200000000)")
+                    help="number of time steps in abnormal (malfunctioning) MuJoCo Gym environment (default: 400000000)")
 
 parser.add_argument("-cm", "--clear_memory", default=False, action="store_true",
                     help="if true, clear the memory (default: False)")

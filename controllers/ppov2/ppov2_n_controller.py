@@ -32,8 +32,8 @@ parser = argparse.ArgumentParser(description="PyTorch Proximal Policy Optimizati
 
 parser.add_argument("-e", "--n_env_name", default="Ant-v2",
                     help="name of normal (non-malfunctioning) MuJoCo Gym environment (default: Ant-v2)")
-parser.add_argument("-t", "--n_time_steps", type=int, default=200000000, metavar="N",
-                    help="number of time steps in normal (non-malfunctioning) MuJoCo Gym environment (default: 200000000)")
+parser.add_argument("-t", "--n_time_steps", type=int, default=400000000, metavar="N",
+                    help="number of time steps in normal (non-malfunctioning) MuJoCo Gym environment (default: 400000000)")
 
 parser.add_argument("--lr", type=float, default=0.00025, metavar="G",
                     help="learning rate (default: 0.00025)")
@@ -74,8 +74,8 @@ parser.add_argument("-ef", "--time_step_eval_frequency", type=int, default=10000
                     help="frequency of policy evaluation during learning (default: 10000)")
 parser.add_argument("-ee", "--eval_episodes", type=int, default=10, metavar="N",
                     help="number of episodes in policy evaluation roll-out (default: 10)")
-parser.add_argument("-msf", "--time_step_model_save_frequency", type=int, default=10000, metavar="N",
-                    help="frequency of saving models during learning (default: 10000)")
+parser.add_argument("-msf", "--time_step_model_save_frequency", type=int, default=100000, metavar="N",
+                    help="frequency of saving models during learning (default: 100000)")
 
 parser.add_argument("-c", "--cuda", default=False, action="store_true",
                     help="if true, run on GPU (default: False)")
@@ -238,7 +238,7 @@ class NormalController:
         # data
 
         num_rows = int(self.parameters["n_time_steps"] / self.parameters["time_step_eval_frequency"]) + 1  # add 1 for evaluation before any learning (0th entry)
-        num_columns = 6
+        num_columns = 7
         self.eval_data = np.zeros((num_rows, num_columns))
 
         num_rows = self.parameters["n_time_steps"]  # larger than needed; will remove extra entries later
@@ -505,8 +505,10 @@ class NormalController:
 
             num_samples = num_mini_batch_updates * self.parameters["mini_batch_size"]
 
+            real_time = int(time.time() - self.start)
+
             index = num_time_steps // self.parameters["time_step_eval_frequency"]
-            self.eval_data[index] = [num_time_steps, num_updates, num_epoch_updates, num_mini_batch_updates, num_samples, average_return]
+            self.eval_data[index] = [num_time_steps, num_updates, num_epoch_updates, num_mini_batch_updates, num_samples, average_return, real_time]
 
             print("evaluation at {} time steps: {}".format(num_time_steps, average_return))
 
@@ -766,7 +768,8 @@ class NormalController:
                                      "num_epoch_updates": self.eval_data[:, 2],
                                      "num_mini_batch_updates": self.eval_data[:, 3],
                                      "num_samples": self.eval_data[:, 4],
-                                     "average_return": self.eval_data[:, 5]})
+                                     "average_return": self.eval_data[:, 5],
+                                     "real_time": self.eval_data[:, 6]})
         eval_data_df.to_csv(csv_foldername + "/eval_data.csv", float_format="%f")
 
         # remove zero entries
@@ -933,7 +936,7 @@ def param_search():
 
     args.policy_entropy_coef = round(np.random.uniform(0, 0.01), 4)
 
-    args.lr = round(np.random.uniform(0.000005, 0.003), 6)
+    args.lr = round(np.random.uniform(0.000005, 0.006), 6)
 
 
 if __name__ == "__main__":

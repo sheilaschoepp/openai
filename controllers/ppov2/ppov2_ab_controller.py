@@ -33,7 +33,7 @@ parser = argparse.ArgumentParser(description="PyTorch Proximal Policy Optimizati
 parser.add_argument("-e", "--ab_env_name", default="Ant-v2",
                     help="name of abnormal (malfunctioning) MuJoCo Gym environment (default: Ant-v2)")
 parser.add_argument("-t", "--ab_time_steps", type=int, default=400000000, metavar="N",
-                    help="number of time steps in abnormal (malfunctioning) MuJoCo Gym environment (default: 200000000)")
+                    help="number of time steps in abnormal (malfunctioning) MuJoCo Gym environment (default: 400000000)")
 
 parser.add_argument("-cm", "--clear_memory", default=False, action="store_true",
                     help="if true, clear the memory (default: False)")
@@ -462,8 +462,10 @@ class AbnormalController:
 
             num_samples = num_mini_batch_updates * self.parameters["mini_batch_size"]
 
+            real_time = int(time.time() - self.start)
+
             index = (num_time_steps // self.parameters["time_step_eval_frequency"]) + 1  # add 1 because we evaluate policy before learning
-            self.eval_data[index] = [num_time_steps, num_updates, num_epoch_updates, num_mini_batch_updates, num_samples, average_return]
+            self.eval_data[index] = [num_time_steps, num_updates, num_epoch_updates, num_mini_batch_updates, num_samples, average_return, real_time]
 
             print("evaluation at {} time steps: {}".format(num_time_steps, average_return))
 
@@ -508,7 +510,7 @@ class AbnormalController:
         if not args.resume:
 
             num_rows = int(self.parameters["ab_time_steps"] / self.parameters["time_step_eval_frequency"]) + 1  # add 1 for evaluation before any learning (0th entry)
-            num_columns = 6
+            num_columns = 7
             self.eval_data = pd.read_csv(csv_foldername + "/eval_data.csv").to_numpy().copy()[:, 1:]
             self.eval_data = np.append(self.eval_data, np.zeros((num_rows, num_columns)), axis=0)
 
@@ -760,7 +762,8 @@ class AbnormalController:
                                      "num_epoch_updates": self.eval_data[:, 2],
                                      "num_mini_batch_updates": self.eval_data[:, 3],
                                      "num_samples": self.eval_data[:, 4],
-                                     "average_return": self.eval_data[:, 5]})
+                                     "average_return": self.eval_data[:, 5],
+                                     "real_time": self.eval_data[:, 6]})
         eval_data_df.to_csv(csv_foldername + "/eval_data.csv", float_format="%f")
 
         # remove zero entries

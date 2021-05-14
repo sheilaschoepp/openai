@@ -441,8 +441,10 @@ class AbnormalController:
 
             num_samples = num_updates * self.parameters["batch_size"]
 
+            real_time = int(time.time() - self.start)
+
             index = int(num_time_steps / self.parameters["time_step_eval_frequency"]) + 1  # add 1 because we evaluate policy before learning
-            self.eval_data[index] = [num_time_steps, num_updates, num_samples, average_return]
+            self.eval_data[index] = [num_time_steps, num_updates, num_samples, average_return, real_time]
 
             print("evaluation at {} time steps: {}".format(num_time_steps, average_return))
 
@@ -486,7 +488,7 @@ class AbnormalController:
         if not args.resume:
 
             num_rows = int(self.parameters["ab_time_steps"] / self.parameters["time_step_eval_frequency"]) + 1  # add 1 for evaluation before any learning (0th entry)
-            num_columns = 4
+            num_columns = 5
             self.eval_data = pd.read_csv(csv_foldername + "/eval_data.csv").to_numpy().copy()[:, 1:]
             self.eval_data = np.append(self.eval_data, np.zeros((num_rows, num_columns)), axis=0)
 
@@ -736,7 +738,8 @@ class AbnormalController:
         eval_data_df = pd.DataFrame({"num_time_steps": self.eval_data[:, 0],
                                      "num_updates": self.eval_data[:, 1],
                                      "num_samples": self.eval_data[:, 2],
-                                     "average_return": self.eval_data[:, 3]})
+                                     "average_return": self.eval_data[:, 3],
+                                     "real_time": self.eval_data[:, 4]})
         eval_data_df.to_csv(csv_foldername + "/eval_data.csv", float_format="%f")
 
         # remove zero entries

@@ -61,8 +61,8 @@ parser.add_argument("-ef", "--time_step_eval_frequency", type=int, default=10000
                     help="frequency of policy evaluation during learning (default: 10000)")
 parser.add_argument("-ee", "--eval_episodes", type=int, default=10, metavar="N",
                     help="number of episodes in policy evaluation roll-out (default: 10)")
-parser.add_argument("-msf", "--time_step_model_save_frequency", type=int, default=10000, metavar="N",
-                    help="frequency of saving models during learning (default: 10000)")
+parser.add_argument("-msf", "--time_step_model_save_frequency", type=int, default=100000, metavar="N",
+                    help="frequency of saving models during learning (default: 100000)")
 
 parser.add_argument("-a", "--automatic_entropy_tuning", default=False, action="store_true",
                     help="if true, automatically tune the temperature (default: False)")
@@ -217,7 +217,7 @@ class NormalController:
         # data
 
         num_rows = int(self.parameters["n_time_steps"] / self.parameters["time_step_eval_frequency"]) + 1  # add 1 for evaluation before any learning (0th entry)
-        num_columns = 4
+        num_columns = 5
         self.eval_data = np.zeros((num_rows, num_columns))
 
         num_rows = self.parameters["n_time_steps"]  # larger than needed; will remove extra entries later
@@ -472,8 +472,10 @@ class NormalController:
                 num_updates = (num_time_steps - self.parameters["batch_size"]) * self.parameters["model_updates_per_step"]
             num_samples = num_updates * self.parameters["batch_size"]
 
+            real_time = int(time.time() - self.start)
+
             index = num_time_steps // self.parameters["time_step_eval_frequency"]
-            self.eval_data[index] = [num_time_steps, num_updates, num_samples, average_return]
+            self.eval_data[index] = [num_time_steps, num_updates, num_samples, average_return, real_time]
 
             print("evaluation at {} time steps: {}".format(num_time_steps, average_return))
 
@@ -731,7 +733,8 @@ class NormalController:
         eval_data_df = pd.DataFrame({"num_time_steps": self.eval_data[:, 0],
                                      "num_updates": self.eval_data[:, 1],
                                      "num_samples": self.eval_data[:, 2],
-                                     "average_return": self.eval_data[:, 3]})
+                                     "average_return": self.eval_data[:, 3],
+                                     "real_time": self.eval_data[:, 4]})
         eval_data_df.to_csv(csv_foldername + "/eval_data.csv", float_format="%f")
 
         # remove zero entries
@@ -880,13 +883,13 @@ def param_search():
 
     args.gamma = round(np.random.uniform(0.8, 0.9997), 4)
 
-    args.lr = round(np.random.uniform(0.000005, 0.003), 6)
+    args.lr = round(np.random.uniform(0.000005, 0.006), 6)
 
     args.tau = round(np.random.uniform(0.0001, 0.1), 4)
 
-    args.replay_buffer_size = int(np.random.choice([10000, 100000, 1000000]))
+    args.replay_buffer_size = int(np.random.choice([10000, 100000, 500000, 1000000]))
 
-    args.batch_size = int(np.random.choice([16, 64, 256]))
+    args.batch_size = int(np.random.choice([16, 64, 256, 512]))
 
 
 if __name__ == "__main__":

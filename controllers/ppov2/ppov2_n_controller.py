@@ -44,7 +44,7 @@ parser.add_argument("--gamma", type=float, default=0.98, metavar="G",
 
 parser.add_argument("-ns", "--num_samples", type=int, default=512, metavar="N",
                     help="number of samples used to update the network(s) (default: 512)")
-parser.add_argument("--mini_batch_size", type=int, default=256, metavar="N",
+parser.add_argument("-mbs", "--mini_batch_size", type=int, default=256, metavar="N",
                     help=" number of samples per mini-batch (default: 256)")
 parser.add_argument("--epochs", type=int, default=4, metavar="N",
                     help="number of epochs when updating the network(s) (default: 4)")
@@ -884,7 +884,6 @@ class NormalController:
         subject = "Experiment Complete"
         text = "Experiment {}/seed{} complete.\n\nTime to complete: \n{} h:m:s\n\nThis message is sent from Python.".format(self.experiment, self.parameters["seed"], run_time)
 
-        # Prepare actual message
         message = """\From: %s\nTo: %s\nSubject: %s\n\n%s""" % (from_, ", ".join(to), subject, text)
 
         server = smtplib.SMTP("smtp.gmail.com", 587)

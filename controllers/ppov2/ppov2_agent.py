@@ -134,8 +134,8 @@ class PPOv2(BaseAgent):
         self.total_num_updates = self.time_steps // self.num_samples
 
         # number of full updates of the network(s)
-        self.num_updates = 0  # number of updates
-        self.num_old_updates = 0  # number of updates with n_controller
+        self.num_updates = 0
+        self.num_old_updates = 0
 
         # number of epochs to update the network(s)
         self.num_epoch_updates = 0
@@ -306,10 +306,10 @@ class PPOv2(BaseAgent):
         """
 
         self.agent_load_models(dir_, t)
-        self.agent_load_num_updates(dir_)  # we load total_num_updates here
+        self.agent_load_num_updates(dir_)
         self.agent_load_memory(dir_)
-        self.agent_load_memory_inti_samples(dir_)  # must come after agent_load_memory; we load how many samples are in memory at the start of learning with ab_controller
-        self.agent_load_total_num_updates()  # must come after agent_load_memory; we load total_num_updates here only if we are not resuming
+        self.agent_load_memory_inti_samples(dir_)  # must come after agent_load_memory
+        self.agent_load_total_num_updates()  # must come after agent_load_memory
 
     def agent_load_models(self, dir_, t):
         """

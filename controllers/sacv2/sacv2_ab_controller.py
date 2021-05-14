@@ -37,6 +37,8 @@ parser.add_argument("-t", "--ab_time_steps", type=int, default=20000000, metavar
 
 parser.add_argument("-crb", "--clear_replay_buffer", default=False, action="store_true",
                     help="if true, clear the replay buffer (default: False)")
+parser.add_argument("-rn", "--reinitialize_networks", default=False, action="store_true",
+                    help="if true, randomly reinitialize the networks (default: False)")
 
 parser.add_argument("-c", "--cuda", default=False, action="store_true",
                     help="if true, run on GPU (default: False)")
@@ -90,6 +92,7 @@ class AbnormalController:
             self.parameters["ab_env_name"] = args.ab_env_name  # addition
             self.parameters["ab_time_steps"] = args.ab_time_steps  # addition
             self.parameters["clear_replay_buffer"] = args.clear_replay_buffer  # addition
+            self.parameters["reinitialize_networks"] = args.reinitialize_networks  # addition
             self.parameters["cuda"] = args.cuda  # update
             self.parameters["file"] = args.file  # addition
             self.parameters["device"] = "cuda" if args.cuda and torch.cuda.is_available() else "cpu"  # update
@@ -133,6 +136,7 @@ class AbnormalController:
                  + "_ee:" + str(self.parameters["eval_episodes"]) \
                  + "_tmsf:" + str(self.parameters["time_step_model_save_frequency"]) \
                  + "_crb:" + str(self.parameters["clear_replay_buffer"]) \
+                 + "_rn:" + str(self.parameters["reinitialize_networks"]) \
                  + "_a:" + str(self.parameters["automatic_entropy_tuning"]) \
                  + "_d:" + str(self.parameters["device"]) \
                  + ("_r" if self.parameters["resumable"] else "") \
@@ -221,6 +225,10 @@ class AbnormalController:
         if not self.parameters["resume"] and self.parameters["clear_replay_buffer"]:
             self.rlg.rl_agent_message("clear_replay_buffer")
 
+        # reinitialize the networks if indicated by argument
+        if not self.parameters["resume"] and self.parameters["reinitialize_networks"]:
+            self.rlg.rl_agent_message("reinitialize_networks")
+
         # print summary info
 
         # is GPU being used?
@@ -272,6 +280,7 @@ class AbnormalController:
         print("time step model save frequency:", self.parameters["time_step_model_save_frequency"])
         print("automatic entropy tuning:", self.parameters["automatic_entropy_tuning"])
         print("clear replay buffer:", highlight_non_default_values("clear_replay_buffer"))
+        print("reinitialize networks:", highlight_non_default_values("reinitialize_networks"))
         if self.parameters["device"] == "cuda":
             print("device:", self.parameters["device"])
             if "CUDA_VISIBLE_DEVICES" in os.environ:
@@ -424,6 +433,12 @@ class AbnormalController:
                 num_updates = (num_time_steps - 2 * self.parameters["batch_size"]) * self.parameters["model_updates_per_step"]
             else:
                 num_updates = (num_time_steps - self.parameters["batch_size"]) * self.parameters["model_updates_per_step"]
+
+            if self.parameters["clear_replay_buffer"] and self.parameters["reinitialize_networks"]:
+                num_updates = max((num_time_steps - self.parameters["n_time_steps"] - self.parameters["batch_size"]), 0) * self.parameters["model_updates_per_step"]
+            elif not self.parameters["clear_replay_buffer"] and self.parameters["reinitialize_networks"]:
+                num_updates = (num_time_steps - self.parameters["n_time_steps"]) * self.parameters["model_updates_per_step"]
+
             num_samples = num_updates * self.parameters["batch_size"]
 
             index = int(num_time_steps / self.parameters["time_step_eval_frequency"]) + 1  # add 1 because we evaluate policy before learning
@@ -845,7 +860,7 @@ class AbnormalController:
         server.close()
 
 
-if __name__ == "__main__":
+def main():
 
     ac = AbnormalController()
 
@@ -856,3 +871,8 @@ if __name__ == "__main__":
     except KeyboardInterrupt as e:
 
         print("keyboard interrupt")
+
+
+if __name__ == "__main__":
+
+    main()

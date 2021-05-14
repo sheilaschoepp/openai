@@ -88,6 +88,12 @@ parser.add_argument("-rf", "--resume_file", default="",
 parser.add_argument("-tl", "--time_limit", type=float, default=100000000000.0, metavar="N",
                     help="run time limit for use on Compute Canada (units: days)")
 
+parser.add_argument("-ps", "--param_search", default=False, action="store_true",
+                    help="if true, run a parameter search")
+
+parser.add_argument("-pss", "--param_search_seed", type=int, default=0, metavar="N",
+                    help="random seed for parameter search (default: 0)")
+
 args = parser.parse_args()
 
 
@@ -849,7 +855,10 @@ class NormalController:
         server.close()
 
 
-if __name__ == "__main__":
+def main():
+
+    if args.param_search:
+        param_search()
 
     nc = NormalController()
 
@@ -860,3 +869,26 @@ if __name__ == "__main__":
     except KeyboardInterrupt as e:
 
         print("keyboard interrupt")
+
+
+def param_search():
+    """
+    Conduct a random parameter search for SACv2 using parameter ranges.
+    """
+
+    np.random.seed(args.param_search_seed)
+
+    args.gamma = round(np.random.uniform(0.8, 0.9997), 4)
+
+    args.lr = round(np.random.uniform(0.000005, 0.003), 6)
+
+    args.tau = round(np.random.uniform(0.0001, 0.1), 4)
+
+    args.replay_buffer_size = int(np.random.choice([10000, 100000, 1000000]))
+
+    args.batch_size = int(np.random.choice([16, 64, 256]))
+
+
+if __name__ == "__main__":
+
+    main()

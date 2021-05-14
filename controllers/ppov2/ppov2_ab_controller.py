@@ -37,6 +37,8 @@ parser.add_argument("-t", "--ab_time_steps", type=int, default=400000000, metava
 
 parser.add_argument("-cm", "--clear_memory", default=False, action="store_true",
                     help="if true, clear the memory (default: False)")
+parser.add_argument("-rn", "--reinitialize_networks", default=False, action="store_true",
+                    help="if true, randomly reinitialize the networks (default: False)")
 
 parser.add_argument("-c", "--cuda", default=False, action="store_true",
                     help="if true, run on GPU (default: False)")
@@ -90,6 +92,7 @@ class AbnormalController:
             self.parameters["ab_env_name"] = args.ab_env_name  # addition
             self.parameters["ab_time_steps"] = args.ab_time_steps  # addition
             self.parameters["clear_memory"] = args.clear_memory  # addition
+            self.parameters["reinitialize_networks"] = args.reinitialize_networks  # addition
             self.parameters["cuda"] = args.cuda  # update
             self.parameters["file"] = args.file  # addition
             self.parameters["device"] = "cuda" if args.cuda and torch.cuda.is_available() else "cpu"  # update
@@ -140,6 +143,7 @@ class AbnormalController:
                  + "_ee:" + str(self.parameters["eval_episodes"]) \
                  + "_tmsf:" + str(self.parameters["time_step_model_save_frequency"]) \
                  + "_cm:" + str(self.parameters["clear_memory"]) \
+                 + "_rn:" + str(self.parameters["reinitialize_networks"]) \
                  + "_d:" + str(self.parameters["device"]) \
                  + ("_r" if self.parameters["resumable"] else "") \
                  + ("_resumed" if self.parameters["resume"] else "")
@@ -234,6 +238,10 @@ class AbnormalController:
         if not self.parameters["resume"] and self.parameters["clear_memory"]:
             self.rlg.rl_agent_message("clear_memory")
 
+        # reinitialize the networks if indicated by argument
+        if not self.parameters["resume"] and self.parameters["reinitialize_networks"]:
+            self.rlg.rl_agent_message("reinitialize_networks")
+
         # print summary info
 
         # is GPU being used?
@@ -290,6 +298,7 @@ class AbnormalController:
         print("evaluation episodes:", self.parameters["eval_episodes"])
         print("time step model save frequency:", self.parameters["time_step_model_save_frequency"])
         print("clear memory:", highlight_non_default_values("clear_memory"))
+        print("reinitialize networks:", highlight_non_default_values("reinitialize_networks"))
         if self.parameters["device"] == "cuda":
             print("device:", self.parameters["device"])
             if "CUDA_VISIBLE_DEVICES" in os.environ:
@@ -442,6 +451,12 @@ class AbnormalController:
                 num_updates = ((num_time_steps - self.parameters["n_time_steps"]) // self.parameters["num_samples"]) + (self.parameters["n_time_steps"] // self.parameters["num_samples"])
             else:
                 num_updates = num_time_steps // self.parameters["num_samples"]
+
+            if self.parameters["clear_memory"] and self.parameters["reinitialize_networks"]:
+                num_updates = ((num_time_steps - self.parameters["n_time_steps"]) // self.parameters["num_samples"])
+            elif not self.parameters["clear_memory"] and self.parameters["reinitialize_networks"]:
+                num_updates = (num_time_steps - self.parameters["n_time_steps"] + self.agent.memory_init_samples) // self.parameters["num_samples"]
+
             num_epoch_updates = num_updates * self.parameters["epochs"]
             num_mini_batch_updates = num_epoch_updates * (self.parameters["num_samples"] // self.parameters["mini_batch_size"])
 
@@ -871,7 +886,7 @@ class AbnormalController:
         server.close()
 
 
-if __name__ == "__main__":
+def main():
 
     ac = AbnormalController()
 
@@ -883,3 +898,7 @@ if __name__ == "__main__":
 
         print("keyboard interrupt")
 
+
+if __name__ == "__main__":
+
+    main()

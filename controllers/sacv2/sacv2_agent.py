@@ -73,9 +73,12 @@ class SACv2(BaseAgent):
 
         super(SACv2, self).__init__()
 
+        self.state_dim = state_dim
+        self.action_dim = action_dim
         self.gamma = gamma
         self.tau = tau
         self.lr = lr
+        self.hidden_dim = hidden_dim
         self.batch_size = batch_size
         self.model_updates_per_step = model_updates_per_step
         self.replay_buffer_size = replay_buffer_size
@@ -85,14 +88,16 @@ class SACv2(BaseAgent):
         self.alpha = torch.Tensor([alpha]).to(device=self.device)  # must come after self.device
         self.loss_data = loss_data
 
+        self.loss_index = 0
+
         self.num_updates = 0
 
         # critic network
-        self.q_network = TwinnedQNetwork(state_dim, action_dim, hidden_dim).to(device=self.device)
-        self.target_q_network = TwinnedQNetwork(state_dim, action_dim, hidden_dim).to(device=self.device)
+        self.q_network = TwinnedQNetwork(self.state_dim, self.action_dim, self.hidden_dim).to(device=self.device)
+        self.target_q_network = TwinnedQNetwork(self.state_dim, self.action_dim, self.hidden_dim).to(device=self.device)
 
         # actor network
-        self.policy_network = GaussianPolicyNetwork(state_dim, action_dim, hidden_dim).to(device=self.device)
+        self.policy_network = GaussianPolicyNetwork(self.state_dim, self.action_dim, self.hidden_dim).to(device=self.device)
 
         # (hard update) target q value network
         for target_param, param in zip(self.target_q_network.parameters(), self.q_network.parameters()):
@@ -248,6 +253,8 @@ class SACv2(BaseAgent):
         if split_message[0] == "mode":
             mode = split_message[1]
             self.agent_set_policy_mode(mode)
+        if split_message[0] == "reinitialize_networks":
+            self.agent_reinitialize_networks()
         if split_message[0] == "save":
             data_dir = split_message[1]
             time_steps = int(split_message[2])
@@ -367,6 +374,7 @@ class SACv2(BaseAgent):
 
         numpy_foldername = dir_ + "/npy"
 
+        self.loss_index = int(np.load(numpy_foldername + "/loss_index.npy"))
         self.num_updates = int(np.load(numpy_foldername + "/num_updates.npy"))
 
     def agent_load_replay_buffer(self, dir_):
@@ -383,6 +391,31 @@ class SACv2(BaseAgent):
 
         with open(pickle_foldername + "/replay_buffer.pickle", "rb") as f:
             self.replay_buffer = pickle.load(f)
+
+    def agent_reinitialize_networks(self):
+        """
+        Randomly re-initialize the network(s) and optimizer(s).
+        """
+
+        self.num_updates = 0
+
+        self.q_network = TwinnedQNetwork(self.state_dim, self.action_dim, self.hidden_dim).to(device=self.device)
+        self.target_q_network = TwinnedQNetwork(self.state_dim, self.action_dim, self.hidden_dim).to(device=self.device)
+
+        self.policy_network = GaussianPolicyNetwork(self.state_dim, self.action_dim, self.hidden_dim).to(device=self.device)
+
+        for target_param, param in zip(self.target_q_network.parameters(), self.q_network.parameters()):
+            target_param.data.copy_(param.data)
+
+        self.q_optimizer_1 = Adam(self.q_network.Q1.parameters(), lr=self.lr)
+        self.q_optimizer_2 = Adam(self.q_network.Q2.parameters(), lr=self.lr)
+        self.policy_optimizer = Adam(self.policy_network.parameters(), lr=self.lr)
+
+        if self.automatic_entropy_tuning:
+            self.target_entropy = -torch.prod(torch.tensor(self.action_dim)).to(device=self.device).item()
+            self.log_alpha = torch.zeros(1, requires_grad=True, device=self.device)
+            self.alpha = self.log_alpha.exp()
+            self.alpha_optimizer = Adam([self.log_alpha], lr=self.lr)
 
     def agent_save(self, dir_, t):
         """
@@ -469,6 +502,7 @@ class SACv2(BaseAgent):
         npy_foldername = dir_ + "/npy"
         os.makedirs(npy_foldername, exist_ok=True)
 
+        np.save(npy_foldername + "/loss_index.npy", self.loss_index)
         np.save(npy_foldername + "/num_updates.npy", self.num_updates)
 
     def agent_save_replay_buffer(self, dir_):
@@ -614,5 +648,5 @@ class SACv2(BaseAgent):
             for target_param, param in zip(self.target_q_network.parameters(), self.q_network.parameters()):
                 target_param.data.copy_(self.tau * param.data + (1.0 - self.tau) * target_param.data)
 
-        index = self.num_updates - 1
-        self.loss_data[index] = [self.num_updates, q_value_loss_1.item(), q_value_loss_2.item(), policy_loss.item(), alpha_loss.item(), self.alpha.item()]
+        self.loss_data[self.loss_index] = [self.num_updates, q_value_loss_1.item(), q_value_loss_2.item(), policy_loss.item(), alpha_loss.item(), self.alpha.item()]
+        self.loss_index += 1

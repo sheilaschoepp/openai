@@ -6,3 +6,4 @@ https://github.com/nikhilbarhate99/PPO-PyTorch
 https://github.com/Khrylx/PyTorch-RL
 https://github.com/ikostrikov/pytorch-a2c-ppo-acktr-gail
 https://github.com/openai/spinningup.git
+https://medium.com/aureliantactics/ppo-hyperparameters-and-ranges-6fc2d29bccbe

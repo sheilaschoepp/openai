@@ -98,6 +98,12 @@ parser.add_argument("-rf", "--resume_file", default="",
 parser.add_argument("-tl", "--time_limit", type=float, default=100000000000.0, metavar="N",
                     help="run time limit for use on Compute Canada (units: days)")
 
+parser.add_argument("-ps", "--param_search", default=False, action="store_true",
+                    help="if true, run a parameter search")
+
+parser.add_argument("-pss", "--param_search_seed", type=int, default=0, metavar="N",
+                    help="random seed for parameter search (default: 0)")
+
 args = parser.parse_args()
 
 
@@ -886,7 +892,10 @@ class NormalController:
         server.close()
 
 
-if __name__ == "__main__":
+def main():
+
+    if args.param_search:
+        param_search()
 
     nc = NormalController()
 
@@ -897,3 +906,36 @@ if __name__ == "__main__":
     except KeyboardInterrupt as e:
 
         print("keyboard interrupt")
+
+
+def param_search():
+    """
+    Conduct a random parameter search for PPOv2 using parameter ranges from https://medium.com/aureliantactics/ppo-hyperparameters-and-ranges-6fc2d29bccbe.
+    """
+
+    np.random.seed(args.param_search_seed)
+
+    args.num_samples = np.random.randint(32, 5001)  # upper bound excluded
+
+    args.mini_batch_size = int(np.random.choice([2**x for x in range(2, 13)]))  # powers of two
+    while args.mini_batch_size > args.num_samples:
+        args.mini_batch_size = int(np.random.choice([2 ** x for x in range(2, 13)]))
+
+    args.epochs = np.random.randint(3, 31)  # upper bound excluded
+
+    args.epsilon = float(np.random.choice([0.1, 0.2, 0.3]))
+
+    args.gamma = round(np.random.uniform(0.8, 0.9997), 4)
+
+    args.gae_lambda = round(np.random.uniform(0.9, 1.0), 4)
+
+    args.vf_loss_coef = float(np.random.choice([0.5, 1.0]))
+
+    args.policy_entropy_coef = round(np.random.uniform(0, 0.01), 4)
+
+    args.lr = round(np.random.uniform(0.000005, 0.003), 6)
+
+
+if __name__ == "__main__":
+
+    main()

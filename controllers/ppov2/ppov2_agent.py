@@ -91,6 +91,10 @@ class PPOv2(BaseAgent):
 
         assert num_samples >= mini_batch_size, "agent.__init__: the number of samples must be greater than or equal to the mini-batch size"
 
+        self.state_dim = state_dim
+        self.action_dim = action_dim
+        self.hidden_dim = hidden_dim
+        self.log_std = log_std
         self.lr = lr
         self.linear_lr_decay = linear_lr_decay
 
@@ -111,16 +115,20 @@ class PPOv2(BaseAgent):
         self.resume = resume
 
         # network
-        self.actor_critic_network = ActorCriticNetwork(state_dim, action_dim, hidden_dim, log_std).to(device=self.device)
+        self.actor_critic_network = ActorCriticNetwork(self.state_dim, self.action_dim, self.hidden_dim, self.log_std).to(device=self.device)
 
         # optimizer
-        self.actor_critic_optimizer = Adam(self.actor_critic_network.parameters(), lr=lr)
+        self.actor_critic_optimizer = Adam(self.actor_critic_network.parameters(), lr=self.lr)
 
         # mse loss criterion
         self.actor_critic_criterion = nn.MSELoss()
 
         # memory
-        self.memory = Memory(num_samples, state_dim, action_dim, gamma, use_gae, gae_lambda, mini_batch_size, device=self.device)
+        self.memory = Memory(num_samples, self.state_dim, self.action_dim, gamma, use_gae, gae_lambda, mini_batch_size, device=self.device)
+        self.memory_init_samples = 0
+
+        # loss_index
+        self.loss_index = 0
 
         # total number of network updates that will occur
         self.total_num_updates = self.time_steps // self.num_samples
@@ -252,6 +260,7 @@ class PPOv2(BaseAgent):
 
         if split_message[0] == "clear_memory":
             self.agent_clear_memory()
+            self.memory_init_samples = 0
             self.agent_load_total_num_updates()
         if split_message[0] == "load":
             data_dir = split_message[1]
@@ -264,6 +273,8 @@ class PPOv2(BaseAgent):
         if split_message[0] == "mode":
             mode = split_message[1]
             self.agent_set_policy_mode(mode)
+        if split_message[0] == "reinitialize_networks":
+            self.agent_reinitialize_networks()
         if split_message[0] == "reset_lr":
             self.agent_reset_lr()
         if split_message[0] == "save":
@@ -297,6 +308,7 @@ class PPOv2(BaseAgent):
         self.agent_load_models(dir_, t)
         self.agent_load_num_updates(dir_)  # we load total_num_updates here
         self.agent_load_memory(dir_)
+        self.agent_load_memory_inti_samples(dir_)  # must come after agent_load_memory; we load how many samples are in memory at the start of learning with ab_controller
         self.agent_load_total_num_updates()  # must come after agent_load_memory; we load total_num_updates here only if we are not resuming
 
     def agent_load_models(self, dir_, t):
@@ -355,6 +367,7 @@ class PPOv2(BaseAgent):
         with open(pickle_foldername + "/num_updates.pickle", "rb") as f:
             update_dic = pickle.load(f)
 
+        self.loss_index = update_dic["loss_index"]
         self.total_num_updates = update_dic["total_num_updates"]
         self.num_updates = update_dic["num_updates"]
 
@@ -380,6 +393,29 @@ class PPOv2(BaseAgent):
 
         with open(pickle_foldername + "/memory.pickle", "rb") as f:
             self.memory = pickle.load(f)
+
+    def agent_load_memory_inti_samples(self, dir_):
+        """
+        Load the number of samples stored in memory at the start of learning with the abnormal controller.
+
+        File format: .pickle
+
+        @param dir_: string
+            load directory
+        """
+
+        if self.resume:
+
+            pickle_foldername = dir_ + "/pickle"
+
+            with open(pickle_foldername + "/memory_init_samples.pickle", "rb") as f:
+                memory_dic = pickle.load(f)
+
+            self.total_num_updates = memory_dic["memory_init_samples"]
+
+        else:
+
+            self.memory_init_samples = self.memory.step
 
     def agent_load_total_num_updates(self):
         """
@@ -417,6 +453,19 @@ class PPOv2(BaseAgent):
         # compute returns and (normalized) advantages
         self.memory.compute_returns_and_advantages()
 
+    def agent_reinitialize_networks(self):
+        """
+        Randomly re-initialize the network(s) and optimizer(s).
+        """
+
+        self.actor_critic_network = ActorCriticNetwork(self.state_dim, self.action_dim, self.hidden_dim, self.log_std).to(device=self.device)
+        self.actor_critic_optimizer = Adam(self.actor_critic_network.parameters(), lr=self.lr)
+
+        self.num_updates = 0
+        self.num_old_updates = 0
+        self.num_epoch_updates = 0
+        self.num_mini_batch_updates = 0
+
     def agent_reset_lr(self):
         """
         Reset the agent's learning rate to its original value.
@@ -437,6 +486,7 @@ class PPOv2(BaseAgent):
         self.agent_save_models(dir_, t)
         self.agent_save_num_updates(dir_)
         self.agent_save_memory(dir_)
+        self.agent_save_memory_init_samples(dir_)
 
     def agent_save_memory(self, dir_):
         """
@@ -453,6 +503,24 @@ class PPOv2(BaseAgent):
 
         with open(pickle_foldername + "/memory.pickle", "wb") as f:
             pickle.dump(self.memory, f)
+
+    def agent_save_memory_init_samples(self, dir_):
+        """
+        Save number of samples in memory at the start of learning with the ab_controller..
+
+        File format: .pickle
+
+        @param dir_: string
+            save directory
+        """
+
+        pickle_foldername = dir_ + "/pickle"
+        os.makedirs(pickle_foldername, exist_ok=True)
+
+        memory_dic = {"memory_init_samples": self.memory_init_samples}
+
+        with open(pickle_foldername + "/memory_init_samples.pickle", "wb") as f:
+            pickle.dump(memory_dic, f)
 
     def agent_save_models(self, dir_, t):
         """
@@ -487,7 +555,8 @@ class PPOv2(BaseAgent):
         pickle_foldername = dir_ + "/pickle"
         os.makedirs(pickle_foldername, exist_ok=True)
 
-        update_dic = {"total_num_updates": self.total_num_updates,
+        update_dic = {"loss_index": self.loss_index,
+                      "total_num_updates": self.total_num_updates,
                       "num_updates": self.num_updates,
                       "num_old_updates": self.num_old_updates,
                       "num_epoch_updates": self.num_epoch_updates,
@@ -645,5 +714,5 @@ class PPOv2(BaseAgent):
 
         clip_fraction = total_num_clips / (self.num_epoch_updates * self.mini_batch_size * (self.num_samples // self.mini_batch_size))
 
-        index = self.num_updates - 1
-        self.loss_data[index] = [self.num_updates, self.num_epoch_updates, self.num_mini_batch_updates, avg_clip_loss, avg_vf_loss, avg_entropy, avg_clip_vf_s_loss, clip_fraction]
+        self.loss_data[self.loss_index] = [self.num_updates, self.num_epoch_updates, self.num_mini_batch_updates, avg_clip_loss, avg_vf_loss, avg_entropy, avg_clip_vf_s_loss, clip_fraction]
+        self.loss_index += 1

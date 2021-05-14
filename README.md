@@ -73,9 +73,10 @@ If using CUDA 11.1: `pip3 install torch==1.8.1+cu111 torchvision==0.9.1+cu111 to
                              [--batch_size N] [--model_updates_per_step N]
                              [--target_update_interval N] [-ef N] [-ee N]
                              [-msf N] [-a] [-c] [-s N] [-d] [--resumable]
-                             [--resume] [-rf RESUME_FILE] [-tl N]`
+                             [--resume] [-rf RESUME_FILE] [-tl N] [-ps]
+                             [-pss N]`
 2. In your activated virtual environment within terminal, run `python ab_controller.py --help` and observe the different parameters and their default settings.  The ab_controller.py file has various arguments, including the name of the abnormal environment and the number of timesteps to take within this environment.  The ab_controller.py file is used only after n_controller.py has been run.  The filename argument is the absolute path of the seed# folder containing the data obtained from running n_controller.py to completion.  Note that ab_controller.py has fewer arguments than n_controller.py.  Many of the arguments set in n_controller.py are loaded from file and are retained in ab_controller.py.\
-`usage: sacv2_ab_controller.py [-h] [-e AB_ENV_NAME] [-t N] [-crb] [-c]
+`usage: sacv2_ab_controller.py [-h] [-e AB_ENV_NAME] [-t N] [-crb] [-rn] [-c]
                               [-f FILE] [-d] [--resumable] [--resume]
                               [-rf RESUME_FILE] [-tl N]`
 

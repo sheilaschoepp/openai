@@ -447,15 +447,14 @@ class AbnormalController:
 
             average_return = np.average(returns)
 
-            if self.parameters["clear_memory"]:
-                num_updates = ((num_time_steps - self.parameters["n_time_steps"]) // self.parameters["num_samples"]) + (self.parameters["n_time_steps"] // self.parameters["num_samples"])
-            else:
-                num_updates = num_time_steps // self.parameters["num_samples"]
-
             if self.parameters["clear_memory"] and self.parameters["reinitialize_networks"]:
                 num_updates = ((num_time_steps - self.parameters["n_time_steps"]) // self.parameters["num_samples"])
             elif not self.parameters["clear_memory"] and self.parameters["reinitialize_networks"]:
                 num_updates = (num_time_steps - self.parameters["n_time_steps"] + self.agent.memory_init_samples) // self.parameters["num_samples"]
+            elif self.parameters["clear_memory"] and not self.parameters["reinitialize_networks"]:
+                num_updates = ((num_time_steps - self.parameters["n_time_steps"]) // self.parameters["num_samples"]) + (self.parameters["n_time_steps"] // self.parameters["num_samples"])
+            else:
+                num_updates = num_time_steps // self.parameters["num_samples"]
 
             num_epoch_updates = num_updates * self.parameters["epochs"]
             num_mini_batch_updates = num_epoch_updates * (self.parameters["num_samples"] // self.parameters["mini_batch_size"])
@@ -878,7 +877,6 @@ class AbnormalController:
         subject = "Experiment Complete"
         text = "Experiment {}/seed{} complete.\n\nTime to complete: \n{} h:m:s\n\nThis message is sent from Python.".format(self.experiment, self.parameters["seed"], run_time)
 
-        # Prepare actual message
         message = """\From: %s\nTo: %s\nSubject: %s\n\n%s""" % (from_, ", ".join(to), subject, text)
 
         server = smtplib.SMTP("smtp.gmail.com", 587)

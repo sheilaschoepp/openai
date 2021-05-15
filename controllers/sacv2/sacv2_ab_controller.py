@@ -429,15 +429,14 @@ class AbnormalController:
 
             average_return = np.average(returns)
 
-            if self.parameters["clear_replay_buffer"]:
-                num_updates = (num_time_steps - 2 * self.parameters["batch_size"]) * self.parameters["model_updates_per_step"]
-            else:
-                num_updates = (num_time_steps - self.parameters["batch_size"]) * self.parameters["model_updates_per_step"]
-
             if self.parameters["clear_replay_buffer"] and self.parameters["reinitialize_networks"]:
                 num_updates = max((num_time_steps - self.parameters["n_time_steps"] - self.parameters["batch_size"]), 0) * self.parameters["model_updates_per_step"]
             elif not self.parameters["clear_replay_buffer"] and self.parameters["reinitialize_networks"]:
                 num_updates = (num_time_steps - self.parameters["n_time_steps"]) * self.parameters["model_updates_per_step"]
+            elif self.parameters["clear_replay_buffer"] and not self.parameters["reinitialize_networks"]:
+                num_updates = (num_time_steps - 2 * self.parameters["batch_size"]) * self.parameters["model_updates_per_step"]
+            else:
+                num_updates = (num_time_steps - self.parameters["batch_size"]) * self.parameters["model_updates_per_step"]
 
             num_samples = num_updates * self.parameters["batch_size"]
 
@@ -852,7 +851,6 @@ class AbnormalController:
         subject = "Experiment Complete"
         text = "Experiment {}/seed{} complete.\n\nTime to complete: \n{} h:m:s\n\nThis message is sent from Python.".format(self.experiment, self.parameters["seed"], run_time)
 
-        # Prepare actual message
         message = """\From: %s\nTo: %s\nSubject: %s\n\n%s""" % (from_, ", ".join(to), subject, text)
 
         server = smtplib.SMTP("smtp.gmail.com", 587)

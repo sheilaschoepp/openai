@@ -411,7 +411,7 @@ class PPOv2(BaseAgent):
             with open(pickle_foldername + "/memory_init_samples.pickle", "rb") as f:
                 memory_dic = pickle.load(f)
 
-            self.total_num_updates = memory_dic["memory_init_samples"]
+            self.memory_init_samples = memory_dic["memory_init_samples"]
 
         else:
 

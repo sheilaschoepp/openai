@@ -847,7 +847,6 @@ class NormalController:
         subject = "Experiment Complete"
         text = "Experiment {}/seed{} complete.\n\nTime to complete: \n{} h:m:s\n\nThis message is sent from Python.".format(self.experiment, self.parameters["seed"], run_time)
 
-        # Prepare actual message
         message = """\From: %s\nTo: %s\nSubject: %s\n\n%s""" % (from_, ", ".join(to), subject, text)
 
         server = smtplib.SMTP("smtp.gmail.com", 587)

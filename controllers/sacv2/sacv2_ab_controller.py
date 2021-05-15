@@ -434,7 +434,7 @@ class AbnormalController:
             elif not self.parameters["clear_replay_buffer"] and self.parameters["reinitialize_networks"]:
                 num_updates = (num_time_steps - self.parameters["n_time_steps"]) * self.parameters["model_updates_per_step"]
             elif self.parameters["clear_replay_buffer"] and not self.parameters["reinitialize_networks"]:
-                num_updates = (num_time_steps - 2 * self.parameters["batch_size"]) * self.parameters["model_updates_per_step"]
+                num_updates = (max((num_time_steps - self.parameters["n_time_steps"] - self.parameters["batch_size"]), 0) + (self.parameters["n_time_steps"] - self.parameters["batch_size"])) * self.parameters["model_updates_per_step"]
             else:
                 num_updates = (num_time_steps - self.parameters["batch_size"]) * self.parameters["model_updates_per_step"]
 

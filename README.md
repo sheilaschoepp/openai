@@ -36,7 +36,7 @@ OR
 If using CUDA 11.1: `pip3 install torch==1.8.1+cu111 torchvision==0.9.1+cu111 torchaudio==0.8.1 -f https://download.pytorch.org/whl/torch_stable.html`
 6. Install [OpenAI gym](https://gym.openai.com/docs/), [pandas](https://pandas.pydata.org/), [termcolor](https://pypi.org/project/termcolor/) and [matplotlib](https://matplotlib.org/). \
 `pip install gym[all] pandas termcolor matplotlib`
-7. [Re-install](https://github.com/openai/mujoco-py#install-and-use-mujoco-py) mujoco-py 2.0. (Note: the installation of gym overwrites the mujoco-py version.) \
+7. [(Re)install](https://github.com/openai/mujoco-py#install-and-use-mujoco-py) mujoco-py 2.0. \
 `pip3 install -U 'mujoco-py<2.1,>=2.0'`
 
 ## Project Structure

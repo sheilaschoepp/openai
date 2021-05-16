@@ -2,7 +2,7 @@
 
 ## Required Software and Code
 
-1. [Download](https://mujoco.org/) and [install](https://github.com/openai/mujoco-py#install-mujoco) MuJoCo.  
+1. [Download](https://mujoco.org/) and [install](https://github.com/openai/mujoco-py#install-mujoco) MuJoCo.
 Note: The required mjkey.txt file is located in the openai/utils folder.  This file contains the MuJoCo license for the University of Alberta.  Please do not share this with people outside of this project.
 2. Clone [this](https://github.com/sheilaschoepp/openai.git) repository into a directory of your choice (on Linux, clone into the Documents directory).\
 `git clone https://github.com/sheilaschoepp/openai.git`
@@ -36,6 +36,8 @@ OR
 If using CUDA 11.1: `pip3 install torch==1.8.1+cu111 torchvision==0.9.1+cu111 torchaudio==0.8.1 -f https://download.pytorch.org/whl/torch_stable.html`
 6. Install [OpenAI gym](https://gym.openai.com/docs/), [pandas](https://pandas.pydata.org/), [termcolor](https://pypi.org/project/termcolor/) and [matplotlib](https://matplotlib.org/). \
 `pip install gym[all] pandas termcolor matplotlib`
+7. [Re-install](https://github.com/openai/mujoco-py#install-and-use-mujoco-py) mujoco-py 2.0. (Note: the installation of gym overwrites the mujoco-py version.)
+`pip3 install -U 'mujoco-py<2.1,>=2.0'`
 
 ## Project Structure
 

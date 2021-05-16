@@ -5,10 +5,10 @@ from pathlib import Path
 from mujoco_py.generated import const
 
 
-class AntEnvV5(mujoco_env.MujocoEnv, utils.EzPickle):  # TODO
+class AntEnvV4(mujoco_env.MujocoEnv, utils.EzPickle):  # TODO
     def __init__(self):
         home = str(Path.home())
-        filepath = home + "/Documents/openai/custom_gym_envs/xml/AntEnv_v5_ab_addedlink.xml"  # TODO
+        filepath = home + "/Documents/openai/custom_gym_envs/xml/AntEnv_v4_ab_addedlink.xml"  # TODO
         mujoco_env.MujocoEnv.__init__(self, filepath, 5)
         utils.EzPickle.__init__(self)
 
@@ -35,9 +35,9 @@ class AntEnvV5(mujoco_env.MujocoEnv, utils.EzPickle):  # TODO
 
     def _get_obs(self):
         return np.concatenate([
-            self.sim.data.qpos.flat[2:],
-            self.sim.data.qvel.flat,
-            np.clip(self.sim.data.cfrc_ext, -1, 1).flat,
+            self.sim.data.qpos.flat[2:-1],
+            self.sim.data.qvel.flat[:-1],
+            np.clip(self.sim.data.cfrc_ext, -1, 1).flat[:-6],
         ])
 
     def reset_model(self):

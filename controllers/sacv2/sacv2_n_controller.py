@@ -140,7 +140,9 @@ class NormalController:
                                "resumable": args.resumable,
                                "resume": args.resume,
                                "resume_file": args.resume_file,
-                               "complete": False}
+                               "complete": False,
+                               "param_search": args.param_search,
+                               "param_search_seed": args.param_search_seed}
 
         else:
 
@@ -176,8 +178,12 @@ class NormalController:
                  + "_tmsf:" + str(self.parameters["time_step_model_save_frequency"]) \
                  + "_a:" + str(self.parameters["automatic_entropy_tuning"]) \
                  + "_d:" + str(self.parameters["device"]) \
+                 + (("_ps:" + str(self.parameters["param_search"])) if self.parameters["param_search"] else "") \
+                 + (("_pss:" + str(self.parameters["param_search_seed"])) if self.parameters["param_search"] else "") \
                  + ("_r" if self.parameters["resumable"] else "") \
                  + ("_resumed" if self.parameters["resume"] else "")
+
+
 
         self.experiment = "SACv2_" + suffix
 

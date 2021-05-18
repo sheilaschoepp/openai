@@ -17,7 +17,7 @@ do
   for s in {0..4}
   do
     tmux new-session -d -s sac$ps$s "CUDA_VISIBLE_DEVICES=0 python $SAC_CONTROLLER_ABSOLUTE_PATH -a -c -s $s -t 5000000 -ps -pss $ps"
-  donef
+  done
 done
 
 for ps in 1

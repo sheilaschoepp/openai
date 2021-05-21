@@ -4,7 +4,7 @@
 #SBATCH --ntasks-per-node=32
 #SBATCH --mem=125G
 #SBATCH --time=10-00:00
-#SBATCH --job-name=pss_8_13
+#SBATCH --job-name=ppo_8_13
 #SBATCH --output=%x-%j.out
 #SBATCH --mail-user=sschoepp@ualberta.ca
 #SBATCH --mail-type=BEGIN

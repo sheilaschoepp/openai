@@ -300,8 +300,6 @@ class AbnormalController:
             print("device:", colored(self.parameters["device"], "red"))
         print("seed:", colored(self.parameters["seed"], "red"))
         print("resumable:", highlight_non_default_values("resumable"))
-        print("total allowed time:", round(args.time_limit * 24, 2), "hours")
-        print("seed allowed time:", round((args.time_limit * 24) - 6 + (self.parameters["seed"] / 6), 2), "hours")
 
         print(self.LINE)
         print(self.LINE)

@@ -340,9 +340,10 @@ class NormalController:
         else:
             print("device:", colored(self.parameters["device"], "red"))
         print("seed:", colored(self.parameters["seed"], "red"))
+        if self.parameters["param_search"]:
+            print("param search:", colored(self.parameters["param_search"], "red"))
+            print("param search seed:", colored(self.parameters["param_search_seed"], "red"))
         print("resumable:", highlight_non_default_values("resumable"))
-        print("total allowed time:", round(args.time_limit * 24, 2), "hours")
-        print("seed allowed time:", round((args.time_limit * 24) - 6 + (self.parameters["seed"] / 6), 2), "hours")
 
         print(self.LINE)
         print(self.LINE)
@@ -363,16 +364,21 @@ class NormalController:
 
         for _ in itertools.count(1):
 
-            # # Compute Canada limits time usage; this prevents data loss
-            # run_time = (time.time() - self.start) / 3600  # units: hours
-            # allowed_time = (args.time_limit * 24) - 6 + (self.parameters["seed"] / 6)  # allow the last 6 hours to be used to save data for each seed (saving cannot happen at the same time or memory will run out)
-            #
-            # if run_time > allowed_time:
-            #     print("allowed time of {} exceeded at a runtime of {}\nstopping experiment".format(str(timedelta(hours=allowed_time))[:-7], str(timedelta(hours=run_time))[:-7]))
-            #     print(self.LINE)
-            #     self.parameters["resumable"] = True
-            #     self.parameters["completed_time_steps"] = self.rlg.num_steps()
-            #     break
+            # Compute Canada limits time usage; this prevents data loss
+            run_time = (time.time() - self.start) / 3600  # units: hours
+
+            if self.parameters["param_search"]:
+                seed = (self.parameters["param_search_seed"] * (self.parameters["seed"] + 1)) % 30
+                allowed_time = (args.time_limit * 24) - 6 + (seed / 6)
+            else:
+                allowed_time = (args.time_limit * 24) - 6 + (self.parameters["seed"] / 6)  # allow the last 6 hours to be used to save data for each seed (saving cannot happen at the same time or memory will run out)
+
+            if run_time > allowed_time:
+                print("allowed time of {} exceeded at a runtime of {}\nstopping experiment".format(str(timedelta(hours=allowed_time))[:-7], str(timedelta(hours=run_time))[:-7]))
+                print(self.LINE)
+                self.parameters["resumable"] = True
+                self.parameters["completed_time_steps"] = self.rlg.num_steps()
+                break
 
             # episode time steps are limited to 1000 (set below)
             # this is used to ensure that once self.parameters["n_time_steps"] is reached, the experiment is terminated

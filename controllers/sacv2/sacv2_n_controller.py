@@ -113,6 +113,10 @@ class NormalController:
 
         self.start = time.time()
 
+        # hostname
+
+        self.hostname = os.uname()[1]
+
         # experiment parameters
 
         self.parameters = None
@@ -185,11 +189,11 @@ class NormalController:
 
         self.experiment = "SACv2_" + suffix
 
-        if os.path.exists(os.getenv("HOME") + "/scratch"):
+        if "cedar" in self.hostname or "beluga" in self.hostname or "gra" in self.hostname:
             # path for compute canada
             self.data_dir = os.getenv("HOME") + "/scratch/openai/data/" + self.experiment + "/seed" + str(self.parameters["seed"])
         else:
-            # path for servers
+            # path for servers and local machines
             self.data_dir = os.getenv("HOME") + "/Documents/openai/data/" + self.experiment + "/seed" + str(self.parameters["seed"])
 
         # does the user wants to restart training?
@@ -359,16 +363,16 @@ class NormalController:
 
         for _ in itertools.count(1):
 
-            # Compute Canada limits time usage; this prevents data loss
-            run_time = (time.time() - self.start) / 3600  # units: hours
-            allowed_time = (args.time_limit * 24) - 6 + (self.parameters["seed"] / 6)  # allow the last 6 hours to be used to save data for each seed (saving cannot happen at the same time or memory will run out)
-
-            if run_time > allowed_time:
-                print("allowed time of {} exceeded at a runtime of {}\nstopping experiment".format(str(timedelta(hours=allowed_time))[:-7], str(timedelta(hours=run_time))[:-7]))
-                print(self.LINE)
-                self.parameters["resumable"] = True
-                self.parameters["completed_time_steps"] = self.rlg.num_steps()
-                break
+            # # Compute Canada limits time usage; this prevents data loss
+            # run_time = (time.time() - self.start) / 3600  # units: hours
+            # allowed_time = (args.time_limit * 24) - 6 + (self.parameters["seed"] / 6)  # allow the last 6 hours to be used to save data for each seed (saving cannot happen at the same time or memory will run out)
+            #
+            # if run_time > allowed_time:
+            #     print("allowed time of {} exceeded at a runtime of {}\nstopping experiment".format(str(timedelta(hours=allowed_time))[:-7], str(timedelta(hours=run_time))[:-7]))
+            #     print(self.LINE)
+            #     self.parameters["resumable"] = True
+            #     self.parameters["completed_time_steps"] = self.rlg.num_steps()
+            #     break
 
             # episode time steps are limited to 1000 (set below)
             # this is used to ensure that once self.parameters["n_time_steps"] is reached, the experiment is terminated
@@ -425,7 +429,10 @@ class NormalController:
         print("time to complete one run:", run_time, "h:m:s")
         print(self.LINE)
 
-        self.send_email(run_time)
+        if "cedar" in self.hostname or "beluga" in self.hostname or "gra" in self.hostname:
+            pass
+        else:
+            self.send_email(run_time)
 
         text_file = open(self.data_dir + "/run_summary.txt", "w")
         text_file.write(date.today().strftime("%m/%d/%y"))

@@ -80,6 +80,10 @@ class AbnormalController:
 
         self.start = time.time()
 
+        # hostname
+
+        self.hostname = os.uname()[1]
+
         # experiment parameters
 
         self.parameters = None
@@ -150,11 +154,11 @@ class AbnormalController:
 
         self.experiment = "PPOv2_" + suffix
 
-        if os.path.exists(os.getenv("HOME") + "/scratch"):
+        if "cedar" in self.hostname or "beluga" in self.hostname or "gra" in self.hostname:
             # path for compute canada
             self.data_dir = os.getenv("HOME") + "/scratch/openai/data/" + self.experiment + "/seed" + str(self.parameters["seed"])
         else:
-            # path for servers
+            # path for servers and local machines
             self.data_dir = os.getenv("HOME") + "/Documents/openai/data/" + self.experiment + "/seed" + str(self.parameters["seed"])
 
         # does the user wants to restart training?
@@ -402,7 +406,10 @@ class AbnormalController:
         print("time to complete one run:", run_time, "h:m:s")
         print(self.LINE)
 
-        self.send_email(run_time)
+        if "cedar" in self.hostname or "beluga" in self.hostname or "gra" in self.hostname:
+            pass
+        else:
+            self.send_email(run_time)
 
         text_file = open(self.data_dir + "/run_summary.txt", "w")
         text_file.write(date.today().strftime("%m/%d/%y"))

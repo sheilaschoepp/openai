@@ -30,7 +30,7 @@
 
 PPO_N_CONTROLLER_ABSOLUTE_PATH="/home/sschoepp/Documents/openai/controllers/ppov2/ppov2_n_controller.py"
 
-for ps in {8..12}
+for ps in 0 1 2 3 4 5 6 7
 do
   for s in {0..4}
   do
@@ -40,7 +40,7 @@ done
 
 SAC_CONTROLLER_ABSOLUTE_PATH="/home/sschoepp/Documents/openai/controllers/sacv2/sacv2_n_controller.py"
 
-for ps in 21
+for ps in 0
 do
   for s in {0..4}
   do
@@ -48,7 +48,7 @@ do
   done
 done
 
-for ps in 22
+for ps in 1
 do
   for s in {0..4}
   do

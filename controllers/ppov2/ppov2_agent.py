@@ -639,80 +639,82 @@ class PPOv2(BaseAgent):
         learning in the abnormal environment, the learning rate has its full value.
         """
 
-        if self.linear_lr_decay:
+        pass  # ppo1
 
-            lr = self.lr - (self.lr * ((self.num_updates - self.num_old_updates) / self.total_num_updates))  # self.num_old_updates is > 0 only if we loaded data from normal environment
-
-            for param_group in self.actor_critic_optimizer.param_groups:
-                param_group["lr"] = lr
-
-        self.num_updates += 1
-
-        avg_clip_loss = 0
-        avg_vf_loss = 0
-        avg_entropy = 0
-        avg_clip_vf_s_loss = 0
-        total_num_clips = 0
-
-        for _ in range(self.epochs):
-
-            self.num_epoch_updates += 1
-
-            mini_batches = self.memory.generate_mini_batches()
-
-            for mb in mini_batches:
-
-                self.num_mini_batch_updates += 1
-
-                states_batch, values_batch, actions_batch, old_log_probs_batch, returns_batch, advantages_batch = mb
-
-                new_log_probs_batch, new_dist_entropies_batch = self.actor_critic_network.evaluate(states_batch, actions_batch)
-                new_values_batch = self.actor_critic_network.value(states_batch)
-
-                ratios = torch.exp(new_log_probs_batch - old_log_probs_batch)
-
-                surr1 = ratios * advantages_batch
-                surr2 = torch.clamp(ratios, 1 - self.epsilon, 1 + self.epsilon) * advantages_batch
-
-                clip_loss = -1 * torch.min(surr1, surr2).mean()
-
-                clipped = ratios.lt(1 - self.epsilon) | ratios.gt(1 + self.epsilon)
-                num_clips = int(clipped.float().sum())
-                total_num_clips += num_clips
-
-                if self.clipped_value_fn:
-
-                    values_batch_clipped = values_batch + (new_values_batch - values_batch).clamp(-self.epsilon, self.epsilon)
-                    values_loss = (new_values_batch - returns_batch).pow(2)
-                    clip_values_loss = (values_batch_clipped - returns_batch).pow(2)
-                    vf_loss = -1 * torch.max(values_loss, clip_values_loss).mean()
-
-                else:
-
-                    vf_loss = -1 * self.actor_critic_criterion(returns_batch, new_values_batch)
-
-                new_dist_entropy = -1 * new_dist_entropies_batch.mean()
-
-                clip_vf_s_loss = clip_loss - self.vf_loss_coef * vf_loss + self.policy_entropy_coef * new_dist_entropy
-
-                self.actor_critic_optimizer.zero_grad()
-                clip_vf_s_loss.backward()
-                torch.nn.utils.clip_grad_norm_(self.actor_critic_network.parameters(), self.max_grad_norm)
-                self.actor_critic_optimizer.step()
-
-                avg_clip_loss += clip_loss.item()
-                avg_vf_loss += vf_loss.item()
-                avg_entropy += -1 * new_dist_entropy.item()
-                avg_clip_vf_s_loss += clip_vf_s_loss.item()
-
-        num_updates = self.epochs * (self.num_samples // self.mini_batch_size)
-
-        avg_clip_loss /= num_updates
-        avg_vf_loss /= num_updates
-        avg_entropy /= num_updates
-        avg_clip_vf_s_loss /= num_updates
-
-        clip_fraction = total_num_clips / (self.num_epoch_updates * self.mini_batch_size * (self.num_samples // self.mini_batch_size))
-
-        self.loss_data[self.loss_index] = [self.num_updates, self.num_epoch_updates, self.num_mini_batch_updates, avg_clip_loss, avg_vf_loss, avg_entropy, avg_clip_vf_s_loss, clip_fraction]
-        self.loss_index += 1
+        # if self.linear_lr_decay:
+        #
+        #     lr = self.lr - (self.lr * ((self.num_updates - self.num_old_updates) / self.total_num_updates))  # self.num_old_updates is > 0 only if we loaded data from normal environment
+        #
+        #     for param_group in self.actor_critic_optimizer.param_groups:
+        #         param_group["lr"] = lr
+        #
+        # self.num_updates += 1
+        #
+        # avg_clip_loss = 0
+        # avg_vf_loss = 0
+        # avg_entropy = 0
+        # avg_clip_vf_s_loss = 0
+        # total_num_clips = 0
+        #
+        # for _ in range(self.epochs):
+        #
+        #     self.num_epoch_updates += 1
+        #
+        #     mini_batches = self.memory.generate_mini_batches()
+        #
+        #     for mb in mini_batches:
+        #
+        #         self.num_mini_batch_updates += 1
+        #
+        #         states_batch, values_batch, actions_batch, old_log_probs_batch, returns_batch, advantages_batch = mb
+        #
+        #         new_log_probs_batch, new_dist_entropies_batch = self.actor_critic_network.evaluate(states_batch, actions_batch)
+        #         new_values_batch = self.actor_critic_network.value(states_batch)
+        #
+        #         ratios = torch.exp(new_log_probs_batch - old_log_probs_batch)
+        #
+        #         surr1 = ratios * advantages_batch
+        #         surr2 = torch.clamp(ratios, 1 - self.epsilon, 1 + self.epsilon) * advantages_batch
+        #
+        #         clip_loss = -1 * torch.min(surr1, surr2).mean()
+        #
+        #         clipped = ratios.lt(1 - self.epsilon) | ratios.gt(1 + self.epsilon)
+        #         num_clips = int(clipped.float().sum())
+        #         total_num_clips += num_clips
+        #
+        #         if self.clipped_value_fn:
+        #
+        #             values_batch_clipped = values_batch + (new_values_batch - values_batch).clamp(-self.epsilon, self.epsilon)
+        #             values_loss = (new_values_batch - returns_batch).pow(2)
+        #             clip_values_loss = (values_batch_clipped - returns_batch).pow(2)
+        #             vf_loss = -1 * torch.max(values_loss, clip_values_loss).mean()
+        #
+        #         else:
+        #
+        #             vf_loss = -1 * self.actor_critic_criterion(returns_batch, new_values_batch)
+        #
+        #         new_dist_entropy = -1 * new_dist_entropies_batch.mean()
+        #
+        #         clip_vf_s_loss = clip_loss - self.vf_loss_coef * vf_loss + self.policy_entropy_coef * new_dist_entropy
+        #
+        #         self.actor_critic_optimizer.zero_grad()
+        #         clip_vf_s_loss.backward()
+        #         torch.nn.utils.clip_grad_norm_(self.actor_critic_network.parameters(), self.max_grad_norm)
+        #         self.actor_critic_optimizer.step()
+        #
+        #         avg_clip_loss += clip_loss.item()
+        #         avg_vf_loss += vf_loss.item()
+        #         avg_entropy += -1 * new_dist_entropy.item()
+        #         avg_clip_vf_s_loss += clip_vf_s_loss.item()
+        #
+        # num_updates = self.epochs * (self.num_samples // self.mini_batch_size)
+        #
+        # avg_clip_loss /= num_updates
+        # avg_vf_loss /= num_updates
+        # avg_entropy /= num_updates
+        # avg_clip_vf_s_loss /= num_updates
+        #
+        # clip_fraction = total_num_clips / (self.num_epoch_updates * self.mini_batch_size * (self.num_samples // self.mini_batch_size))
+        #
+        # self.loss_data[self.loss_index] = [self.num_updates, self.num_epoch_updates, self.num_mini_batch_updates, avg_clip_loss, avg_vf_loss, avg_entropy, avg_clip_vf_s_loss, clip_fraction]
+        # self.loss_index += 1

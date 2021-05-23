@@ -2,7 +2,7 @@
 
 SAC_CONTROLLER_ABSOLUTE_PATH="/home/sschoepp/Documents/openai/controllers/sacv2/sacv2_n_controller.py"
 
-for ps in 10
+for ps in 23
 do
   for s in {0..4}
   do
@@ -10,7 +10,7 @@ do
   done
 done
 
-for ps in 11
+for ps in 24
 do
   for s in {0..4}
   do
@@ -18,7 +18,7 @@ do
   done
 done
 
-for ps in 12
+for ps in 25
 do
   for s in {0..4}
   do
@@ -26,7 +26,7 @@ do
   done
 done
 
-for ps in 13
+for ps in 26
 do
   for s in {0..4}
   do
@@ -34,7 +34,7 @@ do
   done
 done
 
-for ps in 14
+for ps in 27
 do
   for s in {0..4}
   do
@@ -42,7 +42,7 @@ do
   done
 done
 
-for ps in 15
+for ps in 28
 do
   for s in {0..4}
   do

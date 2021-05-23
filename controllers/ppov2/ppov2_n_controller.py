@@ -36,18 +36,18 @@ parser.add_argument("-t", "--n_time_steps", type=int, default=400000000, metavar
                     help="number of time steps in normal (non-malfunctioning) MuJoCo Gym environment (default: 400000000)")
 
 parser.add_argument("--lr", type=float, default=0.00025, metavar="G",
-                    help="learning rate (default: 0.00025)")
+                    help="learning rate (default: 0.0003)")
 parser.add_argument("-lrd", "--linear_lr_decay", default=False, action="store_true",
                     help="if true, decrease learning rate linearly (default: False)")
 parser.add_argument("--gamma", type=float, default=0.98, metavar="G",
-                    help="discount factor (default: 0.98)")
+                    help="discount factor (default: 0.99)")
 
 parser.add_argument("-ns", "--num_samples", type=int, default=512, metavar="N",
-                    help="number of samples used to update the network(s) (default: 512)")
+                    help="number of samples used to update the network(s) (default: 2048)")
 parser.add_argument("-mbs", "--mini_batch_size", type=int, default=256, metavar="N",
-                    help=" number of samples per mini-batch (default: 256)")
+                    help=" number of samples per mini-batch (default: 64)")
 parser.add_argument("--epochs", type=int, default=4, metavar="N",
-                    help="number of epochs when updating the network(s) (default: 4)")
+                    help="number of epochs when updating the network(s) (default: 10)")
 
 parser.add_argument("--epsilon", type=float, default=0.1, metavar="G",
                     help="clip parameter (default: 0.1)")

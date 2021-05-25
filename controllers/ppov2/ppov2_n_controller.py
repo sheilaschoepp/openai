@@ -218,35 +218,37 @@ class NormalController:
             self.data_dir = os.getenv("HOME") + "/Documents/openai/data/" + self.experiment + "/seed" + str(self.parameters["seed"])
 
         # does the user wants to restart training?
+        if "cedar" in self.hostname or "beluga" in self.hostname or "gra" in self.hostname:
+            pass
+        else:
+            # yes
+            # do the data files for the selected seed already exist?
+            if path.exists(self.data_dir):
 
-        # yes
-        # do the data files for the selected seed already exist?
-        # if path.exists(self.data_dir):
-        #
-        #     print(self.LINE)
-        #     print(self.LINE)
-        #
-        #     if args.delete:
-        #         # yes; argument flag present to indicate data deletion
-        #         print(colored("argument indicates DATA DELETION", "red"))
-        #         print(colored("deleting data...", "red"))
-        #         rmtree(self.data_dir, ignore_errors=True)
-        #         print(colored("data deletion complete", "red"))
-        #     else:
-        #         # yes; argument flag not present; get confirmation of data deletion from user input
-        #         print(colored("You are about to delete saved data and restart training.", "red"))
-        #         s = input(colored("Are you sure you want to continue?  Hit 'y' then 'Enter' to continue.\n", "red"))
-        #         if s == "y":
-        #             # delete old data; rewrite new data to same location
-        #             print(colored("user input indicates DATA DELETION", "red"))
-        #             print(colored("deleting data...", "red"))
-        #             rmtree(self.data_dir, ignore_errors=True)
-        #             print(colored("data deletion complete", "red"))
-        #         else:
-        #             # do not delete old data; system exit
-        #             print(colored("user input indicates NO DATA DELETION", "red"))
-        #             print(self.LINE)
-        #             sys.exit("\nexiting...")
+                print(self.LINE)
+                print(self.LINE)
+
+                if args.delete:
+                    # yes; argument flag present to indicate data deletion
+                    print(colored("argument indicates DATA DELETION", "red"))
+                    print(colored("deleting data...", "red"))
+                    rmtree(self.data_dir, ignore_errors=True)
+                    print(colored("data deletion complete", "red"))
+                else:
+                    # yes; argument flag not present; get confirmation of data deletion from user input
+                    print(colored("You are about to delete saved data and restart training.", "red"))
+                    s = input(colored("Are you sure you want to continue?  Hit 'y' then 'Enter' to continue.\n", "red"))
+                    if s == "y":
+                        # delete old data; rewrite new data to same location
+                        print(colored("user input indicates DATA DELETION", "red"))
+                        print(colored("deleting data...", "red"))
+                        rmtree(self.data_dir, ignore_errors=True)
+                        print(colored("data deletion complete", "red"))
+                    else:
+                        # do not delete old data; system exit
+                        print(colored("user input indicates NO DATA DELETION", "red"))
+                        print(self.LINE)
+                        sys.exit("\nexiting...")
 
         # data
 

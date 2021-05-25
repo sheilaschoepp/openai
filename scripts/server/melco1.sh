@@ -1,52 +1,12 @@
 #!/bin/bash
 
-SAC_CONTROLLER_ABSOLUTE_PATH="/home/sschoepp/Documents/openai/controllers/sacv2/sacv2_n_controller.py"
+PPO_N_CONTROLLER_ABSOLUTE_PATH="/home/sschoepp/Documents/openai/controllers/ppov2/ppov2_n_controller.py"
 
-for ps in 8
+for ps in 11 12 13 14 15 16
 do
   for s in {0..4}
   do
-    tmux new-session -d -s sac$ps$s "CUDA_VISIBLE_DEVICES=0 python $SAC_CONTROLLER_ABSOLUTE_PATH -a -c --resumable -s $s -t 5000000 -ps -pss $ps"
-  done
-done
-
-for ps in 9
-do
-  for s in {0..4}
-  do
-    tmux new-session -d -s sac$ps$s "CUDA_VISIBLE_DEVICES=1 python $SAC_CONTROLLER_ABSOLUTE_PATH -a -c --resumable -s $s -t 5000000  -ps -pss $ps"
-  done
-done
-
-for ps in 21
-do
-  for s in {0..4}
-  do
-    tmux new-session -d -s sac$ps$s "CUDA_VISIBLE_DEVICES=3 python $SAC_CONTROLLER_ABSOLUTE_PATH -a -c --resumable -s $s -t 5000000  -ps -pss $ps"
-  done
-done
-
-for ps in 22
-do
-  for s in {0..4}
-  do
-    tmux new-session -d -s sac$ps$s "CUDA_VISIBLE_DEVICES=4 python $SAC_CONTROLLER_ABSOLUTE_PATH -a -c --resumable -s $s -t 5000000  -ps -pss $ps"
-  done
-done
-
-for ps in 23
-do
-  for s in {0..4}
-  do
-    tmux new-session -d -s sac$ps$s "CUDA_VISIBLE_DEVICES=6 python $SAC_CONTROLLER_ABSOLUTE_PATH -a -c --resumable -s $s -t 5000000  -ps -pss $ps"
-  done
-done
-
-for ps in 24
-do
-  for s in {0..4}
-  do
-    tmux new-session -d -s sac$ps$s "CUDA_VISIBLE_DEVICES=7 python $SAC_CONTROLLER_ABSOLUTE_PATH -a -c --resumable -s $s -t 5000000  -ps -pss $ps"
+    tmux new-session -d -s ppo$ps$s "python $PPO_N_CONTROLLER_ABSOLUTE_PATH -lrd -s $s -t 100000000 -ps -pss $ps"
   done
 done
 

@@ -30,7 +30,7 @@
 
 PPO_N_CONTROLLER_ABSOLUTE_PATH="/home/sschoepp/Documents/openai/controllers/ppov2/ppov2_n_controller.py"
 
-for ps in 8 9 10 11 12 13
+for ps in 8 9 10 11 12 13 14
 do
   for s in {0..4}
   do

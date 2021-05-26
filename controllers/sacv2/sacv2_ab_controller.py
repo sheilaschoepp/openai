@@ -2,7 +2,8 @@ import argparse
 import csv
 import itertools
 import os
-os.environ["MKL_NUM_THREADS"] = "1"   # must be before numpy import
+
+os.environ["MKL_NUM_THREADS"] = "1"  # must be before numpy import
 os.environ["NUMEXPR_NUM_THREADS"] = "1"
 os.environ["OMP_NUM_THREADS"] = "1"
 import pickle
@@ -150,10 +151,12 @@ class AbnormalController:
 
         if "cedar" in self.hostname or "beluga" in self.hostname or "gra" in self.hostname:
             # path for compute canada
-            self.data_dir = os.getenv("HOME") + "/scratch/openai/data/" + self.experiment + "/seed" + str(self.parameters["seed"])
+            self.data_dir = os.getenv("HOME") + "/scratch/openai/data/" + self.experiment + "/seed" + str(
+                self.parameters["seed"])
         else:
             # path for servers and local machines
-            self.data_dir = os.getenv("HOME") + "/Documents/openai/data/" + self.experiment + "/seed" + str(self.parameters["seed"])
+            self.data_dir = os.getenv("HOME") + "/Documents/openai/data/" + self.experiment + "/seed" + str(
+                self.parameters["seed"])
 
         # does the user wants to restart training?
 
@@ -315,17 +318,20 @@ class AbnormalController:
 
         # save the agent model and evaluate the model before any learning
         if not args.resume:
-            self.rlg.rl_agent_message("save_model, {}, {}".format(self.data_dir, self.parameters["n_time_steps"]))  # not needed as we already have this model saved
+            self.rlg.rl_agent_message("save_model, {}, {}".format(self.data_dir, self.parameters[
+                "n_time_steps"]))  # not needed as we already have this model saved
             self.evaluate_model(self.rlg.num_steps())
 
         for _ in itertools.count(1):
 
             # Compute Canada limits time usage; this prevents data loss
             run_time = (time.time() - self.start) / 3600  # units: hours
-            allowed_time = (args.time_limit * 24) - 6 + (self.parameters["seed"] / 6)  # allow the last 6 hours to be used to save data for each seed (saving cannot happen at the same time or memory will run out)
+            allowed_time = (args.time_limit * 24) - 6 + (self.parameters[
+                                                             "seed"] / 6)  # allow the last 6 hours to be used to save data for each seed (saving cannot happen at the same time or memory will run out)
 
             if run_time > allowed_time:
-                print("allowed time of {} exceeded at a runtime of {}\nstopping experiment".format(str(timedelta(hours=allowed_time))[:-7], str(timedelta(hours=run_time))[:-7]))
+                print("allowed time of {} exceeded at a runtime of {}\nstopping experiment".format(
+                    str(timedelta(hours=allowed_time))[:-7], str(timedelta(hours=run_time))[:-7]))
                 print(self.LINE)
                 self.parameters["resumable"] = True
                 self.parameters["completed_time_steps"] = self.rlg.num_steps()
@@ -333,7 +339,8 @@ class AbnormalController:
 
             # episode time steps are limited to 1000 (set below)
             # this is used to ensure that once self.parameters["n_time_steps"] + self.parameters["ab_time_steps"] is reached, the experiment is terminated
-            max_steps_this_episode = min(1000, self.parameters["n_time_steps"] + self.parameters["ab_time_steps"] - self.rlg.num_steps())
+            max_steps_this_episode = min(1000, self.parameters["n_time_steps"] + self.parameters[
+                "ab_time_steps"] - self.rlg.num_steps())
 
             # if we want to make an experiment resumable, we must save after the last possible episode
             # since episodes are limited to be a maximum of 1000 time steps, we can save when the max_steps_this_episode is less than 1000
@@ -346,7 +353,8 @@ class AbnormalController:
 
             terminal = False
 
-            while not terminal and ((max_steps_this_episode <= 0) or (self.rlg.num_ep_steps() < max_steps_this_episode)):
+            while not terminal and (
+                    (max_steps_this_episode <= 0) or (self.rlg.num_ep_steps() < max_steps_this_episode)):
                 _, _, terminal, _ = self.rlg.rl_step()
 
                 # save the agent model each 'self.parameters["time_step_model_save_frequency"]' time steps
@@ -393,7 +401,10 @@ class AbnormalController:
 
         text_file = open(self.data_dir + "/run_summary.txt", "w")
         text_file.write(date.today().strftime("%m/%d/%y"))
-        text_file.write("\n\nExperiment {}/seed{} complete.\n\nTime to complete: {} h:m:s".format(self.experiment, self.parameters["seed"], run_time))
+        text_file.write("\n\nExperiment {}/seed{} complete.\n\nTime to complete: {} h:m:s".format(self.experiment,
+                                                                                                  self.parameters[
+                                                                                                      "seed"],
+                                                                                                  run_time))
         text_file.close()
 
     def evaluate_model(self, num_time_steps):
@@ -432,7 +443,8 @@ class AbnormalController:
                 terminal = False
 
                 max_steps_this_episode = 1000
-                while not terminal and ((max_steps_this_episode <= 0) or (rlg_eval.num_ep_steps() < max_steps_this_episode)):
+                while not terminal and (
+                        (max_steps_this_episode <= 0) or (rlg_eval.num_ep_steps() < max_steps_this_episode)):
                     _, _, terminal, _ = rlg_eval.rl_step()
 
                 returns.append(rlg_eval.episode_reward())
@@ -440,19 +452,25 @@ class AbnormalController:
             average_return = np.average(returns)
 
             if self.parameters["clear_replay_buffer"] and self.parameters["reinitialize_networks"]:
-                num_updates = max((num_time_steps - self.parameters["n_time_steps"] - self.parameters["batch_size"]), 0) * self.parameters["model_updates_per_step"]
+                num_updates = max((num_time_steps - self.parameters["n_time_steps"] - self.parameters["batch_size"]),
+                                  0) * self.parameters["model_updates_per_step"]
             elif not self.parameters["clear_replay_buffer"] and self.parameters["reinitialize_networks"]:
-                num_updates = (num_time_steps - self.parameters["n_time_steps"]) * self.parameters["model_updates_per_step"]
+                num_updates = (num_time_steps - self.parameters["n_time_steps"]) * self.parameters[
+                    "model_updates_per_step"]
             elif self.parameters["clear_replay_buffer"] and not self.parameters["reinitialize_networks"]:
-                num_updates = (max((num_time_steps - self.parameters["n_time_steps"] - self.parameters["batch_size"]), 0) + (self.parameters["n_time_steps"] - self.parameters["batch_size"])) * self.parameters["model_updates_per_step"]
+                num_updates = (max((num_time_steps - self.parameters["n_time_steps"] - self.parameters["batch_size"]),
+                                   0) + (self.parameters["n_time_steps"] - self.parameters["batch_size"])) * \
+                              self.parameters["model_updates_per_step"]
             else:
-                num_updates = (num_time_steps - self.parameters["batch_size"]) * self.parameters["model_updates_per_step"]
+                num_updates = (num_time_steps - self.parameters["batch_size"]) * self.parameters[
+                    "model_updates_per_step"]
 
             num_samples = num_updates * self.parameters["batch_size"]
 
             real_time = int(time.time() - self.start)
 
-            index = int(num_time_steps / self.parameters["time_step_eval_frequency"]) + 1  # add 1 because we evaluate policy before learning
+            index = int(num_time_steps / self.parameters[
+                "time_step_eval_frequency"]) + 1  # add 1 because we evaluate policy before learning
             self.eval_data[index] = [num_time_steps, num_updates, num_samples, average_return, real_time]
 
             print("evaluation at {} time steps: {}".format(num_time_steps, average_return))
@@ -478,9 +496,11 @@ class AbnormalController:
         self.rlg.rl_env_message("load, {}".format(self.load_data_dir))  # load environment data
 
         if not self.parameters["resume"]:
-            self.rlg.rl_agent_message("load, {}, {}".format(self.load_data_dir, self.parameters["n_time_steps"]))  # load agent data
+            self.rlg.rl_agent_message(
+                "load, {}, {}".format(self.load_data_dir, self.parameters["n_time_steps"]))  # load agent data
         else:
-            self.rlg.rl_agent_message("load, {}, {}".format(self.load_data_dir, self.parameters["completed_time_steps"]))
+            self.rlg.rl_agent_message(
+                "load, {}, {}".format(self.load_data_dir, self.parameters["completed_time_steps"]))
         self.agent.loss_data = self.loss_data
 
         self.load_rlg_statistics()  # load rlg data
@@ -496,7 +516,8 @@ class AbnormalController:
 
         if not args.resume:
 
-            num_rows = int(self.parameters["ab_time_steps"] / self.parameters["time_step_eval_frequency"]) + 1  # add 1 for evaluation before any learning (0th entry)
+            num_rows = int(self.parameters["ab_time_steps"] / self.parameters[
+                "time_step_eval_frequency"]) + 1  # add 1 for evaluation before any learning (0th entry)
             num_columns = 5
             self.eval_data = pd.read_csv(csv_foldername + "/eval_data.csv").to_numpy().copy()[:, 1:]
             self.eval_data = np.append(self.eval_data, np.zeros((num_rows, num_columns)), axis=0)
@@ -507,7 +528,8 @@ class AbnormalController:
             self.train_data = np.append(self.train_data, np.zeros((num_rows, num_columns)), axis=0)
 
             if self.parameters["clear_replay_buffer"]:
-                num_rows = (self.parameters["ab_time_steps"] - self.parameters["batch_size"]) * self.parameters["model_updates_per_step"]
+                num_rows = (self.parameters["ab_time_steps"] - self.parameters["batch_size"]) * self.parameters[
+                    "model_updates_per_step"]
             else:
                 num_rows = self.parameters["ab_time_steps"] * self.parameters["model_updates_per_step"]
             num_columns = 6
@@ -517,22 +539,26 @@ class AbnormalController:
         else:
 
             self.eval_data = pd.read_csv(csv_foldername + "/eval_data.csv").to_numpy().copy()[:, 1:]
-            num_rows = ((self.parameters["n_time_steps"] + self.parameters["ab_time_steps"]) // self.parameters["time_step_eval_frequency"]) + 2 - self.eval_data.shape[0]
+            num_rows = ((self.parameters["n_time_steps"] + self.parameters["ab_time_steps"]) // self.parameters[
+                "time_step_eval_frequency"]) + 2 - self.eval_data.shape[0]
             num_columns = self.eval_data.shape[1]
             if num_rows > 0:
                 self.eval_data = np.append(self.eval_data, np.zeros((num_rows, num_columns)), axis=0)
 
             self.train_data = pd.read_csv(csv_foldername + "/train_data.csv").to_numpy().copy()[:, 1:]
-            num_rows = (self.parameters["n_time_steps"] + self.parameters["ab_time_steps"]) - self.train_data.shape[0]  # always larger than needed; will remove extra entries later
+            num_rows = (self.parameters["n_time_steps"] + self.parameters["ab_time_steps"]) - self.train_data.shape[
+                0]  # always larger than needed; will remove extra entries later
             num_columns = self.train_data.shape[1]
             if num_rows > 0:
                 self.train_data = np.append(self.train_data, np.zeros((num_rows, num_columns)), axis=0)
 
             self.loss_data = pd.read_csv(csv_foldername + "/loss_data.csv").to_numpy().copy()[:, 1:]
             if self.parameters["clear_replay_buffer"]:
-                num_rows = (((self.parameters["n_time_steps"] + self.parameters["ab_time_steps"]) - 2 * self.parameters["batch_size"]) * self.parameters["model_updates_per_step"]) - self.loss_data.shape[0]
+                num_rows = (((self.parameters["n_time_steps"] + self.parameters["ab_time_steps"]) - 2 * self.parameters[
+                    "batch_size"]) * self.parameters["model_updates_per_step"]) - self.loss_data.shape[0]
             else:
-                num_rows = (((self.parameters["n_time_steps"] + self.parameters["ab_time_steps"]) - self.parameters["batch_size"]) * self.parameters["model_updates_per_step"]) - self.loss_data.shape[0]
+                num_rows = (((self.parameters["n_time_steps"] + self.parameters["ab_time_steps"]) - self.parameters[
+                    "batch_size"]) * self.parameters["model_updates_per_step"]) - self.loss_data.shape[0]
             num_columns = self.loss_data.shape[1]
             if num_rows > 0:
                 self.loss_data = np.append(self.loss_data, np.zeros((num_rows, num_columns)), axis=0)
@@ -609,7 +635,8 @@ class AbnormalController:
 
         # evaluation: average_return vs num_time_steps
         df.plot(x="num_time_steps", y="average_return", color="blue", legend=False)
-        plt.axvline(x=self.parameters["n_time_steps"], ymin=0, ymax=1, color="red", linewidth=2, alpha=0.3)  # malfunction marker
+        plt.axvline(x=self.parameters["n_time_steps"], ymin=0, ymax=1, color="red", linewidth=2,
+                    alpha=0.3)  # malfunction marker
         plt.xlabel("time_steps")
         plt.ylabel("average\nreturn", rotation="horizontal", labelpad=30)
         plt.title("Policy Evaluation")
@@ -619,7 +646,8 @@ class AbnormalController:
 
         # evaluation: average_return vs num_updates
         df.plot(x="num_updates", y="average_return", color="blue", legend=False)
-        plt.axvline(x=(self.parameters["n_time_steps"] - self.parameters["batch_size"]) * self.parameters["model_updates_per_step"], ymin=0, ymax=1, color="red", linewidth=2, alpha=0.3)  # malfunction marker
+        plt.axvline(x=(self.parameters["n_time_steps"] - self.parameters["batch_size"]) * self.parameters[
+            "model_updates_per_step"], ymin=0, ymax=1, color="red", linewidth=2, alpha=0.3)  # malfunction marker
         plt.xlabel("updates")
         plt.ylabel("average\nreturn", rotation="horizontal", labelpad=30)
         plt.title("Policy Evaluation")
@@ -629,7 +657,9 @@ class AbnormalController:
 
         # evaluation: average_return vs num_samples
         df.plot(x="num_samples", y="average_return", color="blue", legend=False)
-        plt.axvline(x=(self.parameters["n_time_steps"] - self.parameters["batch_size"]) * self.parameters["model_updates_per_step"] * self.parameters["batch_size"], ymin=0, ymax=1, color="red", linewidth=2, alpha=0.3)  # malfunction marker
+        plt.axvline(x=(self.parameters["n_time_steps"] - self.parameters["batch_size"]) * self.parameters[
+            "model_updates_per_step"] * self.parameters["batch_size"], ymin=0, ymax=1, color="red", linewidth=2,
+                    alpha=0.3)  # malfunction marker
         plt.xlabel("samples")
         plt.ylabel("average\nreturn", rotation="horizontal", labelpad=30)
         plt.title("Policy Evaluation")
@@ -652,7 +682,8 @@ class AbnormalController:
 
         # training: q_value_loss_1 vs num_updates
         df.plot(x="num_updates", y="q_value_loss_1", color="blue", legend=False)
-        plt.axvline(x=(self.parameters["n_time_steps"] - self.parameters["batch_size"]) * self.parameters["model_updates_per_step"], ymin=0, ymax=1, color="red", linewidth=2, alpha=0.3)  # malfunction marker
+        plt.axvline(x=(self.parameters["n_time_steps"] - self.parameters["batch_size"]) * self.parameters[
+            "model_updates_per_step"], ymin=0, ymax=1, color="red", linewidth=2, alpha=0.3)  # malfunction marker
         plt.xlabel("updates")
         plt.ylabel("loss", rotation="horizontal", labelpad=30)
         plt.title("Q Value Loss 1")
@@ -662,7 +693,8 @@ class AbnormalController:
 
         # training: q_value_loss_2 vs num_updates
         df.plot(x="num_updates", y="q_value_loss_2", color="blue", legend=False)
-        plt.axvline(x=(self.parameters["n_time_steps"] - self.parameters["batch_size"]) * self.parameters["model_updates_per_step"], ymin=0, ymax=1, color="red", linewidth=2, alpha=0.3)  # malfunction marker
+        plt.axvline(x=(self.parameters["n_time_steps"] - self.parameters["batch_size"]) * self.parameters[
+            "model_updates_per_step"], ymin=0, ymax=1, color="red", linewidth=2, alpha=0.3)  # malfunction marker
         plt.xlabel("updates")
         plt.ylabel("loss", rotation="horizontal", labelpad=30)
         plt.title("Q Value Loss 2")
@@ -672,7 +704,8 @@ class AbnormalController:
 
         # training: policy_loss vs num_updates
         df.plot(x="num_updates", y="policy_loss", color="blue", legend=False)
-        plt.axvline(x=(self.parameters["n_time_steps"] - self.parameters["batch_size"]) * self.parameters["model_updates_per_step"], ymin=0, ymax=1, color="red", linewidth=2, alpha=0.3)  # malfunction marker
+        plt.axvline(x=(self.parameters["n_time_steps"] - self.parameters["batch_size"]) * self.parameters[
+            "model_updates_per_step"], ymin=0, ymax=1, color="red", linewidth=2, alpha=0.3)  # malfunction marker
         plt.xlabel("updates")
         plt.ylabel("loss", rotation="horizontal", labelpad=30)
         plt.title("Policy Loss")
@@ -682,7 +715,8 @@ class AbnormalController:
 
         # training: alpha_loss vs num_updates
         df.plot(x="num_updates", y="alpha_loss", color="blue", legend=False)
-        plt.axvline(x=(self.parameters["n_time_steps"] - self.parameters["batch_size"]) * self.parameters["model_updates_per_step"], ymin=0, ymax=1, color="red", linewidth=2, alpha=0.3)  # malfunction marker
+        plt.axvline(x=(self.parameters["n_time_steps"] - self.parameters["batch_size"]) * self.parameters[
+            "model_updates_per_step"], ymin=0, ymax=1, color="red", linewidth=2, alpha=0.3)  # malfunction marker
         plt.xlabel("updates")
         plt.ylabel("loss", rotation="horizontal", labelpad=30)
         plt.title("Alpha Loss")
@@ -692,7 +726,8 @@ class AbnormalController:
 
         # training: alpha_value vs num_updates
         df.plot(x="num_updates", y="alpha_value", color="blue", legend=False)
-        plt.axvline(x=(self.parameters["n_time_steps"] - self.parameters["batch_size"]) * self.parameters["model_updates_per_step"], ymin=0, ymax=1, color="red", linewidth=2, alpha=0.3)  # malfunction marker
+        plt.axvline(x=(self.parameters["n_time_steps"] - self.parameters["batch_size"]) * self.parameters[
+            "model_updates_per_step"], ymin=0, ymax=1, color="red", linewidth=2, alpha=0.3)  # malfunction marker
         plt.xlabel("updates")
         plt.ylabel("alpha", rotation="horizontal", labelpad=30)
         plt.title("Alpha Value")
@@ -754,7 +789,7 @@ class AbnormalController:
         # remove zero entries
         index = None
         for i in range(self.train_data.shape[0]):
-            if (self.train_data[i] == np.zeros(3)).all() and (self.train_data[i+1] == np.zeros(3)).all():
+            if (self.train_data[i] == np.zeros(3)).all() and (self.train_data[i + 1] == np.zeros(3)).all():
                 index = i
                 break
         self.train_data = self.train_data[:index]
@@ -859,7 +894,8 @@ class AbnormalController:
         from_ = gmail_email
         to = recipient if type(recipient) is list else [recipient]
         subject = "Experiment Complete"
-        text = "Experiment {}/seed{} complete.\n\nTime to complete: \n{} h:m:s\n\nThis message is sent from Python.".format(self.experiment, self.parameters["seed"], run_time)
+        text = "Experiment {}/seed{} complete.\n\nTime to complete: \n{} h:m:s\n\nThis message is sent from Python.".format(
+            self.experiment, self.parameters["seed"], run_time)
 
         message = """\From: %s\nTo: %s\nSubject: %s\n\n%s""" % (from_, ", ".join(to), subject, text)
 
@@ -872,7 +908,6 @@ class AbnormalController:
 
 
 def main():
-
     ac = AbnormalController()
 
     try:
@@ -885,5 +920,4 @@ def main():
 
 
 if __name__ == "__main__":
-
     main()

@@ -121,6 +121,7 @@ class RLGlue:
         self._action: float64 numpy array with shape (action_dim,)
             action selected by the agent
         """
+        # TODO: Why didn't you use rl_env_step() instead?
         reward, next_state, terminal = self._environment.env_step(self._action)  # returns reward, next_state, done
 
         self._num_ep_steps += 1

@@ -5,7 +5,7 @@ import torch
 import torch.nn as nn
 from torch.optim import Adam
 
-from controllers.sacv2.sacv2_networks import TwinnedQNetwork, GaussianPolicyNetwork
+from sacv2_networks import TwinnedQNetwork, GaussianPolicyNetwork
 from utils.replay_buffer import ReplayBuffer
 from utils.rl_glue import BaseAgent
 
@@ -91,6 +91,8 @@ class SACv2(BaseAgent):
         self.loss_index = 0
 
         self.num_updates = 0
+
+        # TODO: for the following lines, why not calling the self.agent_reinitialize_networks() function?
 
         # critic network
         self.q_network = TwinnedQNetwork(self.state_dim, self.action_dim, self.hidden_dim).to(device=self.device)
@@ -359,7 +361,6 @@ class SACv2(BaseAgent):
         self.policy_optimizer.load_state_dict(checkpoint["policy_optimizer_state_dict"])
 
         if self.automatic_entropy_tuning:
-
             self.alpha_optimizer.load_state_dict(checkpoint["alpha_optimizer_state_dict"])
 
     def agent_load_num_updates(self, dir_):
@@ -648,5 +649,6 @@ class SACv2(BaseAgent):
             for target_param, param in zip(self.target_q_network.parameters(), self.q_network.parameters()):
                 target_param.data.copy_(self.tau * param.data + (1.0 - self.tau) * target_param.data)
 
-        self.loss_data[self.loss_index] = [self.num_updates, q_value_loss_1.item(), q_value_loss_2.item(), policy_loss.item(), alpha_loss.item(), self.alpha.item()]
+        self.loss_data[self.loss_index] = [self.num_updates, q_value_loss_1.item(), q_value_loss_2.item(),
+                                           policy_loss.item(), alpha_loss.item(), self.alpha.item()]
         self.loss_index += 1

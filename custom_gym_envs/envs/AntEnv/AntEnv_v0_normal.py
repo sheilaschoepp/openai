@@ -9,6 +9,7 @@ class AntEnvV0(mujoco_env.MujocoEnv, utils.EzPickle):
     """
     Original Ant-v2 environment.
     """
+
     def __init__(self):
         home = str(Path.home())
         filepath = home + "/Documents/openai/custom_gym_envs/xml/AntEnv_v0_normal.xml"
@@ -26,8 +27,7 @@ class AntEnvV0(mujoco_env.MujocoEnv, utils.EzPickle):
         survive_reward = 1.0
         reward = forward_reward - ctrl_cost - contact_cost + survive_reward
         state = self.state_vector()
-        notdone = np.isfinite(state).all() \
-                  and state[2] >= 0.2 and state[2] <= 1.0
+        notdone = np.isfinite(state).all() and state[2] >= 0.2 and state[2] <= 1.0
         done = not notdone
         ob = self._get_obs()
         return ob, reward, done, dict(

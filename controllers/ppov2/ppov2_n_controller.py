@@ -447,9 +447,12 @@ class NormalController:
 
             # learning complete
             if self.rlg.num_steps() == self.parameters["n_time_steps"]:
-                if "completed_time_steps" in self.parameters:
-                    del self.parameters["completed_time_steps"]  # we no longer need this information
-                self.parameters["complete"] = True
+                if self.parameters["resumable"]:
+                    self.parameters["completed_time_steps"] = self.rlg.num_steps()
+                else:
+                    if "completed_time_steps" in self.parameters:
+                        del self.parameters["completed_time_steps"]  # we no longer need this information
+                    self.parameters["complete"] = True
                 break
 
         self.save()
@@ -899,7 +902,7 @@ class NormalController:
         """
 
         gmail_email = "mynewbfnao@gmail.com"
-        gmail_password = "cloc_shuk-OSH8mesm"
+        gmail_password = "k!1t8qL(YQO%labr}kS%"
 
         recipient = "sschoepp@ualberta.ca"
 

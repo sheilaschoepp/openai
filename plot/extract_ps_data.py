@@ -58,11 +58,13 @@ def extract_sac_results(directory):
 
     df_mean = df.mean()
     df_std = df.std()
+    df_sem = df.sem()
 
     performance_mean = df_mean[-20:].mean()
     performance_std = df_std[-20:].mean()
+    performance_sem = df_sem[-20:].mean()
 
-    sac_results.append((pss, g, t, lr, rbs, bs, performance_mean, performance_std))
+    sac_results.append((pss, g, t, lr, rbs, bs, performance_mean, performance_std, performance_sem, performance_mean - performance_sem, performance_mean + performance_sem))
 
 
 if __name__ == "__main__":
@@ -79,6 +81,6 @@ if __name__ == "__main__":
         extract_sac_results(dir_)
 
     df = pd.DataFrame(data=sac_results,
-                      columns=["ps seed", "gamma", "tau", "learning rate", "replay buffer size", "batch size", "performance mean", "performance std"])
+                      columns=["ps seed", "gamma", "tau", "learning rate", "replay buffer size", "batch size", "performance mean", "performance std", "performance sem", "mean - sem", "mean + sem"])
 
     df.to_csv("sac_param_search.csv", index=False)

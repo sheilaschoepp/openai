@@ -2,10 +2,10 @@
 
 #SBATCH --nodes=1
 #SBATCH --gres=gpu:v100l:4
-#SBATCH --ntasks-per-node=32
+#SBATCH --ntasks-per-node=20
 #SBATCH --mem=187G
-#SBATCH --time=4-00:00
-#SBATCH --job-name=sac_45_49
+#SBATCH --time=10-00:00
+#SBATCH --job-name=sac_10_11
 #SBATCH --output=%x-%j.out
 #SBATCH --mail-user=sschoepp@ualberta.ca
 #SBATCH --mail-type=BEGIN

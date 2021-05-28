@@ -5,7 +5,7 @@
 #SBATCH --ntasks-per-node=20
 #SBATCH --mem=187G
 #SBATCH --time=10-00:00
-#SBATCH --job-name=sac_8_9
+#SBATCH --job-name=sac_18_19
 #SBATCH --output=%x-%j.out
 #SBATCH --mail-user=sschoepp@ualberta.ca
 #SBATCH --mail-type=BEGIN
@@ -14,4 +14,4 @@
 #SBATCH --mail-type=REQUEUE
 #SBATCH --mail-type=ALL
 
-parallel < s04.txt
+parallel < s09.txt

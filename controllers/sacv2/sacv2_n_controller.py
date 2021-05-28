@@ -368,12 +368,7 @@ class NormalController:
 
             # Compute Canada limits time usage; this prevents data loss
             run_time = (time.time() - self.start) / 3600  # units: hours
-
-            if self.parameters["param_search"]:
-                seed = (self.parameters["param_search_seed"] * (self.parameters["seed"] + 1)) % 30
-                allowed_time = (args.time_limit * 24) - 6 + (seed / 6)
-            else:
-                allowed_time = (args.time_limit * 24) - 6 + (self.parameters["seed"] / 6)  # allow the last 6 hours to be used to save data for each seed (saving cannot happen at the same time or memory will run out)
+            allowed_time = (args.time_limit * 24) - 6 + (self.parameters["seed"] / 6)  # allow the last 6 hours to be used to save data for each seed (saving cannot happen at the same time or memory will run out)
 
             if run_time > allowed_time:
                 print("allowed time of {} exceeded at a runtime of {}\nstopping experiment".format(str(timedelta(hours=allowed_time))[:-7], str(timedelta(hours=run_time))[:-7]))

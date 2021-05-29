@@ -68,24 +68,24 @@ done
 for i in {50..98..2}
 do
   j=$((i+1))
-  echo "CUDA_VISIBLE_DEVICES=0 python /home/sschoepp/scratch/openai/controllers/sacv2/sacv2_n_controller.py -a -c --resumable -s 0 -tl 10 -ps -pss $i
-CUDA_VISIBLE_DEVICES=0 python /home/sschoepp/scratch/openai/controllers/sacv2/sacv2_n_controller.py -a -c --resumable -s 1 -tl 10 -ps -pss $i
-CUDA_VISIBLE_DEVICES=0 python /home/sschoepp/scratch/openai/controllers/sacv2/sacv2_n_controller.py -a -c --resumable -s 2 -tl 10 -ps -pss $i
-CUDA_VISIBLE_DEVICES=0 python /home/sschoepp/scratch/openai/controllers/sacv2/sacv2_n_controller.py -a -c --resumable -s 3 -tl 10 -ps -pss $i
-CUDA_VISIBLE_DEVICES=0 python /home/sschoepp/scratch/openai/controllers/sacv2/sacv2_n_controller.py -a -c --resumable -s 4 -tl 10 -ps -pss $i
-CUDA_VISIBLE_DEVICES=1 python /home/sschoepp/scratch/openai/controllers/sacv2/sacv2_n_controller.py -a -c --resumable -s 5 -tl 10 -ps -pss $i
-CUDA_VISIBLE_DEVICES=1 python /home/sschoepp/scratch/openai/controllers/sacv2/sacv2_n_controller.py -a -c --resumable -s 6 -tl 10 -ps -pss $i
-CUDA_VISIBLE_DEVICES=1 python /home/sschoepp/scratch/openai/controllers/sacv2/sacv2_n_controller.py -a -c --resumable -s 7 -tl 10 -ps -pss $i
-CUDA_VISIBLE_DEVICES=1 python /home/sschoepp/scratch/openai/controllers/sacv2/sacv2_n_controller.py -a -c --resumable -s 8 -tl 10 -ps -pss $i
-CUDA_VISIBLE_DEVICES=1 python /home/sschoepp/scratch/openai/controllers/sacv2/sacv2_n_controller.py -a -c --resumable -s 9 -tl 10 -ps -pss $i
-CUDA_VISIBLE_DEVICES=2 python /home/sschoepp/scratch/openai/controllers/sacv2/sacv2_n_controller.py -a -c --resumable -s 0 -tl 10 -ps -pss $j
-CUDA_VISIBLE_DEVICES=2 python /home/sschoepp/scratch/openai/controllers/sacv2/sacv2_n_controller.py -a -c --resumable -s 1 -tl 10 -ps -pss $j
-CUDA_VISIBLE_DEVICES=2 python /home/sschoepp/scratch/openai/controllers/sacv2/sacv2_n_controller.py -a -c --resumable -s 2 -tl 10 -ps -pss $j
-CUDA_VISIBLE_DEVICES=2 python /home/sschoepp/scratch/openai/controllers/sacv2/sacv2_n_controller.py -a -c --resumable -s 3 -tl 10 -ps -pss $j
-CUDA_VISIBLE_DEVICES=2 python /home/sschoepp/scratch/openai/controllers/sacv2/sacv2_n_controller.py -a -c --resumable -s 4 -tl 10 -ps -pss $j
-CUDA_VISIBLE_DEVICES=3 python /home/sschoepp/scratch/openai/controllers/sacv2/sacv2_n_controller.py -a -c --resumable -s 5 -tl 10 -ps -pss $j
-CUDA_VISIBLE_DEVICES=3 python /home/sschoepp/scratch/openai/controllers/sacv2/sacv2_n_controller.py -a -c --resumable -s 6 -tl 10 -ps -pss $j
-CUDA_VISIBLE_DEVICES=3 python /home/sschoepp/scratch/openai/controllers/sacv2/sacv2_n_controller.py -a -c --resumable -s 7 -tl 10 -ps -pss $j
-CUDA_VISIBLE_DEVICES=3 python /home/sschoepp/scratch/openai/controllers/sacv2/sacv2_n_controller.py -a -c --resumable -s 8 -tl 10 -ps -pss $j
-CUDA_VISIBLE_DEVICES=3 python /home/sschoepp/scratch/openai/controllers/sacv2/sacv2_n_controller.py -a -c --resumable -s 9 -tl 10 -ps -pss $j" >> s"$i".txt
+  echo "CUDA_VISIBLE_DEVICES=0 python /home/taghianj/scratch/openai/controllers/sacv2/sacv2_n_controller.py -a -c --resumable -s 0 -tl 10 -ps -pss $i
+CUDA_VISIBLE_DEVICES=0 python /home/taghianj/scratch/openai/controllers/sacv2/sacv2_n_controller.py -a -c --resumable -s 1 -tl 10 -ps -pss $i
+CUDA_VISIBLE_DEVICES=0 python /home/taghianj/scratch/openai/controllers/sacv2/sacv2_n_controller.py -a -c --resumable -s 2 -tl 10 -ps -pss $i
+CUDA_VISIBLE_DEVICES=0 python /home/taghianj/scratch/openai/controllers/sacv2/sacv2_n_controller.py -a -c --resumable -s 3 -tl 10 -ps -pss $i
+CUDA_VISIBLE_DEVICES=0 python /home/taghianj/scratch/openai/controllers/sacv2/sacv2_n_controller.py -a -c --resumable -s 4 -tl 10 -ps -pss $i
+CUDA_VISIBLE_DEVICES=1 python /home/taghianj/scratch/openai/controllers/sacv2/sacv2_n_controller.py -a -c --resumable -s 5 -tl 10 -ps -pss $i
+CUDA_VISIBLE_DEVICES=1 python /home/taghianj/scratch/openai/controllers/sacv2/sacv2_n_controller.py -a -c --resumable -s 6 -tl 10 -ps -pss $i
+CUDA_VISIBLE_DEVICES=1 python /home/taghianj/scratch/openai/controllers/sacv2/sacv2_n_controller.py -a -c --resumable -s 7 -tl 10 -ps -pss $i
+CUDA_VISIBLE_DEVICES=1 python /home/taghianj/scratch/openai/controllers/sacv2/sacv2_n_controller.py -a -c --resumable -s 8 -tl 10 -ps -pss $i
+CUDA_VISIBLE_DEVICES=1 python /home/taghianj/scratch/openai/controllers/sacv2/sacv2_n_controller.py -a -c --resumable -s 9 -tl 10 -ps -pss $i
+CUDA_VISIBLE_DEVICES=2 python /home/taghianj/scratch/openai/controllers/sacv2/sacv2_n_controller.py -a -c --resumable -s 0 -tl 10 -ps -pss $j
+CUDA_VISIBLE_DEVICES=2 python /home/taghianj/scratch/openai/controllers/sacv2/sacv2_n_controller.py -a -c --resumable -s 1 -tl 10 -ps -pss $j
+CUDA_VISIBLE_DEVICES=2 python /home/taghianj/scratch/openai/controllers/sacv2/sacv2_n_controller.py -a -c --resumable -s 2 -tl 10 -ps -pss $j
+CUDA_VISIBLE_DEVICES=2 python /home/taghianj/scratch/openai/controllers/sacv2/sacv2_n_controller.py -a -c --resumable -s 3 -tl 10 -ps -pss $j
+CUDA_VISIBLE_DEVICES=2 python /home/taghianj/scratch/openai/controllers/sacv2/sacv2_n_controller.py -a -c --resumable -s 4 -tl 10 -ps -pss $j
+CUDA_VISIBLE_DEVICES=3 python /home/taghianj/scratch/openai/controllers/sacv2/sacv2_n_controller.py -a -c --resumable -s 5 -tl 10 -ps -pss $j
+CUDA_VISIBLE_DEVICES=3 python /home/taghianj/scratch/openai/controllers/sacv2/sacv2_n_controller.py -a -c --resumable -s 6 -tl 10 -ps -pss $j
+CUDA_VISIBLE_DEVICES=3 python /home/taghianj/scratch/openai/controllers/sacv2/sacv2_n_controller.py -a -c --resumable -s 7 -tl 10 -ps -pss $j
+CUDA_VISIBLE_DEVICES=3 python /home/taghianj/scratch/openai/controllers/sacv2/sacv2_n_controller.py -a -c --resumable -s 8 -tl 10 -ps -pss $j
+CUDA_VISIBLE_DEVICES=3 python /home/taghianj/scratch/openai/controllers/sacv2/sacv2_n_controller.py -a -c --resumable -s 9 -tl 10 -ps -pss $j" >> s"$i".txt
 done

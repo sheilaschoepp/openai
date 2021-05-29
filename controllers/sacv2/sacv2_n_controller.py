@@ -461,10 +461,10 @@ class NormalController:
         print(self.LINE)
 
         # TODO
-        # if "cedar" in self.hostname or "beluga" in self.hostname or "gra" in self.hostname:
-        #     pass
-        # else:
-        #     self.send_email(run_time)
+        if "cedar" in self.hostname or "beluga" in self.hostname or "gra" in self.hostname:
+            pass
+        else:
+            self.send_email(run_time)
 
         text_file = open(self.data_dir + "/run_summary.txt", "w")
         text_file.write(date.today().strftime("%m/%d/%y"))
@@ -897,7 +897,7 @@ class NormalController:
         gmail_email = "mynewbfnao@gmail.com"
         gmail_password = "cloc_shuk-OSH8mesm"
 
-        recipient = "sschoepp@ualberta.ca"
+        recipient = "mehrantaghian97@gmail.com"
 
         from_ = gmail_email
         to = recipient if type(recipient) is list else [recipient]

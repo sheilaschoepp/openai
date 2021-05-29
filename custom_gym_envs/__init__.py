@@ -1,4 +1,6 @@
 from gym.envs.registration import register
+from custom_gym_envs.envs.PickAndPlace.PickAndPlace_v0 import FetchPickAndPlaceEnv_v0
+from custom_gym_envs.envs.PickAndPlace.PickAndPlace_v1 import FetchPickAndPlaceEnv_v1
 
 # Ant
 
@@ -45,3 +47,23 @@ register(
     entry_point='custom_gym_envs.envs.HumanoidEnv.Humanoid_v1_faulty:HumanoidEnvV1',
     max_episode_steps=1000,
 )
+
+# FetchPickAndPlace
+
+for reward_type in ['sparse', 'dense']:
+    suffix = 'Dense' if reward_type == 'dense' else ''
+    kwargs = {
+        'reward_type': reward_type,
+    }
+    register(
+        id='FetchPickAndPlace{}-v0'.format(suffix),
+        entry_point='custom_gym_envs.envs.PickAndPlace.PickAndPlace_v0:FetchPickAndPlaceEnv_v0',
+        kwargs=kwargs,
+        max_episode_steps=50,
+    )
+    register(
+        id='FetchPickAndPlace{}Faulty-v1'.format(suffix),
+        entry_point='custom_gym_envs.envs.PickAndPlace.PickAndPlace_v1:FetchPickAndPlaceEnv_v1',
+        kwargs=kwargs,
+        max_episode_steps=50,
+    )

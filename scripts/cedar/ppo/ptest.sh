@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #SBATCH --cpus-per-task=1
-#SBATCH --mem=2G
+#SBATCH --mem-per-cpu=5G
 #SBATCH --time=1-00:00
 #SBATCH --job-name=ppo_test
 #SBATCH --output=%x-%j.out

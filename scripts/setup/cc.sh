@@ -1,5 +1,7 @@
 module load python/3.7
+module load cuda/11.1
 virtualenv --no-download ~/envs/openai
+source /home/sschoepp/envs/openai/bin/activate
 pip install --no-index --upgrade pip
 pip install numpy Cython pandas termcolor matplotlib cffi imageio pycparser lockfile imageio torch torchvision --no-index
 pip install gym[all]

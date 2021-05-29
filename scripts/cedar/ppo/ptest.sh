@@ -1,0 +1,15 @@
+#!/bin/bash
+
+#SBATCH --cpus-per-task=1
+#SBATCH --mem=2G
+#SBATCH --time=1-00:00
+#SBATCH --job-name=ppo_test
+#SBATCH --output=%x-%j.out
+#SBATCH --mail-user=sschoepp@ualberta.ca
+#SBATCH --mail-type=BEGIN
+#SBATCH --mail-type=END
+#SBATCH --mail-type=FAIL
+#SBATCH --mail-type=REQUEUE
+#SBATCH --mail-type=ALL
+
+python /home/sschoepp/scratch/openai/controllers/ppov2/ppov2_n_controller.py -lrd -s 0 -ps -pss 8

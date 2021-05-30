@@ -2,7 +2,7 @@
 
 #SBATCH --cpus-per-task=1
 #SBATCH --mem-per-cpu=5G
-#SBATCH --time=0-12:00
+#SBATCH --time=0-6:00
 #SBATCH --job-name=ppo_test
 #SBATCH --output=%x-%j.out
 #SBATCH --mail-user=sschoepp@ualberta.ca

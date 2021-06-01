@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-from torch.distributions import MultivariateNormal
+from torch.distributions import MultivariateNormal, Normal
 
 
 def init_weights(m):
@@ -148,16 +148,27 @@ class ActorCriticNetwork(nn.Module):
             entropy of the policy
         """
 
+        # mean = self.policy_network(state)
+        #
+        # std = torch.exp(self.policy_network.log_std)
+        # variance = std.pow(2).expand_as(mean)
+        # covariance = torch.diag_embed(variance)
+        #
+        # mv_normal = MultivariateNormal(mean, covariance)
+        #
+        # log_prob = mv_normal.log_prob(action).unsqueeze(1)
+        # entropy = mv_normal.entropy().unsqueeze(1)
+
         mean = self.policy_network(state)
 
         std = torch.exp(self.policy_network.log_std)
-        variance = std.pow(2).expand_as(mean)
-        covariance = torch.diag_embed(variance)
 
-        mv_normal = MultivariateNormal(mean, covariance)
+        normal = Normal(mean, std)
 
-        log_prob = mv_normal.log_prob(action).unsqueeze(1)
-        entropy = mv_normal.entropy().unsqueeze(1)
+        log_prob = normal.log_prob(action)
+        log_prob = log_prob.sum(1, keepdim=True)
+        entropy = normal.entropy()
+        entropy = entropy.sum(1, keepdim=True)
 
         return log_prob, entropy
 
@@ -194,19 +205,33 @@ class ActorCriticNetwork(nn.Module):
             log probability of the action selected by the agent
         """
 
+        # mean = self.policy_network(state)
+        #
+        # std = torch.exp(self.policy_network.log_std)
+        # variance = std.pow(2)
+        # covariance = torch.diag(variance)
+        #
+        # mv_normal = MultivariateNormal(mean, covariance)
+        #
+        # if not deterministic:
+        #     action = mv_normal.sample()
+        # else:
+        #     action = mean
+        #
+        # log_prob = mv_normal.log_prob(action).unsqueeze(0)
+
         mean = self.policy_network(state)
 
         std = torch.exp(self.policy_network.log_std)
-        variance = std.pow(2)
-        covariance = torch.diag(variance)
 
-        mv_normal = MultivariateNormal(mean, covariance)
+        normal = Normal(mean, std)
 
         if not deterministic:
-            action = mv_normal.sample()
+            action = normal.sample()
         else:
             action = mean
 
-        log_prob = mv_normal.log_prob(action).unsqueeze(0)
+        log_prob = normal.log_prob(action)
+        log_prob = log_prob.sum(1, keepdim=True)
 
         return action, log_prob

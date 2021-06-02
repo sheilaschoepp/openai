@@ -5,10 +5,10 @@ from pathlib import Path
 from mujoco_py.generated import const
 
 
-class AntEnvV3(mujoco_env.MujocoEnv, utils.EzPickle):
+class AntEnvV2(mujoco_env.MujocoEnv, utils.EzPickle):
     def __init__(self):
         home = str(Path.home())
-        filepath = home + "/Documents/openai/custom_gym_envs/xml/AntEnv_v3_ankle4rom.xml"
+        filepath = home + "/Documents/openai/custom_gym_envs/xml/ant/AntEnv_v2_hip4rom.xml"
         mujoco_env.MujocoEnv.__init__(self, filepath, 5)
         utils.EzPickle.__init__(self)
 

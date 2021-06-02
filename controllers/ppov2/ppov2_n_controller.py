@@ -15,6 +15,8 @@ from datetime import date, timedelta
 from os import path
 from shutil import rmtree
 
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -468,10 +470,10 @@ class NormalController:
         print("time to complete one run:", run_time, "h:m:s")
         print(self.LINE)
 
-        if "cedar" in self.hostname or "beluga" in self.hostname or "gra" in self.hostname:
-            pass
-        else:
-            self.send_email(run_time)
+        # if "cedar" in self.hostname or "beluga" in self.hostname or "gra" in self.hostname:
+        #     pass
+        # else:
+        #     self.send_email(run_time)
 
         text_file = open(self.data_dir + "/run_summary.txt", "w")
         text_file.write(date.today().strftime("%m/%d/%y"))

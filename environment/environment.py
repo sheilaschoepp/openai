@@ -210,6 +210,9 @@ class Environment(BaseEnvironment):
             the state dimension
         """
 
-        state_dim = self.env.observation_space.shape[0]
+        if type(self.env.observation_space) == gym.spaces.dict.Dict:
+            state_dim = self.env.observation_space['observation'].shape[0]
+        else:
+            state_dim = self.env.observation_space.shape[0]
 
         return state_dim

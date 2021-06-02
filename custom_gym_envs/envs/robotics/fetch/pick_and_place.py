@@ -1,19 +1,19 @@
-from pathlib import Path
+import os
 from gym import utils
-from gym.envs.robotics import fetch_env
+from custom_gym_envs.envs.robotics import fetch_env
 
 
 # Ensure we get the path separator correct on windows
-# MODEL_XML_PATH = os.path.join('fetch', 'pick_and_place.xml')
-MODEL_XML_PATH = str(Path.home()) + '/Documents/openai/custom_gym_envs/xml/robots/fetch/PickAndPlace_v1_faulty.xml'
+MODEL_XML_PATH = os.path.join('fetch', 'pick_and_place.xml')
 
-class FetchPickAndPlaceEnv_v1(fetch_env.FetchEnv, utils.EzPickle):
+
+class FetchPickAndPlaceEnv(fetch_env.FetchEnv, utils.EzPickle):
     def __init__(self, reward_type='sparse'):
         initial_qpos = {
             'robot0:slide0': 0.405,
             'robot0:slide1': 0.48,
             'robot0:slide2': 0.0,
-            'object0:joint': [1.25, 0.53, 0.4, 1., 0., 0., 0.],
+            'object0:joint': [1.25, 0.53, 0.4, 1., 0., 0., 0.]
         }
         fetch_env.FetchEnv.__init__(
             self, MODEL_XML_PATH, has_object=True, block_gripper=False, n_substeps=20,

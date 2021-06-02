@@ -212,6 +212,7 @@ class Environment(BaseEnvironment):
 
         if type(self.env.observation_space) == gym.spaces.dict.Dict:
             state_dim = self.env.observation_space['observation'].shape[0]
+            state_dim += self.env.observation_space['desired_goal'].shape[0]
         else:
             state_dim = self.env.observation_space.shape[0]
 

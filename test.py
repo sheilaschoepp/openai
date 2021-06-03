@@ -27,7 +27,7 @@ while True:
     #Takes a random action from its action space
     # aka the number of unique actions an agent can perform
     state, reward, done, info = env.step(env.action_space.sample())
-    # print(state)
+    print(reward)
     # print('#' * 50)
     # print(state[0]['observation'])
     # print(state[0]['achieved_goal'])

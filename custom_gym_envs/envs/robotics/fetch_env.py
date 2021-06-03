@@ -51,12 +51,19 @@ class FetchEnv(robot_env.RobotEnv):
     # ----------------------------
 
     def compute_reward(self, achieved_goal, goal, info):
-        # Compute distance between goal and the achieved goal.
-        d = goal_distance(achieved_goal, goal)
-        if self.reward_type == 'sparse':
-            return -(d > self.distance_threshold).astype(np.float32)
-        else:
-            return -d
+        # # Compute distance between goal and the achieved goal.
+        # d = goal_distance(achieved_goal, goal)
+        # if self.reward_type == 'sparse':
+        #     return -(d > self.distance_threshold).astype(np.float32)
+        # else:
+        #     return -d
+
+        grip_pos = self.sim.data.get_site_xpos('robot0:grip')
+        assert achieved_goal.shape == goal.shape
+        assert grip_pos.shape == achieved_goal.shape
+        d_object_goal = - np.linalg.norm(achieved_goal - goal, axis=-1)
+        d_grip_object = - np.linalg.norm(achieved_goal - grip_pos, axis=-1)
+        return d_object_goal + d_grip_object
 
     # RobotEnv methods
     # ----------------------------

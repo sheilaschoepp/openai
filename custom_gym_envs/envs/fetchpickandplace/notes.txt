@@ -1,0 +1,32 @@
+What is a state/observation in Ant-v2?
+
+sources:
+https://github.com/openai/gym/issues/1721
+
+In  _get_obs() method:
+
+grip_pos: (x, y, z) position of the gripper
+grip_velp: (x, y, z) linear velocity of the gripper (?? why multiply by dt ??)
+robot_qpos: all joint positions of robot (15,) (?? x,y,z ??)
+robot_qvel: all joint velocities of robot (15,) (?? x,y,z ??)
+object_pos: (x, y, z) position of the object
+object_rot: (?, ?, ?)
+object_velp: (x, y, z) linear velocity of the object
+object_velr: (?, ?, ?)
+object_rel_pos: (x, y, z) relative position of the object to the gripper (??)
+object_velp: (x, y, z) relative linear velocity of the object to the gripper (??)
+gripper_state: (?, ?)
+gripper_vel: (?, ?)
+achieved_goal: (?, ?, ?)
+
+obs = np.concatenate([
+            grip_pos (3),
+            object_pos.ravel() (3),
+            object_rel_pos.ravel() (3),
+            gripper_state (2),
+            object_rot.ravel() (3),
+            object_velp.ravel() (3),
+            object_velr.ravel() (3),
+            grip_velp (3),
+            gripper_vel (2),
+        ])

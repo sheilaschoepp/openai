@@ -92,6 +92,8 @@ class FetchEnv(robot_env.RobotEnv):
         robot_qpos, robot_qvel = utils.robot_get_obs(self.sim)
         if self.has_object:
             object_pos = self.sim.data.get_site_xpos('object0')
+            # TODO: set object_pos to static
+            object_pos = np.array([1.2499994, 0.52999961, 0.42478449])
             # rotations
             object_rot = rotations.mat2euler(self.sim.data.get_site_xmat('object0'))
             # velocities
@@ -139,7 +141,7 @@ class FetchEnv(robot_env.RobotEnv):
     def _reset_sim(self):
         self.sim.set_state(self.initial_state)
         # TODO: comment out the following line for not changing the object position
-        self._reset_obj()
+        # self._reset_obj()
         self.sim.forward()
         return True
 

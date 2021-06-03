@@ -36,7 +36,10 @@ class RobotEnv(gym.GoalEnv):
         self._env_setup(initial_qpos=initial_qpos)
         self.initial_state = copy.deepcopy(self.sim.get_state())
 
-        self.goal = self._sample_goal()
+        # TODO: uncomment the following line to randomize the selection of goal
+        # self.goal = self._sample_goal()
+        self.goal = np.array([1.3, 0.8, 0.62])
+
         obs = self._get_obs()
         self.action_space = spaces.Box(-1., 1., shape=(n_actions,), dtype='float32')
         self.observation_space = spaces.Dict(dict(
@@ -83,7 +86,7 @@ class RobotEnv(gym.GoalEnv):
             did_reset_sim = self._reset_sim()
 
         # TODO: comment out the following line for not changing the goal position
-        self.goal = self._sample_goal().copy()
+        # self.goal = self._sample_goal().copy()
         obs = self._get_obs()
         return np.concatenate([obs['observation'], obs['desired_goal']])
 

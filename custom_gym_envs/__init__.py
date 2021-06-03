@@ -41,3 +41,9 @@ register(
     entry_point='custom_gym_envs.envs.fetchpickandplace.FetchPickAndPlaceEnv_v1:FetchPickAndPlaceEnvV1',
     max_episode_steps=1000,
 )
+
+register(
+    id='FetchPickAndPlaceEnv-v2',
+    entry_point='custom_gym_envs.envs.fetchpickandplace.FetchPickAndPlaceEnv_v2:FetchPickAndPlaceEnvV2',
+    max_episode_steps=1000,
+)

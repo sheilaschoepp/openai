@@ -5,18 +5,18 @@ https://github.com/openai/gym/issues/1721
 
 In  _get_obs() method:
 
-grip_pos: (x, y, z) position of the gripper
+grip_pos: (x, y, z) position of the gripper wrt the world frame
 grip_velp: (x, y, z) linear velocity of the gripper (?? why multiply by dt ??)
-robot_qpos: all joint positions of robot (15,) (?? x,y,z ??)
-robot_qvel: all joint velocities of robot (15,) (?? x,y,z ??)
-object_pos: (x, y, z) position of the object
-object_rot: (?, ?, ?)
+robot_qpos: all joint positions of robot wrt to the world frame (15,) (?? x,y,z ??)
+robot_qvel: all joint velocities of robot wrt to the world frame (15,) (?? x,y,z ??)
+object_pos: (x, y, z) position of the object wrt the world frame
+object_rot: (?, ?, ?) orientation of the object wrt the world frame
 object_velp: (x, y, z) linear velocity of the object
-object_velr: (?, ?, ?)
+object_velr: (roll, pitch, yaw) rotational velocity of the object
 object_rel_pos: (x, y, z) relative position of the object to the gripper (??)
 object_velp: (x, y, z) relative linear velocity of the object to the gripper (??)
-gripper_state: (?, ?)
-gripper_vel: (?, ?)
+gripper_state: (?, ?) values between 0 and 0.2 indicating the force to grip an object (??)
+gripper_vel: (?, ?) velocity of the gripper opening and closing
 achieved_goal: (?, ?, ?)
 
 obs = np.concatenate([

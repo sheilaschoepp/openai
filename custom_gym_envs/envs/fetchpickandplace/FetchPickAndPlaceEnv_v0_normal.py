@@ -5,7 +5,6 @@ None
 
 import os
 from gym import utils
-# from gym.envs.robotics import fetch_env
 from custom_gym_envs.envs.fetchpickandplace import FetchEnv_v0_normal  # todo
 
 

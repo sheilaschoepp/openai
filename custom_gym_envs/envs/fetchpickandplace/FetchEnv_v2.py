@@ -13,7 +13,7 @@ def goal_distance(goal_a, goal_b):
     return np.linalg.norm(goal_a - goal_b, axis=-1)
 
 
-class FetchEnvV1(robot_env.RobotEnv):  # todo
+class FetchEnvV2(robot_env.RobotEnv):  # todo
     """Superclass for all Fetch environments.
     """
 
@@ -48,7 +48,7 @@ class FetchEnvV1(robot_env.RobotEnv):  # todo
         self.distance_threshold = distance_threshold
         self.reward_type = reward_type
 
-        super(FetchEnvV1, self).__init__(  # todo
+        super(FetchEnvV2, self).__init__(  # todo
             model_path=model_path, n_substeps=n_substeps, n_actions=4,
             initial_qpos=initial_qpos)
 
@@ -192,4 +192,4 @@ class FetchEnvV1(robot_env.RobotEnv):  # todo
             self.height_offset = self.sim.data.get_site_xpos('object0')[2]
 
     def render(self, mode='human', width=500, height=500):
-        return super(FetchEnvV1, self).render(mode, width, height)  # todo
+        return super(FetchEnvV2, self).render(mode, width, height)  # todo

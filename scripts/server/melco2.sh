@@ -7,12 +7,12 @@ do
   tmux new-session -d -s ppo$s "python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchPickAndPlaceEnv-v0 -lrd --resumable -s $s -t 100000000"
 done
 
-for s in 0
+for s in 1
 do
   tmux new-session -d -s ppo$s "python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchPickAndPlaceEnv-v1 -lrd --resumable -s $s -t 100000000"
 done
 
-for s in 0
+for s in 2
 do
   tmux new-session -d -s ppo$s "python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchPickAndPlaceEnv-v2 -lrd --resumable -s $s -t 100000000"
 done
@@ -24,12 +24,12 @@ do
   tmux new-session -d -s sac$s "CUDA_VISIBLE_DEVICES=1 python $SAC_CONTROLLER_ABSOLUTE_PATH -a -c -e FetchPickAndPlaceEnv-v0 --resumable -s $s -t 5000000"
 done
 
-for s in 0
+for s in 1
 do
   tmux new-session -d -s sac$s "CUDA_VISIBLE_DEVICES=1 python $SAC_CONTROLLER_ABSOLUTE_PATH -a -c -e FetchPickAndPlaceEnv-v1 --resumable -s $s -t 5000000"
 done
 
-for s in 0
+for s in 2
 do
   tmux new-session -d -s sac$s "CUDA_VISIBLE_DEVICES=1 python $SAC_CONTROLLER_ABSOLUTE_PATH -a -c -e FetchPickAndPlaceEnv-v2 --resumable -s $s -t 5000000"
 done

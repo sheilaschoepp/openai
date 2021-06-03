@@ -29,7 +29,7 @@ class Environment(BaseEnvironment):
         self.env_name = env_name
         self.render = render
 
-        self.env = gym.make(self.env_name)
+        self.env = gym.wrappers.FlattenObservation(gym.make(self.env_name))
         self.env_seed(seed)
 
     def env_init(self):

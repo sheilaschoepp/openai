@@ -12,7 +12,7 @@ from custom_gym_envs.envs.fetchpickandplace import FetchEnv_v2  # todo
 MODEL_XML_PATH = os.path.join('fetch', 'pick_and_place.xml')
 
 
-class FetchPickAndPlaceEnvV1(FetchEnv_v2.FetchEnvV2, utils.EzPickle):  # todo
+class FetchPickAndPlaceEnvV2(FetchEnv_v2.FetchEnvV2, utils.EzPickle):  # todo
     def __init__(self, reward_type='dense'):  # modification here
         initial_qpos = {
             'robot0:slide0': 0.405,

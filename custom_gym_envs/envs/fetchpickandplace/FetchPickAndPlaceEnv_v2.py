@@ -1,7 +1,7 @@
 """
 modifications:
-target_in_the_air set to False
 set reward_type to dense
+target_in_the_air set to False
 """
 
 import os
@@ -13,7 +13,7 @@ MODEL_XML_PATH = os.path.join('fetch', 'pick_and_place.xml')
 
 
 class FetchPickAndPlaceEnvV1(FetchEnv_v2.FetchEnvV2, utils.EzPickle):  # todo
-    def __init__(self, reward_type='dense'):
+    def __init__(self, reward_type='dense'):  # modification here
         initial_qpos = {
             'robot0:slide0': 0.405,
             'robot0:slide1': 0.48,
@@ -22,7 +22,7 @@ class FetchPickAndPlaceEnvV1(FetchEnv_v2.FetchEnvV2, utils.EzPickle):  # todo
         }
         FetchEnv_v2.FetchEnvV2.__init__(  # todo
             self, MODEL_XML_PATH, has_object=True, block_gripper=False, n_substeps=20,
-            gripper_extra_height=0.2, target_in_the_air=True, target_offset=0.0,  # modification here: target_in_the_air set to False
+            gripper_extra_height=0.2, target_in_the_air=False, target_offset=0.0,  # modification here
             obj_range=0.15, target_range=0.15, distance_threshold=0.05,
             initial_qpos=initial_qpos, reward_type=reward_type)
         utils.EzPickle.__init__(self)

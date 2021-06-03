@@ -12,7 +12,7 @@ MODEL_XML_PATH = os.path.join('fetch', 'pick_and_place.xml')
 
 
 class FetchPickAndPlaceEnvV1(FetchEnv_v1.FetchEnvV1, utils.EzPickle):  # todo
-    def __init__(self, reward_type='dense'):
+    def __init__(self, reward_type='dense'):  # modification here
         initial_qpos = {
             'robot0:slide0': 0.405,
             'robot0:slide1': 0.48,

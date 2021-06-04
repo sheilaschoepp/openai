@@ -2,7 +2,7 @@ import custom_gym_envs
 import gym
 import time
 
-env = gym.wrappers.FlattenObservation(gym.make("FetchPickAndPlaceEnv-v1"))
+env = gym.wrappers.FlattenObservation(gym.make("FetchPickAndPlaceEnv-v3"))
 
 # action space: Box(-1.0, 1.0, (4,), float32)
 # observation_space["observation"]: Box(-inf, inf, (25,), float32)

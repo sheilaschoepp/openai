@@ -12,7 +12,7 @@ class Environment(BaseEnvironment):
     The environment class implements the dynamics of the task and generates the observations and rewards.  -Brian Tanner & Adam White
     """
 
-    def __init__(self, env_name, seed, render=False):
+    def __init__(self, env_name, seed, render=True):
         """
         Initialize environment variables.
 

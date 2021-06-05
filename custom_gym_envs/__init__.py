@@ -56,5 +56,5 @@ for reward_type in ['sparse', 'dense']:
         id='FetchPickAndPlace{}-v0'.format(suffix),
         entry_point='custom_gym_envs.envs.robotics.fetch.pick_and_place:FetchPickAndPlaceEnv',
         kwargs=kwargs,
-        max_episode_steps=500,
+        max_episode_steps=100,
     )

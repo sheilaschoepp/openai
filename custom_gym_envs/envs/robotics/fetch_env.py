@@ -98,7 +98,7 @@ class FetchEnv(robot_env.RobotEnv):
         grip_velp = self.sim.data.get_site_xvelp('robot0:grip') * dt
         robot_qpos, robot_qvel = utils.robot_get_obs(self.sim)
         if self.has_object:
-            object_pos = self.sim.data.get_site_xpos('object0')
+            # object_pos = self.sim.data.get_site_xpos('object0')
             # TODO: set object_pos to static
             object_pos = np.array([1.2499994, 0.52999961, 0.42478449])
             # rotations

@@ -19,20 +19,21 @@ state = env.reset()
 # print(env.observation_space['observation'].shape)
 
 # print(env.env_state_dim())
+print(env.action_space)
 
-counter = 0
+# counter = 0
 while True:
     #renders the environment
-    env.render()
+    # env.render()
     #Takes a random action from its action space
     # aka the number of unique actions an agent can perform
     state, reward, done, info = env.step(env.action_space.sample())
-    print(reward)
+    # print(reward)
     # print('#' * 50)
     # print(state[0]['observation'])
     # print(state[0]['achieved_goal'])
     # print(state[0]['desired_goal'])
-    #
+    print(state)
     # print('#' * 50)
 
     # counter += 1

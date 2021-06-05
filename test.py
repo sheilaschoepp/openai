@@ -33,7 +33,7 @@ while True:
     # print(state[0]['observation'])
     # print(state[0]['achieved_goal'])
     # print(state[0]['desired_goal'])
-    print(state)
+    print(state.shape)
     # print('#' * 50)
 
     # counter += 1

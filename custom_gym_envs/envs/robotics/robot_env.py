@@ -27,6 +27,9 @@ class RobotEnv(gym.GoalEnv):
         self.viewer = None
         self._viewers = {}
 
+        # TODO: setting to true will randomly generate new coords for the position of obj and goal
+        self.random_position = True
+
         self.metadata = {
             'render.modes': ['human', 'rgb_array'],
             'video.frames_per_second': int(np.round(1.0 / self.dt))
@@ -37,8 +40,10 @@ class RobotEnv(gym.GoalEnv):
         self.initial_state = copy.deepcopy(self.sim.get_state())
 
         # TODO: uncomment the following line to randomize the selection of goal
-        self.goal = self._sample_goal()
-        # self.goal = np.array([1.3, 0.8, 0.62])
+        if self.random_position:
+            self.goal = self._sample_goal()
+        else:
+            self.goal = np.array([1.3, 0.8, 0.62])
 
         obs = self._get_obs()
         self.action_space = spaces.Box(-1., 1., shape=(n_actions,), dtype='float32')
@@ -72,8 +77,8 @@ class RobotEnv(gym.GoalEnv):
         }
         reward = self.compute_reward(obs['achieved_goal'], self.goal, info)
 
-        # return np.concatenate([obs['observation'], obs['desired_goal']]), reward, done, info
-        return obs['observation'], reward, done, info
+        return np.concatenate([obs['observation'], obs['desired_goal']]), reward, done, info
+        # return obs['observation'], reward, done, info
 
     def reset(self):
         # Attempt to reset the simulator. Since we randomize initial conditions, it
@@ -87,10 +92,11 @@ class RobotEnv(gym.GoalEnv):
             did_reset_sim = self._reset_sim()
 
         # TODO: comment out the following line for not changing the goal position
-        self.goal = self._sample_goal().copy()
+        if self.random_position:
+            self.goal = self._sample_goal().copy()
         obs = self._get_obs()
-        # return np.concatenate([obs['observation'], obs['desired_goal']])
-        return obs['observation']
+        return np.concatenate([obs['observation'], obs['desired_goal']])
+        # return obs['observation']
 
     def close(self):
         if self.viewer is not None:

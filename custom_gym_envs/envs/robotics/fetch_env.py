@@ -61,8 +61,21 @@ class FetchEnv(robot_env.RobotEnv):
         grip_pos = self.sim.data.get_site_xpos('robot0:grip')
         assert achieved_goal.shape == goal.shape
         assert grip_pos.shape == achieved_goal.shape
-        d_object_goal = - np.linalg.norm(achieved_goal - goal, axis=-1)
-        d_grip_object = - np.linalg.norm(achieved_goal - grip_pos, axis=-1)
+        xy_offset = self.target_range * 2 + self.target_offset
+        z_offset = xy_offset + self.height_offset + 0.45
+
+        norm_vector = np.array([xy_offset, xy_offset, z_offset])
+        object_goal_dist_normal = (achieved_goal - goal) / norm_vector
+        grip_object_dist_normal = (achieved_goal - grip_pos) / norm_vector
+
+        # print('object-goal: ', object_goal_dist_normal)
+        # print('gripper-object: ', grip_object_dist_normal)
+
+        d_object_goal = - np.linalg.norm(object_goal_dist_normal, axis=-1) / 3
+        d_grip_object = - np.linalg.norm(grip_object_dist_normal, axis=-1) / 3
+        # print(goal)
+        # print(achieved_goal)
+        # print(grip_pos)
         return d_object_goal + d_grip_object
 
     # RobotEnv methods
@@ -98,9 +111,9 @@ class FetchEnv(robot_env.RobotEnv):
         grip_velp = self.sim.data.get_site_xvelp('robot0:grip') * dt
         robot_qpos, robot_qvel = utils.robot_get_obs(self.sim)
         if self.has_object:
-            # object_pos = self.sim.data.get_site_xpos('object0')
+            object_pos = self.sim.data.get_site_xpos('object0')
             # TODO: set object_pos to static
-            object_pos = np.array([1.2499994, 0.52999961, 0.42478449])
+            # object_pos = np.array([1.2499994, 0.52999961, 0.42478449])
             # rotations
             object_rot = rotations.mat2euler(self.sim.data.get_site_xmat('object0'))
             # velocities
@@ -148,7 +161,7 @@ class FetchEnv(robot_env.RobotEnv):
     def _reset_sim(self):
         self.sim.set_state(self.initial_state)
         # TODO: comment out the following line for not changing the object position
-        # self._reset_obj()
+        self._reset_obj()
         self.sim.forward()
         return True
 
@@ -198,6 +211,5 @@ class FetchEnv(robot_env.RobotEnv):
         self.initial_gripper_xpos = self.sim.data.get_site_xpos('robot0:grip').copy()
         if self.has_object:
             self.height_offset = self.sim.data.get_site_xpos('object0')[2]
-
     def render(self, mode='human', width=500, height=500):
         return super(FetchEnv, self).render(mode, width, height)

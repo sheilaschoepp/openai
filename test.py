@@ -14,31 +14,31 @@ state = env.reset()
 # Rendering our instance 300 times
 # print(state.shape)
 # print(env.observation_space)
-# print(env.observation_space['achieved_goal'].shape)
-# print(env.observation_space['desired_goal'].shape)
-# print(env.observation_space['observation'].shape)
+print(env.observation_space['achieved_goal'])
+print(env.observation_space['desired_goal'])
+print(env.observation_space['observation'])
 
 # print(env.env_state_dim())
-print(env.action_space)
+# print(env.action_space)
 
-# counter = 0
+counter = 0
 while True:
     #renders the environment
-    # env.render()
+    env.render()
     #Takes a random action from its action space
     # aka the number of unique actions an agent can perform
     state, reward, done, info = env.step(env.action_space.sample())
-    # print(reward)
+    print('reward: ', reward)
+    # print(state)
     # print('#' * 50)
     # print(state[0]['observation'])
     # print(state[0]['achieved_goal'])
     # print(state[0]['desired_goal'])
-    print(state.shape)
     # print('#' * 50)
 
-    # counter += 1
-    # if counter == 100:
-    #     counter = 0
-    #     env.reset()
+    counter += 1
+    if counter == 50:
+        counter = 0
+        env.reset()
 
 env.close()

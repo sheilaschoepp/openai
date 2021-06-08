@@ -70,8 +70,8 @@ parser.add_argument("--hidden_dim", type=int, default=64, metavar="N",
 parser.add_argument("--log_std", type=float, default=0.0, metavar="G",
                     help="log standard deviation of the policy distribution (default: 0.0)")
 
-parser.add_argument("-ef", "--time_step_eval_frequency", type=int, default=10000, metavar="N",
-                    help="frequency of policy evaluation during learning (default: 10000)")
+parser.add_argument("-ef", "--time_step_eval_frequency", type=int, default=2000000, metavar="N",
+                    help="frequency of policy evaluation during learning (default: 2000000)")
 parser.add_argument("-ee", "--eval_episodes", type=int, default=10, metavar="N",
                     help="number of episodes in policy evaluation roll-out (default: 10)")
 parser.add_argument("-msf", "--time_step_model_save_frequency", type=int, default=100000, metavar="N",

@@ -7,7 +7,7 @@ from gym.envs.robotics import fetch_env
 MODEL_XML_PATH = os.path.join('fetch', 'reach.xml')
 
 
-class FetchReachEnvV0(fetch_env.FetchEnv, utils.EzPickle):
+class FetchReachEnv(fetch_env.FetchEnv, utils.EzPickle):
     def __init__(self, reward_type='sparse'):
         initial_qpos = {
             'robot0:slide0': 0.4049,

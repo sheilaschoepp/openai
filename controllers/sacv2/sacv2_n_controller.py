@@ -113,9 +113,11 @@ class NormalController:
 
         self.start = time.time()
 
-        # hostname
+        # machines
 
         self.hostname = os.uname()[1]
+        self.localhosts = ["melco", "Legion", "amii"]
+        self.computecanada = not any(host in self.hostname for host in self.localhosts)
 
         # experiment parameters
 
@@ -189,19 +191,17 @@ class NormalController:
 
         self.experiment = "SACv2_" + suffix
 
-        if "melco" in self.hostname or "Legion" in self.hostname or "amii" in self.hostname:
-            # path for servers and local machines (melco, melco2)
-            self.data_dir = os.getenv("HOME") + "/Documents/openai/data/" + self.experiment + "/seed" + str(self.parameters["seed"])
-        else:
-            # path for compute canada (cedar, beluga, graham)
+        if self.computecanada:
+            # path for compute canada
             self.data_dir = os.getenv("HOME") + "/scratch/openai/data/" + self.experiment + "/seed" + str(self.parameters["seed"])
-
-        # does the user wants to restart training?
-        if "cedar" in self.hostname or "beluga" in self.hostname or "gra" in self.hostname:
-            pass
         else:
-            # yes
-            # do the data files for the selected seed already exist?
+            # path for servers and local machines
+            self.data_dir = os.getenv("HOME") + "/Documents/openai/data/" + self.experiment + "/seed" + str(self.parameters["seed"])
+
+        # old data
+
+        if not self.computecanada:
+            # are we restarting training?  do the data files for the selected seed already exist?
             if path.exists(self.data_dir):
 
                 print(self.LINE)
@@ -229,7 +229,7 @@ class NormalController:
                         print(self.LINE)
                         sys.exit("\nexiting...")
 
-        # data
+        # new data
 
         num_rows = int(self.parameters["n_time_steps"] / self.parameters["time_step_eval_frequency"]) + 1  # add 1 for evaluation before any learning (0th entry)
         num_columns = 5
@@ -435,12 +435,8 @@ class NormalController:
         print("time to complete one run:", run_time, "h:m:s")
         print(self.LINE)
 
-        if "melco" in self.hostname or "Legion" in self.hostname or "amii" in self.hostname:
-            # (melco, melco2, Legion, amii)
+        if not self.computecanada:
             self.send_email(run_time)
-        else:
-            # (cedar, beluga, graham)
-            pass
 
         text_file = open(self.data_dir + "/run_summary.txt", "w")
         text_file.write(date.today().strftime("%m/%d/%y"))

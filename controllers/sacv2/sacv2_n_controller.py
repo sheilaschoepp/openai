@@ -116,7 +116,8 @@ class NormalController:
         # machines
 
         self.hostname = os.uname()[1]
-        self.servers = ["melco", "Legion", "amii"]
+        self.localhosts = ["melco", "Legion", "amii"]
+        self.computecanada = not any(host in self.hostname for host in self.localhosts)
 
         # experiment parameters
 
@@ -190,20 +191,17 @@ class NormalController:
 
         self.experiment = "SACv2_" + suffix
 
-        if any(server in self.hostname for server in self.servers):
+        if self.computecanada:
+            # path for compute canada
+            self.data_dir = os.getenv("HOME") + "/scratch/openai/data/" + self.experiment + "/seed" + str(self.parameters["seed"])
+        else:
             # path for servers and local machines
             self.data_dir = os.getenv("HOME") + "/Documents/openai/data/" + self.experiment + "/seed" + str(self.parameters["seed"])
-        else:
-            # path for compute canada (cedar, beluga, graham)
-            self.data_dir = os.getenv("HOME") + "/scratch/openai/data/" + self.experiment + "/seed" + str(self.parameters["seed"])
 
-        # does the user wants to restart training?
-        if any(server in self.hostname for server in self.servers):
-            # for servers and local machines
+        # old data
 
-            # yes, restart training
-
-            # do the data files for the selected seed already exist?
+        if not self.computecanada:
+            # are we restarting training?  do the data files for the selected seed already exist?
             if path.exists(self.data_dir):
 
                 print(self.LINE)
@@ -230,12 +228,8 @@ class NormalController:
                         print(colored("user input indicates NO DATA DELETION", "red"))
                         print(self.LINE)
                         sys.exit("\nexiting...")
-        else:
-            # for compute canada
 
-            pass
-
-        # data
+        # new data
 
         num_rows = int(self.parameters["n_time_steps"] / self.parameters["time_step_eval_frequency"]) + 1  # add 1 for evaluation before any learning (0th entry)
         num_columns = 5
@@ -441,12 +435,8 @@ class NormalController:
         print("time to complete one run:", run_time, "h:m:s")
         print(self.LINE)
 
-        if any(server in self.hostname for server in self.servers):
-            # for servers and local machines
+        if not self.computecanada:
             self.send_email(run_time)
-        else:
-            # for compute canada
-            pass
 
         text_file = open(self.data_dir + "/run_summary.txt", "w")
         text_file.write(date.today().strftime("%m/%d/%y"))

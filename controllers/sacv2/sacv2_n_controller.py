@@ -116,7 +116,7 @@ class NormalController:
         # machines
 
         self.hostname = os.uname()[1]
-        self.localhosts = ["melco", "Legion", "amii"]
+        self.localhosts = ["melco", "Legion", "amii", "mehran"]
         self.computecanada = not any(host in self.hostname for host in self.localhosts)
 
         # experiment parameters

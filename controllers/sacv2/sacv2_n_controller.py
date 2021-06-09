@@ -189,12 +189,12 @@ class NormalController:
 
         self.experiment = "SACv2_" + suffix
 
-        if "c" in self.hostname or "b" in self.hostname or "g" in self.hostname:
-            # path for compute canada (cedar, beluga, graham)
-            self.data_dir = os.getenv("HOME") + "/scratch/openai/data/" + self.experiment + "/seed" + str(self.parameters["seed"])
-        else:
+        if "melco" in self.hostname or "Legion" in self.hostname or "amii" in self.hostname:
             # path for servers and local machines (melco, melco2)
             self.data_dir = os.getenv("HOME") + "/Documents/openai/data/" + self.experiment + "/seed" + str(self.parameters["seed"])
+        else:
+            # path for compute canada (cedar, beluga, graham)
+            self.data_dir = os.getenv("HOME") + "/scratch/openai/data/" + self.experiment + "/seed" + str(self.parameters["seed"])
 
         # does the user wants to restart training?
         if "cedar" in self.hostname or "beluga" in self.hostname or "gra" in self.hostname:
@@ -435,12 +435,12 @@ class NormalController:
         print("time to complete one run:", run_time, "h:m:s")
         print(self.LINE)
 
-        if "c" in self.hostname or "b" in self.hostname or "g" in self.hostname:
+        if "melco" in self.hostname or "Legion" in self.hostname or "amii" in self.hostname:
+            # (melco, melco2, Legion, amii)
+            self.send_email(run_time)
+        else:
             # (cedar, beluga, graham)
             pass
-        else:
-            # (melco, melco2)
-            self.send_email(run_time)
 
         text_file = open(self.data_dir + "/run_summary.txt", "w")
         text_file.write(date.today().strftime("%m/%d/%y"))

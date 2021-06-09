@@ -189,11 +189,11 @@ class NormalController:
 
         self.experiment = "SACv2_" + suffix
 
-        if "ced" in self.hostname or "bel" in self.hostname or "gra" in self.hostname:
-            # path for compute canada
+        if "c" in self.hostname or "b" in self.hostname or "g" in self.hostname:
+            # path for compute canada (cedar, beluga, graham)
             self.data_dir = os.getenv("HOME") + "/scratch/openai/data/" + self.experiment + "/seed" + str(self.parameters["seed"])
         else:
-            # path for servers and local machines
+            # path for servers and local machines (melco, melco2)
             self.data_dir = os.getenv("HOME") + "/Documents/openai/data/" + self.experiment + "/seed" + str(self.parameters["seed"])
 
         # does the user wants to restart training?
@@ -435,9 +435,11 @@ class NormalController:
         print("time to complete one run:", run_time, "h:m:s")
         print(self.LINE)
 
-        if "ced" in self.hostname or "bel" in self.hostname or "gra" in self.hostname:
+        if "c" in self.hostname or "b" in self.hostname or "g" in self.hostname:
+            # (cedar, beluga, graham)
             pass
         else:
+            # (melco, melco2)
             self.send_email(run_time)
 
         text_file = open(self.data_dir + "/run_summary.txt", "w")

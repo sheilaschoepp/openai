@@ -53,3 +53,15 @@ register(
     entry_point='custom_gym_envs.envs.fetchpickandplace.FetchPickAndPlaceEnv_v3:FetchPickAndPlaceEnvV3',
     max_episode_steps=50,
 )
+
+register(
+    id='FetchReachEnv-v0',
+    entry_point='custom_gym_envs.envs.fetchreach.FetchReachEnv_v0_normal:FetchReachEnvV0',
+    max_episode_steps=50,
+)
+
+register(
+    id='FetchReachEnv-v1',
+    entry_point='custom_gym_envs.envs.fetchreach.FetchReachEnv_v1:FetchReachEnvV1',
+    max_episode_steps=50,
+)

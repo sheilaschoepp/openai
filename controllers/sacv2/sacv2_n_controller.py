@@ -189,7 +189,7 @@ class NormalController:
 
         self.experiment = "SACv2_" + suffix
 
-        if "cedar" in self.hostname or "beluga" in self.hostname or "gra" in self.hostname:
+        if "ced" in self.hostname or "bel" in self.hostname or "gra" in self.hostname:
             # path for compute canada
             self.data_dir = os.getenv("HOME") + "/scratch/openai/data/" + self.experiment + "/seed" + str(self.parameters["seed"])
         else:
@@ -435,7 +435,7 @@ class NormalController:
         print("time to complete one run:", run_time, "h:m:s")
         print(self.LINE)
 
-        if "cedar" in self.hostname or "beluga" in self.hostname or "gra" in self.hostname:
+        if "ced" in self.hostname or "bel" in self.hostname or "gra" in self.hostname:
             pass
         else:
             self.send_email(run_time)

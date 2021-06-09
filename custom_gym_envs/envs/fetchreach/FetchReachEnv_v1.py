@@ -9,7 +9,8 @@ from gym.envs.robotics import fetch_env
 
 
 # Ensure we get the path separator correct on windows
-MODEL_XML_PATH = os.path.join('fetch', 'reach.xml')
+# MODEL_XML_PATH = os.path.join('fetch', 'reach.xml')
+MODEL_XML_PATH = "/custom_gym_envs/xml/fetchreach/FetchReachEnv_v0_normal_reach.xml"
 
 
 class FetchReachEnvV1(fetch_env.FetchEnv, utils.EzPickle):

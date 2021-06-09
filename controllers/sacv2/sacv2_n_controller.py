@@ -113,9 +113,10 @@ class NormalController:
 
         self.start = time.time()
 
-        # hostname
+        # machines
 
         self.hostname = os.uname()[1]
+        self.servers = ["melco", "Legion", "amii"]
 
         # experiment parameters
 
@@ -189,18 +190,19 @@ class NormalController:
 
         self.experiment = "SACv2_" + suffix
 
-        if "melco" in self.hostname or "Legion" in self.hostname or "amii" in self.hostname:
-            # path for servers and local machines (melco, melco2)
+        if any(server in self.hostname for server in self.servers):
+            # path for servers and local machines
             self.data_dir = os.getenv("HOME") + "/Documents/openai/data/" + self.experiment + "/seed" + str(self.parameters["seed"])
         else:
             # path for compute canada (cedar, beluga, graham)
             self.data_dir = os.getenv("HOME") + "/scratch/openai/data/" + self.experiment + "/seed" + str(self.parameters["seed"])
 
         # does the user wants to restart training?
-        if "cedar" in self.hostname or "beluga" in self.hostname or "gra" in self.hostname:
-            pass
-        else:
-            # yes
+        if any(server in self.hostname for server in self.servers):
+            # for servers and local machines
+
+            # yes, restart training
+
             # do the data files for the selected seed already exist?
             if path.exists(self.data_dir):
 
@@ -228,6 +230,10 @@ class NormalController:
                         print(colored("user input indicates NO DATA DELETION", "red"))
                         print(self.LINE)
                         sys.exit("\nexiting...")
+        else:
+            # for compute canada
+
+            pass
 
         # data
 
@@ -435,11 +441,11 @@ class NormalController:
         print("time to complete one run:", run_time, "h:m:s")
         print(self.LINE)
 
-        if "melco" in self.hostname or "Legion" in self.hostname or "amii" in self.hostname:
-            # (melco, melco2, Legion, amii)
+        if any(server in self.hostname for server in self.servers):
+            # for servers and local machines
             self.send_email(run_time)
         else:
-            # (cedar, beluga, graham)
+            # for compute canada
             pass
 
         text_file = open(self.data_dir + "/run_summary.txt", "w")

@@ -75,15 +75,22 @@ class FetchEnv(robot_env.RobotEnv):
         # print('grip pos: ', grip_pos)
         # print('object pos: ', achieved_goal)
         # Unnormalized
-        d_object_goal = - np.linalg.norm(achieved_goal - goal, axis=-1)
-        d_grip_object = - np.linalg.norm(achieved_goal - grip_pos, axis=-1)
+
+        d_object_goal = achieved_goal - goal
+        d_object_goal[2] *= 10  # Emphasize the z-coordinate distance
+
+        d_grip_object = achieved_goal - grip_pos
+        d_grip_object[2] *= 10
+
+        norm_object_goal = - np.linalg.norm(d_object_goal, axis=-1)
+        norm_grip_object = - np.linalg.norm(d_grip_object, axis=-1)
 
         # print(goal)
         # print(achieved_goal)
         # print(grip_pos)
-        reward = d_object_goal + d_grip_object
+        reward = norm_object_goal + norm_grip_object
         # print(reward)
-        return d_object_goal + d_grip_object
+        return norm_object_goal + norm_grip_object
 
     # RobotEnv methods
     # ----------------------------
@@ -221,5 +228,6 @@ class FetchEnv(robot_env.RobotEnv):
         self.initial_gripper_xpos = self.sim.data.get_site_xpos('robot0:grip').copy()
         if self.has_object:
             self.height_offset = self.sim.data.get_site_xpos('object0')[2]
+
     def render(self, mode='human', width=500, height=500):
         return super(FetchEnv, self).render(mode, width, height)

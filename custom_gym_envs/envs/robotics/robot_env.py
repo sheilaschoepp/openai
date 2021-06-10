@@ -77,8 +77,8 @@ class RobotEnv(gym.GoalEnv):
         }
         reward = self.compute_reward(obs['achieved_goal'], self.goal, info)
 
-        return np.concatenate([obs['observation'], obs['desired_goal']]), reward, done, info
-        # return obs['observation'], reward, done, info
+        # return np.concatenate([obs['observation'], obs['desired_goal']]), reward, done, info
+        return obs['observation'], reward, done, info
 
     def reset(self):
         # Attempt to reset the simulator. Since we randomize initial conditions, it
@@ -95,8 +95,8 @@ class RobotEnv(gym.GoalEnv):
         if self.random_position:
             self.goal = self._sample_goal().copy()
         obs = self._get_obs()
-        return np.concatenate([obs['observation'], obs['desired_goal']])
-        # return obs['observation']
+        # return np.concatenate([obs['observation'], obs['desired_goal']])
+        return obs['observation']
 
     def close(self):
         if self.viewer is not None:

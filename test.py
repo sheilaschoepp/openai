@@ -35,7 +35,10 @@ while True:
     state, reward, done, info = env.step(env.action_space.sample())
     # print('reward: ', reward)
     # print(state[np.where(prev_state == state)])
-    print(state)
+    print(state['observation'])
+    print(state['achieved_goal'])
+    print(state['desired_goal'])
+
     # print('#' * 50)
     # print(state[0]['observation'])
     # print(state[0]['achieved_goal'])

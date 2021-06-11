@@ -77,12 +77,12 @@ class FetchEnv(robot_env.RobotEnv):
         # Unnormalized
 
         d_object_goal = achieved_goal - goal
-        # d_object_goal[2] *= 3  # penalizing the z-coordinate distance
+        d_object_goal[2] *= 2  # penalizing the z-coordinate distance
         # d_object_goal[0] *= 3  # penalizing the x-coordinate distance
         # d_object_goal[1] *= 3  # penalizing the y-coordinate distance
 
         d_grip_object = achieved_goal - grip_pos
-        # d_grip_object[2] *= 3  # penalizing the z-coordinate distance
+        d_grip_object[2] *= 2  # penalizing the z-coordinate distance
         # d_grip_object[0] *= 3  # penalizing the x-coordinate distance
         # d_grip_object[1] *= 3  # penalizing the y-coordinate distance
 

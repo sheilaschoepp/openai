@@ -111,7 +111,7 @@ class FetchEnv(robot_env.RobotEnv):
             achieved_goal = np.squeeze(object_pos.copy())
         obs = np.concatenate([
             grip_pos, object_pos.ravel(), object_rel_pos.ravel(), gripper_state, object_rot.ravel(),
-            object_velp.ravel(), object_velr.ravel(), grip_velp, gripper_vel,
+            object_velp.ravel(), object_velr.ravel(), grip_velp, gripper_vel, self.goal.copy()
         ])
 
         return {

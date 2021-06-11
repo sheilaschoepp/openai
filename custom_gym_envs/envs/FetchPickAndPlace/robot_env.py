@@ -28,7 +28,7 @@ class RobotEnv(gym.GoalEnv):
         self._viewers = {}
 
         # TODO: setting to true will randomly generate new coords for the position of obj and goal
-        self.random_position = True
+        self.random_position = False
 
         self.metadata = {
             'render.modes': ['human', 'rgb_array'],

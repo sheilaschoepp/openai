@@ -94,7 +94,7 @@ class FetchEnv(robot_env.RobotEnv):
         # print(grip_pos)
         reward = norm_object_goal + norm_grip_object
         # print(reward)
-        return norm_object_goal + norm_grip_object
+        return reward
 
     # RobotEnv methods
     # ----------------------------
@@ -163,7 +163,8 @@ class FetchEnv(robot_env.RobotEnv):
             object_rot.ravel(), object_velp.ravel(), object_velr.ravel()
         ])
 
-        # print('object_rot: ', object_rot)
+        # print('object pos: ', object_pos)
+        # print('gripper pos: ', grip_pos)
 
         return {
             'observation': obs.copy(),

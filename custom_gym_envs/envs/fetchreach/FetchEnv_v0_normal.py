@@ -1,6 +1,7 @@
 import numpy as np
 
-from gym.envs.robotics import rotations, robot_env, utils
+from gym.envs.robotics import rotations, utils  # , robot_env todo: remove import of robot_env
+from custom_gym_envs.envs.fetchreach import RobotEnv_v0_normal as robot_env  # todo: add import of RobotEnv_v<#>_<description>.py file as robot_env
 
 
 def goal_distance(goal_a, goal_b):
@@ -8,14 +9,14 @@ def goal_distance(goal_a, goal_b):
     return np.linalg.norm(goal_a - goal_b, axis=-1)
 
 
-class FetchEnv(robot_env.RobotEnv):
+class FetchEnvV0(robot_env.RobotEnvV0):  # todo: add version to FetchEnv, add version to RobotEnv
     """Superclass for all Fetch environments.
     """
 
     def __init__(
-        self, model_path, n_substeps, gripper_extra_height, block_gripper,
-        has_object, target_in_the_air, target_offset, obj_range, target_range,
-        distance_threshold, initial_qpos, reward_type,
+            self, model_path, n_substeps, gripper_extra_height, block_gripper,
+            has_object, target_in_the_air, target_offset, obj_range, target_range,
+            distance_threshold, initial_qpos, reward_type,
     ):
         """Initializes a new Fetch environment.
 
@@ -43,7 +44,7 @@ class FetchEnv(robot_env.RobotEnv):
         self.distance_threshold = distance_threshold
         self.reward_type = reward_type
 
-        super(FetchEnv, self).__init__(
+        super(FetchEnvV0, self).__init__(  # todo: add version to FetchEnv
             model_path=model_path, n_substeps=n_substeps, n_actions=4,
             initial_qpos=initial_qpos)
 
@@ -143,7 +144,8 @@ class FetchEnv(robot_env.RobotEnv):
         if self.has_object:
             object_xpos = self.initial_gripper_xpos[:2]
             while np.linalg.norm(object_xpos - self.initial_gripper_xpos[:2]) < 0.1:
-                object_xpos = self.initial_gripper_xpos[:2] + self.np_random.uniform(-self.obj_range, self.obj_range, size=2)
+                object_xpos = self.initial_gripper_xpos[:2] + self.np_random.uniform(-self.obj_range, self.obj_range,
+                                                                                     size=2)
             object_qpos = self.sim.data.get_joint_qpos('object0:joint')
             assert object_qpos.shape == (7,)
             object_qpos[:2] = object_xpos
@@ -174,7 +176,8 @@ class FetchEnv(robot_env.RobotEnv):
         self.sim.forward()
 
         # Move end effector into position.
-        gripper_target = np.array([-0.498, 0.005, -0.431 + self.gripper_extra_height]) + self.sim.data.get_site_xpos('robot0:grip')
+        gripper_target = np.array([-0.498, 0.005, -0.431 + self.gripper_extra_height]) + self.sim.data.get_site_xpos(
+            'robot0:grip')
         gripper_rotation = np.array([1., 0., 1., 0.])
         self.sim.data.set_mocap_pos('robot0:mocap', gripper_target)
         self.sim.data.set_mocap_quat('robot0:mocap', gripper_rotation)
@@ -187,4 +190,4 @@ class FetchEnv(robot_env.RobotEnv):
             self.height_offset = self.sim.data.get_site_xpos('object0')[2]
 
     def render(self, mode='human', width=500, height=500):
-        return super(FetchEnv, self).render(mode, width, height)
+        return super(FetchEnvV0, self).render(mode, width, height)  # todo: add version to FetchEnv

@@ -5,6 +5,7 @@ import numpy as np
 import gym
 from gym import error, spaces
 from gym.utils import seeding
+from pathlib import Path  # todo: add import
 
 try:
     import mujoco_py
@@ -13,10 +14,12 @@ except ImportError as e:
 
 DEFAULT_SIZE = 500
 
-class RobotEnv(gym.GoalEnv):
+
+class RobotEnvV0(gym.GoalEnv):  # todo: add version to RobotEnv
     def __init__(self, model_path, initial_qpos, n_actions, n_substeps):
         if model_path.startswith('/'):
-            fullpath = model_path
+            home = str(Path.home())
+            fullpath = home + model_path
         else:
             fullpath = os.path.join(os.path.dirname(__file__), 'assets', model_path)
         if not os.path.exists(fullpath):
@@ -76,7 +79,7 @@ class RobotEnv(gym.GoalEnv):
         # Gimbel lock) or we may not achieve an initial condition (e.g. an object is within the hand).
         # In this case, we just keep randomizing until we eventually achieve a valid initial
         # configuration.
-        super(RobotEnv, self).reset()
+        super(RobotEnvV0, self).reset()  # todo: add version to RobotEnv
         did_reset_sim = False
         while not did_reset_sim:
             did_reset_sim = self._reset_sim()

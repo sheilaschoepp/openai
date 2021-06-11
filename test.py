@@ -6,8 +6,8 @@ import mujoco_py
 import custom_gym_envs
 #Setting MountainCar-v0 as the environment
 # env = Environment('FetchPickAndPlace-v0', 0)
-# env = gym.make('FetchPickAndPlaceDense-v0')
-env = gym.make('FetchReach-v0')
+env = gym.make('FetchPickAndPlaceDense-v0')
+# env = gym.make('FetchReach-v0')
 
 # env = gym.make('FetchReach-v1')
 
@@ -35,9 +35,9 @@ while True:
     state, reward, done, info = env.step(env.action_space.sample())
     # print('reward: ', reward)
     # print(state[np.where(prev_state == state)])
-    print(state['observation'])
-    print(state['achieved_goal'])
-    print(state['desired_goal'])
+    # print(state['observation'])
+    # print(state['achieved_goal'])
+    # print(state['desired_goal'])
 
     # print('#' * 50)
     # print(state[0]['observation'])

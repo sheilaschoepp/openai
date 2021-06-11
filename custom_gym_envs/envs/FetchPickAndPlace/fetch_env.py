@@ -180,6 +180,7 @@ class FetchEnv(robot_env.RobotEnv):
         self.viewer.cam.distance = 2.5
         self.viewer.cam.azimuth = 132.
         self.viewer.cam.elevation = -14.
+        self.viewer.cam.elevation = -14.
 
     def _render_callback(self):
         # Visualize target.

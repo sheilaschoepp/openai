@@ -2,6 +2,8 @@ import os
 import pickle
 
 import gym
+import numpy as np
+
 from utils.rl_glue import BaseEnvironment
 
 
@@ -29,7 +31,11 @@ class Environment(BaseEnvironment):
         self.env_name = env_name
         self.render = render
 
-        self.env = gym.wrappers.FlattenObservation(gym.make(self.env_name))
+        if "FetchReach" in self.env_name:
+            self.env = gym.make(self.env_name, reward_type="dense")
+        else:
+            self.env = gym.make(self.env_name)
+
         self.env_seed(seed)
 
     def env_init(self):
@@ -49,6 +55,9 @@ class Environment(BaseEnvironment):
         """
 
         state = self.env.reset()
+
+        if "FetchReach" in self.env_name:
+            state = np.concatenate((state["observation"], state["desired_goal"]))
 
         if self.render:
             self.env.render()
@@ -79,6 +88,9 @@ class Environment(BaseEnvironment):
             self.env.render()
 
         next_state, reward, terminal, _ = self.env.step(action)
+
+        if "FetchReach" in self.env_name:
+            next_state = np.concatenate((next_state["observation"], next_state["desired_goal"]))
 
         return reward, next_state, terminal
 
@@ -210,6 +222,9 @@ class Environment(BaseEnvironment):
             the state dimension
         """
 
-        state_dim = self.env.observation_space.shape[0]
+        if "FetchReach" in self.env_name:
+            state_dim = self.env.observation_space["observation"].shape[0] + self.env.observation_space["desired_goal"].shape[0]
+        else:
+            state_dim = self.env.observation_space.shape[0]
 
         return state_dim

@@ -54,13 +54,13 @@ for reward_type in ['sparse', 'dense']:
     }
     register(
         id='FetchPickAndPlace{}-v0'.format(suffix),
-        entry_point='custom_gym_envs.envs.robotics.fetch.pick_and_place:FetchPickAndPlaceEnv',
+        entry_point='custom_gym_envs.envs.FetchPickAndPlace.fetch.pick_and_place:FetchPickAndPlaceEnv',
         kwargs=kwargs,
         max_episode_steps=50,
     )
     register(
         id='FetchReach{}-v0'.format(suffix),
-        entry_point='custom_gym_envs.envs.robotics.fetch.reach:FetchReachEnv',
+        entry_point='custom_gym_envs.envs.FetchReach.fetch.reach:FetchReachEnv',
         kwargs=kwargs,
         max_episode_steps=50,
     )

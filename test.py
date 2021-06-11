@@ -1,5 +1,6 @@
 #Importing OpenAI gym package and MuJoCo engine
 import gym
+import numpy as np
 from environment.environment import Environment
 import mujoco_py
 import custom_gym_envs
@@ -13,7 +14,7 @@ env = gym.make('FetchReach-v0')
 # env = gym.make('AntEnv-v0')
 
 #Sets an initial state
-state = env.reset()
+prev_state = env.reset()
 # env.render()
 # Rendering our instance 300 times
 # print(state.shape)
@@ -33,7 +34,8 @@ while True:
     # aka the number of unique actions an agent can perform
     state, reward, done, info = env.step(env.action_space.sample())
     # print('reward: ', reward)
-    # print(state)
+    # print(state[np.where(prev_state == state)])
+    print(state)
     # print('#' * 50)
     # print(state[0]['observation'])
     # print(state[0]['achieved_goal'])

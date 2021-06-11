@@ -1,6 +1,6 @@
 import numpy as np
 
-from custom_gym_envs.envs.robotics import rotations, robot_env, utils
+from gym.envs.robotics import rotations, robot_env, utils
 
 
 def goal_distance(goal_a, goal_b):
@@ -13,9 +13,9 @@ class FetchEnv(robot_env.RobotEnv):
     """
 
     def __init__(
-            self, model_path, n_substeps, gripper_extra_height, block_gripper,
-            has_object, target_in_the_air, target_offset, obj_range, target_range,
-            distance_threshold, initial_qpos, reward_type,
+        self, model_path, n_substeps, gripper_extra_height, block_gripper,
+        has_object, target_in_the_air, target_offset, obj_range, target_range,
+        distance_threshold, initial_qpos, reward_type,
     ):
         """Initializes a new Fetch environment.
 
@@ -51,46 +51,12 @@ class FetchEnv(robot_env.RobotEnv):
     # ----------------------------
 
     def compute_reward(self, achieved_goal, goal, info):
-        # # Compute distance between goal and the achieved goal.
-        # d = goal_distance(achieved_goal, goal)
-        # if self.reward_type == 'sparse':
-        #     return -(d > self.distance_threshold).astype(np.float32)
-        # else:
-        #     return -d
-
-        grip_pos = self.sim.data.get_site_xpos('robot0:grip')
-        assert achieved_goal.shape == goal.shape
-        assert grip_pos.shape == achieved_goal.shape
-
-        # normalized
-        # xy_offset = self.target_range * 2 + self.target_offset
-        # z_offset = xy_offset + self.height_offset + 0.45
-        # norm_vector = np.array([xy_offset, xy_offset, z_offset])
-        # object_goal_dist_normal = (achieved_goal - goal) / norm_vector
-        # grip_object_dist_normal = (achieved_goal - grip_pos) / norm_vector
-        # object_goal_dist_normal = (achieved_goal - goal)
-        # grip_object_dist_normal = (achieved_goal - grip_pos)
-        # d_object_goal = - np.linalg.norm(object_goal_dist_normal, axis=-1) / 3
-        # d_grip_object = - np.linalg.norm(grip_object_dist_normal, axis=-1) / 3
-        # print('grip pos: ', grip_pos)
-        # print('object pos: ', achieved_goal)
-        # Unnormalized
-
-        d_object_goal = achieved_goal - goal
-        d_object_goal[2] *= 10  # Emphasize the z-coordinate distance
-
-        d_grip_object = achieved_goal - grip_pos
-        d_grip_object[2] *= 10
-
-        norm_object_goal = - np.linalg.norm(d_object_goal, axis=-1)
-        norm_grip_object = - np.linalg.norm(d_grip_object, axis=-1)
-
-        # print(goal)
-        # print(achieved_goal)
-        # print(grip_pos)
-        reward = norm_object_goal + norm_grip_object
-        # print(reward)
-        return norm_object_goal + norm_grip_object
+        # Compute distance between goal and the achieved goal.
+        d = goal_distance(achieved_goal, goal)
+        if self.reward_type == 'sparse':
+            return -(d > self.distance_threshold).astype(np.float32)
+        else:
+            return -d
 
     # RobotEnv methods
     # ----------------------------
@@ -125,11 +91,7 @@ class FetchEnv(robot_env.RobotEnv):
         grip_velp = self.sim.data.get_site_xvelp('robot0:grip') * dt
         robot_qpos, robot_qvel = utils.robot_get_obs(self.sim)
         if self.has_object:
-            if self.random_position:
-                object_pos = self.sim.data.get_site_xpos('object0')
-            # TODO: set object_pos to static
-            else:
-                object_pos = np.array([1.2499994, 0.52999961, 0.42478449])
+            object_pos = self.sim.data.get_site_xpos('object0')
             # rotations
             object_rot = rotations.mat2euler(self.sim.data.get_site_xmat('object0'))
             # velocities
@@ -176,23 +138,19 @@ class FetchEnv(robot_env.RobotEnv):
 
     def _reset_sim(self):
         self.sim.set_state(self.initial_state)
-        # TODO: comment out the following line for not changing the object position
-        if self.random_position:
-            self._reset_obj()
-        self.sim.forward()
-        return True
 
-    def _reset_obj(self):
         # Randomize start position of object.
         if self.has_object:
             object_xpos = self.initial_gripper_xpos[:2]
             while np.linalg.norm(object_xpos - self.initial_gripper_xpos[:2]) < 0.1:
-                object_xpos = self.initial_gripper_xpos[:2] + self.np_random.uniform(-self.obj_range, self.obj_range,
-                                                                                     size=2)
+                object_xpos = self.initial_gripper_xpos[:2] + self.np_random.uniform(-self.obj_range, self.obj_range, size=2)
             object_qpos = self.sim.data.get_joint_qpos('object0:joint')
             assert object_qpos.shape == (7,)
             object_qpos[:2] = object_xpos
             self.sim.data.set_joint_qpos('object0:joint', object_qpos)
+
+        self.sim.forward()
+        return True
 
     def _sample_goal(self):
         if self.has_object:
@@ -202,7 +160,7 @@ class FetchEnv(robot_env.RobotEnv):
             if self.target_in_the_air and self.np_random.uniform() < 0.5:
                 goal[2] += self.np_random.uniform(0, 0.45)
         else:
-            goal = self.initial_gripper_xpos[:3] + self.np_random.uniform(-0.15, 0.15, size=3)
+            goal = self.initial_gripper_xpos[:3] + self.np_random.uniform(-self.target_range, self.target_range, size=3)
         return goal.copy()
 
     def _is_success(self, achieved_goal, desired_goal):
@@ -216,8 +174,7 @@ class FetchEnv(robot_env.RobotEnv):
         self.sim.forward()
 
         # Move end effector into position.
-        gripper_target = np.array([-0.498, 0.005, -0.431 + self.gripper_extra_height]) + self.sim.data.get_site_xpos(
-            'robot0:grip')
+        gripper_target = np.array([-0.498, 0.005, -0.431 + self.gripper_extra_height]) + self.sim.data.get_site_xpos('robot0:grip')
         gripper_rotation = np.array([1., 0., 1., 0.])
         self.sim.data.set_mocap_pos('robot0:mocap', gripper_target)
         self.sim.data.set_mocap_quat('robot0:mocap', gripper_rotation)

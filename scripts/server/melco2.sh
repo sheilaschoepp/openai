@@ -2,44 +2,47 @@
 
 PPO_N_CONTROLLER_ABSOLUTE_PATH="/home/sschoepp/Documents/openai/controllers/ppov2/ppov2_n_controller.py"
 
-for s in 0
-do
-  tmux new-session -d -s ppo$s "python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchPickAndPlaceEnv-v0 -lrd --resumable -s $s -t 100000000"
-done
+tmux new-session -d -s ps000 "python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 0 -t 6000000 -ps -pss 0; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 1 -t 6000000 -ps -pss 0; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 2 -t 6000000 -ps -pss 0; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 3 -t 6000000 -ps -pss 0; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 4 -t 6000000 -ps -pss 0"
+tmux new-session -d -s ps005 "python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 5 -t 6000000 -ps -pss 0; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 6 -t 6000000 -ps -pss 0; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 7 -t 6000000 -ps -pss 0; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 8 -t 6000000 -ps -pss 0; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 9 -t 6000000 -ps -pss 0"
 
-for s in 1
-do
-  tmux new-session -d -s ppo$s "python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchPickAndPlaceEnv-v1 -lrd --resumable -s $s -t 100000000"
-done
+tmux new-session -d -s ps010 "python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 0 -t 6000000 -ps -pss 1; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 1 -t 6000000 -ps -pss 1; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 2 -t 6000000 -ps -pss 1; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 3 -t 6000000 -ps -pss 1; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 4 -t 6000000 -ps -pss 1"
+tmux new-session -d -s ps015 "python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 5 -t 6000000 -ps -pss 1; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 6 -t 6000000 -ps -pss 1; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 7 -t 6000000 -ps -pss 1; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 8 -t 6000000 -ps -pss 1; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 9 -t 6000000 -ps -pss 1"
 
-for s in 2
-do
-  tmux new-session -d -s ppo$s "python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchPickAndPlaceEnv-v2 -lrd --resumable -s $s -t 100000000"
-done
+tmux new-session -d -s ps020 "python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 0 -t 6000000 -ps -pss 2; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 1 -t 6000000 -ps -pss 2; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 2 -t 6000000 -ps -pss 2; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 3 -t 6000000 -ps -pss 2; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 4 -t 6000000 -ps -pss 2"
+tmux new-session -d -s ps025 "python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 5 -t 6000000 -ps -pss 2; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 6 -t 6000000 -ps -pss 2; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 7 -t 6000000 -ps -pss 2; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 8 -t 6000000 -ps -pss 2; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 9 -t 6000000 -ps -pss 2"
 
-for s in 3
-do
-  tmux new-session -d -s ppo$s "python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd --resumable -s $s -t 100000000 --lr 0.0003 --policy_entropy_coef 0.0 -ns 2000 -mbs 50 --epsilon 0.2; test.py"
-done
+tmux new-session -d -s ps030 "python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 0 -t 6000000 -ps -pss 3; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 1 -t 6000000 -ps -pss 3; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 2 -t 6000000 -ps -pss 3; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 3 -t 6000000 -ps -pss 3; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 4 -t 6000000 -ps -pss 3"
+tmux new-session -d -s ps035 "python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 5 -t 6000000 -ps -pss 3; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 6 -t 6000000 -ps -pss 3; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 7 -t 6000000 -ps -pss 3; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 8 -t 6000000 -ps -pss 3; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 9 -t 6000000 -ps -pss 3"
 
-SAC_CONTROLLER_ABSOLUTE_PATH="/home/sschoepp/Documents/openai/controllers/sacv2/sacv2_n_controller.py"
+tmux new-session -d -s ps040 "python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 0 -t 6000000 -ps-pss 4; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 1 -t 6000000 -ps-pss 4; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 2 -t 6000000 -ps-pss 4; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 3 -t 6000000 -ps-pss 4; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 4 -t 6000000 -ps-pss 4"
+tmux new-session -d -s ps045 "python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 5 -t 6000000 -ps-pss 4; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 6 -t 6000000 -ps-pss 4; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 7 -t 6000000 -ps-pss 4; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 8 -t 6000000 -ps-pss 4; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 9 -t 6000000 -ps-pss 4"
 
-for s in 0
-do
-  tmux new-session -d -s sac$s "CUDA_VISIBLE_DEVICES=1 python $SAC_CONTROLLER_ABSOLUTE_PATH -a -c -e FetchPickAndPlaceEnv-v0 --resumable -s $s -t 5000000"
-done
+tmux new-session -d -s ps050 "python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 0 -t 6000000 -ps -pss 5; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 1 -t 6000000 -ps -pss 5; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 2 -t 6000000 -ps -pss 5; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 3 -t 6000000 -ps -pss 5; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 4 -t 6000000 -ps -pss 5"
+tmux new-session -d -s ps055 "python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 5 -t 6000000 -ps -pss 5; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 6 -t 6000000 -ps -pss 5; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 7 -t 6000000 -ps -pss 5; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 8 -t 6000000 -ps -pss 5; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 9 -t 6000000 -ps -pss 5"
 
-for s in 1
-do
-  tmux new-session -d -s sac$s "CUDA_VISIBLE_DEVICES=1 python $SAC_CONTROLLER_ABSOLUTE_PATH -a -c -e FetchPickAndPlaceEnv-v1 --resumable -s $s -t 5000000"
-done
+tmux new-session -d -s ps060 "python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 0 -t 6000000 -ps -pss 6; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 1 -t 6000000 -ps -pss 6; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 2 -t 6000000 -ps -pss 6; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 3 -t 6000000 -ps -pss 6; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 4 -t 6000000 -ps -pss 6"
+tmux new-session -d -s ps065 "python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 5 -t 6000000 -ps -pss 6; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 6 -t 6000000 -ps -pss 6; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 7 -t 6000000 -ps -pss 6; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 8 -t 6000000 -ps -pss 6; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 9 -t 6000000 -ps -pss 6"
 
-for s in 2
-do
-  tmux new-session -d -s sac$s "CUDA_VISIBLE_DEVICES=1 python $SAC_CONTROLLER_ABSOLUTE_PATH -a -c -e FetchPickAndPlaceEnv-v2 --resumable -s $s -t 5000000"
-done
+tmux new-session -d -s ps070 "python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 0 -t 6000000 -ps -pss 7; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 1 -t 6000000 -ps -pss 7; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 2 -t 6000000 -ps -pss 7; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 3 -t 6000000 -ps -pss 7; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 4 -t 6000000 -ps -pss 7"
+tmux new-session -d -s ps075 "python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 5 -t 6000000 -ps -pss 7; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 6 -t 6000000 -ps -pss 7; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 7 -t 6000000 -ps -pss 7; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 8 -t 6000000 -ps -pss 7; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 9 -t 6000000 -ps -pss 7"
 
-for s in 3
-do
-  tmux new-session -d -s sac$s "CUDA_VISIBLE_DEVICES=1 python $SAC_CONTROLLER_ABSOLUTE_PATH -a -c -e FetchReach-v1 -ef 10000 --resumable -s $s -t 5000000; python test.py"
-done
+tmux new-session -d -s ps080 "python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 0 -t 6000000 -ps -pss 8; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 1 -t 6000000 -ps -pss 8; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 2 -t 6000000 -ps -pss 8; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 3 -t 6000000 -ps -pss 8; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 4 -t 6000000 -ps -pss 8"
+tmux new-session -d -s ps085 "python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 5 -t 6000000 -ps -pss 8; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 6 -t 6000000 -ps -pss 8; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 7 -t 6000000 -ps -pss 8; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 8 -t 6000000 -ps -pss 8; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 9 -t 6000000 -ps -pss 8"
+
+tmux new-session -d -s ps090 "python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 0 -t 6000000 -ps -pss 9; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 1 -t 6000000 -ps -pss 9; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 2 -t 6000000 -ps -pss 9; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 3 -t 6000000 -ps -pss 9; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 4 -t 6000000 -ps -pss 9"
+tmux new-session -d -s ps095 "python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 5 -t 6000000 -ps -pss 9; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 6 -t 6000000 -ps -pss 9; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 7 -t 6000000 -ps -pss 9; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 8 -t 6000000 -ps -pss 9; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 9 -t 6000000 -ps -pss 9"
+
+tmux new-session -d -s ps100 "python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 0 -t 6000000 -ps -pss 10; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 1 -t 6000000 -ps -pss 10; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 2 -t 6000000 -ps -pss 10; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 3 -t 6000000 -ps -pss 10; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 4 -t 6000000 -ps -pss 10"
+tmux new-session -d -s ps105 "python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 5 -t 6000000 -ps -pss 10; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 6 -t 6000000 -ps -pss 10; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 7 -t 6000000 -ps -pss 10; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 8 -t 6000000 -ps -pss 10; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 9 -t 6000000 -ps -pss 10"
+
+tmux new-session -d -s ps110 "python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 0 -t 6000000 -ps -pss 11; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 1 -t 6000000 -ps -pss 11; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 2 -t 6000000 -ps -pss 11; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 3 -t 6000000 -ps -pss 11; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 4 -t 6000000 -ps -pss 11"
+tmux new-session -d -s ps115 "python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 5 -t 6000000 -ps -pss 11; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 6 -t 6000000 -ps -pss 11; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 7 -t 6000000 -ps -pss 11; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 8 -t 6000000 -ps -pss 11; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 9 -t 6000000 -ps -pss 11"
+
+tmux new-session -d -s ps120 "python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 0 -t 6000000 -ps -pss 12; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 1 -t 6000000 -ps -pss 12; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 2 -t 6000000 -ps -pss 12; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 3 -t 6000000 -ps -pss 12; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 4 -t 6000000 -ps -pss 12"
+tmux new-session -d -s ps125 "python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 5 -t 6000000 -ps -pss 12; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 6 -t 6000000 -ps -pss 12; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 7 -t 6000000 -ps -pss 12; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 8 -t 6000000 -ps -pss 12; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 9 -t 6000000 -ps -pss 12"
+
+tmux new-session -d -s ps130 "python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 0 -t 6000000 -ps -pss 13; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 1 -t 6000000 -ps -pss 13; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 2 -t 6000000 -ps -pss 13; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 3 -t 6000000 -ps -pss 13; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 4 -t 6000000 -ps -pss 13"
+tmux new-session -d -s ps135 "python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 5 -t 6000000 -ps -pss 13; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 6 -t 6000000 -ps -pss 13; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 7 -t 6000000 -ps -pss 13; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 8 -t 6000000 -ps -pss 13; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 9 -t 6000000 -ps -pss 13"
+
+tmux new-session -d -s ps140 "python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 0 -t 6000000 -ps -pss 14; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 1 -t 6000000 -ps -pss 14; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 2 -t 6000000 -ps -pss 14; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 3 -t 6000000 -ps -pss 14; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 4 -t 6000000 -ps -pss 14"
+tmux new-session -d -s ps145 "python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 5 -t 6000000 -ps -pss 14; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 6 -t 6000000 -ps -pss 14; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 7 -t 6000000 -ps -pss 14; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 8 -t 6000000 -ps -pss 14; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 9 -t 6000000 -ps -pss 14"

@@ -60,7 +60,31 @@ for reward_type in ['sparse', 'dense']:
     )
     register(
         id='FetchReach{}-v0'.format(suffix),
-        entry_point='custom_gym_envs.envs.FetchReach.fetch.reach:FetchReachEnv',
+        entry_point='custom_gym_envs.envs.FetchReach.Normal.fetch.reach:FetchReachEnv',
+        kwargs=kwargs,
+        max_episode_steps=50,
+    )
+    register(
+        id='FetchReachFaultyJoint{}-v1'.format(suffix),
+        entry_point='custom_gym_envs.envs.FetchReach.FaultyJoint_v1.fetch.reach:FetchReachEnv',
+        kwargs=kwargs,
+        max_episode_steps=50,
+    )
+    register(
+        id='FetchReachFaultyJoint{}-v2'.format(suffix),
+        entry_point='custom_gym_envs.envs.FetchReach.FaultyJoint_v2.fetch.reach:FetchReachEnv',
+        kwargs=kwargs,
+        max_episode_steps=50,
+    )
+    register(
+        id='FetchReachFaultyJoint{}-v3'.format(suffix),
+        entry_point='custom_gym_envs.envs.FetchReach.FaultyJoint_v3.fetch.reach:FetchReachEnv',
+        kwargs=kwargs,
+        max_episode_steps=50,
+    )
+    register(
+        id='FetchReachFaultyBrokenGrip{}-v0'.format(suffix),
+        entry_point='custom_gym_envs.envs.FetchReach.FaultyBrokenGrip.fetch.reach:FetchReachEnv',
         kwargs=kwargs,
         max_episode_steps=50,
     )

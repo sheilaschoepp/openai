@@ -140,12 +140,13 @@ class FetchEnv(robot_env.RobotEnv):
             object_velp = self.sim.data.get_site_xvelp('object0') * dt
             object_velr = self.sim.data.get_site_xvelr('object0') * dt
             # gripper state
-            object_rel_pos_grip = object_pos - grip_pos
-            object_rel_pos_goal = object_pos - self.goal
+            object_rel_pos = object_pos - grip_pos
+            # object_rel_pos_grip = object_pos - grip_pos
+            # object_rel_pos_goal = object_pos - self.goal
             object_velp -= grip_velp
         else:
-            object_pos = object_rot = object_velp = object_velr = \
-                object_rel_pos_grip = object_rel_pos_goal = np.zeros(0)
+            object_pos = object_rot = object_velp = object_velr = object_rel_pos = np.zeros(0)
+            # object_rel_pos_grip = object_rel_pos_goal = np.zeros(0)
         gripper_state = robot_qpos[-2:]
         gripper_vel = robot_qvel[-2:] * dt  # change to a scalar if the gripper is made symmetric
 
@@ -159,9 +160,14 @@ class FetchEnv(robot_env.RobotEnv):
         # ])
 
         obs = np.concatenate([
-            grip_pos, gripper_state, grip_velp, gripper_vel, object_rel_pos_grip.ravel(), object_rel_pos_goal.ravel(),
-            object_rot.ravel(), object_velp.ravel(), object_velr.ravel()
+            grip_pos, object_pos.ravel(), object_rel_pos.ravel(), gripper_state, object_rot.ravel(),
+            object_velp.ravel(), object_velr.ravel(), grip_velp, gripper_vel, self.goal.copy()
         ])
+
+        # obs = np.concatenate([
+        #     grip_pos, gripper_state, grip_velp, gripper_vel, object_rel_pos_grip.ravel(), object_rel_pos_goal.ravel(),
+        #     object_rot.ravel(), object_velp.ravel(), object_velr.ravel()
+        # ])
 
         # print('object pos: ', object_pos)
         # print('gripper pos: ', grip_pos)

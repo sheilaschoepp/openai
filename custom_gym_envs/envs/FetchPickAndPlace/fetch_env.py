@@ -90,7 +90,7 @@ class FetchEnv(robot_env.RobotEnv):
         norm_grip_object = - np.linalg.norm(d_grip_object, axis=-1)
         d = - norm_object_goal
         # reward = norm_object_goal + norm_grip_object
-        reward = norm_grip_object + -(d > self.distance_threshold)
+        reward = norm_grip_object + -int(d > self.distance_threshold)
         return reward
 
     # RobotEnv methods

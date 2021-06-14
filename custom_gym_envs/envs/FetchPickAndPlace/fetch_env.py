@@ -86,12 +86,17 @@ class FetchEnv(robot_env.RobotEnv):
         # d_grip_object[0] *= 3  # penalizing the x-coordinate distance
         # d_grip_object[1] *= 3  # penalizing the y-coordinate distance
 
-        norm_object_goal = - np.linalg.norm(d_object_goal, axis=-1)
-        norm_grip_object = - np.linalg.norm(d_grip_object, axis=-1)
-        # d = - norm_object_goal
+        norm_object_goal = np.linalg.norm(d_object_goal, axis=-1)
+        norm_grip_object = np.linalg.norm(d_grip_object, axis=-1)
         # reward = norm_object_goal + norm_grip_object
-        # reward = norm_grip_object + -int(d > self.distance_threshold)
-        reward = norm_grip_object + np.exp(norm_object_goal * 100)
+        # reward = norm_grip_object - int(norm_object_goal > self.distance_threshold)
+
+        if norm_grip_object < 0.0005:
+            reward = np.exp(-norm_object_goal)
+        else:
+            reward = - norm_grip_object
+
+        # reward = norm_grip_object + np.exp(norm_object_goal * 100)
         return reward
 
     # RobotEnv methods

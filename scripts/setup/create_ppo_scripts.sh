@@ -1,6 +1,6 @@
 echo 'PPO_N_CONTROLLER_ABSOLUTE_PATH="/home/sschoepp/Documents/openai/controllers/ppov2/ppov2_n_controller.py"' >> melco2.sh
 
-for i in {76..78}
+for i in {79..99}
 do
   echo 'tmux new-session -d -s ps'$i' "python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 0 -t 6000000 -tef 30000 -ps -pss '$i'; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 1 -t 6000000 -tef 30000 -ps -pss '$i'; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 2 -t 6000000 -tef 30000 -ps -pss '$i'; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 3 -t 6000000 -tef 30000 -ps -pss '$i'; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 4 -t 6000000 -tef 30000 -ps -pss '$i'; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 5 -t 6000000 -tef 30000 -ps -pss '$i'; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 6 -t 6000000 -tef 30000 -ps -pss '$i'; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 7 -t 6000000 -tef 30000 -ps -pss '$i'; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 8 -t 6000000 -tef 30000 -ps -pss '$i'; python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 9 -t 6000000 -tef 30000 -ps -pss '$i'"' >> melco2.sh
 done

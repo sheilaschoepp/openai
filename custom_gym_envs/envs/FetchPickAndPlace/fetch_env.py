@@ -96,7 +96,7 @@ class FetchEnv(robot_env.RobotEnv):
         else:
             reward = - norm_grip_object
 
-        print(reward)
+        # print(reward)
         # reward = norm_grip_object + np.exp(norm_object_goal * 100)
         return reward
 

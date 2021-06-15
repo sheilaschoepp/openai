@@ -1,5 +1,6 @@
 #Importing OpenAI gym package and MuJoCo engine
 import gym
+import time
 import numpy as np
 from environment.environment import Environment
 import mujoco_py
@@ -30,14 +31,19 @@ print(env.observation_space['observation'])
 # print(env.env_state_dim())
 # print(env.action_space)
 
-counter = 0
+
+# counter = 0
 while True:
     #renders the environment
     env.render()
+
     #Takes a random action from its action space
     # aka the number of unique actions an agent can perform
-    state, reward, done, info = env.step(env.action_space.sample())
-    print('reward: ', reward)
+    # action = env.action_space.sample()
+    action = np.array([0, 0, 0, 1])
+    # print(action)
+    state, reward, done, info = env.step(action)
+    # print('reward: ', reward)
     # print(state[np.where(prev_state == state)])
     # print(state['observation'])
     # print(state['achieved_goal'])
@@ -48,10 +54,10 @@ while True:
     # print(state[0]['achieved_goal'])
     # print(state[0]['desired_goal'])
     # print('#' * 50)
-
-    counter += 1
-    if counter == 50:
-        counter = 0
-        env.reset()
+    # time.sleep(3)
+    # counter += 1
+    # if counter == 50:
+    #     counter = 0
+    #     env.reset()
 
 env.close()

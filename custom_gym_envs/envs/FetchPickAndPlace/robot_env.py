@@ -44,6 +44,7 @@ class RobotEnv(gym.GoalEnv):
             self.goal = self._sample_goal()
         else:
             self.goal = np.array([1.3, 0.8, 0.62])
+            # self.goal = self.sim.data.get_site_xpos('robot0:grip')
 
         obs = self._get_obs()
         self.action_space = spaces.Box(-1., 1., shape=(n_actions,), dtype='float32')

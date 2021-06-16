@@ -646,9 +646,6 @@ class PPOv2(BaseAgent):
             for param_group in self.actor_critic_optimizer.param_groups:
                 param_group["lr"] = lr
 
-            print("learning rate:", lr)
-            print(self.num_updates, "/", self.total_num_updates)
-
         self.num_updates += 1
 
         avg_clip_loss = 0

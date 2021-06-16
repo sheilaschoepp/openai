@@ -51,7 +51,7 @@ python /home/sschoepp/scratch/openai/controllers/ppov2/ppov2_n_controller.py -lr
 python /home/sschoepp/scratch/openai/controllers/ppov2/ppov2_n_controller.py -lrd -s 9 -tl 12 -ps -pss $k" > s"$i".txt
 done
 
-for i in {51..96..2}
+for i in {51..96..3}
 do
   echo "#!/bin/bash
 

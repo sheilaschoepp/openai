@@ -2,7 +2,7 @@ echo 'PPO_N_CONTROLLER_ABSOLUTE_PATH="/home/sschoepp/Documents/openai/controller
 
 for s in 4 5 6 7 8 9
 do
-  echo 'tmux new-session -d -s ps88$s "python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s $s -t 6000000 -tef 30000 -ps -pss 88"' > melco2.sh
+  echo 'tmux new-session -d -s ps88$s "python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s $s -t 6000000 -tef 30000 -ps -pss 88"' >> melco2.sh
 done
 
 for s in 4 5 6 7 8 9

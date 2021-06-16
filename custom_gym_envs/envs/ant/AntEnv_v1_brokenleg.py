@@ -8,7 +8,7 @@ from mujoco_py.generated import const
 class AntEnvV1(mujoco_env.MujocoEnv, utils.EzPickle):
     def __init__(self):
         home = str(Path.home())
-        filepath = home + "/Documents/openai/custom_gym_envs/xml/ant/AntEnv_v1_brokenleg.xml"
+        filepath = home + "/Documents/openai/custom_gym_envs/envs/ant/xml/AntEnv_v1_brokenleg.xml"
         mujoco_env.MujocoEnv.__init__(self, filepath, 5)
         utils.EzPickle.__init__(self)
 

@@ -646,6 +646,9 @@ class PPOv2(BaseAgent):
             for param_group in self.actor_critic_optimizer.param_groups:
                 param_group["lr"] = lr
 
+            print("learning rate:", lr)
+            print(self.num_updates, "/", self.total_num_updates)
+
         self.num_updates += 1
 
         avg_clip_loss = 0
@@ -714,5 +717,5 @@ class PPOv2(BaseAgent):
 
         clip_fraction = total_num_clips / (self.num_epoch_updates * self.mini_batch_size * (self.num_samples // self.mini_batch_size))
 
-        self.loss_data[self.loss_index] = [self.num_updates, self.num_epoch_updates, self.num_mini_batch_updates, avg_clip_loss, avg_vf_loss, avg_entropy, avg_clip_vf_s_loss, clip_fraction]
+        # self.loss_data[self.loss_index] = [self.num_updates, self.num_epoch_updates, self.num_mini_batch_updates, avg_clip_loss, avg_vf_loss, avg_entropy, avg_clip_vf_s_loss, clip_fraction]  # todo readd
         self.loss_index += 1

@@ -256,13 +256,14 @@ class NormalController:
         num_columns = 7
         self.eval_data = np.zeros((num_rows, num_columns))
 
-        num_rows = self.parameters["n_time_steps"]  # larger than needed; will remove extra entries later
-        num_columns = 3
-        self.train_data = np.zeros((num_rows, num_columns))
-
-        num_rows = (self.parameters["n_time_steps"] // self.parameters["num_samples"])
-        num_columns = 8
-        self.loss_data = np.zeros((num_rows, num_columns))
+        # num_rows = self.parameters["n_time_steps"]  # larger than needed; will remove extra entries later # todo readd
+        # num_columns = 3
+        # self.train_data = np.zeros((num_rows, num_columns))
+        #
+        # num_rows = (self.parameters["n_time_steps"] // self.parameters["num_samples"])
+        # num_columns = 8
+        # self.loss_data = np.zeros((num_rows, num_columns))
+        self.loss_data = None  # todo remove
 
         # seeds
 
@@ -438,7 +439,7 @@ class NormalController:
                     self.evaluate_model(self.rlg.num_steps())
 
             index = self.rlg.num_episodes() - 1
-            self.train_data[index] = [self.rlg.num_episodes(), self.rlg.num_steps(), self.rlg.episode_reward()]
+            # self.train_data[index] = [self.rlg.num_episodes(), self.rlg.num_steps(), self.rlg.episode_reward()]  # todo readd
 
             # learning complete
             if self.rlg.num_steps() == self.parameters["n_time_steps"]:
@@ -574,17 +575,17 @@ class NormalController:
         if num_rows > 0:
             self.eval_data = np.append(self.eval_data, np.zeros((num_rows, num_columns)), axis=0)
 
-        self.train_data = pd.read_csv(csv_foldername + "/train_data.csv").to_numpy().copy()[:, 1:]
-        num_rows = self.parameters["n_time_steps"] - self.train_data.shape[0]  # always larger than needed; will remove extra entries later
-        num_columns = self.train_data.shape[1]
-        if num_rows > 0:
-            self.train_data = np.append(self.train_data, np.zeros((num_rows, num_columns)), axis=0)
-
-        self.loss_data = pd.read_csv(csv_foldername + "/loss_data.csv").to_numpy().copy()[:, 1:]
-        num_rows = (self.parameters["n_time_steps"] // self.parameters["num_samples"]) - self.loss_data.shape[0]
-        num_columns = self.loss_data.shape[1]
-        if num_rows > 0:
-            self.loss_data = np.append(self.loss_data, np.zeros((num_rows, num_columns)), axis=0)
+        # self.train_data = pd.read_csv(csv_foldername + "/train_data.csv").to_numpy().copy()[:, 1:]  # todo readd
+        # num_rows = self.parameters["n_time_steps"] - self.train_data.shape[0]  # always larger than needed; will remove extra entries later
+        # num_columns = self.train_data.shape[1]
+        # if num_rows > 0:
+        #     self.train_data = np.append(self.train_data, np.zeros((num_rows, num_columns)), axis=0)
+        #
+        # self.loss_data = pd.read_csv(csv_foldername + "/loss_data.csv").to_numpy().copy()[:, 1:]
+        # num_rows = (self.parameters["n_time_steps"] // self.parameters["num_samples"]) - self.loss_data.shape[0]
+        # num_columns = self.loss_data.shape[1]
+        # if num_rows > 0:
+        #     self.loss_data = np.append(self.loss_data, np.zeros((num_rows, num_columns)), axis=0)
 
     def load_parameters(self):
         """
@@ -683,63 +684,63 @@ class NormalController:
         plt.savefig(jpg_foldername + "/evaluation_samples.jpg")
         plt.close()
 
-        df = pd.read_csv(csv_foldername + "/train_data.csv")
-
-        # training: episode_return vs num_episodes
-        df.plot(x="num_episodes", y="episode_return", color="blue", legend=False)
-        plt.xlabel("episodes")
-        plt.ylabel("episode\nreturn", rotation="horizontal", labelpad=30)
-        plt.title("Training")
-        pss.plot_settings()
-        plt.savefig(jpg_foldername + "/train_episodes.jpg")
-        plt.close()
-
-        df = pd.read_csv(csv_foldername + "/loss_data.csv")
-
-        # training: clip_loss vs num_updates
-        df.plot(x="num_updates", y="clip_loss", color="blue", legend=False)
-        plt.xlabel("updates")
-        plt.ylabel("loss", rotation="horizontal", labelpad=30)
-        plt.title("CLIP Loss")
-        pss.plot_settings()
-        plt.savefig(jpg_foldername + "/clip_loss_updates.jpg")
-        plt.close()
-
-        # training: vf_loss vs num_updates
-        df.plot(x="num_updates", y="vf_loss", color="blue", legend=False)
-        plt.xlabel("updates")
-        plt.ylabel("loss", rotation="horizontal", labelpad=30)
-        plt.title("VF Loss")
-        pss.plot_settings()
-        plt.savefig(jpg_foldername + "/vf_loss_updates.jpg")
-        plt.close()
-
-        # training: entropy vs num_updates
-        df.plot(x="num_updates", y="entropy", color="blue", legend=False)
-        plt.xlabel("updates")
-        plt.ylabel("entropy", rotation="horizontal", labelpad=30)
-        plt.title("Entropy")
-        pss.plot_settings()
-        plt.savefig(jpg_foldername + "/entropy_updates.jpg")
-        plt.close()
-
-        # training: clip_vf_s_loss vs num_updates
-        df.plot(x="num_updates", y="clip_vf_s_loss", color="blue", legend=False)
-        plt.xlabel("updates")
-        plt.ylabel("loss", rotation="horizontal", labelpad=30)
-        plt.title("CLIP+VF+S Loss")
-        pss.plot_settings()
-        plt.savefig(jpg_foldername + "/clip_vf_s_loss_updates.jpg")
-        plt.close()
-
-        # training: clip_fraction vs num_updates
-        df.plot(x="num_updates", y="clip_fraction", color="blue", legend=False)
-        plt.xlabel("updates")
-        plt.ylabel("clip fraction", rotation="horizontal", labelpad=30)
-        plt.title("Clip Fraction")
-        pss.plot_settings()
-        plt.savefig(jpg_foldername + "/clip_fraction_updates.jpg")
-        plt.close()
+        # df = pd.read_csv(csv_foldername + "/train_data.csv")  # todo readd
+        #
+        # # training: episode_return vs num_episodes
+        # df.plot(x="num_episodes", y="episode_return", color="blue", legend=False)
+        # plt.xlabel("episodes")
+        # plt.ylabel("episode\nreturn", rotation="horizontal", labelpad=30)
+        # plt.title("Training")
+        # pss.plot_settings()
+        # plt.savefig(jpg_foldername + "/train_episodes.jpg")
+        # plt.close()
+        #
+        # df = pd.read_csv(csv_foldername + "/loss_data.csv")
+        #
+        # # training: clip_loss vs num_updates
+        # df.plot(x="num_updates", y="clip_loss", color="blue", legend=False)
+        # plt.xlabel("updates")
+        # plt.ylabel("loss", rotation="horizontal", labelpad=30)
+        # plt.title("CLIP Loss")
+        # pss.plot_settings()
+        # plt.savefig(jpg_foldername + "/clip_loss_updates.jpg")
+        # plt.close()
+        #
+        # # training: vf_loss vs num_updates
+        # df.plot(x="num_updates", y="vf_loss", color="blue", legend=False)
+        # plt.xlabel("updates")
+        # plt.ylabel("loss", rotation="horizontal", labelpad=30)
+        # plt.title("VF Loss")
+        # pss.plot_settings()
+        # plt.savefig(jpg_foldername + "/vf_loss_updates.jpg")
+        # plt.close()
+        #
+        # # training: entropy vs num_updates
+        # df.plot(x="num_updates", y="entropy", color="blue", legend=False)
+        # plt.xlabel("updates")
+        # plt.ylabel("entropy", rotation="horizontal", labelpad=30)
+        # plt.title("Entropy")
+        # pss.plot_settings()
+        # plt.savefig(jpg_foldername + "/entropy_updates.jpg")
+        # plt.close()
+        #
+        # # training: clip_vf_s_loss vs num_updates
+        # df.plot(x="num_updates", y="clip_vf_s_loss", color="blue", legend=False)
+        # plt.xlabel("updates")
+        # plt.ylabel("loss", rotation="horizontal", labelpad=30)
+        # plt.title("CLIP+VF+S Loss")
+        # pss.plot_settings()
+        # plt.savefig(jpg_foldername + "/clip_vf_s_loss_updates.jpg")
+        # plt.close()
+        #
+        # # training: clip_fraction vs num_updates
+        # df.plot(x="num_updates", y="clip_fraction", color="blue", legend=False)
+        # plt.xlabel("updates")
+        # plt.ylabel("clip fraction", rotation="horizontal", labelpad=30)
+        # plt.title("Clip Fraction")
+        # pss.plot_settings()
+        # plt.savefig(jpg_foldername + "/clip_fraction_updates.jpg")
+        # plt.close()
 
         print("plotting complete")
 
@@ -795,26 +796,26 @@ class NormalController:
         eval_data_df.to_csv(csv_foldername + "/eval_data.csv", float_format="%f")
 
         # remove zero entries
-        index = None
-        for i in range(self.train_data.shape[0]):
-            if (self.train_data[i] == np.zeros(3)).all() and (self.train_data[i+1] == np.zeros(3)).all():
-                index = i
-                break
-        self.train_data = self.train_data[:index]
-        train_data_df = pd.DataFrame({"num_episodes": self.train_data[:, 0],
-                                      "num_time_steps": self.train_data[:, 1],
-                                      "episode_return": self.train_data[:, 2]})
-        train_data_df.to_csv(csv_foldername + "/train_data.csv", float_format="%f")
-
-        loss_data_df = pd.DataFrame({"num_updates": self.loss_data[:, 0],
-                                     "num_epoch_updates": self.loss_data[:, 1],
-                                     "num_mini_batch_updates": self.loss_data[:, 2],
-                                     "clip_loss": self.loss_data[:, 3],
-                                     "vf_loss": self.loss_data[:, 4],
-                                     "entropy": self.loss_data[:, 5],
-                                     "clip_vf_s_loss": self.loss_data[:, 6],
-                                     "clip_fraction": self.loss_data[:, 7]})
-        loss_data_df.to_csv(csv_foldername + "/loss_data.csv", float_format="%f")
+        # index = None  todo readd
+        # for i in range(self.train_data.shape[0]):
+        #     if (self.train_data[i] == np.zeros(3)).all() and (self.train_data[i+1] == np.zeros(3)).all():
+        #         index = i
+        #         break
+        # self.train_data = self.train_data[:index]
+        # train_data_df = pd.DataFrame({"num_episodes": self.train_data[:, 0],
+        #                               "num_time_steps": self.train_data[:, 1],
+        #                               "episode_return": self.train_data[:, 2]})
+        # train_data_df.to_csv(csv_foldername + "/train_data.csv", float_format="%f")
+        #
+        # loss_data_df = pd.DataFrame({"num_updates": self.loss_data[:, 0],
+        #                              "num_epoch_updates": self.loss_data[:, 1],
+        #                              "num_mini_batch_updates": self.loss_data[:, 2],
+        #                              "clip_loss": self.loss_data[:, 3],
+        #                              "vf_loss": self.loss_data[:, 4],
+        #                              "entropy": self.loss_data[:, 5],
+        #                              "clip_vf_s_loss": self.loss_data[:, 6],
+        #                              "clip_fraction": self.loss_data[:, 7]})
+        # loss_data_df.to_csv(csv_foldername + "/loss_data.csv", float_format="%f")
 
     def save_parameters(self):
         """

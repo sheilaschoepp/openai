@@ -29,33 +29,3 @@ register(
     entry_point='custom_gym_envs.envs.ant.AntEnv_v4_ab_addedlink:AntEnvV4',
     max_episode_steps=1000,
 )
-
-register(
-    id='FetchPickAndPlaceEnv-v0',
-    entry_point='custom_gym_envs.envs.fetchpickandplace.FetchPickAndPlaceEnv_v0_normal:FetchPickAndPlaceEnvV0',
-    max_episode_steps=50,
-)
-
-register(
-    id='FetchPickAndPlaceEnv-v1',
-    entry_point='custom_gym_envs.envs.fetchpickandplace.FetchPickAndPlaceEnv_v1:FetchPickAndPlaceEnvV1',
-    max_episode_steps=50,
-)
-
-register(
-    id='FetchPickAndPlaceEnv-v2',
-    entry_point='custom_gym_envs.envs.fetchpickandplace.FetchPickAndPlaceEnv_v2:FetchPickAndPlaceEnvV2',
-    max_episode_steps=50,
-)
-
-register(
-    id='FetchPickAndPlaceEnv-v3',
-    entry_point='custom_gym_envs.envs.fetchpickandplace.FetchPickAndPlaceEnv_v3:FetchPickAndPlaceEnvV3',
-    max_episode_steps=50,
-)
-
-register(
-    id='FetchReachEnv-v0',
-    entry_point='custom_gym_envs.envs.fetchreach.FetchReachEnv_v0_normal:FetchReachEnvV0',
-    max_episode_steps=50,
-)

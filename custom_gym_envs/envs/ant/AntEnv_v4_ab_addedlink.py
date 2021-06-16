@@ -8,7 +8,7 @@ from mujoco_py.generated import const
 class AntEnvV4(mujoco_env.MujocoEnv, utils.EzPickle):  # TODO
     def __init__(self):
         home = str(Path.home())
-        filepath = home + "/Documents/openai/custom_gym_envs/xml/ant/AntEnv_v4_ab_addedlink.xml"  # TODO
+        filepath = home + "/Documents/openai/custom_gym_envs/envs/ant/xml/AntEnv_v4_ab_addedlink.xml"  # TODO
         mujoco_env.MujocoEnv.__init__(self, filepath, 5)
         utils.EzPickle.__init__(self)
 

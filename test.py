@@ -7,8 +7,8 @@ import mujoco_py
 import custom_gym_envs
 #Setting MountainCar-v0 as the environment
 # env = Environment('FetchPickAndPlace-v0', 0)
-# env = gym.make('FetchPickAndPlaceDense-v0')
-env = gym.make('FetchReach-v0')
+env = gym.make('FetchPickAndPlaceDense-v0')
+# env = gym.make('FetchReach-v0')
 # env = gym.make('FetchReachFaultyJoint-v1')
 # env = gym.make('FetchReachFaultyJoint-v2')
 # env = gym.make('FetchReachFaultyJoint-v3')
@@ -31,7 +31,7 @@ print(env.observation_space['observation'])
 # print(env.env_state_dim())
 # print(env.action_space)
 
-
+reward = 0
 # counter = 0
 while True:
     #renders the environment
@@ -40,7 +40,11 @@ while True:
     #Takes a random action from its action space
     # aka the number of unique actions an agent can perform
     # action = env.action_space.sample()
-    action = np.array([0, 0, 0, 1])
+    if reward == -100:
+        action = np.array([0.01, 0.01, 0.1, 0.001])
+    else:
+        action = np.array([0.01, 0.01, -0.1, 0.001])
+
     # print(action)
     state, reward, done, info = env.step(action)
     # print('reward: ', reward)

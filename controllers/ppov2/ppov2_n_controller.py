@@ -32,8 +32,8 @@ parser = argparse.ArgumentParser(description="PyTorch Proximal Policy Optimizati
 
 parser.add_argument("-e", "--n_env_name", default="Ant-v2",
                     help="name of normal (non-malfunctioning) MuJoCo Gym environment (default: Ant-v2)")
-parser.add_argument("-t", "--n_time_steps", type=int, default=400000000, metavar="N",
-                    help="number of time steps in normal (non-malfunctioning) MuJoCo Gym environment (default: 400000000)")
+parser.add_argument("-t", "--n_time_steps", type=int, default=1000000000, metavar="N",  # todo
+                    help="number of time steps in normal (non-malfunctioning) MuJoCo Gym environment (default: 1000000000)")
 
 parser.add_argument("--lr", type=float, default=0.00025, metavar="G",
                     help="learning rate (default: 0.0003)")
@@ -70,12 +70,12 @@ parser.add_argument("--hidden_dim", type=int, default=64, metavar="N",
 parser.add_argument("--log_std", type=float, default=0.0, metavar="G",
                     help="log standard deviation of the policy distribution (default: 0.0)")
 
-parser.add_argument("-tef", "--time_step_eval_frequency", type=int, default=2000000, metavar="N",
-                    help="frequency of policy evaluation during learning (default: 2000000)")
+parser.add_argument("-tef", "--time_step_eval_frequency", type=int, default=5000000, metavar="N",  # todo
+                    help="frequency of policy evaluation during learning (default: 5000000)")
 parser.add_argument("-ee", "--eval_episodes", type=int, default=10, metavar="N",
                     help="number of episodes in policy evaluation roll-out (default: 10)")
-parser.add_argument("-tmsf", "--time_step_model_save_frequency", type=int, default=100000, metavar="N",
-                    help="frequency of saving models during learning (default: 100000)")
+parser.add_argument("-tmsf", "--time_step_model_save_frequency", type=int, default=50000000, metavar="N",  # todo
+                    help="frequency of saving models during learning (default: 50000000)")
 
 parser.add_argument("-c", "--cuda", default=False, action="store_true",
                     help="if true, run on GPU (default: False)")

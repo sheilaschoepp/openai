@@ -32,7 +32,7 @@ parser = argparse.ArgumentParser(description="PyTorch Soft Actor-Critic Argument
 
 parser.add_argument("-e", "--n_env_name", default="Ant-v2",
                     help="name of normal (non-malfunctioning) MuJoCo Gym environment (default: Ant-v2)")
-parser.add_argument("-t", "--n_time_steps", type=int, default=20000000, metavar="N",
+parser.add_argument("-t", "--n_time_steps", type=int, default=20000000, metavar="N",  # todo
                     help="number of time steps in normal (non-malfunctioning) MuJoCo Gym environment (default: 20000000)")
 
 parser.add_argument("--gamma", type=float, default=0.99, metavar="G",
@@ -57,11 +57,11 @@ parser.add_argument("--model_updates_per_step", type=int, default=1, metavar="N"
 parser.add_argument("--target_update_interval", type=int, default=1, metavar="N",
                     help="number of target value network updates per number of gradient steps (network updates) (default: 1)")
 
-parser.add_argument("-tef", "--time_step_eval_frequency", type=int, default=100000, metavar="N",
+parser.add_argument("-tef", "--time_step_eval_frequency", type=int, default=100000, metavar="N",  # todo
                     help="frequency of policy evaluation during learning (default: 10000)")
 parser.add_argument("-ee", "--eval_episodes", type=int, default=10, metavar="N",
                     help="number of episodes in policy evaluation roll-out (default: 10)")
-parser.add_argument("-tmsf", "--time_step_model_save_frequency", type=int, default=1000000, metavar="N",
+parser.add_argument("-tmsf", "--time_step_model_save_frequency", type=int, default=1000000, metavar="N",  # todo
                     help="frequency of saving models during learning (default: 100000)")
 
 parser.add_argument("-a", "--automatic_entropy_tuning", default=False, action="store_true",

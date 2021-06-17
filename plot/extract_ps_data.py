@@ -16,8 +16,8 @@ def extract_sac_results(directory):
     parameters = directory.split("_")
 
     g = None
-    t = None
     lr = None
+    t = None
     rbs = None
     bs = None
     pss = None
@@ -27,11 +27,11 @@ def extract_sac_results(directory):
         if p.startswith("g:"):
             g = float(p.split(":")[1])
 
-        elif p.startswith("t:"):
-            t = float(p.split(":")[1])
-
         elif p.startswith("lr:"):
             lr = float(p.split(":")[1])
+
+        elif p.startswith("t:"):
+            t = float(p.split(":")[1])
 
         elif p.startswith("rbs:"):
             rbs = int(p.split(":")[1])
@@ -64,13 +64,15 @@ def extract_sac_results(directory):
     performance_std = df_std[-20:].mean()
     performance_sem = df_sem[-20:].mean()
 
-    sac_results.append((pss, g, t, lr, rbs, bs, performance_mean, performance_std, performance_sem, performance_mean - performance_sem, performance_mean + performance_sem))
+    # confidence interval calculation: 9 degrees of freedom, 95% confidence (or alpha=0.025), table value is 2.262
+    # https://www.statisticshowto.com/probability-and-statistics/confidence-interval/
+    sac_results.append((pss, g, lr, t, rbs, bs, performance_mean, performance_std, performance_sem, performance_mean - 2.262*performance_sem, performance_mean + 2.262*performance_sem))
 
 
 if __name__ == "__main__":
 
-    DATA_DIR = "/mnt/DATA"
-    RUNS = 5
+    DATA_DIR = "/local/melco2-1/shared/ant"
+    RUNS = 10
 
     sac_dirs = os.listdir(DATA_DIR + "/sac")
 
@@ -81,6 +83,6 @@ if __name__ == "__main__":
         extract_sac_results(dir_)
 
     df = pd.DataFrame(data=sac_results,
-                      columns=["ps seed", "gamma", "tau", "learning rate", "replay buffer size", "batch size", "performance mean", "performance std", "performance sem", "mean - sem", "mean + sem"])
+                      columns=["ps seed", "gamma", "learning rate", "tau", "replay buffer size", "batch size", "performance mean", "performance std", "performance sem", "ci lower", "ci upper"])
 
     df.to_csv("sac_param_search.csv", index=False)

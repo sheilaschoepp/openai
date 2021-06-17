@@ -39,3 +39,8 @@ for s in 9
 do
   echo 'tmux new-session -d -s ps99'$s' "python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s '$s' -t 6000000 -tef 30000 -tmsf 100000 -ps -pss 99"' >> melco2.sh
 done
+
+for s in 8 9
+do
+  echo 'tmux new-session -d -s ps43'$s' "python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s '$s' -t 6000000 -tef 30000 -tmsf 100000 -ps -pss 43"' >> melco2.sh
+done

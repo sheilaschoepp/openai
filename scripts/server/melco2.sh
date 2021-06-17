@@ -43,3 +43,5 @@ tmux new-session -d -s ps917 "python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchRea
 tmux new-session -d -s ps918 "python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 8 -t 6000000 -tef 30000 -tmsf 100000 -ps -pss 91"
 tmux new-session -d -s ps919 "python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 9 -t 6000000 -tef 30000 -tmsf 100000 -ps -pss 91"
 tmux new-session -d -s ps999 "python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 9 -t 6000000 -tef 30000 -tmsf 100000 -ps -pss 99"
+tmux new-session -d -s ps438 "python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 8 -t 6000000 -tef 30000 -tmsf 100000 -ps -pss 43"
+tmux new-session -d -s ps439 "python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReach-v1 -lrd -s 9 -t 6000000 -tef 30000 -tmsf 100000 -ps -pss 43"

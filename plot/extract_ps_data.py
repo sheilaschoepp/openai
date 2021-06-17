@@ -59,20 +59,22 @@ def extract_sac_results(directory):
             
             print("missing:", seed_foldername)
 
-    df = pd.concat(dfs)
-    df = df.groupby(df.index)
+    if len(dfs) > 0:
+        
+        df = pd.concat(dfs)
+        df = df.groupby(df.index)
 
-    df_mean = df.mean()
-    df_std = df.std()
-    df_sem = df.sem()
+        df_mean = df.mean()
+        df_std = df.std()
+        df_sem = df.sem()
 
-    performance_mean = df_mean[-20:].mean()
-    performance_std = df_std[-20:].mean()
-    performance_sem = df_sem[-20:].mean()
+        performance_mean = df_mean[-20:].mean()
+        performance_std = df_std[-20:].mean()
+        performance_sem = df_sem[-20:].mean()
 
-    # confidence interval calculation: 9 degrees of freedom, 95% confidence (or alpha=0.025), table value is 2.262
-    # https://www.statisticshowto.com/probability-and-statistics/confidence-interval/
-    sac_results.append((pss, g, lr, t, rbs, bs, performance_mean, performance_std, performance_sem, performance_mean - 2.262*performance_sem, performance_mean + 2.262*performance_sem))
+        # confidence interval calculation: 9 degrees of freedom, 95% confidence (or alpha=0.025), table value is 2.262
+        # https://www.statisticshowto.com/probability-and-statistics/confidence-interval/
+        sac_results.append((pss, g, lr, t, rbs, bs, performance_mean, performance_std, performance_sem, performance_mean - 2.262*performance_sem, performance_mean + 2.262*performance_sem))
 
 
 if __name__ == "__main__":

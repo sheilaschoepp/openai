@@ -74,7 +74,7 @@ def extract_sac_results(directory):
 
         # confidence interval calculation: 9 degrees of freedom, 95% confidence (or alpha=0.025), table value is 2.262
         # https://www.statisticshowto.com/probability-and-statistics/confidence-interval/
-        sac_results.append((pss, g, lr, t, rbs, bs, performance_mean, performance_std, performance_sem, performance_mean - 2.262*performance_sem, performance_mean + 2.262*performance_sem))
+        return [pss, performance_mean, performance_mean - 2.262*performance_sem, performance_mean + 2.262*performance_sem]
 
 
 if __name__ == "__main__":
@@ -88,14 +88,18 @@ if __name__ == "__main__":
 
     for dir_ in sac_dirs:
 
-        extract_sac_results(dir_)
+        sac_result = extract_sac_results(dir_)
+        sac_results.append(sac_result)
 
     # sort by descending performance mean
-    def sort_descending(sac_result):
-        return sac_result[6]
+    def sort_descending(sr):
+        return sr[1]
     sac_results.sort(key=sort_descending, reverse=True)
 
     df = pd.DataFrame(data=sac_results,
-                      columns=["ps seed", "gamma", "learning rate", "tau", "replay buffer size", "batch size", "performance mean", "performance std", "performance sem", "ci lower", "ci upper"])
+                      columns=["ps seed",
+                               "performance mean",
+                               "ci lower",
+                               "ci upper"])
 
     df.to_csv("sac_param_search.csv", index=False)

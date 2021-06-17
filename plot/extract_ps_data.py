@@ -49,9 +49,15 @@ def extract_sac_results(directory):
         seed_foldername = DATA_DIR + "/sac/" + directory + "/seed{}".format(i)
         csv_filename = seed_foldername + "/csv/eval_data.csv"
 
-        df = pd.read_csv(csv_filename)
-        df = df["average_return"]
-        dfs.append(df)
+        if os.path.exists(csv_filename):
+
+            df = pd.read_csv(csv_filename)
+            df = df["average_return"]
+            dfs.append(df)
+
+        else:
+            
+            print("missing:", seed_foldername)
 
     df = pd.concat(dfs)
     df = df.groupby(df.index)

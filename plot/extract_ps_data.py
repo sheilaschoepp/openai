@@ -93,7 +93,7 @@ if __name__ == "__main__":
     # sort by descending performance mean
     def sort_descending(sac_result):
         return sac_result[6]
-    sac_results.sort(key=sort_descending)
+    sac_results.sort(key=sort_descending, reverse=True)
 
     df = pd.DataFrame(data=sac_results,
                       columns=["ps seed", "gamma", "learning rate", "tau", "replay buffer size", "batch size", "performance mean", "performance std", "performance sem", "ci lower", "ci upper"])

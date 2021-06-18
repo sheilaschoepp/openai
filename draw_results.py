@@ -26,6 +26,7 @@ def draw():
     sns.set_theme()
 
     for e in experiments_list:
+        print(e)
         try:
             seed_list = os.listdir(os.path.join(PATH, e))
             experiment_seed[e] = seed_list

@@ -24,15 +24,14 @@ def draw():
     # set the theme for plots
     sns.set_style("dark")
     sns.set_theme()
-
-    for e in experiments_list:
-        print(e)
+    e = 0
+    while e < len(experiments_list):
         try:
-            seed_list = os.listdir(os.path.join(PATH, e))
-            experiment_seed[e] = seed_list
-            print(e)
+            seed_list = os.listdir(os.path.join(PATH, experiments_list[e]))
+            experiment_seed[experiments_list[e]] = seed_list
+            e += 1
         except PermissionError:
-            experiments_list.remove(e)
+            del experiments_list[e]
             continue
 
     for exp in experiments_list:

@@ -3,6 +3,7 @@ from matplotlib import pyplot as plt
 import pandas as pd
 import numpy as np
 import argparse
+import pathlib
 import os
 
 parser = argparse.ArgumentParser(description="Draw results of the experiments inside a directory")
@@ -52,12 +53,16 @@ def draw():
         standard_error = np.std(average_returns, axis=0) / np.sqrt(average_returns.shape[0])
 
         x = np.array(data_temp['num_time_steps'])[:-1]
+        plt.figure(figsize=(12, 5))
         plt.plot(x, average, 'b')
         plt.fill_between(x, average - standard_error, average + standard_error, color='r', alpha=0.2)
-        if not os.path.exists(os.path.join(PATH, 'draw_results')):
-            os.mkdir(os.path.join(PATH, 'draw_results'))
-        result_path = os.path.join(PATH, 'draw_results')
+        current_path = pathlib.Path(__file__).parent.absolute()
+        if not os.path.exists(os.path.join(current_path, 'draw_results')):
+            os.mkdir(os.path.join(current_path, 'draw_results'))
+        result_path = os.path.join(current_path, 'draw_results')
         plt.savefig(os.path.join(result_path, f'{exp}.jpg'), dpi=300)
+
+
 
 
 if __name__ == "__main__":

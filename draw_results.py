@@ -25,13 +25,20 @@ def draw():
     sns.set_theme()
 
     for e in experiments_list:
-        seed_list = os.listdir(os.path.join(PATH, e))
-        experiment_seed[e] = seed_list
+        try:
+            seed_list = os.listdir(os.path.join(PATH, e))
+            experiment_seed[e] = seed_list
+        except PermissionError:
+            continue
 
     for exp in experiments_list:
         num_seeds = len(experiment_seed[exp])
-        path = os.path.join(PATH, exp, 'seed0', 'csv', 'eval_data.csv')
-        data_temp = pd.read_csv(path)
+        try:
+            path = os.path.join(PATH, exp, 'seed0', 'csv', 'eval_data.csv')
+            data_temp = pd.read_csv(path)
+        except FileNotFoundError:
+            continue
+
         num_samples = len(data_temp) - 1
         average_returns = np.zeros([num_seeds, num_samples])
         index = 0

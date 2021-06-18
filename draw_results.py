@@ -29,8 +29,8 @@ def draw():
         try:
             seed_list = os.listdir(os.path.join(PATH, e))
             experiment_seed[e] = seed_list
-        except PermissionError:
             print(e)
+        except PermissionError:
             experiments_list.remove(e)
             continue
 

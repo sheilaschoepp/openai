@@ -1,7 +1,37 @@
-from mujoco_py import load_model_from_path, MjSim, functions
-import numpy as np
-MODEL_XML = "/home/mehran/Documents/openai/custom_gym_envs/envs/FetchReach/Normal/assets/fetch/reach.xml"
-model = load_model_from_path(MODEL_XML)
-sim = MjSim(model)
-data = sim.data # not sure if this is right
-print(functions.mj_kinematics(model, data)) # this doesn't work - shows None
+# from mujoco_py import load_model_from_path, MjSim, functions
+# import numpy as np
+# MODEL_XML = "/home/mehran/Documents/openai/custom_gym_envs/envs/FetchReach/Normal/assets/fetch/reach.xml"
+# model = load_model_from_path(MODEL_XML)
+# sim = MjSim(model)
+# data = sim.data # not sure if this is right
+#
+# while True:
+#     # functions.mj_kinematics(model, data)
+#     functions.mj_step(model, data)
+#     functions.mj_inverse(model, data)
+#     print(sim.data.qfrc_inverse)
+
+
+import gym
+
+# from mujoco_py import functions, load_model_from_path
+import custom_gym_envs
+env = gym.make('FetchReach-v0')
+env.reset()
+sim = env.sim
+# model = load_model_from_path("/home/mehran/Documents/openai/custom_gym_envs/envs/FetchReach/Normal/assets/fetch/reach.xml")
+
+prev = sim.data.qfrc_inverse
+while True:
+    # functions.mj_kinematics(env.sim.model, env.sim.data)
+    # functions.mj_step(sim.model, sim.data)
+    action = env.action_space.sample()
+    env.step(action)
+    # functions.mj_inverse(env.sim.model, env.sim.data)
+    print(env.sim.data.get_joint_qpos("robot0:elbow_flex_joint"))
+
+    env.render()
+
+    # print(sim.data.qfrc_inverse == prev)
+    # prev = sim.data.qfrc_inverse.copy()
+

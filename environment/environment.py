@@ -5,6 +5,7 @@ import gym
 import numpy as np
 
 from utils.rl_glue import BaseEnvironment
+from environment.fetch_reach_observation_wrapper import FetchReachObservationWrapper
 
 
 class Environment(BaseEnvironment):
@@ -27,12 +28,12 @@ class Environment(BaseEnvironment):
         """
 
         super(Environment, self).__init__()
-        
+
         self.env_name = env_name
         self.render = render
 
         if "FetchReach" in self.env_name:
-            self.env = gym.make(self.env_name, reward_type="dense")
+            self.env = FetchReachObservationWrapper(gym.make(self.env_name, reward_type="dense"))
         else:
             self.env = gym.make(self.env_name)
 
@@ -55,9 +56,6 @@ class Environment(BaseEnvironment):
         """
 
         state = self.env.reset()
-
-        if "FetchReach" in self.env_name:
-            state = np.concatenate((state["observation"], state["desired_goal"]))
 
         if self.render:
             self.env.render()
@@ -88,9 +86,6 @@ class Environment(BaseEnvironment):
             self.env.render()
 
         next_state, reward, terminal, _ = self.env.step(action)
-
-        if "FetchReach" in self.env_name:
-            next_state = np.concatenate((next_state["observation"], next_state["desired_goal"]))
 
         return reward, next_state, terminal
 
@@ -222,9 +217,6 @@ class Environment(BaseEnvironment):
             the state dimension
         """
 
-        if "FetchReach" in self.env_name:
-            state_dim = self.env.observation_space["observation"].shape[0] + self.env.observation_space["desired_goal"].shape[0]
-        else:
-            state_dim = self.env.observation_space.shape[0]
+        state_dim = self.env.observation_space.shape[0]
 
         return state_dim

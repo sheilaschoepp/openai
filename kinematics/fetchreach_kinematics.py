@@ -2,7 +2,7 @@ from mujoco_py import load_model_from_path, MjSim, functions
 import numpy as np
 from tqdm import tqdm
 
-MODEL_XML = "/home/sschoepp/Documents/openai/custom_gym_envs/envs/fetchreach/Normal/assets/fetch/reach.xml"
+MODEL_XML = "/home/sschoepp/Documents/openai/custom_gym_envs/envs/fetchreach/FetchReachEnv_v0_Normal/assets/fetch/reach.xml"
 
 model = load_model_from_path(MODEL_XML)
 sim = MjSim(model)

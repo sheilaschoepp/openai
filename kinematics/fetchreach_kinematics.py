@@ -1,5 +1,6 @@
 from mujoco_py import load_model_from_path, MjSim, functions
 import numpy as np
+from tqdm import tqdm
 
 MODEL_XML = "/home/sschoepp/Documents/openai/custom_gym_envs/envs/fetchreach/Normal/assets/fetch/reach.xml"
 
@@ -65,43 +66,41 @@ points = []
 functions.mj_kinematics(model, sim.data)  # run forward kinematics, returns None
 functions.mj_forward(model, sim.data)  # same as mj_step but does not integrate in time, returns None
 
-step = 0
+with tqdm(total=num_points) as pbar:
+    for i in torso_lift_joint:
+        sim.data.set_joint_qpos("robot0:torso_lift_joint", i)
 
-for i in torso_lift_joint:
-    sim.data.set_joint_qpos("robot0:torso_lift_joint", i)
+        for j in head_pan_joint:
+            sim.data.set_joint_qpos("robot0:head_pan_joint", j)
 
-    for j in head_pan_joint:
-        sim.data.set_joint_qpos("robot0:head_pan_joint", j)
+            for k in head_tilt_joint:
+                sim.data.set_joint_qpos("robot0:head_tilt_joint", k)
 
-        for k in head_tilt_joint:
-            sim.data.set_joint_qpos("robot0:head_tilt_joint", k)
+                for l in shoulder_pan_joint:
+                    sim.data.set_joint_qpos("robot0:shoulder_pan_joint", l)
 
-            for l in shoulder_pan_joint:
-                sim.data.set_joint_qpos("robot0:shoulder_pan_joint", l)
+                    for m in shoulder_lift_joint:
+                        sim.data.set_joint_qpos("robot0:shoulder_lift_joint", m)
 
-                for m in shoulder_lift_joint:
-                    sim.data.set_joint_qpos("robot0:shoulder_lift_joint", m)
+                        for n in elbow_flex_joint:
+                            sim.data.set_joint_qpos("robot0:elbow_flex_joint", n)
 
-                    for n in elbow_flex_joint:
-                        sim.data.set_joint_qpos("robot0:elbow_flex_joint", n)
+                            for o in wrist_flex_joint:
+                                sim.data.set_joint_qpos("robot0:wrist_flex_joint", o)
 
-                        for o in wrist_flex_joint:
-                            sim.data.set_joint_qpos("robot0:wrist_flex_joint", o)
+                                for p in r_gripper_finger_joint:
+                                    sim.data.set_joint_qpos("robot0:r_gripper_finger_joint", p)
 
-                            for p in r_gripper_finger_joint:
-                                sim.data.set_joint_qpos("robot0:r_gripper_finger_joint", p)
+                                    for q in l_gripper_finger_joint:
+                                        sim.data.set_joint_qpos("robot0:l_gripper_finger_joint", q)
 
-                                for q in l_gripper_finger_joint:
-                                    sim.data.set_joint_qpos("robot0:l_gripper_finger_joint", q)
+                                        functions.mj_kinematics(model, sim.data)
+                                        functions.mj_forward(model, sim.data)
 
-                                    functions.mj_kinematics(model, sim.data)
-                                    functions.mj_forward(model, sim.data)
+                                        point = sim.data.get_site_xpos("robot0:grip")
+                                        points.append(point)
 
-                                    point = sim.data.get_site_xpos("robot0:grip")
-                                    points.append(point)
-
-                                    step += 1
-                                    print(step, "/", num_points)
+                                        pbar.update(1)
 
 print("points", len(points))
 unique = np.unique(points, axis=0)

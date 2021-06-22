@@ -14,6 +14,6 @@ for i in 83 84 85 86 87 88 89 90 91 92
 do
   for j in 0 1 2 3 4
   do
-    echo 'tmux new-session -d -s sac'$i' "python $SAC_N_CONTROLLER_ABSOLUTE_PATH -a --resumable -s '$j' -ps -pss '$i'"' >> melco2.sh
+    echo 'tmux new-session -d -s sac'$i$j' "python $SAC_N_CONTROLLER_ABSOLUTE_PATH -a --resumable -s '$j' -ps -pss '$i'"' >> melco2.sh
   done
 done

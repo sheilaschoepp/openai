@@ -23,23 +23,26 @@ sim = env.sim
 prev = sim.data.qfrc_inverse
 
 
-for wrist_flex_joint_angle in np.linspace(-2.16, 2.16, 100):
-    for shoulder_lift_joint_angle in np.linspace(-1.221, 1.518, 100):
-        for elbow_flex_joint_angle in np.linspace(-2.251, 2.251, 100):
-            env.sim.data.set_joint_qpos("robot0:wrist_flex_joint", wrist_flex_joint_angle)
-            env.sim.data.set_joint_qpos("robot0:shoulder_lift_joint", shoulder_lift_joint_angle)
-            env.sim.data.set_joint_qpos("robot0:elbow_flex_joint", elbow_flex_joint_angle)
-            functions.mj_kinematics(env.sim.model, env.sim.data)
-            functions.mj_step(sim.model, sim.data)
-            # action = env.action_space.sample()
-            # env.step(action)
-            # functions.mj_inverse(env.sim.model, env.sim.data)
-            # print(env.sim.data.get_joint_qpos("robot0:wrist_flex_joint"))
-            # print(env.sim.data.get_joint_qpos("robot0:shoulder_lift_joint"))
-            # print(env.sim.data.get_joint_qpos("robot0:elbow_flex_joint"))
 
+
+
+for x in np.linspace(-0.15, 0.15, 20):
+    for y in np.linspace(-0.15, 0.15, 20):
+        for z in np.linspace(-0.15, 0.15, 20):
+            coord = np.array([x, y, z])
+            env.sim.data.set_site_xpos('robot0:grip', coord)
+            functions.mj_kinematics(env.sim.model, env.sim.data)
+            # functions.mj_step(sim.model, sim.data)
+            functions.mj_forward(env.sim.model, env.sim.data)
             env.render()
 
-    # print(sim.data.qfrc_inverse == prev)
-    # prev = sim.data.qfrc_inverse.copy()
+# for wrist_flex_joint_angle in np.linspace(-2.16, 2.16, 100):
+#     for shoulder_lift_joint_angle in np.linspace(-1.221, 1.518, 100):
+#         for elbow_flex_joint_angle in np.linspace(-2.251, 2.251, 100):
+#             env.sim.data.set_joint_qpos("robot0:wrist_flex_joint", wrist_flex_joint_angle)
+#             env.sim.data.set_joint_qpos("robot0:shoulder_lift_joint", shoulder_lift_joint_angle)
+#             env.sim.data.set_joint_qpos("robot0:elbow_flex_joint", elbow_flex_joint_angle)
+#             functions.mj_kinematics(env.sim.model, env.sim.data)
+#             # functions.mj_step(sim.model, sim.data)
+#             functions.mj_forward(env.sim.model, env.sim.data)
 

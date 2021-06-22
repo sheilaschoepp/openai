@@ -1,4 +1,4 @@
-#Importing OpenAI gym package and MuJoCo engine
+# Importing OpenAI gym package and MuJoCo engine
 import gym
 import time
 import numpy as np
@@ -7,10 +7,11 @@ from mujoco_py import functions, load_model_from_path
 from environment.environment import Environment
 import mujoco_py
 import custom_gym_envs
-#Setting MountainCar-v0 as the environment
+
+# Setting MountainCar-v0 as the environment
 # env = Environment('FetchPickAndPlace-v0', 0)
-env = gym.make('FetchPickAndPlaceDense-v0')
-# env = gym.make('FetchReach-v0')
+# env = gym.make('FetchPickAndPlaceDense-v0')
+env = gym.make('FetchReach-v0')
 # env = gym.make('FetchReachFaultyJoint-v1')
 # env = gym.make('FetchReachFaultyJoint-v2')
 # env = gym.make('FetchReachFaultyJoint-v3')
@@ -20,10 +21,7 @@ env = gym.make('FetchPickAndPlaceDense-v0')
 
 # env = gym.make('AntEnv-v0')
 
-sim = env.sim
-model = load_model_from_path("/home/mehran/Documents/openai/custom_gym_envs/envs/FetchReach/Normal/assets/fetch/reach.xml")
-
-#Sets an initial state
+# Sets an initial state
 prev_state = env.reset()
 # env.render()
 # Rendering our instance 300 times
@@ -33,22 +31,63 @@ print(env.observation_space['achieved_goal'])
 print(env.observation_space['desired_goal'])
 print(env.observation_space['observation'])
 
+env._max_episode_steps = 5
+offset = 0.01
+# offset = 0.02
+velocity = 0.5
+
 while True:
-        #renders the environment
-        env.render()
-        #Takes a random action from its action space
-        # aka the number of unique actions an agent can perform
-        action = env.action_space.sample()
+    # renders the environment
+    done = False
+    state = env.reset()
+    env.render()
+    # Takes a random action from its action space
+    # aka the number of unique actions an agent can perform
 
+    # action = env.action_space.sample()
+    goal = state['desired_goal']
+    current_pos = state['achieved_goal']
+    action = np.zeros(4)
+    while abs(goal[0] - current_pos[0]) > offset and not done:
+        current_pos = state['achieved_goal']
+        # print("Goal0: ", goal[0])
+        # print("current_pos0: ", current_pos[0])
+        if goal[0] > current_pos[0]:
+            action[0] = velocity
+        else:
+            action[0] = -velocity
         state, reward, done, info = env.step(action)
+        env.render()
 
-        data = sim.data
-        print(functions.mj_kinematics(model, data))
-        # counter += 1
-        # if counter == 50:
-        #     counter = 0
-        #     env.reset()
+    action[0] = 0
+    while abs(goal[1] - current_pos[1]) > offset and not done:
+        current_pos = state['achieved_goal']
+        # print("Goal1: ", goal[1])
+        # print("current_pos1: ", current_pos[1])
+        if goal[1] > current_pos[1]:
+            action[1] = velocity
+        else:
+            action[1] = -velocity
+        state, reward, done, info = env.step(action)
+        env.render()
 
+    action[1] = 0
+
+    while abs(goal[2] - current_pos[2]) > offset and not done:
+        current_pos = state['achieved_goal']
+        # print("Goal2: ", goal[2])
+        # print("current_pos2: ", current_pos[2])
+        if goal[2] > current_pos[2]:
+            action[2] = velocity
+        else:
+            action[2] = -velocity
+        state, reward, done, info = env.step(action)
+        env.render()
+
+    # counter += 1
+    # if counter == 50:
+    #     counter = 0
+    #     env.reset()
 
 # reward = 0
 # counter = 0

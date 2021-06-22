@@ -93,7 +93,7 @@ class FetchEnv(robot_env.RobotEnv):
 
         # if (grip_pos[2] - self.height_offset) < 0:
         #     reward = -0.5
-        if norm_grip_object < 0.005:
+        if norm_grip_object < 0.008:
             reward = np.exp(- norm_object_goal * 10)
         else:
             reward = - norm_grip_object

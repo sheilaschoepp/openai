@@ -29,3 +29,42 @@ register(
     entry_point='custom_gym_envs.envs.ant.AntEnv_v4_ab_addedlink:AntEnvV4',
     max_episode_steps=1000,
 )
+
+
+# FetchPickAndPlace
+
+for reward_type in ['sparse', 'dense']:
+    suffix = 'Dense' if reward_type == 'dense' else ''
+    kwargs = {
+        'reward_type': reward_type,
+    }
+    register(
+        id='FetchReachEnv{}-v0'.format(suffix),
+        entry_point='custom_gym_envs.envs.FetchReach.FetchReachEnv_v0_Normal.fetch.reach:FetchReachEnv',
+        kwargs=kwargs,
+        max_episode_steps=50,
+    )
+    register(
+        id='FetchReachEnv{}-v1'.format(suffix),
+        entry_point='custom_gym_envs.envs.FetchReach.FetchReachEnv_v1_BrokenShoulderLiftJoint.fetch.reach:FetchReachEnv',
+        kwargs=kwargs,
+        max_episode_steps=50,
+    )
+    register(
+        id='FetchReachEnv{}-v2'.format(suffix),
+        entry_point='custom_gym_envs.envs.FetchReach.FetchReachEnv_v2_BrokenElbowFlexJoint.fetch.reach:FetchReachEnv',
+        kwargs=kwargs,
+        max_episode_steps=50,
+    )
+    register(
+        id='FetchReachEnv{}-v3'.format(suffix),
+        entry_point='custom_gym_envs.envs.FetchReach.FetchReachEnv_v3_BrokenWristFlexJoint.fetch.reach:FetchReachEnv',
+        kwargs=kwargs,
+        max_episode_steps=50,
+    )
+    register(
+        id='FetchReachEnv{}-v4'.format(suffix),
+        entry_point='custom_gym_envs.envs.FetchReach.FetchReachEnv_v4_BrokenGrip.fetch.reach:FetchReachEnv',
+        kwargs=kwargs,
+        max_episode_steps=50,
+    )

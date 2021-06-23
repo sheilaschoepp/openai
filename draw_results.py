@@ -86,8 +86,7 @@ def draw():
     sorted_experiments_score = {k: v for k, v in sorted(experiments_score.items(), key=lambda item: item[1])}
 
     counter = 0
-    for exp in sorted_experiments_score.keys():
-        print(exp)
+    for exp in reversed(sorted_experiments_score.keys()):
         draw_path = os.path.join(result_path, f'{exp}.jpg')
         shutil.copy2(draw_path, best_results_path)
         counter += 1

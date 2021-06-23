@@ -91,11 +91,7 @@ def draw():
         draw_path = os.path.join(result_path, f'{exp}.jpg')
         shutil.copy2(draw_path, best_results_path)
         counter += 1
-        print(counter)
-        print(num_top_experiments)
-        print(counter == num_top_experiments)
         if counter == num_top_experiments:
-            print('fuck yeah')
             break
 
 

@@ -26,8 +26,8 @@ args = parser.parse_args()
 
 def draw():
     PATH = args.dir
-    percentage_consider = args.percentage_consider
-    num_top_experiments = args.num_top_experiments
+    percentage_consider = float(args.percentage_consider)
+    num_top_experiments = int(args.num_top_experiments)
     experiments_list = os.listdir(PATH)
 
     current_path = pathlib.Path(__file__).parent.absolute()

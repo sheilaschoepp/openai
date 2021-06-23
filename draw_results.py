@@ -4,13 +4,19 @@ import pandas as pd
 import numpy as np
 import argparse
 import pathlib
-import os
-
+import os, shutil
 
 parser = argparse.ArgumentParser(description="Draw results of the experiments inside a directory")
 
-parser.add_argument("-p", "--path", default="",
+parser.add_argument("-d", "--dir", default="",
                     help="absolute path of the folder containing experiments")
+
+parser.add_argument("-p", "--percentage_consider", default=0.2,
+                    help="the sum of expected reward from the beginning to the percentage of time from the"
+                         "whole experiment time that we consider")
+
+parser.add_argument("-nte", "--num_top_experiments", default=5,
+                    help="how many best settings do you want to have?")
 
 args = parser.parse_args()
 
@@ -18,10 +24,22 @@ args = parser.parse_args()
 # PATH = '/home/mehran/Desktop/AntAnalyze'
 
 def draw():
-    PATH = args.path
+    PATH = args.dir
+    percentage_consider = args.percentage_consider
+    num_top_experiments = args.num_top_experiments
     experiments_list = os.listdir(PATH)
-    experiment_seed = {}
 
+    current_path = pathlib.Path(__file__).parent.absolute()
+    if not os.path.exists(os.path.join(current_path, 'draw_results')):
+        os.mkdir(os.path.join(current_path, 'draw_results'))
+    result_path = os.path.join(current_path, 'draw_results')
+
+    if not os.path.exists(os.path.join(current_path, 'best_results')):
+        os.mkdir(os.path.join(current_path, 'best_results'))
+    best_results_path = os.path.join(current_path, 'best_results')
+
+    experiment_seed = {}
+    experiments_score = {}
     # set the theme for plots
     sns.set_style("dark")
     sns.set_theme()
@@ -54,18 +72,23 @@ def draw():
 
         average = np.mean(average_returns, axis=0)
         standard_error = np.std(average_returns, axis=0) / np.sqrt(average_returns.shape[0])
+        experiments_score[exp] = average[:int(average.shape[0] * percentage_consider)].sum()
 
         x = np.array(data_temp['num_time_steps'])[:-1]
         plt.figure(figsize=(12, 5))
         plt.plot(x, average, 'b')
         plt.fill_between(x, average - standard_error, average + standard_error, color='r', alpha=0.2)
-        current_path = pathlib.Path(__file__).parent.absolute()
-        if not os.path.exists(os.path.join(current_path, 'draw_results')):
-            os.mkdir(os.path.join(current_path, 'draw_results'))
-        result_path = os.path.join(current_path, 'draw_results')
         plt.savefig(os.path.join(result_path, f'{exp}.jpg'), dpi=300)
 
+    sorted_experiments_score = {k: v for k, v in sorted(experiments_score.items(), key=lambda item: item[1])}
 
+    counter = 0
+    for exp in sorted_experiments_score.keys():
+        draw_path = os.path.join(result_path, f'{exp}.jpg')
+        shutil.copy2(draw_path, best_results_path)
+        counter += 1
+        if counter == num_top_experiments:
+            break
 
 
 if __name__ == "__main__":

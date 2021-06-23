@@ -22,8 +22,6 @@ parser.add_argument("-nte", "--num_top_experiments", default=10,
 args = parser.parse_args()
 
 
-# PATH = '/home/mehran/Desktop/AntAnalyze'
-
 def draw():
     PATH = args.dir
     percentage_consider = float(args.percentage_consider)
@@ -31,13 +29,13 @@ def draw():
     experiments_list = os.listdir(PATH)
 
     current_path = pathlib.Path(__file__).parent.absolute()
-    if not os.path.exists(os.path.join(current_path, 'draw_results')):
-        os.mkdir(os.path.join(current_path, 'draw_results'))
-    result_path = os.path.join(current_path, 'draw_results')
+    if not os.path.exists(os.path.join(current_path, 'plotted_hps_results')):
+        os.mkdir(os.path.join(current_path, 'plotted_hps_results'))
+    result_path = os.path.join(current_path, 'plotted_hps_results')
 
-    if not os.path.exists(os.path.join(current_path, 'best_results')):
-        os.mkdir(os.path.join(current_path, 'best_results'))
-    best_results_path = os.path.join(current_path, 'best_results')
+    if not os.path.exists(os.path.join(result_path, 'best_hps_results')):
+        os.mkdir(os.path.join(result_path, 'best_hps_results'))
+    best_hps_results_path = os.path.join(result_path, 'best_hps_results')
 
     experiment_seed = {}
     experiments_score = {}
@@ -92,7 +90,7 @@ def draw():
     counter = 0
     for exp in reversed(sorted_experiments_score.keys()):
         draw_path = os.path.join(result_path, f'{exp}.jpg')
-        shutil.copy2(draw_path, best_results_path)
+        shutil.copy2(draw_path, best_hps_results_path)
         counter += 1
         if counter == num_top_experiments:
             break

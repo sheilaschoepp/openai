@@ -1,140 +1,103 @@
 # Importing OpenAI gym package and MuJoCo engine
 import gym
-import time
+from tqdm import tqdm
 import numpy as np
-
 from mujoco_py import functions, load_model_from_path
 from environment.environment import Environment
-import mujoco_py
 import custom_gym_envs
+
 
 # Setting MountainCar-v0 as the environment
 # env = Environment('FetchPickAndPlace-v0', 0)
 # env = gym.make('FetchPickAndPlaceDense-v0')
-env = gym.make('FetchReach-v0')
+# env = gym.make('FetchReach-v0')
 # env = gym.make('FetchReachFaultyJoint-v1')
 # env = gym.make('FetchReachFaultyJoint-v2')
-# env = gym.make('FetchReachFaultyJoint-v3')
+env = gym.make('FetchReachFaultyJoint-v3')
 # env = gym.make('FetchReachFaultyBrokenGrip-v0')
-
 # env = gym.make('FetchReach-v1')
-
 # env = gym.make('AntEnv-v0')
 
-# Sets an initial state
-prev_state = env.reset()
-# env.render()
-# Rendering our instance 300 times
-# print(state.shape)
-# print(env.observation_space)
 print(env.observation_space['achieved_goal'])
 print(env.observation_space['desired_goal'])
 print(env.observation_space['observation'])
 
-env._max_episode_steps = 5
-offset = 0.01
+env._max_episode_steps = 300
+offset = 0.0167
 # offset = 0.02
-velocity = 0.5
+velocity = 0.1
+num_points_per_axis = 20
+counter = 0
+reward = -1
+render = True
 
-while True:
-    # renders the environment
-    done = False
-    state = env.reset()
-    env.render()
-    # Takes a random action from its action space
-    # aka the number of unique actions an agent can perform
+points = np.zeros([num_points_per_axis ** 3, 4])
 
-    # action = env.action_space.sample()
-    goal = state['desired_goal']
-    current_pos = state['achieved_goal']
+
+def reduce_distance():
+    global current_pos, state, reward, done
     action = np.zeros(4)
-    while abs(goal[0] - current_pos[0]) > offset and not done:
-        current_pos = state['achieved_goal']
-        # print("Goal0: ", goal[0])
-        # print("current_pos0: ", current_pos[0])
+    while abs(goal[0] - current_pos[0]) > offset and reward != 0 and not done:
         if goal[0] > current_pos[0]:
             action[0] = velocity
         else:
             action[0] = -velocity
+        prev_pos = current_pos
         state, reward, done, info = env.step(action)
-        env.render()
-
-    action[0] = 0
-    while abs(goal[1] - current_pos[1]) > offset and not done:
         current_pos = state['achieved_goal']
-        # print("Goal1: ", goal[1])
-        # print("current_pos1: ", current_pos[1])
+        print(abs(prev_pos - current_pos))
+        if render:
+            env.render()
+    action = np.zeros(4)
+    while abs(goal[1] - current_pos[1]) > offset and reward != 0 and not done:
+        current_pos = state['achieved_goal']
         if goal[1] > current_pos[1]:
             action[1] = velocity
         else:
             action[1] = -velocity
+        prev_pos = current_pos
         state, reward, done, info = env.step(action)
-        env.render()
-
-    action[1] = 0
-
-    while abs(goal[2] - current_pos[2]) > offset and not done:
         current_pos = state['achieved_goal']
-        # print("Goal2: ", goal[2])
-        # print("current_pos2: ", current_pos[2])
+        print(abs(prev_pos - current_pos))
+        if render:
+            env.render()
+    action = np.zeros(4)
+    while abs(goal[2] - current_pos[2]) > offset and reward != 0 and not done:
+        current_pos = state['achieved_goal']
+        prev_pos = current_pos
         if goal[2] > current_pos[2]:
             action[2] = velocity
         else:
             action[2] = -velocity
+        prev_pos = current_pos
         state, reward, done, info = env.step(action)
-        env.render()
+        current_pos = state['achieved_goal']
+        print(abs(prev_pos - current_pos))
+        if render:
+            env.render()
 
-    # counter += 1
-    # if counter == 50:
-    #     counter = 0
-    #     env.reset()
 
-# reward = 0
-# counter = 0
-# actions = []
-#
-# for i in [-1, 0, 1]:
-#     for j in [-1, 0, 1]:
-#         for k in [-1, 0, 1]:
-#             actions.append([i, j, k, 0])
-#
-# # while True:
-# for a in actions:
-#     print(env.sim.data.get_site_xpos('robot0:grip'))
-#     env.reset()
-#     for _ in range(100):
-#         #renders the environment
-#         env.render()
-#         #Takes a random action from its action space
-#         # aka the number of unique actions an agent can perform
-#         # action = env.action_space.sample()
-#         # if reward == -100:
-#         #     action = np.array([0.01, 0.01, 0.1, 0.001])
-#         # else:
-#         #     action = np.array([0.01, 0.01, -0.1, 0.001])
-#
-#
-#         # action = np.array([1, 1, 1, 0])
-#         action = np.array(a)
-#
-#         # print(action)
-#         state, reward, done, info = env.step(action)
-#
-#         # print('reward: ', reward)
-#         # print(state[np.where(prev_state == state)])
-#         # print(state['observation'])
-#         # print(state['achieved_goal'])
-#         # print(state['desired_goal'])
-#
-#         # print('#' * 50)
-#         # print(state[0]['observation'])
-#         # print(state[0]['achieved_goal'])
-#         # print(state[0]['desired_goal'])
-#         # print('#' * 50)
-#         # time.sleep(3)
-#         # counter += 1
-#         # if counter == 50:
-#         #     counter = 0
-#         #     env.reset()
+with tqdm(total=num_points_per_axis ** 3) as pbar:
+    for x in np.linspace(-0.15, 0.15, num_points_per_axis):
+        for y in np.linspace(-0.15, 0.15, num_points_per_axis):
+            for z in np.linspace(-0.15, 0.15, num_points_per_axis):
+                done = False
+                reward = -1
+                goal = env.initial_gripper_xpos[:3] + np.array([x, y, z])
+                env.set_goal(goal)
+                state = env.reset()
+                if render:
+                    env.render()
+                # action = env.action_space.sample()
+                goal = state['desired_goal']
+                current_pos = state['achieved_goal']
+
+                while (abs(current_pos - goal) > offset).any() and reward != 0 and not done:
+                    reduce_distance()
+
+                points[counter, :3] = goal
+                points[counter, 3] = (True if (reward == 0) else False)
+                counter += 1
+                pbar.update(1)
 
 env.close()

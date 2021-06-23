@@ -6,6 +6,7 @@ import argparse
 import pathlib
 import os
 
+
 parser = argparse.ArgumentParser(description="Draw results of the experiments inside a directory")
 
 parser.add_argument("-p", "--path", default="",

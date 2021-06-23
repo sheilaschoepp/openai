@@ -5,6 +5,7 @@ import numpy as np
 import argparse
 import pathlib
 import os, shutil
+from tqdm import tqdm
 
 parser = argparse.ArgumentParser(description="Draw results of the experiments inside a directory")
 
@@ -53,32 +54,34 @@ def draw():
             del experiments_list[e]
             continue
 
-    for exp in experiments_list:
-        num_seeds = len(experiment_seed[exp])
-        try:
-            path = os.path.join(PATH, exp, 'seed0', 'csv', 'eval_data.csv')
-            data_temp = pd.read_csv(path)
-        except FileNotFoundError:
-            continue
+    with tqdm(total=len(experiments_list)) as pbar:
+        for exp in experiments_list:
+            num_seeds = len(experiment_seed[exp])
+            try:
+                path = os.path.join(PATH, exp, 'seed0', 'csv', 'eval_data.csv')
+                data_temp = pd.read_csv(path)
+            except FileNotFoundError:
+                continue
 
-        num_samples = len(data_temp) - 1
-        average_returns = np.zeros([num_seeds, num_samples])
-        index = 0
-        for seed in experiment_seed[exp]:
-            path = os.path.join(PATH, exp, seed, 'csv', 'eval_data.csv')
-            data_temp = pd.read_csv(path)
-            average_returns[index] = np.array(data_temp['average_return'])[:-1]
-            index += 1
+            num_samples = len(data_temp) - 1
+            average_returns = np.zeros([num_seeds, num_samples])
+            index = 0
+            for seed in experiment_seed[exp]:
+                path = os.path.join(PATH, exp, seed, 'csv', 'eval_data.csv')
+                data_temp = pd.read_csv(path)
+                average_returns[index] = np.array(data_temp['average_return'])[:-1]
+                index += 1
 
-        average = np.mean(average_returns, axis=0)
-        standard_error = np.std(average_returns, axis=0) / np.sqrt(average_returns.shape[0])
-        experiments_score[exp] = average[:int(average.shape[0] * percentage_consider)].sum()
+            average = np.mean(average_returns, axis=0)
+            standard_error = np.std(average_returns, axis=0) / np.sqrt(average_returns.shape[0])
+            experiments_score[exp] = average[:int(average.shape[0] * percentage_consider)].sum()
 
-        x = np.array(data_temp['num_time_steps'])[:-1]
-        plt.figure(figsize=(12, 5))
-        plt.plot(x, average, 'b')
-        plt.fill_between(x, average - standard_error, average + standard_error, color='r', alpha=0.2)
-        plt.savefig(os.path.join(result_path, f'{exp}.jpg'), dpi=300)
+            x = np.array(data_temp['num_time_steps'])[:-1]
+            plt.figure(figsize=(12, 5))
+            plt.plot(x, average, 'b')
+            plt.fill_between(x, average - standard_error, average + standard_error, color='r', alpha=0.2)
+            plt.savefig(os.path.join(result_path, f'{exp}.jpg'), dpi=300)
+            pbar.update(1)
 
     sorted_experiments_score = {k: v for k, v in sorted(experiments_score.items(), key=lambda item: item[1])}
 

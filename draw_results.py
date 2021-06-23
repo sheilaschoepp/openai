@@ -91,6 +91,7 @@ def draw():
         shutil.copy2(draw_path, best_results_path)
         counter += 1
         if counter == num_top_experiments:
+            print('fuck yeah')
             break
 
 

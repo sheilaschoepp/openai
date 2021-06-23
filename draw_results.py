@@ -12,11 +12,11 @@ parser = argparse.ArgumentParser(description="Draw results of the experiments in
 parser.add_argument("-d", "--dir", default="",
                     help="absolute path of the folder containing experiments")
 
-parser.add_argument("-p", "--percentage_consider", default=0.2,
+parser.add_argument("-p", "--percentage_consider", default=1.0,
                     help="the sum of expected reward from the beginning to the percentage of time from the"
                          "whole experiment time that we consider")
 
-parser.add_argument("-nte", "--num_top_experiments", default=5,
+parser.add_argument("-nte", "--num_top_experiments", default=10,
                     help="how many best settings do you want to have?")
 
 args = parser.parse_args()
@@ -45,6 +45,8 @@ def draw():
     sns.set_style("dark")
     sns.set_theme()
     e = 0
+
+    # List the experiments in a directory
     while e < len(experiments_list):
         try:
             seed_list = os.listdir(os.path.join(PATH, experiments_list[e]))
@@ -54,6 +56,8 @@ def draw():
             del experiments_list[e]
             continue
 
+    # Calculate the average and standard error of each experiment and
+    # draw results for each one
     with tqdm(total=len(experiments_list)) as pbar:
         for exp in experiments_list:
             num_seeds = len(experiment_seed[exp])
@@ -79,12 +83,12 @@ def draw():
             x = np.array(data_temp['num_time_steps'])[:-1]
             plt.figure(figsize=(12, 5))
             plt.plot(x, average, 'b')
-            plt.fill_between(x, average - standard_error, average + standard_error, color='r', alpha=0.2)
+            plt.fill_between(x, average - 1.96 * standard_error, average + 1.96 * standard_error, color='r', alpha=0.2)
             plt.savefig(os.path.join(result_path, f'{exp}.jpg'), dpi=300)
             pbar.update(1)
 
+    # Finding the best HP settings based on the sum of average returns of different seeds
     sorted_experiments_score = {k: v for k, v in sorted(experiments_score.items(), key=lambda item: item[1])}
-
     counter = 0
     for exp in reversed(sorted_experiments_score.keys()):
         draw_path = os.path.join(result_path, f'{exp}.jpg')

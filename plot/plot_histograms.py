@@ -237,7 +237,7 @@ class AntHistogram:
                          num_steps=self.rlg_statistics["num_steps"],
                          num_episodes=self.rlg_statistics["num_episodes"])
 
-        for _ in range(100):
+        for _ in range(100):   # todo
 
             state, _ = self.rlg.rl_start()
             save_ant_joint_angles(state)
@@ -472,7 +472,7 @@ class FetchReachHistogram:
                          num_steps=self.rlg_statistics["num_steps"],
                          num_episodes=self.rlg_statistics["num_episodes"])
 
-        for _ in range(100):
+        for _ in range(100):  # todo
 
             state, _ = self.rlg.rl_start()
             save_fetchreach_joint_angles(self.env.env.sim.data)

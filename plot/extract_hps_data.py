@@ -4,7 +4,7 @@ import os
 import pandas as pd
 
 
-def extract_ppo_results(directory):
+def extract_ppo_summary_data(directory):
     """
 
     @param directory: string
@@ -94,7 +94,7 @@ def extract_ppo_results(directory):
         return [pss, performance_mean, performance_mean - 2.262 * performance_sem, performance_mean + 2.262 * performance_sem, performance_mean_sum]
 
 
-def extract_sac_results(directory):
+def extract_sac_summary_data(directory):
     """
 
     @param directory: string
@@ -186,7 +186,7 @@ def ant():
 
     for dir_ in ant_data_dirs:
         if "PPO" in dir_:
-            ant_ppo_result = extract_ppo_results(ant_data_dir + "/" + dir_)
+            ant_ppo_result = extract_ppo_summary_data(ant_data_dir + "/" + dir_)
             ant_ppo_results.append(ant_ppo_result)
 
     df = pd.DataFrame(data=ant_ppo_results,
@@ -200,8 +200,6 @@ def ant():
 
     df.to_csv(hps_data_dir + "/ant_ppo_hps_data.csv", index=False)
 
-
-
     """
     SAC
     """
@@ -210,7 +208,7 @@ def ant():
 
     for dir_ in ant_data_dirs:
         if "SAC" in dir_:
-            ant_sac_result = extract_sac_results(ant_data_dir + "/" + dir_)
+            ant_sac_result = extract_sac_summary_data(ant_data_dir + "/" + dir_)
             ant_sac_results.append(ant_sac_result)
 
     df = pd.DataFrame(data=ant_sac_results,
@@ -242,7 +240,7 @@ def fetchreach():
 
     for dir_ in fetchreach_data_dirs:
         if "PPO" in dir_:
-            fetchreach_ppo_result = extract_ppo_results(fetchreach_data_dir + "/" + dir_)
+            fetchreach_ppo_result = extract_ppo_summary_data(fetchreach_data_dir + "/" + dir_)
             fetchreach_ppo_results.append(fetchreach_ppo_result)
 
     df = pd.DataFrame(data=fetchreach_ppo_results,
@@ -256,6 +254,12 @@ def fetchreach():
 
     df.to_csv(hps_data_dir + "/fetchreach_ppo_hps_data.csv", index=False)
 
+    df = df["ps seed"].head()
+
+    top_hps_seeds = df.values.tolist()
+
+    
+
     """
     SAC
     """
@@ -264,7 +268,7 @@ def fetchreach():
 
     for dir_ in fetchreach_data_dirs:
         if "SAC" in dir_:
-            fetchreach_sac_result = extract_sac_results(fetchreach_data_dir + "/" + dir_)
+            fetchreach_sac_result = extract_sac_summary_data(fetchreach_data_dir + "/" + dir_)
             fetchreach_sac_results.append(fetchreach_sac_result)
 
     df = pd.DataFrame(data=fetchreach_sac_results,

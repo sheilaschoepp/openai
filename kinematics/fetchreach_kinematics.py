@@ -24,7 +24,7 @@ torso_lift_joint = np.linspace(start=0.0386, stop=0.3861, num=4)
 
 # robot0:head_pan_joint, range -1.57 1.57
 # head_pan_joint = np.concatenate((np.arange(-1.57, 1.57, 0.1), np.full((1,), 1.57)))
-head_pan_joint = np.linspace(start=-1.57, stop=1.57, num=16)
+head_pan_joint = np.linspace(start=-1.57, stop=1.57, num=32)
 
 # robot0:head_tilt_joint, range -0.76 1.45
 # head_tilt_joint = np.concatenate((np.arange(-0.76, 1.45, 0.1), np.full((1,), 1.45)))
@@ -32,7 +32,7 @@ head_tilt_joint = np.linspace(start=-0.76, stop=1.45, num=12)
 
 # robot0:shoulder_pan_joint, range -1.6056 1.6056
 # shoulder_pan_joint = np.concatenate((np.arange(-1.6056, 1.61, 0.1), np.full((1,), 1.6057)))
-shoulder_pan_joint = np.linspace(start=-1.6056, stop=1.6056, num=16)
+shoulder_pan_joint = np.linspace(start=-1.6056, stop=1.6056, num=32)
 
 # robot0:shoulder_lift_joint, range -1.221 1.518
 # shoulder_lift_joint = np.concatenate((np.arange(-1.221, 1.518, 0.1), np.full((1,), 1.518)))
@@ -123,9 +123,9 @@ data_directory = os.getcwd() + "/data"
 os.makedirs(data_directory, exist_ok=True)
 
 # np.save(data_directory + "/points.npy", points)
-np.savetxt(data_directory + "/points.csv", points, delimiter=",")
+# np.savetxt(data_directory + "/points.csv", points, delimiter=",")
 # np.save(data_directory + "/unique_points.npy", unique_points)
-np.savetxt(data_directory + "/unique_points.csv", unique_points, delimiter=",")
+# np.savetxt(data_directory + "/unique_points.csv", unique_points, delimiter=",")
 
 # plot
 

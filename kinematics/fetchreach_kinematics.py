@@ -20,35 +20,35 @@ sim = MjSim(model)
 
 # robot0:torso_lift_joint, range 0.0386 0.3861
 # torso_lift_joint = np.concatenate((np.arange(0.0386,  0.38, 0.1), np.full((1,), 0.3861)))
-torso_lift_joint = np.linspace(start=0.0386, stop=0.3861, num=2)
+torso_lift_joint = np.linspace(start=0.0386, stop=0.3861, num=10)
 
 # robot0:head_pan_joint, range -1.57 1.57
 # head_pan_joint = np.concatenate((np.arange(-1.57, 1.57, 0.1), np.full((1,), 1.57)))
-head_pan_joint = np.linspace(start=-1.57, stop=1.57, num=2)
+head_pan_joint = np.linspace(start=-1.57, stop=1.57, num=10)
 
 # robot0:head_tilt_joint, range -0.76 1.45
 # head_tilt_joint = np.concatenate((np.arange(-0.76, 1.45, 0.1), np.full((1,), 1.45)))
-head_tilt_joint = np.linspace(start=-0.76, stop=1.45, num=2)
+head_tilt_joint = np.linspace(start=-0.76, stop=1.45, num=10)
 
 # robot0:shoulder_pan_joint, range -1.6056 1.6056
 # shoulder_pan_joint = np.concatenate((np.arange(-1.6056, 1.61, 0.1), np.full((1,), 1.6057)))
-shoulder_pan_joint = np.linspace(start=-1.6056, stop=1.6056, num=2)
+shoulder_pan_joint = np.linspace(start=-1.6056, stop=1.6056, num=10)
 
 # robot0:shoulder_lift_joint, range -1.221 1.518
 # shoulder_lift_joint = np.concatenate((np.arange(-1.221, 1.518, 0.1), np.full((1,), 1.518)))
-shoulder_lift_joint = np.linspace(start=-1.221, stop=1.518, num=2)
+shoulder_lift_joint = np.linspace(start=-1.221, stop=1.518, num=10)
 
 # robot0:upperarm_roll_joint, no range
 
 # robot0:elbow_flex_joint, range -2.251 2.251
 # elbow_flex_joint = np.concatenate((np.arange(-2.251, 2.25, 0.1), np.full((1,), 2.251)))
-elbow_flex_joint = np.linspace(start=-2.251, stop=2.251, num=2)
+elbow_flex_joint = np.linspace(start=-2.251, stop=2.251, num=10)
 
 # robot0:forearm_roll_joint, no range
 
 # robot0:wrist_flex_joint, range -2.16 2.16
 # wrist_flex_joint = np.concatenate((np.arange(-2.16, 2.17, 0.1), np.full((1,), 2.16)))
-wrist_flex_joint = np.linspace(start=-2.16, stop=2.16, num=2)
+wrist_flex_joint = np.linspace(start=-2.16, stop=2.16, num=10)
 
 # robot0:wrist_roll_joint, no range
 

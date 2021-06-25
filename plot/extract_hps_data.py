@@ -460,8 +460,8 @@ def plot_fetchreach_sac(seeds, df_means, df_sems):
     s3 = df_sems[3]["average_return"]
     s4 = df_sems[4]["average_return"]
 
-    # plt.plot(x, y0, color="tab:blue", label=str(seeds[0]))
-    # plt.fill_between(x, y0 - s0, y0 + s0, color="tab:blue")
+    plt.plot(x, y0, color="tab:blue", label=str(seeds[0]))
+    plt.fill_between(x, y0 - s0, y0 + s0, color="tab:blue")
 
     plt.plot(x, y1, color="tab:orange", label=str(seeds[1]))
     plt.fill_between(x, y1 - s1, y1 + s1, color="tab:orange")

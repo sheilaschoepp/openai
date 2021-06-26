@@ -53,7 +53,8 @@ def draw():
     best_hps_results_path = os.path.join(result_path, 'best_hps_results')
 
     experiment_seed = {}
-    experiments_score = {}
+    experiments_score_sac = {}
+    experiments_score_ppo = {}
     experiments_statistical_info = {}
     # set the theme for plots
     sns.set_style("dark")
@@ -93,7 +94,12 @@ def draw():
 
             average = np.mean(average_returns, axis=0)
             standard_error = np.std(average_returns, axis=0) / np.sqrt(average_returns.shape[0])
-            experiments_score[exp] = average[:int(average.shape[0] * percentage_consider)].sum()
+
+            if 'SAC' in exp:
+                experiments_score_sac[exp] = average[:int(average.shape[0] * percentage_consider)].sum()
+            elif 'PPO' in exp:
+                experiments_score_ppo[exp] = average[:int(average.shape[0] * percentage_consider)].sum()
+
             x = np.array(data_temp['num_time_steps'])[:-1]
             experiments_statistical_info[exp] = {'avg': average, 'std_error': standard_error, 'time_step': x,
                                                  'pss': parameters['param_search_seed']}
@@ -101,28 +107,51 @@ def draw():
             plt.plot(x, average, 'b')
             plt.fill_between(x, average - 2.26 * standard_error, average + 2.26 * standard_error, alpha=0.2)
             plt.savefig(os.path.join(result_path, f'{exp}.jpg'), dpi=300)
+            plt.close()
             pbar.update(1)
 
     # Finding the best HP settings based on the sum of average returns of different seeds
-    sorted_experiments_score = {k: v for k, v in sorted(experiments_score.items(), key=lambda item: item[1])}
+    sorted_experiments_score_sac = {k: v for k, v in sorted(experiments_score_sac.items(), key=lambda item: item[1])}
+    sorted_experiments_score_ppo = {k: v for k, v in sorted(experiments_score_ppo.items(), key=lambda item: item[1])}
+
     counter = 0
     plt.figure(figsize=(12, 5))
 
-    for exp in reversed(sorted_experiments_score.keys()):
+    for exp in reversed(sorted_experiments_score_sac.keys()):
         # draw_path = os.path.join(result_path, f'{exp}.jpg')
         # shutil.copy2(draw_path, best_hps_results_path)
-        average = experiments_statistical_info[exp]['avg']
-        standard_error = experiments_statistical_info[exp]['std_error']
-        x = experiments_statistical_info[exp]['time_step']
-        label = experiments_statistical_info[exp]['pss']
-        plt.plot(x, average, label=label)
-        plt.fill_between(x, average - 2.26 * standard_error, average + 2.26 * standard_error, alpha=0.2)
+        single_plot(exp, experiments_statistical_info)
         counter += 1
         if counter == num_top_experiments:
             break
 
     plt.legend(loc="upper right")
-    plt.savefig(os.path.join(best_hps_results_path, f'best_results.jpg'), dpi=300)
+    plt.savefig(os.path.join(best_hps_results_path, f'best_results_sac.jpg'), dpi=300)
+    plt.close()
+
+    counter = 0
+    plt.figure(figsize=(12, 5))
+
+    for exp in reversed(sorted_experiments_score_ppo.keys()):
+        # draw_path = os.path.join(result_path, f'{exp}.jpg')
+        # shutil.copy2(draw_path, best_hps_results_path)
+        single_plot(exp, experiments_statistical_info)
+        counter += 1
+        if counter == num_top_experiments:
+            break
+
+    plt.legend(loc="upper right")
+    plt.savefig(os.path.join(best_hps_results_path, f'best_results_ppo.jpg'), dpi=300)
+    plt.close()
+
+
+def single_plot(exp, experiments_statistical_info):
+    average = experiments_statistical_info[exp]['avg']
+    standard_error = experiments_statistical_info[exp]['std_error']
+    x = experiments_statistical_info[exp]['time_step']
+    label = experiments_statistical_info[exp]['pss']
+    plt.plot(x, average, label=label)
+    plt.fill_between(x, average - 2.26 * standard_error, average + 2.26 * standard_error, alpha=0.2)
 
 
 if __name__ == "__main__":

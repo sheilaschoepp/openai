@@ -50,19 +50,19 @@ for child in root.iter():
     attrib = child.attrib
     name = attrib.get("name")
     if name == "robot0:torso_lift_joint":
-        torso_lift_joint_range = np.array(attrib.get("range").split(" "), dtype=np.float)
+        torso_lift_joint_range = np.array(attrib.get("range").split(" "), dtype=float)
     elif name == "robot0:head_pan_joint":
-        head_pan_joint_range = np.array(attrib.get("range").split(" "), dtype=np.float)
+        head_pan_joint_range = np.array(attrib.get("range").split(" "), dtype=float)
     elif name == "robot0:head_tilt_joint":
-        head_tilt_joint_range = np.array(attrib.get("range").split(" "), dtype=np.float)
+        head_tilt_joint_range = np.array(attrib.get("range").split(" "), dtype=float)
     elif name == "robot0:shoulder_pan_joint":
-        shoulder_pan_joint_range = np.array(attrib.get("range").split(" "), dtype=np.float)
+        shoulder_pan_joint_range = np.array(attrib.get("range").split(" "), dtype=float)
     elif name == "robot0:shoulder_lift_joint":
-        shoulder_lift_joint_range = np.array(attrib.get("range").split(" "), dtype=np.float)
+        shoulder_lift_joint_range = np.array(attrib.get("range").split(" "), dtype=float)
     elif name == "robot0:elbow_flex_joint":
-        elbow_flex_joint_range = np.array(attrib.get("range").split(" "), dtype=np.float)
+        elbow_flex_joint_range = np.array(attrib.get("range").split(" "), dtype=float)
     elif name == "robot0:wrist_flex_joint":
-        wrist_flex_joint_range = np.array(attrib.get("range").split(" "), dtype=np.float)
+        wrist_flex_joint_range = np.array(attrib.get("range").split(" "), dtype=float)
 
 
 # joint angles

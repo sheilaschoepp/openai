@@ -12,8 +12,8 @@ from tqdm import tqdm
 import custom_gym_envs  # DO NOT DELETE
 
 parser = argparse.ArgumentParser(description='FetchReach Kinematics Arguments')
-parser.add_argument("-e", "--env_name", default="FetchReachEnv-v0",
-                    help="name of normal (non-malfunctioning) MuJoCo Gym environment (default: FetchReachEnv-v0)")
+parser.add_argument("-e", "--env_name", default="FetchReach-v0",
+                    help="name of normal (non-malfunctioning) MuJoCo Gym environment (default: FetchReach-v0)")
 args = parser.parse_args()
 
 # xml

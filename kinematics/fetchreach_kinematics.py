@@ -1,27 +1,38 @@
+import argparse
+import math
+import multiprocessing as mp
 import os
+import xml.etree.ElementTree as ET
 
-import gym
 import matplotlib.pyplot as plt
 import numpy as np
 from mujoco_py import load_model_from_path, MjSim, functions
 from tqdm import tqdm
-import xml.etree.ElementTree as ET
 
-import argparse
+import custom_gym_envs  # DO NOT DELETE
+
+print("Number of processors: ", mp.cpu_count())
 
 parser = argparse.ArgumentParser(description='FetchReach Kinematics Arguments')
 parser.add_argument("-e", "--env_name", default="FetchReachEnv-v0",
                     help="name of normal (non-malfunctioning) MuJoCo Gym environment (default: FetchReachEnv-v0)")
 args = parser.parse_args()
 
-env = gym.make(args.env_name)
+# xml
 
-test = env.MODEL_XML_PATH
-
-MODEL_XML = "/home/sschoepp/Documents/openai/custom_gym_envs/envs/fetchreach/FetchReachEnv_v0_Normal/assets/fetch/reach.xml"
-
-model = load_model_from_path(MODEL_XML)
-sim = MjSim(model)
+MODEL_XML = None
+if args.env_name == "FetchReach-v1":
+    MODEL_XML = "'/home/sschoepp/anaconda3/envs/openai/lib/python3.7/site-packages/gym/envs/robotics/assets/fetch/reach.xml'"
+elif args.env_name == "FetchReachEnv-v0":
+    MODEL_XML = "/home/sschoepp/Documents/openai/custom_gym_envs/envs/fetchreach/FetchReachEnv_v0_Normal/assets/fetch/reach.xml"
+elif args.env_name == "FetchReachEnv-v1":
+    MODEL_XML = "/home/sschoepp/Documents/openai/custom_gym_envs/envs/fetchreach/FetchReachEnv_v1_BrokenShoulderLiftJoint/assets/fetch/reach.xml"
+elif args.env_name == "FetchReachEnv-v2":
+    MODEL_XML = "/home/sschoepp/Documents/openai/custom_gym_envs/envs/fetchreach/FetchReachEnv_v2_BrokenElbowFlexJoint/assets/fetch/reach.xml"
+elif args.env_name == "FetchReachEnv-v3":
+    MODEL_XML = "/home/sschoepp/Documents/openai/custom_gym_envs/envs/fetchreach/FetchReachEnv_v3_BrokenWristFlexJoint/assets/fetch/reach.xml"
+elif args.env_name == "FetchReachEnv-v4":
+    MODEL_XML = "/home/sschoepp/Documents/openai/custom_gym_envs/envs/fetchreach/FetchReachEnv_v4_BrokenGrip/assets/fetch/reach.xml"
 
 ROBOT_XML = MODEL_XML[:-9] + "robot.xml"
 tree = ET.parse(ROBOT_XML)
@@ -53,7 +64,10 @@ for child in root.iter():
     elif name == "robot0:wrist_flex_joint":
         wrist_flex_joint_range = np.array(attrib.get("range").split(" "), dtype=np.float)
 
-# joints
+
+# joint angles
+
+ACCURACY = np.radians(5.0)  # radians
 
 # robot0:slide0, no range
 
@@ -62,35 +76,48 @@ for child in root.iter():
 # robot0:slide2, no range
 
 # robot0:torso_lift_joint, range 0.0386 0.3861
-torso_lift_joint_angles = np.linspace(start=torso_lift_joint_range[0], stop=torso_lift_joint_range[1], num=10)
+num = max(math.ceil((torso_lift_joint_range[1] - torso_lift_joint_range[0]) / ACCURACY), 2)
+torso_lift_joint_angles = np.linspace(start=torso_lift_joint_range[0], stop=torso_lift_joint_range[1], num=num)
 
 # robot0:head_pan_joint, range -1.57 1.57
-head_pan_joint_angles = np.linspace(start=head_pan_joint_range[0], stop=head_pan_joint_range[1], num=10)
+num = max(math.ceil((head_pan_joint_range[1] - head_pan_joint_range[0]) / ACCURACY), 2)
+head_pan_joint_angles = np.linspace(start=head_pan_joint_range[0], stop=head_pan_joint_range[1], num=num)
 
 # robot0:head_tilt_joint, range -0.76 1.45
-head_tilt_joint_angles = np.linspace(start=head_tilt_joint_range[0], stop=head_tilt_joint_range[1], num=10)
+num = max(math.ceil((head_tilt_joint_range[1] - head_tilt_joint_range[0]) / ACCURACY), 2)
+head_tilt_joint_angles = np.linspace(start=head_tilt_joint_range[0], stop=head_tilt_joint_range[1], num=num)
 
 # robot0:shoulder_pan_joint, range -1.6056 1.6056
-shoulder_pan_joint_angles = np.linspace(start=shoulder_pan_joint_range[0], stop=shoulder_pan_joint_range[1], num=10)
+num = max(math.ceil((shoulder_pan_joint_range[1] - shoulder_pan_joint_range[0]) / ACCURACY), 2)
+shoulder_pan_joint_angles = np.linspace(start=shoulder_pan_joint_range[0], stop=shoulder_pan_joint_range[1], num=num)
 
 # robot0:shoulder_lift_joint, range -1.221 1.518
-shoulder_lift_joint_angles = np.linspace(start=shoulder_lift_joint_range[0], stop=shoulder_lift_joint_range[1], num=10)
+num = max(math.ceil((shoulder_lift_joint_range[1] - shoulder_lift_joint_range[0]) / ACCURACY), 2)
+shoulder_lift_joint_angles = np.linspace(start=shoulder_lift_joint_range[0], stop=shoulder_lift_joint_range[1], num=num)
 
 # robot0:upperarm_roll_joint, no range
 
 # robot0:elbow_flex_joint, range -2.251 2.251
-elbow_flex_joint_angles = np.linspace(start=elbow_flex_joint_range[0], stop=elbow_flex_joint_range[1], num=10)
+num = max(math.ceil((elbow_flex_joint_range[1] - elbow_flex_joint_range[0]) / ACCURACY), 2)
+elbow_flex_joint_angles = np.linspace(start=elbow_flex_joint_range[0], stop=elbow_flex_joint_range[1], num=num)
 
 # robot0:forearm_roll_joint, no range
 
 # robot0:wrist_flex_joint, range -2.16 2.16
-wrist_flex_joint_angles = np.linspace(start=wrist_flex_joint_range[0], stop=wrist_flex_joint_range[1], num=10)
+num = max(math.ceil((wrist_flex_joint_range[1] - wrist_flex_joint_range[0]) / ACCURACY), 2)
+wrist_flex_joint_angles = np.linspace(start=wrist_flex_joint_range[0], stop=wrist_flex_joint_range[1], num=num)
 
 # robot0:wrist_roll_joint, no range
 
 # robot0:r_gripper_finger_joint, range 0 0.05  # not included, no effect on end effector position
 
 # robot0:l_gripper_finger_joint, range 0 0.05  # not included, no effect on end effector position
+
+
+# scan through joint angles
+
+model = load_model_from_path(MODEL_XML)
+sim = MjSim(model)
 
 num_points = torso_lift_joint_angles.shape[0] * \
              head_pan_joint_angles.shape[0] * \
@@ -145,9 +172,9 @@ data_directory = os.getcwd() + "/data"
 os.makedirs(data_directory, exist_ok=True)
 
 # np.save(data_directory + "/points.npy", points)
-np.savetxt(data_directory + "/points.csv", points, delimiter=",")
+np.savetxt(data_directory + "/workspace_all_points.csv", points, delimiter=",")
 # np.save(data_directory + "/unique_points.npy", unique_points)
-np.savetxt(data_directory + "/unique_points.csv", unique_points, delimiter=",")
+np.savetxt(data_directory + "/workspace_unique_points.csv", unique_points, delimiter=",")
 
 # plot
 

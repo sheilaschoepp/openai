@@ -11,8 +11,6 @@ from tqdm import tqdm
 
 import custom_gym_envs  # DO NOT DELETE
 
-print("Number of processors: ", mp.cpu_count())
-
 parser = argparse.ArgumentParser(description='FetchReach Kinematics Arguments')
 parser.add_argument("-e", "--env_name", default="FetchReachEnv-v0",
                     help="name of normal (non-malfunctioning) MuJoCo Gym environment (default: FetchReachEnv-v0)")

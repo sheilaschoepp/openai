@@ -71,7 +71,7 @@ class="robot0:red" added to the shared.xml file. \\
                               quat="0.4382 0.4382 0.555 0.555"></inertial>
                     <!--					<joint axis="0 1 0" name="robot0:shoulder_lift_joint" range="-1.221 1.518"></joint>-->
                     <!--					<geom mesh="robot0:shoulder_lift_link" name="robot0:shoulder_lift_link" material="robot0:arm_mat" class="robot0:blue"></geom>-->
-                    <joint axis="0 1 0" name="robot0:shoulder_lift_joint" range="-0.0221 0.0221" limited="true"></joint>
+                    <joint axis="0 1 0" name="robot0:shoulder_lift_joint" range="-0.02 0.02" limited="true"></joint>
                     <geom mesh="robot0:shoulder_lift_link" name="robot0:shoulder_lift_link" material="robot0:arm_mat"
                           class="robot0:red"></geom>
                     <body name="robot0:upperarm_roll_link" pos="0.219 0 0">

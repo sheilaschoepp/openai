@@ -83,7 +83,7 @@ class="robot0:red" added to the shared.xml file. \\
                                       quat="0.4332 0.4332 0.5589 0.5589"></inertial>
                             <!--							<joint axis="0 1 0" name="robot0:elbow_flex_joint" range="-2.251 2.251"></joint>-->
                             <!--							<geom mesh="robot0:elbow_flex_link" name="robot0:elbow_flex_link" material="robot0:arm_mat" class="robot0:blue"></geom>-->
-                            <joint axis="0 1 0" name="robot0:elbow_flex_joint" range="-0.251 0.251"
+                            <joint axis="0 1 0" name="robot0:elbow_flex_joint" range="-0.2 0.2"
                                    limited="true"></joint>
                             <geom mesh="robot0:elbow_flex_link" name="robot0:elbow_flex_link" material="robot0:arm_mat"
                                   class="robot0:red"></geom>

@@ -1,14 +1,57 @@
-import math
 import os
+
+import gym
 import matplotlib.pyplot as plt
 import numpy as np
 from mujoco_py import load_model_from_path, MjSim, functions
 from tqdm import tqdm
+import xml.etree.ElementTree as ET
+
+import argparse
+
+parser = argparse.ArgumentParser(description='FetchReach Kinematics Arguments')
+parser.add_argument("-e", "--env_name", default="FetchReachEnv-v0",
+                    help="name of normal (non-malfunctioning) MuJoCo Gym environment (default: FetchReachEnv-v0)")
+args = parser.parse_args()
+
+env = gym.make(args.env_name)
+
+test = env.MODEL_XML_PATH
 
 MODEL_XML = "/home/sschoepp/Documents/openai/custom_gym_envs/envs/fetchreach/FetchReachEnv_v0_Normal/assets/fetch/reach.xml"
 
 model = load_model_from_path(MODEL_XML)
 sim = MjSim(model)
+
+ROBOT_XML = MODEL_XML[:-9] + "robot.xml"
+tree = ET.parse(ROBOT_XML)
+root = tree.getroot()
+
+torso_lift_joint_range = None
+head_pan_joint_range = None
+head_tilt_joint_range = None
+shoulder_pan_joint_range = None
+shoulder_lift_joint_range = None
+elbow_flex_joint_range = None
+wrist_flex_joint_range = None
+
+for child in root.iter():
+    attrib = child.attrib
+    name = attrib.get("name")
+    if name == "robot0:torso_lift_joint":
+        torso_lift_joint_range = np.array(attrib.get("range").split(" "), dtype=np.float)
+    elif name == "robot0:head_pan_joint":
+        head_pan_joint_range = np.array(attrib.get("range").split(" "), dtype=np.float)
+    elif name == "robot0:head_tilt_joint":
+        head_tilt_joint_range = np.array(attrib.get("range").split(" "), dtype=np.float)
+    elif name == "robot0:shoulder_pan_joint":
+        shoulder_pan_joint_range = np.array(attrib.get("range").split(" "), dtype=np.float)
+    elif name == "robot0:shoulder_lift_joint":
+        shoulder_lift_joint_range = np.array(attrib.get("range").split(" "), dtype=np.float)
+    elif name == "robot0:elbow_flex_joint":
+        elbow_flex_joint_range = np.array(attrib.get("range").split(" "), dtype=np.float)
+    elif name == "robot0:wrist_flex_joint":
+        wrist_flex_joint_range = np.array(attrib.get("range").split(" "), dtype=np.float)
 
 # joints
 
@@ -19,54 +62,43 @@ sim = MjSim(model)
 # robot0:slide2, no range
 
 # robot0:torso_lift_joint, range 0.0386 0.3861
-# torso_lift_joint = np.concatenate((np.arange(0.0386,  0.38, 0.1), np.full((1,), 0.3861)))
-torso_lift_joint = np.linspace(start=0.0386, stop=0.3861, num=4)
+torso_lift_joint_angles = np.linspace(start=torso_lift_joint_range[0], stop=torso_lift_joint_range[1], num=10)
 
 # robot0:head_pan_joint, range -1.57 1.57
-# head_pan_joint = np.concatenate((np.arange(-1.57, 1.57, 0.1), np.full((1,), 1.57)))
-head_pan_joint = np.linspace(start=-1.57, stop=1.57, num=32)
+head_pan_joint_angles = np.linspace(start=head_pan_joint_range[0], stop=head_pan_joint_range[1], num=10)
 
 # robot0:head_tilt_joint, range -0.76 1.45
-# head_tilt_joint = np.concatenate((np.arange(-0.76, 1.45, 0.1), np.full((1,), 1.45)))
-head_tilt_joint = np.linspace(start=-0.76, stop=1.45, num=23)
+head_tilt_joint_angles = np.linspace(start=head_tilt_joint_range[0], stop=head_tilt_joint_range[1], num=10)
 
 # robot0:shoulder_pan_joint, range -1.6056 1.6056
-# shoulder_pan_joint = np.concatenate((np.arange(-1.6056, 1.61, 0.1), np.full((1,), 1.6057)))
-shoulder_pan_joint = np.linspace(start=-1.6056, stop=1.6056, num=32)
+shoulder_pan_joint_angles = np.linspace(start=shoulder_pan_joint_range[0], stop=shoulder_pan_joint_range[1], num=10)
 
 # robot0:shoulder_lift_joint, range -1.221 1.518
-# shoulder_lift_joint = np.concatenate((np.arange(-1.221, 1.518, 0.1), np.full((1,), 1.518)))
-shoulder_lift_joint = np.linspace(start=-1.221, stop=1.518, num=29)
+shoulder_lift_joint_angles = np.linspace(start=shoulder_lift_joint_range[0], stop=shoulder_lift_joint_range[1], num=10)
 
 # robot0:upperarm_roll_joint, no range
 
 # robot0:elbow_flex_joint, range -2.251 2.251
-# elbow_flex_joint = np.concatenate((np.arange(-2.251, 2.25, 0.1), np.full((1,), 2.251)))
-elbow_flex_joint = np.linspace(start=-2.251, stop=2.251, num=46)
+elbow_flex_joint_angles = np.linspace(start=elbow_flex_joint_range[0], stop=elbow_flex_joint_range[1], num=10)
 
 # robot0:forearm_roll_joint, no range
 
 # robot0:wrist_flex_joint, range -2.16 2.16
-# wrist_flex_joint = np.concatenate((np.arange(-2.16, 2.17, 0.1), np.full((1,), 2.16)))
-wrist_flex_joint = np.linspace(start=-2.16, stop=2.16, num=44)
+wrist_flex_joint_angles = np.linspace(start=wrist_flex_joint_range[0], stop=wrist_flex_joint_range[1], num=10)
 
 # robot0:wrist_roll_joint, no range
 
-# robot0:r_gripper_finger_joint, range 0 0.05
-# r_gripper_finger_joint = np.arange(0, 0.06, 0.025)
+# robot0:r_gripper_finger_joint, range 0 0.05  # not included, no effect on end effector position
 
-# robot0:l_gripper_finger_joint, range 0 0.05
-# l_gripper_finger_joint = np.arange(0, 0.06, 0.025)
+# robot0:l_gripper_finger_joint, range 0 0.05  # not included, no effect on end effector position
 
-num_points = torso_lift_joint.shape[0] * \
-             head_pan_joint.shape[0] * \
-             head_tilt_joint.shape[0] * \
-             shoulder_pan_joint.shape[0] * \
-             shoulder_lift_joint.shape[0] * \
-             elbow_flex_joint.shape[0] * \
-             wrist_flex_joint.shape[0]  #* \
-             # r_gripper_finger_joint.shape[0] * \
-             # l_gripper_finger_joint.shape[0]
+num_points = torso_lift_joint_angles.shape[0] * \
+             head_pan_joint_angles.shape[0] * \
+             head_tilt_joint_angles.shape[0] * \
+             shoulder_pan_joint_angles.shape[0] * \
+             shoulder_lift_joint_angles.shape[0] * \
+             elbow_flex_joint_angles.shape[0] * \
+             wrist_flex_joint_angles.shape[0]
 
 points = []
 
@@ -74,42 +106,32 @@ functions.mj_kinematics(model, sim.data)  # run forward kinematics, returns None
 functions.mj_forward(model, sim.data)  # same as mj_step but does not integrate in time, returns None
 
 with tqdm(total=num_points) as pbar:
-    for i in torso_lift_joint:
+    for i in torso_lift_joint_angles:
         sim.data.set_joint_qpos("robot0:torso_lift_joint", i)
 
-        for j in head_pan_joint:
+        for j in head_pan_joint_angles:
             sim.data.set_joint_qpos("robot0:head_pan_joint", j)
 
-            for k in head_tilt_joint:
+            for k in head_tilt_joint_angles:
                 sim.data.set_joint_qpos("robot0:head_tilt_joint", k)
 
-                for l in shoulder_pan_joint:
+                for l in shoulder_pan_joint_angles:
                     sim.data.set_joint_qpos("robot0:shoulder_pan_joint", l)
 
-                    for m in shoulder_lift_joint:
+                    for m in shoulder_lift_joint_angles:
                         sim.data.set_joint_qpos("robot0:shoulder_lift_joint", m)
 
-                        for n in elbow_flex_joint:
+                        for n in elbow_flex_joint_angles:
                             sim.data.set_joint_qpos("robot0:elbow_flex_joint", n)
 
-                            for o in wrist_flex_joint:
+                            for o in wrist_flex_joint_angles:
                                 sim.data.set_joint_qpos("robot0:wrist_flex_joint", o)
-
-                                # important: removed the next two joints from the computation since they have no effect on grip position
-
-                                # for p in r_gripper_finger_joint:
-                                #     sim.data.set_joint_qpos("robot0:r_gripper_finger_joint", p)
-                                #
-                                #     for q in l_gripper_finger_joint:
-                                #         sim.data.set_joint_qpos("robot0:l_gripper_finger_joint", q)
 
                                 functions.mj_kinematics(model, sim.data)
                                 functions.mj_forward(model, sim.data)
 
                                 point = sim.data.get_site_xpos("robot0:grip").copy()  # must use copy here; otherwise all points in list are same
                                 points.append(point)
-
-                                # print(point)
 
                                 pbar.update(1)
 
@@ -123,9 +145,9 @@ data_directory = os.getcwd() + "/data"
 os.makedirs(data_directory, exist_ok=True)
 
 # np.save(data_directory + "/points.npy", points)
-np.savetxt(data_directory + "/points_full.csv", points, delimiter=",")
+np.savetxt(data_directory + "/points.csv", points, delimiter=",")
 # np.save(data_directory + "/unique_points.npy", unique_points)
-np.savetxt(data_directory + "/unique_points_full.csv", unique_points, delimiter=",")
+np.savetxt(data_directory + "/unique_points.csv", unique_points, delimiter=",")
 
 # plot
 
@@ -196,5 +218,5 @@ ax.set_xlabel('x')
 ax.set_ylabel('y')
 ax.set_zlabel('z')
 
-plt.savefig(plot_directory + "/robot_workspace_full.jpg")
+plt.savefig(plot_directory + "/robot_workspace.jpg")
 # plt.show()

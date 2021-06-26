@@ -2,7 +2,11 @@ import custom_gym_envs
 import gym
 import time
 
-env = gym.wrappers.FlattenObservation(gym.make("FetchReachEnv-v0"))
+from environment.fetch_reach_observation_wrapper import FetchReachObservationWrapper
+
+env = FetchReachObservationWrapper(gym.make("FetchReachEnv-v0"))
+
+
 
 
 # action space: Box(-1.0, 1.0, (4,), float32)
@@ -14,5 +18,4 @@ for e in range(10):
     env.reset()
     done = False
     while not done:
-        env.render()
         observation, reward, done, info = env.step(env.action_space.sample())

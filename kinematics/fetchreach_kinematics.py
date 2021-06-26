@@ -18,19 +18,26 @@ args = parser.parse_args()
 
 # xml
 
+if "melco2" in os.uname()[1]:
+    anaconda_path = "/opt/anaconda3"
+elif "melco" in os.uname()[1]:
+    anaconda_path = "/local/melco2/sschoepp/anaconda3"
+else:
+    anaconda_path = os.getenv("HOME") + "/anaconda3"
+
 MODEL_XML = None
 if args.env_name == "FetchReach-v1":
-    MODEL_XML = "/opt/anaconda3/envs/openai/lib/python3.7/site-packages/gym/envs/robotics/assets/fetch/reach.xml"
+    MODEL_XML = anaconda_path + "/envs/openai/lib/python3.7/site-packages/gym/envs/robotics/assets/fetch/reach.xml"
 elif args.env_name == "FetchReachEnv-v0":
-    MODEL_XML = "/opt/Documents/openai/custom_gym_envs/envs/fetchreach/FetchReachEnv_v0_Normal/assets/fetch/reach.xml"
+    MODEL_XML = "/home/sschoepp/Documents/openai/custom_gym_envs/envs/fetchreach/FetchReachEnv_v0_Normal/assets/fetch/reach.xml"
 elif args.env_name == "FetchReachEnv-v1":
-    MODEL_XML = "/opt/Documents/openai/custom_gym_envs/envs/fetchreach/FetchReachEnv_v1_BrokenShoulderLiftJoint/assets/fetch/reach.xml"
+    MODEL_XML = "/home/sschoepp/Documents/openai/custom_gym_envs/envs/fetchreach/FetchReachEnv_v1_BrokenShoulderLiftJoint/assets/fetch/reach.xml"
 elif args.env_name == "FetchReachEnv-v2":
-    MODEL_XML = "/opt/Documents/openai/custom_gym_envs/envs/fetchreach/FetchReachEnv_v2_BrokenElbowFlexJoint/assets/fetch/reach.xml"
+    MODEL_XML = "/home/sschoepp/Documents/openai/custom_gym_envs/envs/fetchreach/FetchReachEnv_v2_BrokenElbowFlexJoint/assets/fetch/reach.xml"
 elif args.env_name == "FetchReachEnv-v3":
-    MODEL_XML = "/opt/Documents/openai/custom_gym_envs/envs/fetchreach/FetchReachEnv_v3_BrokenWristFlexJoint/assets/fetch/reach.xml"
+    MODEL_XML = "/home/sschoepp/Documents/openai/custom_gym_envs/envs/fetchreach/FetchReachEnv_v3_BrokenWristFlexJoint/assets/fetch/reach.xml"
 elif args.env_name == "FetchReachEnv-v4":
-    MODEL_XML = "/opt/Documents/openai/custom_gym_envs/envs/fetchreach/FetchReachEnv_v4_BrokenGrip/assets/fetch/reach.xml"
+    MODEL_XML = "/home/sschoepp/Documents/openai/custom_gym_envs/envs/fetchreach/FetchReachEnv_v4_BrokenGrip/assets/fetch/reach.xml"
 
 ROBOT_XML = MODEL_XML[:-9] + "robot.xml"
 tree = ET.parse(ROBOT_XML)

@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 import argparse
 import pathlib
-import os, shutil
+import os, shutil, pickle
 from tqdm import tqdm
 
 parser = argparse.ArgumentParser(description="Draw results of the experiments inside a directory")
@@ -21,8 +21,21 @@ parser.add_argument("-nte", "--num_top_experiments", default=10,
 
 args = parser.parse_args()
 
+parameters = None
 
-# PATH = '/home/mehran/Desktop/AntAnalyze'
+
+def load_parameters(data_dir):
+    """
+    Load normal experiment parameters.
+
+    File format: .pickle
+    """
+    global parameters
+    pickle_foldername = data_dir + "/pickle"
+
+    with open(pickle_foldername + "/parameters.pickle", "rb") as f:
+        parameters = pickle.load(f)
+
 
 def draw():
     PATH = args.dir
@@ -31,16 +44,17 @@ def draw():
     experiments_list = os.listdir(PATH)
 
     current_path = pathlib.Path(__file__).parent.absolute()
-    if not os.path.exists(os.path.join(current_path, 'draw_results')):
-        os.mkdir(os.path.join(current_path, 'draw_results'))
-    result_path = os.path.join(current_path, 'draw_results')
+    if not os.path.exists(os.path.join(current_path, 'plotted_hps_results')):
+        os.mkdir(os.path.join(current_path, 'plotted_hps_results'))
+    result_path = os.path.join(current_path, 'plotted_hps_results')
 
-    if not os.path.exists(os.path.join(current_path, 'best_results')):
-        os.mkdir(os.path.join(current_path, 'best_results'))
-    best_results_path = os.path.join(current_path, 'best_results')
+    if not os.path.exists(os.path.join(result_path, 'best_hps_results')):
+        os.mkdir(os.path.join(result_path, 'best_hps_results'))
+    best_hps_results_path = os.path.join(result_path, 'best_hps_results')
 
     experiment_seed = {}
     experiments_score = {}
+    experiments_statistical_info = {}
     # set the theme for plots
     sns.set_style("dark")
     sns.set_theme()
@@ -64,6 +78,7 @@ def draw():
             try:
                 path = os.path.join(PATH, exp, 'seed0', 'csv', 'eval_data.csv')
                 data_temp = pd.read_csv(path)
+                load_parameters(os.path.join(PATH, exp, 'seed0'))
             except FileNotFoundError:
                 continue
 
@@ -79,23 +94,35 @@ def draw():
             average = np.mean(average_returns, axis=0)
             standard_error = np.std(average_returns, axis=0) / np.sqrt(average_returns.shape[0])
             experiments_score[exp] = average[:int(average.shape[0] * percentage_consider)].sum()
-
             x = np.array(data_temp['num_time_steps'])[:-1]
+            experiments_statistical_info[exp] = {'avg': average, 'std_error': standard_error, 'time_step': x,
+                                                 'pss': parameters['param_search_seed']}
             plt.figure(figsize=(12, 5))
             plt.plot(x, average, 'b')
-            plt.fill_between(x, average - 1.96 * standard_error, average + 1.96 * standard_error, color='r', alpha=0.2)
+            plt.fill_between(x, average - 2.26 * standard_error, average + 2.26 * standard_error, alpha=0.2)
             plt.savefig(os.path.join(result_path, f'{exp}.jpg'), dpi=300)
             pbar.update(1)
 
     # Finding the best HP settings based on the sum of average returns of different seeds
     sorted_experiments_score = {k: v for k, v in sorted(experiments_score.items(), key=lambda item: item[1])}
     counter = 0
+    plt.figure(figsize=(12, 5))
+
     for exp in reversed(sorted_experiments_score.keys()):
-        draw_path = os.path.join(result_path, f'{exp}.jpg')
-        shutil.copy2(draw_path, best_results_path)
+        # draw_path = os.path.join(result_path, f'{exp}.jpg')
+        # shutil.copy2(draw_path, best_hps_results_path)
+        average = experiments_statistical_info[exp]['avg']
+        standard_error = experiments_statistical_info[exp]['std_error']
+        x = experiments_statistical_info[exp]['time_step']
+        label = experiments_statistical_info[exp]['pss']
+        plt.plot(x, average, label=label)
+        plt.fill_between(x, average - 2.26 * standard_error, average + 2.26 * standard_error, alpha=0.2)
         counter += 1
         if counter == num_top_experiments:
             break
+
+    plt.legend(loc="upper right")
+    plt.savefig(os.path.join(best_hps_results_path, f'best_results.jpg'), dpi=300)
 
 
 if __name__ == "__main__":

@@ -10,10 +10,10 @@ import custom_gym_envs
 # Setting MountainCar-v0 as the environment
 # env = Environment('FetchPickAndPlace-v0', 0)
 # env = gym.make('FetchPickAndPlaceDense-v0')
-# env = gym.make('FetchReach-v0')
+env = gym.make('FetchReach-v0')
 # env = gym.make('FetchReachFaultyJoint-v1')
 # env = gym.make('FetchReachFaultyJoint-v2')
-env = gym.make('FetchReachFaultyJoint-v3')
+# env = gym.make('FetchReachFaultyJoint-v3')
 # env = gym.make('FetchReachFaultyBrokenGrip-v0')
 # env = gym.make('FetchReach-v1')
 # env = gym.make('AntEnv-v0')

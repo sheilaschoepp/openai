@@ -4,7 +4,7 @@ import time
 
 from environment.fetch_reach_observation_wrapper import FetchReachObservationWrapper
 
-env = gym.make("FetchReach-v1")
+env = FetchReachObservationWrapper(gym.make("FetchReachEnv-v0"))
 
 
 

@@ -184,7 +184,7 @@ np.savetxt(data_directory + "/workspace_unique_points.csv", unique_points, delim
 
 # plot
 
-plot_directory = os.getcwd() + "/plotted_forward_kinematics"
+plot_directory = os.getcwd() + "/plotted_fetchreach_forward_kinematics"
 os.makedirs(plot_directory, exist_ok=True)
 
 # set min and max x,y,z to the x,y,z of the first point in list

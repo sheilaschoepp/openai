@@ -33,7 +33,7 @@ class Environment(BaseEnvironment):
         self.render = render
 
         if "FetchReach" in self.env_name:
-            self.env = FetchReachObservationWrapper(gym.make(self.env_name, reward_type="dense"))
+            self.env = FetchReachObservationWrapper(gym.make(self.env_name))
         else:
             self.env = gym.make(self.env_name)
 

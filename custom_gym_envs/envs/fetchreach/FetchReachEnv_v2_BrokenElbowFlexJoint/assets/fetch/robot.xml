@@ -5,7 +5,7 @@ http://www.mujoco.org/book/XMLreference.html#joint
 http://www.mujoco.org/book/XMLreference.html#geom
 
 modifications: Second blue joint (elbow flex joint)
-name="robot0:elbow_flex_joint", range="-2.251 2.251" changed to range="-0.251 0.251", added limited="true" \\
+name="robot0:elbow_flex_joint", range="-2.251 2.251" changed to range="-0.2 0.2", added limited="true" \\
 name="robot0:elbow_flex_link", class="robot0:blue" changed to class="robot0:red" \\
 class="robot0:red" added to the shared.xml file. \\
 -->

@@ -30,7 +30,7 @@ parser.add_argument("-t", "--time_steps", default="",
 args = parser.parse_args()
 
 
-NUM_SEEDS = 30
+NUM_SEEDS = 10
 NUM_EPISODES_PER_SEED = 100
 
 
@@ -47,9 +47,10 @@ def plot_ant_histograms():
     histogram_plot_directory = os.getcwd() + "/plotted_histogram_results/ant/{}/{}".format(env_name, algorithm)
     os.makedirs(histogram_plot_directory, exist_ok=True)
 
-    # df = pd.DataFrame(fetchreach_histogram_data[0], columns=["radians"])
-    # sns.histplot(data=df, x="radians", color="tab:brown", stat="probability", bins=np.arange(0, 0.5, 0.01))
-    # plt.savefig(histogram_plot_directory + "/{}_{}_torso_lift_joint.jpg".format(env_name, algorithm))
+    df = pd.DataFrame(ant_histogram_data[0], columns=["radians"])
+    sns.histplot(data=df, x="radians", color="tab:brown", stat="probability", bins=np.arange(-0.6, 0.6, 0.1))
+    plt.savefig(histogram_plot_directory + "/{}_{}_hip_1.jpg".format(env_name, algorithm))
+    plt.show()
     # plt.close()
 
     # pss.plot_settings()

@@ -2,9 +2,10 @@ import custom_gym_envs
 import gym
 import time
 
-from environment.fetch_reach_observation_wrapper import FetchReachObservationWrapper
+from environment.fetchreach_observation_wrapper import FetchReachObservationWrapper
+from environment.environment import Environment
 
-env = FetchReachObservationWrapper(gym.make("FetchReachEnv-v0"))
+env = Environment("FetchReachEnv-v1", 0)
 
 
 

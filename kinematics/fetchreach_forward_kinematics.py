@@ -1,6 +1,5 @@
 import argparse
 import math
-import multiprocessing as mp
 import os
 import xml.etree.ElementTree as ET
 
@@ -12,8 +11,10 @@ from tqdm import tqdm
 import custom_gym_envs  # DO NOT DELETE
 
 parser = argparse.ArgumentParser(description='FetchReach Kinematics Arguments')
+
 parser.add_argument("-e", "--env_name", default="FetchReach-v1",
                     help="name of normal (non-malfunctioning) MuJoCo Gym environment (default: FetchReach-v1)")
+
 args = parser.parse_args()
 
 # xml
@@ -25,22 +26,22 @@ elif "melco" in os.uname()[1]:
 else:
     anaconda_path = os.getenv("HOME") + "/anaconda3"
 
-MODEL_XML = None
+model_xml = None
 if args.env_name == "FetchReach-v1":
-    MODEL_XML = anaconda_path + "/envs/openai/lib/python3.7/site-packages/gym/envs/robotics/assets/fetch/reach.xml"
+    model_xml = anaconda_path + "/envs/openai/lib/python3.7/site-packages/gym/envs/robotics/assets/fetch/reach.xml"
 elif args.env_name == "FetchReachEnv-v0":
-    MODEL_XML = "/home/sschoepp/Documents/openai/custom_gym_envs/envs/fetchreach/FetchReachEnv_v0_Normal/assets/fetch/reach.xml"
+    model_xml = "/home/sschoepp/Documents/openai/custom_gym_envs/envs/fetchreach/FetchReachEnv_v0_Normal/assets/fetch/reach.xml"
 elif args.env_name == "FetchReachEnv-v1":
-    MODEL_XML = "/home/sschoepp/Documents/openai/custom_gym_envs/envs/fetchreach/FetchReachEnv_v1_BrokenShoulderLiftJoint/assets/fetch/reach.xml"
+    model_xml = "/home/sschoepp/Documents/openai/custom_gym_envs/envs/fetchreach/FetchReachEnv_v1_BrokenShoulderLiftJoint/assets/fetch/reach.xml"
 elif args.env_name == "FetchReachEnv-v2":
-    MODEL_XML = "/home/sschoepp/Documents/openai/custom_gym_envs/envs/fetchreach/FetchReachEnv_v2_BrokenElbowFlexJoint/assets/fetch/reach.xml"
+    model_xml = "/home/sschoepp/Documents/openai/custom_gym_envs/envs/fetchreach/FetchReachEnv_v2_BrokenElbowFlexJoint/assets/fetch/reach.xml"
 elif args.env_name == "FetchReachEnv-v3":
-    MODEL_XML = "/home/sschoepp/Documents/openai/custom_gym_envs/envs/fetchreach/FetchReachEnv_v3_BrokenWristFlexJoint/assets/fetch/reach.xml"
+    model_xml = "/home/sschoepp/Documents/openai/custom_gym_envs/envs/fetchreach/FetchReachEnv_v3_BrokenWristFlexJoint/assets/fetch/reach.xml"
 elif args.env_name == "FetchReachEnv-v4":
-    MODEL_XML = "/home/sschoepp/Documents/openai/custom_gym_envs/envs/fetchreach/FetchReachEnv_v4_BrokenGrip/assets/fetch/reach.xml"
+    model_xml = "/home/sschoepp/Documents/openai/custom_gym_envs/envs/fetchreach/FetchReachEnv_v4_BrokenGrip/assets/fetch/reach.xml"
 
-ROBOT_XML = MODEL_XML[:-9] + "robot.xml"
-tree = ET.parse(ROBOT_XML)
+robot_xml = model_xml[:-9] + "robot.xml"
+tree = ET.parse(robot_xml)
 root = tree.getroot()
 
 torso_lift_joint_range = None
@@ -121,7 +122,7 @@ wrist_flex_joint_angles = np.linspace(start=wrist_flex_joint_range[0], stop=wris
 
 # scan through joint angles
 
-model = load_model_from_path(MODEL_XML)
+model = load_model_from_path(model_xml)
 sim = MjSim(model)
 
 num_points = torso_lift_joint_angles.shape[0] * \
@@ -183,7 +184,7 @@ np.savetxt(data_directory + "/workspace_unique_points.csv", unique_points, delim
 
 # plot
 
-plot_directory = os.getcwd() + "/plot"
+plot_directory = os.getcwd() + "/plotted_forward_kinematics"
 os.makedirs(plot_directory, exist_ok=True)
 
 # set min and max x,y,z to the x,y,z of the first point in list

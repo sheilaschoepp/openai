@@ -39,18 +39,21 @@ register(
     kwargs={'reward_type': 'dense'},
     max_episode_steps=50,
 )
+
 register(
     id="FetchReachEnv-v1",
     entry_point="custom_gym_envs.envs.fetchreach.FetchReachEnv_v1_BrokenShoulderLiftJoint.fetch.reach:FetchReachEnv",
     kwargs={'reward_type': 'dense'},
     max_episode_steps=50,
 )
+
 register(
     id="FetchReachEnv-v2",
     entry_point="custom_gym_envs.envs.fetchreach.FetchReachEnv_v2_BrokenElbowFlexJoint.fetch.reach:FetchReachEnv",
     kwargs={'reward_type': 'dense'},
     max_episode_steps=50,
 )
+
 register(
     id="FetchReachEnv-v3",
     entry_point="custom_gym_envs.envs.fetchreach.FetchReachEnv_v3_BrokenWristFlexJoint.fetch.reach:FetchReachEnv",

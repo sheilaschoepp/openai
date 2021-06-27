@@ -31,7 +31,7 @@ parser.add_argument("-t", "--time_steps", default="",
 args = parser.parse_args()
 
 
-NUM_SEEDS = 30
+NUM_SEEDS = 10
 NUM_EPISODES_PER_SEED = 100
 
 
@@ -41,82 +41,81 @@ def plot_ant_histograms():
 
     histogram data:
     [hip_1, ankle_1,  hip_2, ankle_2, hip_3, ankle_3, hip_4 ,ankle_4]
+
+    format: .jpg
     """
 
-    histogram_directory = os.getcwd() + "/plotted_histogram_results/ant"
-    os.makedirs(histogram_directory, exist_ok=True)
+    histogram_plot_directory = os.getcwd() + "/plotted_histogram_results/ant/" + env_name
+    os.makedirs(histogram_plot_directory, exist_ok=True)
 
-    # histogram_plot_directory = os.getcwd() + "/plotted_histogram_results/fetchreach/" + env_name
-    # os.makedirs(histogram_plot_directory, exist_ok=True)
-    #
     # df = pd.DataFrame(fetchreach_histogram_data[0], columns=["radians"])
     # sns.histplot(data=df, x="radians", color="tab:brown", stat="probability", bins=np.arange(0, 0.5, 0.01))
     # plt.savefig(histogram_plot_directory + "/{}_{}_torso_lift_joint.jpg".format(env_name, algorithm))
     # plt.close()
 
-    pss.plot_settings()
-    plt.hist(ant_histogram_data[0])
-    plt.title("hip_1")
-    plt.axvline(x=-np.radians(30), color="red")
-    plt.axvline(x=np.radians(30), color="red")
-    plt.savefig(histogram_directory + "/hip_1.jpg")
-    plt.clf()
-
-    pss.plot_settings()
-    plt.hist(ant_histogram_data[1])
-    plt.title("ankle_1")
-    plt.axvline(x=np.radians(30), color="red")
-    plt.axvline(x=np.radians(70), color="red")
-    plt.savefig(histogram_directory + "/ankle_1.jpg")
-    plt.clf()
-
-    pss.plot_settings()
-    plt.hist(ant_histogram_data[2])
-    plt.title("hip_2")
-    plt.axvline(x=-np.radians(30), color="red")
-    plt.axvline(x=np.radians(30), color="red")
-    plt.savefig(histogram_directory + "/hip_2.jpg")
-    plt.clf()
-
-    pss.plot_settings()
-    plt.hist(ant_histogram_data[3])
-    plt.title("ankle_2")
-    plt.axvline(x=-np.radians(70), color="red")
-    plt.axvline(x=-np.radians(30), color="red")
-    plt.savefig(histogram_directory + "/ankle_2.jpg")
-    plt.clf()
-
-    pss.plot_settings()
-    plt.hist(ant_histogram_data[4])
-    plt.title("hip_3")
-    plt.axvline(x=-np.radians(30), color="red")
-    plt.axvline(x=np.radians(30), color="red")
-    plt.savefig(histogram_directory + "/hip_3.jpg")
-    plt.clf()
-
-    pss.plot_settings()
-    plt.hist(ant_histogram_data[5])
-    plt.title("ankle_3")
-    plt.axvline(x=-np.radians(70), color="red")
-    plt.axvline(x=-np.radians(30), color="red")
-    plt.savefig(histogram_directory + "/ankle_3.jpg")
-    plt.clf()
-
-    pss.plot_settings()
-    plt.hist(ant_histogram_data[6])
-    plt.title("hip_4")
-    plt.axvline(x=-np.radians(30), color="red")
-    plt.axvline(x=np.radians(30), color="red")
-    plt.savefig(histogram_directory + "/hip_4.jpg")
-    plt.clf()
-
-    pss.plot_settings()
-    plt.hist(ant_histogram_data[7])
-    plt.title("ankle_4")
-    plt.axvline(x=np.radians(30), color="red")
-    plt.axvline(x=np.radians(70), color="red")
-    plt.savefig(histogram_directory + "/ankle_4.jpg")
-    plt.clf()
+    # pss.plot_settings()
+    # plt.hist(ant_histogram_data[0])
+    # plt.title("hip_1")
+    # plt.axvline(x=-np.radians(30), color="red")
+    # plt.axvline(x=np.radians(30), color="red")
+    # plt.savefig(histogram_directory + "/hip_1.jpg")
+    # plt.clf()
+    #
+    # pss.plot_settings()
+    # plt.hist(ant_histogram_data[1])
+    # plt.title("ankle_1")
+    # plt.axvline(x=np.radians(30), color="red")
+    # plt.axvline(x=np.radians(70), color="red")
+    # plt.savefig(histogram_directory + "/ankle_1.jpg")
+    # plt.clf()
+    #
+    # pss.plot_settings()
+    # plt.hist(ant_histogram_data[2])
+    # plt.title("hip_2")
+    # plt.axvline(x=-np.radians(30), color="red")
+    # plt.axvline(x=np.radians(30), color="red")
+    # plt.savefig(histogram_directory + "/hip_2.jpg")
+    # plt.clf()
+    #
+    # pss.plot_settings()
+    # plt.hist(ant_histogram_data[3])
+    # plt.title("ankle_2")
+    # plt.axvline(x=-np.radians(70), color="red")
+    # plt.axvline(x=-np.radians(30), color="red")
+    # plt.savefig(histogram_directory + "/ankle_2.jpg")
+    # plt.clf()
+    #
+    # pss.plot_settings()
+    # plt.hist(ant_histogram_data[4])
+    # plt.title("hip_3")
+    # plt.axvline(x=-np.radians(30), color="red")
+    # plt.axvline(x=np.radians(30), color="red")
+    # plt.savefig(histogram_directory + "/hip_3.jpg")
+    # plt.clf()
+    #
+    # pss.plot_settings()
+    # plt.hist(ant_histogram_data[5])
+    # plt.title("ankle_3")
+    # plt.axvline(x=-np.radians(70), color="red")
+    # plt.axvline(x=-np.radians(30), color="red")
+    # plt.savefig(histogram_directory + "/ankle_3.jpg")
+    # plt.clf()
+    #
+    # pss.plot_settings()
+    # plt.hist(ant_histogram_data[6])
+    # plt.title("hip_4")
+    # plt.axvline(x=-np.radians(30), color="red")
+    # plt.axvline(x=np.radians(30), color="red")
+    # plt.savefig(histogram_directory + "/hip_4.jpg")
+    # plt.clf()
+    #
+    # pss.plot_settings()
+    # plt.hist(ant_histogram_data[7])
+    # plt.title("ankle_4")
+    # plt.axvline(x=np.radians(30), color="red")
+    # plt.axvline(x=np.radians(70), color="red")
+    # plt.savefig(histogram_directory + "/ankle_4.jpg")
+    # plt.clf()
 
 
 def save_ant_histogram_data():

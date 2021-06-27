@@ -1,7 +1,5 @@
 from gym.envs.registration import register
 
-print('registering ...')
-
 register(
     id="AntEnv-v0",
     entry_point="custom_gym_envs.envs.ant.AntEnv_v0_Normal:AntEnvV0",

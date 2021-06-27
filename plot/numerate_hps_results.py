@@ -7,8 +7,9 @@ import pandas as pd
 import utils.plot_style_settings as pss
 
 
-def extract_ppo_data(directory):
+def get_ppo_data(directory):
     """
+    Obtain the average return for 200 policy evaluations (or an entire run) across 10 runs for a single hyperparameter setting.
 
     @param directory: string
         directory for PPO experiment data
@@ -85,8 +86,15 @@ def extract_ppo_data(directory):
         return df_mean, df_sem
 
 
-def extract_ppo_summary_data(directory):
+def get_ppo_summary_data(directory):
     """
+    Obtain summary data for a single hyperparameter setting, averaged across 10 runs.
+
+    Summary data includes:
+    - performance mean: average of the (average) return in the last 20 policy evaluations
+    - performance mean low: lower bound for 95% confidence interval
+    - performance mean high: upper bound for 95% confidence interval
+    - performance mean sum: sum of the average return across 200 policy evaluations (entire run)
 
     @param directory: string
         directory for PPO experiment data
@@ -176,8 +184,9 @@ def extract_ppo_summary_data(directory):
         return [pss, performance_mean, performance_mean - 2.262 * performance_sem, performance_mean + 2.262 * performance_sem, performance_mean_sum]
 
 
-def extract_sac_data(directory):
+def get_sac_data(directory):
     """
+    Obtain the average return for 200 policy evaluations (or an entire run) across 10 runs for a single hyperparameter setting.
 
     @param directory: string
         directory for SAC experiment data
@@ -238,8 +247,15 @@ def extract_sac_data(directory):
         return df_mean, df_sem
 
 
-def extract_sac_summary_data(directory):
+def get_sac_summary_data(directory):
     """
+    Obtain summary data for a single hyperparameter setting, averaged across 10 runs.
+
+    Summary data includes:
+    - performance mean: average of the (average) return in the last 20 policy evaluations
+    - performance mean low: lower bound for 95% confidence interval
+    - performance mean high: upper bound for 95% confidence interval
+    - performance mean sum: sum of the average return across 200 policy evaluations (entire run)
 
     @param directory: string
         directory for SAC experiment data
@@ -418,20 +434,20 @@ def plot_fetchreach_ppo(seeds, df_means, df_sems):
     s3 = df_sems[3]["average_return"]
     s4 = df_sems[4]["average_return"]
 
-    plt.plot(x, y0, color="tab:blue", label=str(seeds[0]))
-    plt.fill_between(x, y0 - s0, y0 + s0, color="tab:blue")
+    # plt.plot(x, y4, color="tab:purple", label=str(seeds[4]))
+    # plt.fill_between(x, y4 - s4, y4 + s4, color="tab:purple")
+    #
+    # plt.plot(x, y3, color="tab:red", label=str(seeds[3]))
+    # plt.fill_between(x, y3 - s3, y3 + s3, color="tab:red")
+
+    plt.plot(x, y2, color="tab:green", label=str(seeds[2]))
+    plt.fill_between(x, y2 - s2, y2 + s2, color="tab:green")
 
     plt.plot(x, y1, color="tab:orange", label=str(seeds[1]))
     plt.fill_between(x, y1 - s1, y1 + s1, color="tab:orange")
 
-    # plt.plot(x, y2, color="tab:green", label=str(seeds[2]))
-    # plt.fill_between(x, y2 - s2, y2 + s2, color="tab:green")
-
-    plt.plot(x, y3, color="tab:red", label=str(seeds[3]))
-    plt.fill_between(x, y3 - s3, y3 + s3, color="tab:red")
-
-    # plt.plot(x, y4, color="tab:purple", label=str(seeds[4]))
-    # plt.fill_between(x, y4 - s4, y4 + s4, color="tab:purple")
+    plt.plot(x, y0, color="tab:blue", label=str(seeds[0]))
+    plt.fill_between(x, y0 - s0, y0 + s0, color="tab:blue")
 
     plt.legend()
 
@@ -460,20 +476,20 @@ def plot_fetchreach_sac(seeds, df_means, df_sems):
     s3 = df_sems[3]["average_return"]
     s4 = df_sems[4]["average_return"]
 
-    plt.plot(x, y0, color="tab:blue", label=str(seeds[0]))
-    plt.fill_between(x, y0 - s0, y0 + s0, color="tab:blue")
-
-    plt.plot(x, y1, color="tab:orange", label=str(seeds[1]))
-    plt.fill_between(x, y1 - s1, y1 + s1, color="tab:orange")
-
-    plt.plot(x, y2, color="tab:green", label=str(seeds[2]))
-    plt.fill_between(x, y2 - s2, y2 + s2, color="tab:green")
+    # plt.plot(x, y4, color="tab:purple", label=str(seeds[4]))
+    # plt.fill_between(x, y4 - s4, y4 + s4, color="tab:purple")
 
     # plt.plot(x, y3, color="tab:red", label=str(seeds[3]))
     # plt.fill_between(x, y3 - s3, y3 + s3, color="tab:red")
 
-    # plt.plot(x, y4, color="tab:purple", label=str(seeds[4]))
-    # plt.fill_between(x, y4 - s4, y4 + s4, color="tab:purple")
+    plt.plot(x, y2, color="tab:green", label=str(seeds[2]))
+    plt.fill_between(x, y2 - s2, y2 + s2, color="tab:green")
+
+    plt.plot(x, y1, color="tab:orange", label=str(seeds[1]))
+    plt.fill_between(x, y1 - s1, y1 + s1, color="tab:orange")
+
+    plt.plot(x, y0, color="tab:blue", label=str(seeds[0]))
+    plt.fill_between(x, y0 - s0, y0 + s0, color="tab:blue")
 
     plt.legend()
 
@@ -498,7 +514,7 @@ def ant():
 
     for dir_ in ant_data_dirs:
         if "PPO" in dir_:
-            ant_ppo_result = extract_ppo_summary_data(ant_data_dir + "/" + dir_)
+            ant_ppo_result = get_ppo_summary_data(ant_data_dir + "/" + dir_)
             ant_ppo_results.append(ant_ppo_result)
 
     df = pd.DataFrame(data=ant_ppo_results,
@@ -521,7 +537,7 @@ def ant():
     for seed in top_hps_seeds:
         for dir_ in ant_data_dirs:
             if "PPO" in dir_ and "pss:" + str(seed) == dir_[-(4 + len(str(seed))):]:
-                df_mean, df_sem = extract_ppo_data(ant_data_dir + "/" + dir_)
+                df_mean, df_sem = get_ppo_data(ant_data_dir + "/" + dir_)
                 top_ant_ppo_results_mean.append(df_mean)
                 top_ant_ppo_results_sem.append(df_sem)
 
@@ -535,7 +551,7 @@ def ant():
 
     for dir_ in ant_data_dirs:
         if "SAC" in dir_:
-            ant_sac_result = extract_sac_summary_data(ant_data_dir + "/" + dir_)
+            ant_sac_result = get_sac_summary_data(ant_data_dir + "/" + dir_)
             ant_sac_results.append(ant_sac_result)
 
     df = pd.DataFrame(data=ant_sac_results,
@@ -558,7 +574,7 @@ def ant():
     for seed in top_hps_seeds:
         for dir_ in ant_data_dirs:
             if "PPO" in dir_ and "pss:" + str(seed) == dir_[-(4 + len(str(seed))):]:
-                df_mean, df_sem = extract_ppo_data(ant_data_dir + "/" + dir_)
+                df_mean, df_sem = get_ppo_data(ant_data_dir + "/" + dir_)
                 top_ant_ppo_results_mean.append(df_mean)
                 top_ant_ppo_results_sem.append(df_sem)
 
@@ -582,7 +598,7 @@ def fetchreach():
 
     for dir_ in fetchreach_data_dirs:
         if "PPO" in dir_:
-            fetchreach_ppo_result = extract_ppo_summary_data(fetchreach_data_dir + "/" + dir_)
+            fetchreach_ppo_result = get_ppo_summary_data(fetchreach_data_dir + "/" + dir_)
             fetchreach_ppo_results.append(fetchreach_ppo_result)
 
     df = pd.DataFrame(data=fetchreach_ppo_results,
@@ -605,7 +621,7 @@ def fetchreach():
     for seed in top_hps_seeds:
         for dir_ in fetchreach_data_dirs:
             if "PPO" in dir_ and "pss:" + str(seed) == dir_[-(4 + len(str(seed))):]:
-                df_mean, df_sem = extract_ppo_data(fetchreach_data_dir + "/" + dir_)
+                df_mean, df_sem = get_ppo_data(fetchreach_data_dir + "/" + dir_)
                 top_fetchreach_ppo_results_mean.append(df_mean)
                 top_fetchreach_ppo_results_sem.append(df_sem)
 
@@ -619,7 +635,7 @@ def fetchreach():
 
     for dir_ in fetchreach_data_dirs:
         if "SAC" in dir_:
-            fetchreach_sac_result = extract_sac_summary_data(fetchreach_data_dir + "/" + dir_)
+            fetchreach_sac_result = get_sac_summary_data(fetchreach_data_dir + "/" + dir_)
             fetchreach_sac_results.append(fetchreach_sac_result)
 
     df = pd.DataFrame(data=fetchreach_sac_results,
@@ -642,7 +658,7 @@ def fetchreach():
     for seed in top_hps_seeds:
         for dir_ in fetchreach_data_dirs:
             if "SAC" in dir_ and "pss:" + str(seed) == dir_[-(4 + len(str(seed))):]:
-                df_mean, df_sem = extract_sac_data(fetchreach_data_dir + "/" + dir_)
+                df_mean, df_sem = get_sac_data(fetchreach_data_dir + "/" + dir_)
                 top_fetchreach_sac_results_mean.append(df_mean)
                 top_fetchreach_sac_results_sem.append(df_sem)
 
@@ -652,7 +668,7 @@ def fetchreach():
 if __name__ == "__main__":
 
     # DATA_DIR = "/Users/sheilaschoepp/Documents/DATA"
-    DATA_DIR = "/mnt/DATA"
+    DATA_DIR = "/mnt/DATA/"
 
     RUNS = 10
 

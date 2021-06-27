@@ -1,17 +1,24 @@
 import argparse
+import math
 import os
 import pickle
 import random
+import xml.etree.ElementTree as ET
 
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
+import seaborn as sns
 import torch
+from tqdm import tqdm
 
 import utils.plot_style_settings as pss
 from controllers.ppov2.ppov2_agent import PPOv2
 from controllers.sacv2.sacv2_agent import SACv2
 from environment.environment import Environment
 from utils.rl_glue import RLGlue
+
+sns.set_theme()
 
 parser = argparse.ArgumentParser(description="Simulate Arguments")
 
@@ -24,6 +31,10 @@ parser.add_argument("-t", "--time_steps", default="",
 args = parser.parse_args()
 
 
+NUM_SEEDS = 1  # 30
+NUM_EPISODES_PER_SEED = 100
+
+
 def plot_ant_histograms():
     """
     Plot Ant histograms.
@@ -32,7 +43,7 @@ def plot_ant_histograms():
     [hip_1, ankle_1,  hip_2, ankle_2, hip_3, ankle_3, hip_4 ,ankle_4]
     """
 
-    histogram_directory = os.getcwd() + "/plotted_histograms/ant"
+    histogram_directory = os.getcwd() + "/plotted_histogram_results/ant"
     os.makedirs(histogram_directory, exist_ok=True)
 
     pss.plot_settings()
@@ -237,7 +248,7 @@ class AntHistogram:
                          num_steps=self.rlg_statistics["num_steps"],
                          num_episodes=self.rlg_statistics["num_episodes"])
 
-        for _ in range(100):   # todo
+        for _ in range(NUM_EPISODES_PER_SEED):
 
             state, _ = self.rlg.rl_start()
             save_ant_joint_angles(state)
@@ -255,83 +266,76 @@ def plot_fetchreach_histograms():
     Plot FetchReach histograms.
 
     histogram data:
-    [hip_1, ankle_1,  hip_2, ankle_2, hip_3, ankle_3, hip_4 ,ankle_4]
+    [torso_lift_joint, head_pan_joint, head_tilt_joint, shoulder_pan_joint, shoulder_lift_joint, elbow_flex_joint, wrist_flex_joint, r_gripper_finger_joint, l_gripper_finger_joint]
+
+    format: .jpg
     """
 
-    histogram_directory = os.getcwd() + "/plotted_histograms/fetchreach"
-    os.makedirs(histogram_directory, exist_ok=True)
+    histogram_plot_directory = os.getcwd() + "/plotted_histogram_results/fetchreach/" + env_name
+    os.makedirs(histogram_plot_directory, exist_ok=True)
 
-    pss.plot_settings()
-    plt.hist(fetchreach_histogram_data[0])
-    plt.title("torso_lift_joint")
-    plt.axvline(x=0.0386, color="red")
-    plt.axvline(x=0.3861, color="red")
-    plt.savefig(histogram_directory + "/torso_lift_joint.jpg")
-    plt.clf()
+    df = pd.DataFrame(fetchreach_histogram_data[0], columns=["radians"])
+    sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(0, 0.5, 0.05))
+    plt.savefig(histogram_plot_directory + "/{}_{}_torso_lift_joint.jpg".format(env_name, algorithm))
+    plt.close()
 
-    pss.plot_settings()
-    plt.hist(fetchreach_histogram_data[1])
-    plt.title("head_pan_joint")
-    # plt.axvline(x=-1.57, color="red")  # todo: uncomment
-    # plt.axvline(x=1.57, color="red")
-    plt.savefig(histogram_directory + "/head_pan_joint.jpg")
-    plt.clf()
+    df = pd.DataFrame(fetchreach_histogram_data[1], columns=["radians"])
+    sns.histplot(data=df, x="radians", color="tab:blue", stat="probability",  bins=np.arange(-1.6, 1.7, 0.1))
+    plt.savefig(histogram_plot_directory + "/{}_{}_head_pan_joint.jpg".format(env_name, algorithm))
+    plt.close()
 
-    pss.plot_settings()
-    plt.hist(fetchreach_histogram_data[2])
-    plt.title("head_tilt_joint")
-    # plt.axvline(x=-0.76, color="red")  # todo: uncomment
-    # plt.axvline(x=1.45, color="red")
-    plt.savefig(histogram_directory + "/head_tilt_joint.jpg")
-    plt.clf()
+    df = pd.DataFrame(fetchreach_histogram_data[2], columns=["radians"])
+    sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(-0.7, 1.6, 0.1))
+    plt.savefig(histogram_plot_directory + "/{}_{}_head_tilt_joint.jpg".format(env_name, algorithm))
+    plt.close()
 
-    pss.plot_settings()
-    plt.hist(fetchreach_histogram_data[3])
-    plt.title("shoulder_pan_joint")
-    plt.axvline(x=-1.6056, color="red")
-    plt.axvline(x=1.6056, color="red")
-    plt.savefig(histogram_directory + "/shoulder_pan_joint.jpg")
-    plt.clf()
+    df = pd.DataFrame(fetchreach_histogram_data[3], columns=["radians"])
+    sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(-1.7, 1.8, 0.1))
+    plt.savefig(histogram_plot_directory + "/{}_{}_shoulder_pan_joint.jpg".format(env_name, algorithm))
+    plt.close()
 
-    pss.plot_settings()
-    plt.hist(fetchreach_histogram_data[4])
-    plt.title("shoulder_lift_joint")
-    plt.axvline(x=-1.221, color="red")
-    plt.axvline(x=1.518, color="red")
-    plt.savefig(histogram_directory + "/shoulder_lift_joint.jpg")
-    plt.clf()
+    df = pd.DataFrame(fetchreach_histogram_data[4], columns=["radians"])
+    sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(-1.3, 1.7, 0.1))
+    plt.savefig(histogram_plot_directory + "/{}_{}_shoulder_lift_joint.jpg".format(env_name, algorithm))
+    plt.close()
 
-    pss.plot_settings()
-    plt.hist(fetchreach_histogram_data[5])
-    plt.title("elbow_flex_joint")
-    plt.axvline(x=-2.251, color="red")
-    plt.axvline(x=2.251, color="red")
-    plt.savefig(histogram_directory + "/elbow_flex_joint.jpg")
-    plt.clf()
+    df = pd.DataFrame(fetchreach_histogram_data[5], columns=["radians"])
+    sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(-2.3, 2.4, 0.1))
+    plt.savefig(histogram_plot_directory + "/{}_{}_elbow_flex_joint.jpg".format(env_name, algorithm))
+    plt.close()
 
-    pss.plot_settings()
-    plt.hist(fetchreach_histogram_data[6])
-    plt.title("wrist_flex_joint")
-    plt.axvline(x=-2.16, color="red")
-    plt.axvline(x=2.16, color="red")
-    plt.savefig(histogram_directory + "/wrist_flex_joint.jpg")
-    plt.clf()
+    df = pd.DataFrame(fetchreach_histogram_data[6], columns=["radians"])
+    sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(-2.2, 2.3, 0.1))
+    plt.savefig(histogram_plot_directory + "/{}_{}_wrist_flex_joint.jpg".format(env_name, algorithm))
+    plt.close()
 
-    pss.plot_settings()
-    plt.hist(fetchreach_histogram_data[7])
-    plt.title("r_gripper_finger_joint")
-    # plt.axvline(x=0.0, color="red")  # todo: uncomment
-    # plt.axvline(x=0.05, color="red")
-    plt.savefig(histogram_directory + "/r_gripper_finger_joint.jpg")
-    plt.clf()
+    df = pd.DataFrame(fetchreach_histogram_data[7], columns=["radians"])
+    sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(0.0, 0.6, 0.05))
+    plt.savefig(histogram_plot_directory + "/{}_{}_r_gripper_finger_joint.jpg".format(env_name, algorithm))
+    plt.close()
 
-    pss.plot_settings()
-    plt.hist(fetchreach_histogram_data[8])
-    plt.title("l_gripper_finger_joint")
-    # plt.axvline(x=0.0, color="red")  # todo: uncomment
-    # plt.axvline(x=0.05, color="red")
-    plt.savefig(histogram_directory + "/l_gripper_finger_joint.jpg")
-    plt.clf()
+    df = pd.DataFrame(fetchreach_histogram_data[7], columns=["radians"])
+    sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(0.0, 0.6, 0.05))
+    plt.savefig(histogram_plot_directory + "/{}_{}_r_gripper_finger_joint.jpg".format(env_name, algorithm))
+    plt.close()
+
+    df = pd.DataFrame(fetchreach_histogram_data[8], columns=["radians"])
+    sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(0.0, 0.6, 0.05))
+    plt.savefig(histogram_plot_directory + "/{}_{}_l_gripper_finger_joint.jpg".format(env_name, algorithm))
+    plt.close()
+
+
+def save_fetchreach_histogram_data():
+    """
+    Save histogram data.
+
+    format: .csv
+    """
+
+    histogram_data_directory = os.getcwd() + "/numerical_histogram_results/fetchreach/" + env_name
+    os.makedirs(histogram_data_directory, exist_ok=True)
+
+    np.savetxt(histogram_data_directory + "/{}_{}_histogram_data.csv".format(env_name, algorithm), fetchreach_histogram_data, delimiter=",")
 
 
 def save_fetchreach_joint_angles(d):
@@ -373,10 +377,10 @@ class FetchReachHistogram:
         self.load_parameters()
 
         if "ab_env_name" in self.parameters:
-            print("loading abnormal environment")
+            # print("loading abnormal environment")
             self.env_name = self.parameters["ab_env_name"]
         else:
-            print("loading normal environment")
+            # print("loading normal environment")
             self.env_name = self.parameters["n_env_name"]
 
         # seeds
@@ -472,7 +476,7 @@ class FetchReachHistogram:
                          num_steps=self.rlg_statistics["num_steps"],
                          num_episodes=self.rlg_statistics["num_episodes"])
 
-        for _ in range(100):  # todo
+        for _ in range(NUM_EPISODES_PER_SEED):  # todo
 
             state, _ = self.rlg.rl_start()
             save_fetchreach_joint_angles(self.env.env.sim.data)
@@ -487,31 +491,51 @@ class FetchReachHistogram:
 
 if __name__ == "__main__":
 
-    if "Ant" in args.file:
+    env_name = args.file.split("_")[1].split(":")[0]
+
+    algorithm = args.file.split("_")[0].split("/")[-1][:-2].lower()
+
+    if "Ant" in env_name:
 
         # histogram data:
         # [hip_1, ankle_1,  hip_2, ankle_2, hip_3, ankle_3, hip_4 ,ankle_4]
         ant_histogram_data = [[], [], [], [], [], [], [], []]
 
-        for seed in range(0, 1):  # todo
+        pbar = tqdm(total=NUM_SEEDS)
+
+        for seed in range(NUM_SEEDS):
+
+            pbar.set_description("Processing seed {}".format(seed))
 
             sim = AntHistogram(seed)
             sim.run()
+            sim.cleanup()
+
+            pbar.update(1)
 
         plot_ant_histograms()
 
-    elif "FetchReach" in args.file:
+    elif "FetchReach" in env_name:
 
         # histogram data:
         # [torso_lift_joint, head_pan_joint, head_tilt_joint, shoulder_pan_joint, shoulder_lift_joint, elbow_flex_joint, wrist_flex_joint, r_gripper_finger_joint, l_gripper_finger_joint]
         fetchreach_histogram_data = [[], [], [], [], [], [], [], [], []]
 
-        for seed in range(0, 1):  # todo
+        pbar = tqdm(total=NUM_SEEDS)
+
+        for seed in range(NUM_SEEDS):
+
+            pbar.set_description("Processing seed {}".format(seed))
 
             sim = FetchReachHistogram(seed)
             sim.run()
+            sim.cleanup()
+
+            pbar.update(1)
 
         plot_fetchreach_histograms()
+
+        save_fetchreach_histogram_data()
 
     else:
 

@@ -5,7 +5,7 @@ http://www.mujoco.org/book/XMLreference.html#joint
 http://www.mujoco.org/book/XMLreference.html#geom
 
 modifications: First blue joint (shoulder lift joint)
-name="robot0:shoulder_lift_joint", range="-1.221 1.518" changed to range="-0.0221 0.0221", added limited="true" \\
+name="robot0:shoulder_lift_joint", range="-1.221 1.518" changed to range="-0.02 0.02", added limited="true" \\
 name="robot0:shoulder_lift_link", class="robot0:blue" changed to class="robot0:red" \\
 class="robot0:red" added to the shared.xml file. \\
 -->

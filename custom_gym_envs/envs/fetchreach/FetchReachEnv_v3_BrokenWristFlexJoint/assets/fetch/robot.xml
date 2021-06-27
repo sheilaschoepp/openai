@@ -5,7 +5,7 @@ http://www.mujoco.org/book/XMLreference.html#joint
 http://www.mujoco.org/book/XMLreference.html#geom
 
 modifications: Third blue joint (wrist flex joint)
-name="robot0:wrist_flex_joint", range="-2.16 2.16" changed to range="-0.16 0.16", added limited="true" \\
+name="robot0:wrist_flex_joint", range="-2.16 2.16" changed to range="-0.1 0.1", added limited="true" \\
 name="robot0:wrist_flex_link", class="robot0:blue" changed to class="robot0:red" \\
 class="robot0:red" added to the shared.xml file. \\
 -->
@@ -95,7 +95,7 @@ class="robot0:red" added to the shared.xml file. \\
                                               pos="0.0882 0.0009 -0.0001" quat="0.4895 0.4895 0.5103 0.5103"></inertial>
                                     <!--									<joint axis="0 1 0" name="robot0:wrist_flex_joint" range="-2.16 2.16"></joint>-->
                                     <!--									<geom mesh="robot0:wrist_flex_link" name="robot0:wrist_flex_link" material="robot0:arm_mat" class="robot0:blue"></geom>-->
-                                    <joint axis="0 1 0" name="robot0:wrist_flex_joint" range="-0.16 0.16"
+                                    <joint axis="0 1 0" name="robot0:wrist_flex_joint" range="-0.1 0.1"
                                            limited="true"></joint>
                                     <geom mesh="robot0:wrist_flex_link" name="robot0:wrist_flex_link"
                                           material="robot0:arm_mat" class="robot0:red"></geom>

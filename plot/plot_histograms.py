@@ -12,7 +12,6 @@ import seaborn as sns
 import torch
 from tqdm import tqdm
 
-import utils.plot_style_settings as pss
 from controllers.ppov2.ppov2_agent import PPOv2
 from controllers.sacv2.sacv2_agent import SACv2
 from environment.environment import Environment
@@ -43,82 +42,81 @@ def plot_ant_histograms():
 
     histogram data:
     [hip_1, ankle_1,  hip_2, ankle_2, hip_3, ankle_3, hip_4 ,ankle_4]
+
+    format: .jpg
     """
 
-    histogram_directory = os.getcwd() + "/plotted_histogram_results/ant"
-    os.makedirs(histogram_directory, exist_ok=True)
+    histogram_plot_directory = os.getcwd() + "/plotted_histogram_results/ant/{}/{}".format(env_name, algorithm)
+    os.makedirs(histogram_plot_directory, exist_ok=True)
 
-    # histogram_plot_directory = os.getcwd() + "/plotted_histogram_results/fetchreach/" + env_name
-    # os.makedirs(histogram_plot_directory, exist_ok=True)
-    #
     # df = pd.DataFrame(fetchreach_histogram_data[0], columns=["radians"])
     # sns.histplot(data=df, x="radians", color="tab:brown", stat="probability", bins=np.arange(0, 0.5, 0.01))
     # plt.savefig(histogram_plot_directory + "/{}_{}_torso_lift_joint.jpg".format(env_name, algorithm))
     # plt.close()
 
-    pss.plot_settings()
-    plt.hist(ant_histogram_data[0])
-    plt.title("hip_1")
-    plt.axvline(x=-np.radians(30), color="red")
-    plt.axvline(x=np.radians(30), color="red")
-    plt.savefig(histogram_directory + "/hip_1.jpg")
-    plt.clf()
-
-    pss.plot_settings()
-    plt.hist(ant_histogram_data[1])
-    plt.title("ankle_1")
-    plt.axvline(x=np.radians(30), color="red")
-    plt.axvline(x=np.radians(70), color="red")
-    plt.savefig(histogram_directory + "/ankle_1.jpg")
-    plt.clf()
-
-    pss.plot_settings()
-    plt.hist(ant_histogram_data[2])
-    plt.title("hip_2")
-    plt.axvline(x=-np.radians(30), color="red")
-    plt.axvline(x=np.radians(30), color="red")
-    plt.savefig(histogram_directory + "/hip_2.jpg")
-    plt.clf()
-
-    pss.plot_settings()
-    plt.hist(ant_histogram_data[3])
-    plt.title("ankle_2")
-    plt.axvline(x=-np.radians(70), color="red")
-    plt.axvline(x=-np.radians(30), color="red")
-    plt.savefig(histogram_directory + "/ankle_2.jpg")
-    plt.clf()
-
-    pss.plot_settings()
-    plt.hist(ant_histogram_data[4])
-    plt.title("hip_3")
-    plt.axvline(x=-np.radians(30), color="red")
-    plt.axvline(x=np.radians(30), color="red")
-    plt.savefig(histogram_directory + "/hip_3.jpg")
-    plt.clf()
-
-    pss.plot_settings()
-    plt.hist(ant_histogram_data[5])
-    plt.title("ankle_3")
-    plt.axvline(x=-np.radians(70), color="red")
-    plt.axvline(x=-np.radians(30), color="red")
-    plt.savefig(histogram_directory + "/ankle_3.jpg")
-    plt.clf()
-
-    pss.plot_settings()
-    plt.hist(ant_histogram_data[6])
-    plt.title("hip_4")
-    plt.axvline(x=-np.radians(30), color="red")
-    plt.axvline(x=np.radians(30), color="red")
-    plt.savefig(histogram_directory + "/hip_4.jpg")
-    plt.clf()
-
-    pss.plot_settings()
-    plt.hist(ant_histogram_data[7])
-    plt.title("ankle_4")
-    plt.axvline(x=np.radians(30), color="red")
-    plt.axvline(x=np.radians(70), color="red")
-    plt.savefig(histogram_directory + "/ankle_4.jpg")
-    plt.clf()
+    # pss.plot_settings()
+    # plt.hist(ant_histogram_data[0])
+    # plt.title("hip_1")
+    # plt.axvline(x=-np.radians(30), color="red")
+    # plt.axvline(x=np.radians(30), color="red")
+    # plt.savefig(histogram_directory + "/hip_1.jpg")
+    # plt.clf()
+    #
+    # pss.plot_settings()
+    # plt.hist(ant_histogram_data[1])
+    # plt.title("ankle_1")
+    # plt.axvline(x=np.radians(30), color="red")
+    # plt.axvline(x=np.radians(70), color="red")
+    # plt.savefig(histogram_directory + "/ankle_1.jpg")
+    # plt.clf()
+    #
+    # pss.plot_settings()
+    # plt.hist(ant_histogram_data[2])
+    # plt.title("hip_2")
+    # plt.axvline(x=-np.radians(30), color="red")
+    # plt.axvline(x=np.radians(30), color="red")
+    # plt.savefig(histogram_directory + "/hip_2.jpg")
+    # plt.clf()
+    #
+    # pss.plot_settings()
+    # plt.hist(ant_histogram_data[3])
+    # plt.title("ankle_2")
+    # plt.axvline(x=-np.radians(70), color="red")
+    # plt.axvline(x=-np.radians(30), color="red")
+    # plt.savefig(histogram_directory + "/ankle_2.jpg")
+    # plt.clf()
+    #
+    # pss.plot_settings()
+    # plt.hist(ant_histogram_data[4])
+    # plt.title("hip_3")
+    # plt.axvline(x=-np.radians(30), color="red")
+    # plt.axvline(x=np.radians(30), color="red")
+    # plt.savefig(histogram_directory + "/hip_3.jpg")
+    # plt.clf()
+    #
+    # pss.plot_settings()
+    # plt.hist(ant_histogram_data[5])
+    # plt.title("ankle_3")
+    # plt.axvline(x=-np.radians(70), color="red")
+    # plt.axvline(x=-np.radians(30), color="red")
+    # plt.savefig(histogram_directory + "/ankle_3.jpg")
+    # plt.clf()
+    #
+    # pss.plot_settings()
+    # plt.hist(ant_histogram_data[6])
+    # plt.title("hip_4")
+    # plt.axvline(x=-np.radians(30), color="red")
+    # plt.axvline(x=np.radians(30), color="red")
+    # plt.savefig(histogram_directory + "/hip_4.jpg")
+    # plt.clf()
+    #
+    # pss.plot_settings()
+    # plt.hist(ant_histogram_data[7])
+    # plt.title("ankle_4")
+    # plt.axvline(x=np.radians(30), color="red")
+    # plt.axvline(x=np.radians(70), color="red")
+    # plt.savefig(histogram_directory + "/ankle_4.jpg")
+    # plt.clf()
 
 
 def save_ant_histogram_data():
@@ -128,7 +126,7 @@ def save_ant_histogram_data():
     format: .npy
     """
 
-    histogram_data_directory = os.getcwd() + "/numerical_histogram_results/ant/" + env_name
+    histogram_data_directory = os.getcwd() + "/numerical_histogram_results/ant/{}/{}".format(env_name, algorithm)
     os.makedirs(histogram_data_directory, exist_ok=True)
 
     np.save(histogram_data_directory + "/{}_{}_histogram_data.npy".format(env_name, algorithm), ant_histogram_data)
@@ -294,7 +292,7 @@ def plot_fetchreach_histograms():
     format: .jpg
     """
 
-    histogram_plot_directory = os.getcwd() + "/plotted_histogram_results/fetchreach/" + env_name
+    histogram_plot_directory = os.getcwd() + "/plotted_histogram_results/fetchreach/{}/{}".format(env_name, algorithm)
     os.makedirs(histogram_plot_directory, exist_ok=True)
 
     df = pd.DataFrame(fetchreach_histogram_data[0], columns=["radians"])
@@ -350,7 +348,7 @@ def save_fetchreach_histogram_data():
     format: .npy
     """
 
-    histogram_data_directory = os.getcwd() + "/numerical_histogram_results/fetchreach/" + env_name
+    histogram_data_directory = os.getcwd() + "/numerical_histogram_results/fetchreach/{}/{}".format(env_name, algorithm)
     os.makedirs(histogram_data_directory, exist_ok=True)
 
     np.save(histogram_data_directory + "/{}_{}_histogram_data.npy".format(env_name, algorithm), fetchreach_histogram_data)
@@ -494,7 +492,7 @@ class FetchReachHistogram:
                          num_steps=self.rlg_statistics["num_steps"],
                          num_episodes=self.rlg_statistics["num_episodes"])
 
-        for _ in range(NUM_EPISODES_PER_SEED):  # todo
+        for _ in range(NUM_EPISODES_PER_SEED):
 
             state, _ = self.rlg.rl_start()
             save_fetchreach_joint_angles(self.env.env.sim.data)

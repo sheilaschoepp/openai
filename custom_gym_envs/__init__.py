@@ -53,8 +53,8 @@ register(
     entry_point="custom_gym_envs.envs.fetchreach.FetchReachEnv_v3_BrokenWristFlexJoint.fetch.reach:FetchReachEnv",
     max_episode_steps=50,
 )
-register(
-    id="FetchReachEnv-v4",
-    entry_point="custom_gym_envs.envs.fetchreach.FetchReachEnv_v4_BrokenGrip.fetch.reach:FetchReachEnv",
-    max_episode_steps=50,
-)
+# register(
+#     id="FetchReachEnv-v4",
+#     entry_point="custom_gym_envs.envs.fetchreach.FetchReachEnv_v4_BrokenGrip.fetch.reach:FetchReachEnv",
+#     max_episode_steps=50,
+# )

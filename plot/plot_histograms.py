@@ -10,7 +10,6 @@ import seaborn as sns
 import torch
 from tqdm import tqdm
 
-import utils.plot_style_settings as pss
 from controllers.ppov2.ppov2_agent import PPOv2
 from controllers.sacv2.sacv2_agent import SACv2
 from environment.environment import Environment
@@ -31,7 +30,7 @@ parser.add_argument("-t", "--time_steps", default="",
 args = parser.parse_args()
 
 
-NUM_SEEDS = 10
+NUM_SEEDS = 30
 NUM_EPISODES_PER_SEED = 100
 
 
@@ -45,7 +44,7 @@ def plot_ant_histograms():
     format: .jpg
     """
 
-    histogram_plot_directory = os.getcwd() + "/plotted_histogram_results/ant/" + env_name
+    histogram_plot_directory = os.getcwd() + "/plotted_histogram_results/ant/{}/{}".format(env_name, algorithm)
     os.makedirs(histogram_plot_directory, exist_ok=True)
 
     # df = pd.DataFrame(fetchreach_histogram_data[0], columns=["radians"])
@@ -125,7 +124,7 @@ def save_ant_histogram_data():
     format: .npy
     """
 
-    histogram_data_directory = os.getcwd() + "/numerical_histogram_results/ant/" + env_name
+    histogram_data_directory = os.getcwd() + "/numerical_histogram_results/ant/{}/{}".format(env_name, algorithm)
     os.makedirs(histogram_data_directory, exist_ok=True)
 
     np.save(histogram_data_directory + "/{}_{}_histogram_data.npy".format(env_name, algorithm), ant_histogram_data)
@@ -291,7 +290,7 @@ def plot_fetchreach_histograms():
     format: .jpg
     """
 
-    histogram_plot_directory = os.getcwd() + "/plotted_histogram_results/fetchreach/" + env_name
+    histogram_plot_directory = os.getcwd() + "/plotted_histogram_results/fetchreach/{}/{}".format(env_name, algorithm)
     os.makedirs(histogram_plot_directory, exist_ok=True)
 
     df = pd.DataFrame(fetchreach_histogram_data[0], columns=["radians"])
@@ -347,7 +346,7 @@ def save_fetchreach_histogram_data():
     format: .npy
     """
 
-    histogram_data_directory = os.getcwd() + "/numerical_histogram_results/fetchreach/" + env_name
+    histogram_data_directory = os.getcwd() + "/numerical_histogram_results/fetchreach/{}/{}".format(env_name, algorithm)
     os.makedirs(histogram_data_directory, exist_ok=True)
 
     np.save(histogram_data_directory + "/{}_{}_histogram_data.npy".format(env_name, algorithm), fetchreach_histogram_data)
@@ -491,7 +490,7 @@ class FetchReachHistogram:
                          num_steps=self.rlg_statistics["num_steps"],
                          num_episodes=self.rlg_statistics["num_episodes"])
 
-        for _ in range(NUM_EPISODES_PER_SEED):  # todo
+        for _ in range(NUM_EPISODES_PER_SEED):
 
             state, _ = self.rlg.rl_start()
             save_fetchreach_joint_angles(self.env.env.sim.data)

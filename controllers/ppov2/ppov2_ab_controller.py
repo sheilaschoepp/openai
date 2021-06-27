@@ -23,10 +23,10 @@ from termcolor import colored
 
 import utils.plot_style_settings as pss
 from controllers.ppov2.ppov2_agent import PPOv2
-import custom_gym_envs  # do not delete; required for custom gym environments
 from environment.environment import Environment
 from utils.rl_glue import RLGlue
 
+import custom_gym_envs  # do not delete; required for custom gym environments
 
 parser = argparse.ArgumentParser(description="PyTorch Proximal Policy Optimization Arguments")
 

@@ -275,52 +275,47 @@ def plot_fetchreach_histograms():
     os.makedirs(histogram_plot_directory, exist_ok=True)
 
     df = pd.DataFrame(fetchreach_histogram_data[0], columns=["radians"])
-    sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(0, 0.5, 0.05))
+    sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(0, 0.5, 0.01))
     plt.savefig(histogram_plot_directory + "/{}_{}_torso_lift_joint.jpg".format(env_name, algorithm))
     plt.close()
 
     df = pd.DataFrame(fetchreach_histogram_data[1], columns=["radians"])
-    sns.histplot(data=df, x="radians", color="tab:blue", stat="probability",  bins=np.arange(-1.6, 1.7, 0.1))
+    sns.histplot(data=df, x="radians", color="tab:orange", stat="probability",  bins=np.arange(-1.6, 1.7, 0.1))
     plt.savefig(histogram_plot_directory + "/{}_{}_head_pan_joint.jpg".format(env_name, algorithm))
     plt.close()
 
     df = pd.DataFrame(fetchreach_histogram_data[2], columns=["radians"])
-    sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(-0.7, 1.6, 0.1))
+    sns.histplot(data=df, x="radians", color="tab:green", stat="probability", bins=np.arange(-0.7, 1.6, 0.1))
     plt.savefig(histogram_plot_directory + "/{}_{}_head_tilt_joint.jpg".format(env_name, algorithm))
     plt.close()
 
     df = pd.DataFrame(fetchreach_histogram_data[3], columns=["radians"])
-    sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(-1.7, 1.8, 0.1))
+    sns.histplot(data=df, x="radians", color="tab:red", stat="probability", bins=np.arange(-1.7, 1.8, 0.1))
     plt.savefig(histogram_plot_directory + "/{}_{}_shoulder_pan_joint.jpg".format(env_name, algorithm))
     plt.close()
 
     df = pd.DataFrame(fetchreach_histogram_data[4], columns=["radians"])
-    sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(-1.3, 1.7, 0.1))
+    sns.histplot(data=df, x="radians", color="tab:purple", stat="probability", bins=np.arange(-1.3, 1.7, 0.1))
     plt.savefig(histogram_plot_directory + "/{}_{}_shoulder_lift_joint.jpg".format(env_name, algorithm))
     plt.close()
 
     df = pd.DataFrame(fetchreach_histogram_data[5], columns=["radians"])
-    sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(-2.3, 2.4, 0.1))
+    sns.histplot(data=df, x="radians", color="tab:brown", stat="probability", bins=np.arange(-2.3, 2.4, 0.1))
     plt.savefig(histogram_plot_directory + "/{}_{}_elbow_flex_joint.jpg".format(env_name, algorithm))
     plt.close()
 
     df = pd.DataFrame(fetchreach_histogram_data[6], columns=["radians"])
-    sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(-2.2, 2.3, 0.1))
+    sns.histplot(data=df, x="radians", color="tab:olive", stat="probability", bins=np.arange(-2.2, 2.3, 0.1))
     plt.savefig(histogram_plot_directory + "/{}_{}_wrist_flex_joint.jpg".format(env_name, algorithm))
     plt.close()
 
     df = pd.DataFrame(fetchreach_histogram_data[7], columns=["radians"])
-    sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(0.0, 0.6, 0.05))
-    plt.savefig(histogram_plot_directory + "/{}_{}_r_gripper_finger_joint.jpg".format(env_name, algorithm))
-    plt.close()
-
-    df = pd.DataFrame(fetchreach_histogram_data[7], columns=["radians"])
-    sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(0.0, 0.6, 0.05))
+    sns.histplot(data=df, x="radians", color="tab:cyan", stat="probability", bins=np.arange(0.0, 0.6, 0.01))
     plt.savefig(histogram_plot_directory + "/{}_{}_r_gripper_finger_joint.jpg".format(env_name, algorithm))
     plt.close()
 
     df = pd.DataFrame(fetchreach_histogram_data[8], columns=["radians"])
-    sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(0.0, 0.6, 0.05))
+    sns.histplot(data=df, x="radians", color="tab:pink", stat="probability", bins=np.arange(0.0, 0.6, 0.01))
     plt.savefig(histogram_plot_directory + "/{}_{}_l_gripper_finger_joint.jpg".format(env_name, algorithm))
     plt.close()
 
@@ -493,7 +488,7 @@ if __name__ == "__main__":
 
     env_name = args.file.split("_")[1].split(":")[0]
 
-    algorithm = args.file.split("_")[0].split("/")[-1][:-2].lower()
+    algorithm = args.file.split("_")[0].split("/")[-1][:-2]
 
     if "Ant" in env_name:
 

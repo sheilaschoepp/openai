@@ -30,7 +30,7 @@ parser.add_argument("-t", "--time_steps", default="",
 args = parser.parse_args()
 
 
-NUM_SEEDS = 10
+NUM_SEEDS = 1
 NUM_EPISODES_PER_SEED = 100
 
 
@@ -295,47 +295,47 @@ def plot_fetchreach_histograms():
     os.makedirs(histogram_plot_directory, exist_ok=True)
 
     df = pd.DataFrame(fetchreach_histogram_data[0], columns=["radians"])
-    sns.histplot(data=df, x="radians", color="tab:brown", stat="probability", bins=np.arange(0, 0.5, 0.01))
+    sns.histplot(data=df, x="radians", color="tab:brown", stat="probability", bins=np.arange(0, 0.5, 0.01)).set_title("robot0:torso_lift_joint", fontweight="bold")
     plt.savefig(histogram_plot_directory + "/{}_{}_torso_lift_joint.jpg".format(env_name, algorithm))
     plt.close()
 
     df = pd.DataFrame(fetchreach_histogram_data[1], columns=["radians"])
-    sns.histplot(data=df, x="radians", color="tab:brown", stat="probability",  bins=np.arange(-1.6, 1.7, 0.1))
+    sns.histplot(data=df, x="radians", color="tab:brown", stat="probability",  bins=np.arange(-1.6, 1.7, 0.1)).set_title("robot0:head_pan_joint", fontweight="bold")
     plt.savefig(histogram_plot_directory + "/{}_{}_head_pan_joint.jpg".format(env_name, algorithm))
     plt.close()
 
     df = pd.DataFrame(fetchreach_histogram_data[2], columns=["radians"])
-    sns.histplot(data=df, x="radians", color="tab:brown", stat="probability", bins=np.arange(-0.7, 1.6, 0.1))
+    sns.histplot(data=df, x="radians", color="tab:brown", stat="probability", bins=np.arange(-0.7, 1.6, 0.1)).set_title("robot0:head_tilt_joint", fontweight="bold")
     plt.savefig(histogram_plot_directory + "/{}_{}_head_tilt_joint.jpg".format(env_name, algorithm))
     plt.close()
 
     df = pd.DataFrame(fetchreach_histogram_data[3], columns=["radians"])
-    sns.histplot(data=df, x="radians", color="tab:brown", stat="probability", bins=np.arange(-1.7, 1.8, 0.1))
+    sns.histplot(data=df, x="radians", color="tab:brown", stat="probability", bins=np.arange(-1.7, 1.8, 0.1)).set_title("robot0:shoulder_pan_joint", fontweight="bold")
     plt.savefig(histogram_plot_directory + "/{}_{}_shoulder_pan_joint.jpg".format(env_name, algorithm))
     plt.close()
 
     df = pd.DataFrame(fetchreach_histogram_data[4], columns=["radians"])
-    sns.histplot(data=df, x="radians", color="tab:brown", stat="probability", bins=np.arange(-1.3, 1.7, 0.1))
+    sns.histplot(data=df, x="radians", color="tab:brown", stat="probability", bins=np.arange(-1.3, 1.7, 0.1)).set_title("robot0:shoulder_lift_joint", fontweight="bold")
     plt.savefig(histogram_plot_directory + "/{}_{}_shoulder_lift_joint.jpg".format(env_name, algorithm))
     plt.close()
 
     df = pd.DataFrame(fetchreach_histogram_data[5], columns=["radians"])
-    sns.histplot(data=df, x="radians", color="tab:brown", stat="probability", bins=np.arange(-2.3, 2.4, 0.1))
+    sns.histplot(data=df, x="radians", color="tab:brown", stat="probability", bins=np.arange(-2.3, 2.4, 0.1)).set_title("robot0:elbow_flex_joint", fontweight="bold")
     plt.savefig(histogram_plot_directory + "/{}_{}_elbow_flex_joint.jpg".format(env_name, algorithm))
     plt.close()
 
     df = pd.DataFrame(fetchreach_histogram_data[6], columns=["radians"])
-    sns.histplot(data=df, x="radians", color="tab:brown", stat="probability", bins=np.arange(-2.2, 2.3, 0.1))
+    sns.histplot(data=df, x="radians", color="tab:brown", stat="probability", bins=np.arange(-2.2, 2.3, 0.1)).set_title("robot0:wrist_flex_joint", fontweight="bold")
     plt.savefig(histogram_plot_directory + "/{}_{}_wrist_flex_joint.jpg".format(env_name, algorithm))
     plt.close()
 
     df = pd.DataFrame(fetchreach_histogram_data[7], columns=["radians"])
-    sns.histplot(data=df, x="radians", color="tab:brown", stat="probability", bins=np.arange(0.0, 0.6, 0.01))
+    sns.histplot(data=df, x="radians", color="tab:brown", stat="probability", bins=np.arange(0.0, 0.6, 0.01)).set_title("robot0:r_gripper_finger_joint", fontweight="bold")
     plt.savefig(histogram_plot_directory + "/{}_{}_r_gripper_finger_joint.jpg".format(env_name, algorithm))
     plt.close()
 
     df = pd.DataFrame(fetchreach_histogram_data[8], columns=["radians"])
-    sns.histplot(data=df, x="radians", color="tab:brown", stat="probability", bins=np.arange(0.0, 0.6, 0.01))
+    sns.histplot(data=df, x="radians", color="tab:brown", stat="probability", bins=np.arange(0.0, 0.6, 0.01)).set_title("robot0:l_gripper_finger_joint", fontweight="bold")
     plt.savefig(histogram_plot_directory + "/{}_{}_l_gripper_finger_joint.jpg".format(env_name, algorithm))
     plt.close()
 

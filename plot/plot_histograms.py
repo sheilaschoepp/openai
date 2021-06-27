@@ -46,6 +46,14 @@ def plot_ant_histograms():
     histogram_directory = os.getcwd() + "/plotted_histogram_results/ant"
     os.makedirs(histogram_directory, exist_ok=True)
 
+    # histogram_plot_directory = os.getcwd() + "/plotted_histogram_results/fetchreach/" + env_name
+    # os.makedirs(histogram_plot_directory, exist_ok=True)
+    #
+    # df = pd.DataFrame(fetchreach_histogram_data[0], columns=["radians"])
+    # sns.histplot(data=df, x="radians", color="tab:brown", stat="probability", bins=np.arange(0, 0.5, 0.01))
+    # plt.savefig(histogram_plot_directory + "/{}_{}_torso_lift_joint.jpg".format(env_name, algorithm))
+    # plt.close()
+
     pss.plot_settings()
     plt.hist(ant_histogram_data[0])
     plt.title("hip_1")
@@ -111,9 +119,22 @@ def plot_ant_histograms():
     plt.clf()
 
 
+def save_ant_histogram_data():
+    """
+    Save Ant histogram data.
+
+    format: .npy
+    """
+
+    histogram_data_directory = os.getcwd() + "/numerical_histogram_results/ant/" + env_name
+    os.makedirs(histogram_data_directory, exist_ok=True)
+
+    np.save(histogram_data_directory + "/{}_{}_histogram_data.npy".format(env_name, algorithm), ant_histogram_data)
+
+
 def save_ant_joint_angles(s):
     """
-    Save the Ant's joint angles.
+    Save Ant visited joint angles.
 
     @param s: float64 numpy array
         state of the environment
@@ -275,27 +296,27 @@ def plot_fetchreach_histograms():
     os.makedirs(histogram_plot_directory, exist_ok=True)
 
     df = pd.DataFrame(fetchreach_histogram_data[0], columns=["radians"])
-    sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(0, 0.5, 0.01))
+    sns.histplot(data=df, x="radians", color="tab:brown", stat="probability", bins=np.arange(0, 0.5, 0.01))
     plt.savefig(histogram_plot_directory + "/{}_{}_torso_lift_joint.jpg".format(env_name, algorithm))
     plt.close()
 
     df = pd.DataFrame(fetchreach_histogram_data[1], columns=["radians"])
-    sns.histplot(data=df, x="radians", color="tab:orange", stat="probability",  bins=np.arange(-1.6, 1.7, 0.1))
+    sns.histplot(data=df, x="radians", color="tab:brown", stat="probability",  bins=np.arange(-1.6, 1.7, 0.1))
     plt.savefig(histogram_plot_directory + "/{}_{}_head_pan_joint.jpg".format(env_name, algorithm))
     plt.close()
 
     df = pd.DataFrame(fetchreach_histogram_data[2], columns=["radians"])
-    sns.histplot(data=df, x="radians", color="tab:green", stat="probability", bins=np.arange(-0.7, 1.6, 0.1))
+    sns.histplot(data=df, x="radians", color="tab:brown", stat="probability", bins=np.arange(-0.7, 1.6, 0.1))
     plt.savefig(histogram_plot_directory + "/{}_{}_head_tilt_joint.jpg".format(env_name, algorithm))
     plt.close()
 
     df = pd.DataFrame(fetchreach_histogram_data[3], columns=["radians"])
-    sns.histplot(data=df, x="radians", color="tab:red", stat="probability", bins=np.arange(-1.7, 1.8, 0.1))
+    sns.histplot(data=df, x="radians", color="tab:brown", stat="probability", bins=np.arange(-1.7, 1.8, 0.1))
     plt.savefig(histogram_plot_directory + "/{}_{}_shoulder_pan_joint.jpg".format(env_name, algorithm))
     plt.close()
 
     df = pd.DataFrame(fetchreach_histogram_data[4], columns=["radians"])
-    sns.histplot(data=df, x="radians", color="tab:purple", stat="probability", bins=np.arange(-1.3, 1.7, 0.1))
+    sns.histplot(data=df, x="radians", color="tab:brown", stat="probability", bins=np.arange(-1.3, 1.7, 0.1))
     plt.savefig(histogram_plot_directory + "/{}_{}_shoulder_lift_joint.jpg".format(env_name, algorithm))
     plt.close()
 
@@ -305,26 +326,26 @@ def plot_fetchreach_histograms():
     plt.close()
 
     df = pd.DataFrame(fetchreach_histogram_data[6], columns=["radians"])
-    sns.histplot(data=df, x="radians", color="tab:olive", stat="probability", bins=np.arange(-2.2, 2.3, 0.1))
+    sns.histplot(data=df, x="radians", color="tab:brown", stat="probability", bins=np.arange(-2.2, 2.3, 0.1))
     plt.savefig(histogram_plot_directory + "/{}_{}_wrist_flex_joint.jpg".format(env_name, algorithm))
     plt.close()
 
     df = pd.DataFrame(fetchreach_histogram_data[7], columns=["radians"])
-    sns.histplot(data=df, x="radians", color="tab:cyan", stat="probability", bins=np.arange(0.0, 0.6, 0.01))
+    sns.histplot(data=df, x="radians", color="tab:brown", stat="probability", bins=np.arange(0.0, 0.6, 0.01))
     plt.savefig(histogram_plot_directory + "/{}_{}_r_gripper_finger_joint.jpg".format(env_name, algorithm))
     plt.close()
 
     df = pd.DataFrame(fetchreach_histogram_data[8], columns=["radians"])
-    sns.histplot(data=df, x="radians", color="tab:pink", stat="probability", bins=np.arange(0.0, 0.6, 0.01))
+    sns.histplot(data=df, x="radians", color="tab:brown", stat="probability", bins=np.arange(0.0, 0.6, 0.01))
     plt.savefig(histogram_plot_directory + "/{}_{}_l_gripper_finger_joint.jpg".format(env_name, algorithm))
     plt.close()
 
 
 def save_fetchreach_histogram_data():
     """
-    Save histogram data.
+    Save FetchReach histogram data.
 
-    format: .csv
+    format: .npy
     """
 
     histogram_data_directory = os.getcwd() + "/numerical_histogram_results/fetchreach/" + env_name
@@ -335,7 +356,7 @@ def save_fetchreach_histogram_data():
 
 def save_fetchreach_joint_angles(d):
     """
-    Save the FetchReach robot's joint angles.
+    Save FetchReach visited joint angles
 
     @param d: PyMjData object (https://openai.github.io/mujoco-py/build/html/reference.html#pymjdata-time-dependent-data)
         mujoco-py simulation data
@@ -509,6 +530,8 @@ if __name__ == "__main__":
             pbar.update(1)
 
         plot_ant_histograms()
+
+        save_ant_histogram_data()
 
     elif "FetchReach" in env_name:
 

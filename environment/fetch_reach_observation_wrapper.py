@@ -9,7 +9,7 @@ class FetchReachObservationWrapper(gym.ObservationWrapper):
 
         super(FetchReachObservationWrapper, self).__init__(env)
 
-        self.observation_space = gym.spaces.Box(-np.inf, np.inf, shape=(16,), dtype=np.float32)
+        self.observation_space = gym.spaces.Box(-np.inf, np.inf, shape=(13,), dtype=np.float32)
 
     def observation(self, observation):
         """Observation is a dictionary.  Create a new numpy array using 'observation' and 'desired_goal' dictionary entries."""

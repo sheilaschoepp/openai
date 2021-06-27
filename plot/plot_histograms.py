@@ -1,9 +1,7 @@
 import argparse
-import math
 import os
 import pickle
 import random
-import xml.etree.ElementTree as ET
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -18,6 +16,8 @@ from controllers.sacv2.sacv2_agent import SACv2
 from environment.environment import Environment
 from utils.rl_glue import RLGlue
 
+import custom_gym_envs  # DO NOT DELETE
+
 sns.set_theme()
 
 parser = argparse.ArgumentParser(description="Simulate Arguments")
@@ -31,7 +31,7 @@ parser.add_argument("-t", "--time_steps", default="",
 args = parser.parse_args()
 
 
-NUM_SEEDS = 1  # 30
+NUM_SEEDS = 30
 NUM_EPISODES_PER_SEED = 100
 
 
@@ -335,7 +335,7 @@ def save_fetchreach_histogram_data():
     histogram_data_directory = os.getcwd() + "/numerical_histogram_results/fetchreach/" + env_name
     os.makedirs(histogram_data_directory, exist_ok=True)
 
-    np.savetxt(histogram_data_directory + "/{}_{}_histogram_data.csv".format(env_name, algorithm), fetchreach_histogram_data, delimiter=",")
+    np.save(histogram_data_directory + "/{}_{}_histogram_data.npy".format(env_name, algorithm), fetchreach_histogram_data)
 
 
 def save_fetchreach_joint_angles(d):

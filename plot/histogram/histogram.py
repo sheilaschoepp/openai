@@ -1,7 +1,9 @@
 import argparse
+import math
 import os
 import pickle
 import random
+import xml.etree.ElementTree as ET
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -43,7 +45,7 @@ def plot_ant_histograms():
     format: .jpg
     """
 
-    histogram_plot_directory = os.getcwd() + "/plotted_histogram_results/ant/{}/{}".format(algorithm, env_name)
+    histogram_plot_directory = os.getcwd() + "/plot/ant/{}/{}".format(algorithm, env_name)
     os.makedirs(histogram_plot_directory, exist_ok=True)
 
     df = pd.DataFrame(ant_histogram_data[0], columns=["radians"])
@@ -124,7 +126,7 @@ def save_ant_histogram_data():
     format: .npy
     """
 
-    histogram_data_directory = os.getcwd() + "/numerical_histogram_results/ant/{}/{}".format(env_name, algorithm)
+    histogram_data_directory = os.getcwd() + "/data/ant/{}/{}".format(env_name, algorithm)
     os.makedirs(histogram_data_directory, exist_ok=True)
 
     np.save(histogram_data_directory + "/{}_{}_histogram_data.npy".format(env_name, algorithm), ant_histogram_data)
@@ -290,7 +292,7 @@ def plot_fetchreach_histograms():
     format: .jpg
     """
 
-    histogram_plot_directory = os.getcwd() + "/plotted_histogram_results/fetchreach/{}/{}".format(algorithm, env_name)
+    histogram_plot_directory = os.getcwd() + "/plot/fetchreach/{}/{}".format(algorithm, env_name)
     os.makedirs(histogram_plot_directory, exist_ok=True)
 
     df = pd.DataFrame(fetchreach_histogram_data[0], columns=["radians"])
@@ -346,10 +348,12 @@ def save_fetchreach_histogram_data():
     format: .npy
     """
 
-    histogram_data_directory = os.getcwd() + "/numerical_histogram_results/fetchreach/{}/{}".format(env_name, algorithm)
+    histogram_data_directory = os.getcwd() + "/data/fetchreach/{}/{}".format(env_name, algorithm)
     os.makedirs(histogram_data_directory, exist_ok=True)
 
-    np.save(histogram_data_directory + "/{}_{}_histogram_data.npy".format(env_name, algorithm), fetchreach_histogram_data)
+    df = pd.DataFrame(np.array(fetchreach_histogram_data).T, columns=["torso_lift_joint", "head_pan_joint", "head_tilt_joint", "shoulder_pan_joint", "shoulder_lift_joint", "elbow_flex_joint", "wrist_flex_joint", "r_gripper_finger_joint", "l_gripper_finger_joint"])
+
+    df.to_pickle(histogram_data_directory + "/{}_{}_histogram_data.pkl".format(env_name, algorithm))
 
 
 def save_fetchreach_joint_angles(d):

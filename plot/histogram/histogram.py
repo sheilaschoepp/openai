@@ -330,15 +330,15 @@ def plot_fetchreach_histograms():
     plt.savefig(histogram_plot_directory + "/{}_{}_wrist_flex_joint.jpg".format(algorithm, env_name))
     plt.close()
 
-    df = pd.DataFrame(fetchreach_histogram_data[7], columns=["radians"])
-    sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(0.0, 0.6, 0.01)).set_title("{}, {}: robot0:r_gripper_finger_joint".format(algorithm, env_name), fontweight="bold")
-    plt.savefig(histogram_plot_directory + "/{}_{}_r_gripper_finger_joint.jpg".format(algorithm, env_name))
-    plt.close()
-
-    df = pd.DataFrame(fetchreach_histogram_data[8], columns=["radians"])
-    sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(0.0, 0.6, 0.01)).set_title("{}, {}: robot0:l_gripper_finger_joint".format(algorithm, env_name), fontweight="bold")
-    plt.savefig(histogram_plot_directory + "/{}_{}_l_gripper_finger_joint.jpg".format(algorithm, env_name))
-    plt.close()
+    # df = pd.DataFrame(fetchreach_histogram_data[7], columns=["radians"])
+    # sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(0.0, 0.6, 0.01)).set_title("{}, {}: robot0:r_gripper_finger_joint".format(algorithm, env_name), fontweight="bold")
+    # plt.savefig(histogram_plot_directory + "/{}_{}_r_gripper_finger_joint.jpg".format(algorithm, env_name))
+    # plt.close()
+    #
+    # df = pd.DataFrame(fetchreach_histogram_data[8], columns=["radians"])
+    # sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(0.0, 0.6, 0.01)).set_title("{}, {}: robot0:l_gripper_finger_joint".format(algorithm, env_name), fontweight="bold")
+    # plt.savefig(histogram_plot_directory + "/{}_{}_l_gripper_finger_joint.jpg".format(algorithm, env_name))
+    # plt.close()
 
 
 def save_fetchreach_histogram_data():

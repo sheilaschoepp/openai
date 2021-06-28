@@ -499,7 +499,7 @@ def plot_fetchreach_sac(seeds, df_means, df_sems):
 
 def ant():
 
-    hps_data_dir = os.getcwd() + "/numerical_hps_results/ant"
+    hps_data_dir = os.getcwd() + "/numerical_hps_results/Ant-v2"
     os.makedirs(hps_data_dir, exist_ok=True)
 
     ant_data_dir = DATA_DIR + "/ant"
@@ -672,5 +672,5 @@ if __name__ == "__main__":
 
     RUNS = 10
 
-    # ant()
+    ant()
     fetchreach()

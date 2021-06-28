@@ -48,7 +48,7 @@ def plot_ant_histograms():
     os.makedirs(histogram_plot_directory, exist_ok=True)
 
     df = pd.DataFrame(ant_histogram_data[0], columns=["radians"])
-    sns.histplot(data=df, x="radians", color="tab:brown", stat="probability", bins=np.arange(-0.6, 0.6, 0.1))
+    sns.histplot(data=df, x="radians", color="tab:brown", stat="probability", bins=np.arange(-0.6, 0.6, 0.1)).set_title("hip_1", fontweight="bold")
     plt.savefig(histogram_plot_directory + "/{}_{}_hip_1.jpg".format(env_name, algorithm))
     plt.show()
     # plt.close()

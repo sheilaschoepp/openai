@@ -2,8 +2,8 @@
 data/**
 
 # ingore workspace data points
-**/workspace_all_points.csv
-**/workspace_unique_points.csv
+**/*_workspace_all_points.csv
+**/*_workspace_unique_points.csv
 
 **/*.dat
 

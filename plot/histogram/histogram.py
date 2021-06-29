@@ -341,6 +341,19 @@ def plot_fetchreach_histograms():
     # plt.close()
 
 
+def plot_fetchreach_heatmap():
+    """
+    Plot FetchReach heatmap.
+
+    histogram data:
+    [torso_lift_joint, head_pan_joint, head_tilt_joint, shoulder_pan_joint, shoulder_lift_joint, elbow_flex_joint, wrist_flex_joint, r_gripper_finger_joint, l_gripper_finger_joint]
+
+    format: .jpg
+    """
+
+    df = pd.read_pickle()
+
+
 def save_fetchreach_histogram_data():
     """
     Save FetchReach histogram data.

@@ -26,7 +26,7 @@ ACCURACY_LVL_2 = 0.2  # radians
 # ACCURACY_LVL_1 = 0.75  # radians
 # ACCURACY_LVL_2 = 1  # radians
 
-NUM_WORKERS = 8
+NUM_WORKERS = 16
 
 # xml
 
@@ -39,7 +39,6 @@ else:
 
 home_dir = str(Path.home())
 
-print(home_dir)
 model_xml = None
 if args.env_name == "FetchReach-v1":
     model_xml = anaconda_path + "/envs/openai/lib/python3.7/site-packages/gym/envs/robotics/assets/fetch/reach.xml"
@@ -171,19 +170,25 @@ def forward_kinematics(index_i, index_j, index_k, index_l, index_m, index_n, ind
     point = thread_sim.data.get_site_xpos("robot0:grip").copy()  # must use copy here; otherwise all points in list are same
     points_list[thread_id].append(point)
 
+print(len(torso_lift_joint_angles))
+print(len(head_pan_joint_angles))
+
 
 with tqdm(total=num_points) as pbar:
+    def for_loop_func(i, j):
+        for k in head_tilt_joint_angles:
+            for l in shoulder_pan_joint_angles:
+                for m in shoulder_lift_joint_angles:
+                    for n in elbow_flex_joint_angles:
+                        for o in wrist_flex_joint_angles:
+                            forward_kinematics(i, j, k, l, m, n, o)
+                            # forward_kinematics(i, j, k, l, m, n, o)
+                            pbar.update(1)
+
     with ThreadPoolExecutor(max_workers=NUM_WORKERS) as e:
         for i in torso_lift_joint_angles:
             for j in head_pan_joint_angles:
-                for k in head_tilt_joint_angles:
-                    for l in shoulder_pan_joint_angles:
-                        for m in shoulder_lift_joint_angles:
-                            for n in elbow_flex_joint_angles:
-                                for o in wrist_flex_joint_angles:
-                                    e.submit(forward_kinematics, i, j, k, l, m, n, o)
-                                    # forward_kinematics(i, j, k, l, m, n, o)
-                                    pbar.update(1)
+                e.submit(for_loop_func, i, j)
 
 points = []
 for pl in points_list:
@@ -265,7 +270,7 @@ for up in unique_points:
     y_points.append(up[1])
     z_points.append(up[2])
 
-ax.scatter3D(x_points, y_points, z_points, c=z_points, cmap='hsv');
+ax.scatter3D(x_points, y_points, z_points, c=z_points, cmap='hsv')
 
 ax.set_xlabel('x')
 ax.set_ylabel('y')

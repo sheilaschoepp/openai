@@ -48,7 +48,7 @@ def plot_ant_histograms():
     format: .jpg
     """
 
-    histogram_plot_directory = os.getcwd() + "/plot/ant/{}/{}".format(algorithm, env_name)
+    histogram_plot_directory = os.getcwd() + "/plots/ant/{}/{}".format(algorithm, env_name)
     os.makedirs(histogram_plot_directory, exist_ok=True)
 
     df = pd.DataFrame(ant_histogram_data[0], columns=["radians"])
@@ -287,7 +287,7 @@ class AntHistogram:
 
 def plot_fetchreach_histograms():
     """
-    Load data and plot FetchReach histograms.
+    Load data and plots FetchReach histograms.
 
     histogram data:
     [torso_lift_joint, head_pan_joint, head_tilt_joint, shoulder_pan_joint, shoulder_lift_joint, elbow_flex_joint, wrist_flex_joint]
@@ -299,7 +299,7 @@ def plot_fetchreach_histograms():
     histogram_data_directory = os.getcwd() + "/data/fetchreach/{}/{}".format(algorithm, env_name)
     fetchreach_histogram_data = np.load(histogram_data_directory + "/{}_{}_histogram_data.npy".format(algorithm, env_name))
 
-    histogram_plot_directory = os.getcwd() + "/plot/fetchreach/{}/{}".format(algorithm, env_name)
+    histogram_plot_directory = os.getcwd() + "/plots/fetchreach/{}/{}".format(algorithm, env_name)
     os.makedirs(histogram_plot_directory, exist_ok=True)
 
     df = pd.DataFrame(fetchreach_histogram_data[0], columns=["radians"])
@@ -364,7 +364,7 @@ def plot_fetchreach_heatmap():
 
     df = pd.DataFrame(np.array(fetchreach_histogram_count_data).T, index=bins[:-1], columns=["torso_lift", "head_pan", "head_tilt", "shoulder_pan", "shoulder_lift", "elbow_flex", "wrist_flex"])
 
-    histogram_plot_directory = os.getcwd() + "/plot/fetchreach/{}/{}".format(algorithm, env_name)
+    histogram_plot_directory = os.getcwd() + "/plots/fetchreach/{}/{}".format(algorithm, env_name)
     os.makedirs(histogram_plot_directory, exist_ok=True)
 
     sns.heatmap(data=df, cmap="viridis").set_title("{}, {}: Visited Joint Angles".format(algorithm, env_name), fontweight="bold")

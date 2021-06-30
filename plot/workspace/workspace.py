@@ -188,7 +188,7 @@ np.savetxt(data_directory + "/{}_workspace_unique_points.csv".format(args.env_na
 
 # plot
 
-plot_directory = os.getcwd() + "/plot/{}".format(args.env_name)
+plot_directory = os.getcwd() + "/plots/{}".format(args.env_name)
 os.makedirs(plot_directory, exist_ok=True)
 
 # set min and max x,y,z to the x,y,z of the first point in list

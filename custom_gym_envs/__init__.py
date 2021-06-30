@@ -62,7 +62,7 @@ register(
 )
 
 register(
-    id="FetchReachEnv-v3",
+    id="FetchReachEnv-v999",
     entry_point="custom_gym_envs.envs.fetchreach.FetchReachEnv_TEST.fetch.reach:FetchReachEnv",
     kwargs={"reward_type": "dense"},
     max_episode_steps=50,

@@ -2,8 +2,10 @@ import argparse
 import math
 import os
 import xml.etree.ElementTree as ET
-from concurrent.futures import ThreadPoolExecutor
-import threading
+# from concurrent.futures import ThreadPoolExecutor
+# import threading
+import concurrent
+from concurrent.futures import ProcessPoolExecutor
 import matplotlib.pyplot as plt
 import numpy as np
 from mujoco_py import load_model_from_path, MjSim, functions
@@ -21,12 +23,12 @@ args = parser.parse_args()
 # accuracy level
 # pan motion is given a higher accuracy than lift/flex motions
 
-ACCURACY_LVL_1 = 0.1  # radians
-ACCURACY_LVL_2 = 0.2  # radians
-# ACCURACY_LVL_1 = 0.75  # radians
-# ACCURACY_LVL_2 = 1  # radians
+# ACCURACY_LVL_1 = 0.1  # radians
+# ACCURACY_LVL_2 = 0.2  # radians
+ACCURACY_LVL_1 = 0.25  # radians
+ACCURACY_LVL_2 = 0.5  # radians
 
-NUM_WORKERS = 16
+# NUM_WORKERS = 16
 
 # xml
 
@@ -132,15 +134,13 @@ wrist_flex_joint_angles = np.linspace(start=wrist_flex_joint_range[0], stop=wris
 
 # scan through joint angles
 
-simulator = []
-points_list = []
-for _ in range(NUM_WORKERS):
-    model = load_model_from_path(model_xml)
-    sim = MjSim(model)
-    simulator.append(sim)
-    points_list.append([])
-    functions.mj_kinematics(sim.model, sim.data)  # run forward kinematics, returns None
-    functions.mj_forward(sim.model, sim.data)  # same as mj_step but does not integrate in time, returns None
+# simulator = []
+# points_list = []
+# for _ in range(NUM_WORKERS):
+#     model = load_model_from_path(model_xml)
+#     sim = MjSim(model)
+#     simulator.append(sim)
+#     points_list.append([])
 
 num_points = torso_lift_joint_angles.shape[0] * \
              head_pan_joint_angles.shape[0] * \
@@ -155,9 +155,9 @@ num_points = torso_lift_joint_angles.shape[0] * \
 # functions.mj_forward(model, sim.data)  # same as mj_step but does not integrate in time, returns None
 
 
-def forward_kinematics(index_i, index_j, index_k, index_l, index_m, index_n, index_o):
-    thread_id = int(threading.current_thread().getName()[-1])
-    thread_sim = simulator[thread_id]
+def forward_kinematics(thread_sim, thread_points, index_i, index_j, index_k, index_l, index_m, index_n, index_o):
+    # thread_id = int(threading.current_thread().getName()[-1])
+    # thread_sim = simulator[thread_id]
     thread_sim.data.set_joint_qpos("robot0:torso_lift_joint", index_i)
     thread_sim.data.set_joint_qpos("robot0:head_pan_joint", index_j)
     thread_sim.data.set_joint_qpos("robot0:head_tilt_joint", index_k)
@@ -167,32 +167,47 @@ def forward_kinematics(index_i, index_j, index_k, index_l, index_m, index_n, ind
     thread_sim.data.set_joint_qpos("robot0:wrist_flex_joint", index_o)
     functions.mj_kinematics(thread_sim.model, thread_sim.data)
     functions.mj_forward(thread_sim.model, thread_sim.data)
-    point = thread_sim.data.get_site_xpos("robot0:grip").copy()  # must use copy here; otherwise all points in list are same
-    points_list[thread_id].append(point)
+    point = thread_sim.data.get_site_xpos(
+        "robot0:grip").copy()  # must use copy here; otherwise all points in list are same
+    thread_points.append(point)
 
-print(len(torso_lift_joint_angles))
-print(len(head_pan_joint_angles))
-
-
-with tqdm(total=num_points) as pbar:
-    def for_loop_func(i, j):
-        for k in head_tilt_joint_angles:
-            for l in shoulder_pan_joint_angles:
-                for m in shoulder_lift_joint_angles:
-                    for n in elbow_flex_joint_angles:
-                        for o in wrist_flex_joint_angles:
-                            forward_kinematics(i, j, k, l, m, n, o)
-                            # forward_kinematics(i, j, k, l, m, n, o)
-                            pbar.update(1)
-
-    with ThreadPoolExecutor(max_workers=NUM_WORKERS) as e:
-        for i in torso_lift_joint_angles:
-            for j in head_pan_joint_angles:
-                e.submit(for_loop_func, i, j)
 
 points = []
-for pl in points_list:
-    points += pl
+
+
+# with tqdm(total=num_points) as pbar:
+def for_loop_func(i, j):
+    global points
+    model = load_model_from_path(model_xml)
+    thread_sim = MjSim(model)
+    thread_points = []
+    for k in head_tilt_joint_angles:
+        for l in shoulder_pan_joint_angles:
+            for m in shoulder_lift_joint_angles:
+                for n in elbow_flex_joint_angles:
+                    for o in wrist_flex_joint_angles:
+                        forward_kinematics(thread_sim, thread_points, i, j, k, l, m, n, o)
+                        # forward_kinematics(i, j, k, l, m, n, o)
+                        # pbar.update(1)
+    return thread_points
+
+
+with ProcessPoolExecutor() as executor:
+    results = []
+    for i in torso_lift_joint_angles:
+        for j in head_pan_joint_angles:
+            results.append(executor.submit(for_loop_func, i, j))
+
+    for r in concurrent.futures.as_completed(results):
+        points += r.result()
+
+    # with ThreadPoolExecutor(max_workers=NUM_WORKERS) as e:
+    #     for i in torso_lift_joint_angles:
+    #         for j in head_pan_joint_angles:
+    #             e.submit(for_loop_func, i, j)
+
+# for pl in points_list:
+#     points += pl
 # data
 
 print("points", len(points))

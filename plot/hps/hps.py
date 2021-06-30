@@ -334,10 +334,8 @@ def get_sac_summary_data(directory):
 
 def plot_ant_ppo(seeds, df_means, df_sems):
 
-    plot_directory = os.getcwd() + "/plotted_hps_results/Ant-v2"
+    plot_directory = os.getcwd() + "/plots/Ant-v2"
     os.makedirs(plot_directory, exist_ok=True)
-
-
 
     # pss.plot_settings()
     #
@@ -379,7 +377,7 @@ def plot_ant_ppo(seeds, df_means, df_sems):
 
 def plot_ant_sac(seeds, df_means, df_sems):
 
-    plot_directory = os.getcwd() + "/plotted_hps_results/Ant-v2"
+    plot_directory = os.getcwd() + "/plots/Ant-v2"
     os.makedirs(plot_directory, exist_ok=True)
 
     # pss.plot_settings()
@@ -422,10 +420,8 @@ def plot_ant_sac(seeds, df_means, df_sems):
 
 def plot_fetchreach_ppo(seeds, df_means, df_sems):
 
-    plot_directory = os.getcwd() + "/plotted_hps_results/FetchReach-v1"
+    plot_directory = os.getcwd() + "/plots/FetchReach-v1"
     os.makedirs(plot_directory, exist_ok=True)
-
-    pss.plot_settings()
 
     x = df_means[0]["num_time_steps"]
 
@@ -440,6 +436,9 @@ def plot_fetchreach_ppo(seeds, df_means, df_sems):
     s2 = df_sems[2]["average_return"]
     s3 = df_sems[3]["average_return"]
     s4 = df_sems[4]["average_return"]
+
+    sns.lineplot(data=df, palette="tab10")
+    plt.show()
 
     # plt.plot(x, y4, color="tab:purple", label=str(seeds[4]))
     # plt.fill_between(x, y4 - s4, y4 + s4, color="tab:purple")
@@ -458,14 +457,13 @@ def plot_fetchreach_ppo(seeds, df_means, df_sems):
 
     plt.legend()
 
-    plt.savefig(plot_directory + "/PPO.jpg")
-    # plt.show()
+    plt.savefig(plot_directory + "/FetchReach-v1_PPO_hps.jpg")
     plt.close()
 
 
 def plot_fetchreach_sac(seeds, df_means, df_sems):
 
-    plot_directory = os.getcwd() + "/plotted_hps_results/FetchReach-v1"
+    plot_directory = os.getcwd() + "/plots/FetchReach-v1"
     os.makedirs(plot_directory, exist_ok=True)
 
     pss.plot_settings()
@@ -501,14 +499,13 @@ def plot_fetchreach_sac(seeds, df_means, df_sems):
 
     plt.legend()
 
-    plt.savefig(plot_directory + "/SAC.jpg")
-    # plt.show()
+    plt.savefig(plot_directory + "/FetchReach-v1_SAC_hps.jpg")
     plt.close()
 
 
 def ant():
 
-    hps_data_dir = os.getcwd() + "/numerical_hps_results/Ant-v2"
+    hps_data_dir = os.getcwd() + "/data/Ant-v2"
     os.makedirs(hps_data_dir, exist_ok=True)
 
     ant_data_dir = DATA_DIR + "/ant/hps"
@@ -608,7 +605,7 @@ def ant():
 
 def fetchreach():
 
-    hps_data_dir = os.getcwd() + "/numerical_hps_results/fetchreach"
+    hps_data_dir = os.getcwd() + "/data/fetchreach"
     os.makedirs(hps_data_dir, exist_ok=True)
 
     fetchreach_data_dir = DATA_DIR + "/fetchreach/hps"
@@ -696,5 +693,5 @@ if __name__ == "__main__":
 
     RUNS = 10
 
-    ant()
+    # ant()
     fetchreach()

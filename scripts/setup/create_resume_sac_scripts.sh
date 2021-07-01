@@ -6,14 +6,14 @@ echo 'SAC_N_CONTROLLER_ABSOLUTE_PATH="/home/sschoepp/Documents/openai/controller
 #echo 'RESUME_FILE="/local/melco2-1/shared/ant/"' >> melco2.sh
 #echo 'tmux new-session -d -s sac5 "CUDA_VISIBLE_DEVICES=1 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -c --resume --resume_file $RESUME_FILE/seed0; CUDA_VISIBLE_DEVICES=1 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -c --resume --resume_file $RESUME_FILE/seed1; CUDA_VISIBLE_DEVICES=1 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -c --resume --resume_file $RESUME_FILE/seed2; CUDA_VISIBLE_DEVICES=1 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -c --resume --resume_file $RESUME_FILE/seed3; CUDA_VISIBLE_DEVICES=1 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -c --resume --resume_file $RESUME_FILE/seed4; CUDA_VISIBLE_DEVICES=1 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -c --resume --resume_file $RESUME_FILE/seed5; CUDA_VISIBLE_DEVICES=1 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -c --resume --resume_file $RESUME_FILE/seed6; CUDA_VISIBLE_DEVICES=1 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -c --resume --resume_file $RESUME_FILE/seed7; CUDA_VISIBLE_DEVICES=1 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -c --resume --resume_file $RESUME_FILE/seed8; CUDA_VISIBLE_DEVICES=1 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -c --resume --resume_file $RESUME_FILE/seed9"' >> melco2.sh
 
-echo 'RESUME_FILE="/local/melco2-1/shared/ant/SACv2_Ant-v2:20000000_g:0.9283_t:0.0512_a:0.2_lr:0.003234_hd:256_rbs:1000000_bs:64_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_a:True_d:cpu_ps:True_pss:73_r"' >> melco2.sh
+echo 'RESUME_FILE="/local/melco2-1/shared/ant/SACv2_Ant-v2:20000000_g:0.871_t:0.0933_a:0.2_lr:0.002048_hd:256_rbs:1000000_bs:64_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_a:True_d:cpu_ps:True_pss:81_r"' >> melco2.sh
 for i in {0..9}
 do
   echo 'tmux new-session -d -s sac73'$i' "python $SAC_N_CONTROLLER_ABSOLUTE_PATH --resume --resume_file $RESUME_FILE/seed'$i'"' >> melco2.sh
 done
 
-echo 'RESUME_FILE="/local/melco2-1/shared/ant/SACv2_Ant-v2:20000000_g:0.8592_t:0.0351_a:0.2_lr:0.004855_hd:256_rbs:10000_bs:64_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_a:True_d:cpu_ps:True_pss:69_r"' >> melco2.sh
-for i in {0..9}
-do
-  echo 'tmux new-session -d -s sac73'$i' "python $SAC_N_CONTROLLER_ABSOLUTE_PATH --resume --resume_file $RESUME_FILE/seed'$i'"' >> melco2.sh
-done
+#echo 'RESUME_FILE="/local/melco2-1/shared/ant/SACv2_Ant-v2:20000000_g:0.8592_t:0.0351_a:0.2_lr:0.004855_hd:256_rbs:10000_bs:64_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_a:True_d:cpu_ps:True_pss:69_r"' >> melco2.sh
+#for i in {0..9}
+#do
+#  echo 'tmux new-session -d -s sac73'$i' "python $SAC_N_CONTROLLER_ABSOLUTE_PATH --resume --resume_file $RESUME_FILE/seed'$i'"' >> melco2.sh
+#done

@@ -22,9 +22,9 @@ def run(algorithm, env_name):
     """
 
     if args.hpsc:
-        directory = os.path.join(DATA_DIR, env_name, "hpsc", algorithm)
+        directory = os.path.join(DATA_DIR, env_name, "hpsc", algorithm)  # only check for missing seeds
     else:
-        directory = os.path.join(DATA_DIR, env_name, "hps", algorithm)
+        directory = os.path.join(DATA_DIR, env_name, "hps", algorithm)  # check for missing seeds and missing final models
     dirs = os.listdir(directory)
 
     missing_pss_values = list(np.arange(0, 100))
@@ -46,7 +46,7 @@ def run(algorithm, env_name):
             model = params[1].split(":")[1] + ".tar"
 
             # check if all seeds are present for given pss value
-            # check if final model is present for given pss value and given seed
+            # check if final model is present for given pss value and given seed (if not args.hpsc)
             missing_pss_final_model_seeds = []
             for s in range(10):
                 seed_foldername = os.path.join(directory, dir, "seed" + str(s))

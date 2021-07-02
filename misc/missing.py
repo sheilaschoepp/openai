@@ -21,7 +21,7 @@ def run(algorithm, env_name):
 
     for dir in dirs:
 
-        if algorithm is "sac" and env_name is "ant" and "_resumed" not in dir:  # skip resumable folders
+        if algorithm == "sac" and env_name == "ant" and "_resumed" not in dir:  # skip resumable folders
             pass
 
         else:

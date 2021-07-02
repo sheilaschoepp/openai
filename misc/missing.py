@@ -27,8 +27,8 @@ def run(algorithm, env_name):
         directory = os.path.join(DATA_DIR, env_name, "hps", algorithm)
     dirs = os.listdir(directory)
 
-    print(directory)
     missing_pss_values = list(np.arange(0, 100))
+    missing_pss_final_models = []
 
     for dir in dirs:
 
@@ -55,12 +55,13 @@ def run(algorithm, env_name):
                     if os.path.exists(tar_foldername):
                         models = os.listdir(tar_foldername)
                         if model not in models:
-                            print(colored("missing final model: pss {} seed {} tar {}".format(pss_value, s, model), "red"))
+                            missing_pss_final_models.append("{}-{}".format(pss_value, s))
 
                 else:
                     print(colored("missing seed: pss {} seed {}".format(pss_value, s), "red"))
 
     print("missing pss values for {} {}:".format(env_name, algorithm.upper()), missing_pss_values)
+    print("missing pss final models for {} {}:".format(env_name, algorithm.upper(), missing_pss_final_models))
 
 
 if __name__ == "__main__":

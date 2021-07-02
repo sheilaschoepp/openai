@@ -1,7 +1,14 @@
 import os
-
+import argparse
 import numpy as np
 from termcolor import colored
+
+parser = argparse.ArgumentParser(description="Missing")
+
+parser.add_argument("-c", "--hpsc", default=False, action="store_true",
+                    help="if True, only check for missing csv files (and not for missing tar files)")
+
+args = parser.parse_args()
 
 
 def run(algorithm, env_name):
@@ -14,7 +21,10 @@ def run(algorithm, env_name):
     - missing final models (if tar folder is available)
     """
 
-    directory = os.path.join(DATA_DIR, env_name, "hps", algorithm)
+    if args.hpsc:
+        directory = os.path.join(DATA_DIR, env_name, "hpsc", algorithm)
+    else:
+        directory = os.path.join(DATA_DIR, env_name, "hps", algorithm)
     dirs = os.listdir(directory)
 
     missing_pss_values = list(np.arange(0, 100))

@@ -28,7 +28,7 @@ def run(algorithm, env_name):
     dirs = os.listdir(directory)
 
     missing_pss_values = list(np.arange(0, 100))
-    missing_pss_final_models = []
+    missing_pss_final_models = {}
 
     for dir in dirs:
 
@@ -46,19 +46,21 @@ def run(algorithm, env_name):
             model = params[1].split(":")[1] + ".tar"
 
             # check if all seeds are present for given pss value
+            # check if final model is present for given pss value and given seed
+            missing_pss_final_model_seeds = []
             for s in range(10):
                 seed_foldername = os.path.join(directory, dir, "seed" + str(s))
                 if os.path.exists(seed_foldername):
-
-                    # check if final model is present for given pss value and given seed
                     tar_foldername = os.path.join(seed_foldername, "tar")
                     if os.path.exists(tar_foldername):
                         models = os.listdir(tar_foldername)
                         if model not in models:
-                            missing_pss_final_models.append("{}-{}".format(pss_value, s))
+                            missing_pss_final_model_seeds.append(s)
 
                 else:
                     print(colored("missing seed: pss {} seed {}".format(pss_value, s), "red"))
+
+            missing_pss_final_models[pss_value] = missing_pss_final_model_seeds
 
     print("missing pss values for {} {}:".format(env_name, algorithm.upper()), missing_pss_values)
     print("missing pss final models for {} {}:".format(env_name, algorithm.upper()), missing_pss_final_models)

@@ -64,7 +64,7 @@ def run(algorithm, env_name):
                 missing_pss_final_models[pss_value] = missing_pss_final_model_seeds
 
     print("missing pss values for {} {}:".format(env_name, algorithm.upper()), missing_pss_values)
-    print("missing pss final models for {} {}:".format(env_name, algorithm.upper()), missing_pss_final_models)
+    print(colored("missing pss final models for {} {}:".format(env_name, algorithm.upper()), missing_pss_final_models, "red"))
 
 
 if __name__ == "__main__":

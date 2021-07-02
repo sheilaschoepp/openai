@@ -61,7 +61,7 @@ def run(algorithm, env_name):
                     print(colored("missing seed: pss {} seed {}".format(pss_value, s), "red"))
 
     print("missing pss values for {} {}:".format(env_name, algorithm.upper()), missing_pss_values)
-    print("missing pss final models for {} {}:".format(env_name, algorithm.upper(), missing_pss_final_models))
+    print("missing pss final models for {} {}:".format(env_name, algorithm.upper()), missing_pss_final_models)
 
 
 if __name__ == "__main__":
@@ -69,8 +69,8 @@ if __name__ == "__main__":
     Find missing files for all experiments.
     """
 
-    DATA_DIR = "/media/sschoepp/easystore/shared"
-    # DATA_DIR = "/mnt/DATA/shared"
+    # DATA_DIR = "/media/sschoepp/easystore/shared"
+    DATA_DIR = "/mnt/DATA/shared"
 
     RUNS = 10
 

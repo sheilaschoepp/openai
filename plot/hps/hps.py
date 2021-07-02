@@ -78,13 +78,17 @@ def get_ppo_data(directory):
             df = df[["num_time_steps", "average_return"]]
             dfs.append(df)
 
+        else:
+
+            print("missing:", seed_foldername)
+
     if len(dfs) > 0:
 
         df = pd.concat(dfs)
         df = df.groupby(df.index)
 
-        df_mean = df.mean()
-        df_sem = df.sem()
+        df_mean = df.mean().rename(columns={"average_return": str(pss)})
+        df_sem = df.sem().rename(columns={"average_return": str(pss)})
 
         return df_mean, df_sem
 

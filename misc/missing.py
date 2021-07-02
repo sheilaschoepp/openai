@@ -81,8 +81,8 @@ if __name__ == "__main__":
 
     RUNS = 10
 
-    # run("ppo", "fetchreach")
-    # run("sac", "fetchreach")
+    run("ppo", "fetchreach")
+    run("sac", "fetchreach")
     run("ppo", "ant")
     run("sac", "ant")
 

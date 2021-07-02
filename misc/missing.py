@@ -14,7 +14,7 @@ def run(algorithm, env_name):
     - missing final models (if tar folder is available)
     """
 
-    directory = os.path.join(DATA_DIR, env_name, "hpsc", algorithm)
+    directory = os.path.join(DATA_DIR, env_name, "hps", algorithm)
     dirs = os.listdir(directory)
 
     missing_pss_values = list(np.arange(0, 100))
@@ -38,9 +38,9 @@ def run(algorithm, env_name):
             for s in range(10):
                 seed_foldername = os.path.join(directory, dir, "seed" + str(s))
                 if os.path.exists(seed_foldername):
-                    tar_foldername = os.path.join(seed_foldername, "tar")
 
                     # check if final model is present for given pss value and given seed
+                    tar_foldername = os.path.join(seed_foldername, "tar")
                     if os.path.exists(tar_foldername):
                         models = os.listdir(tar_foldername)
                         if model not in models:
@@ -58,6 +58,7 @@ if __name__ == "__main__":
     """
 
     DATA_DIR = "/media/sschoepp/easystore/shared"
+    # DATA_DIR = "/mnt/DATA/shared"
 
     RUNS = 10
 

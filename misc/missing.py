@@ -27,6 +27,7 @@ def run(algorithm, env_name):
         directory = os.path.join(DATA_DIR, env_name, "hps", algorithm)
     dirs = os.listdir(directory)
 
+    print(directory)
     missing_pss_values = list(np.arange(0, 100))
 
     for dir in dirs:
@@ -67,13 +68,13 @@ if __name__ == "__main__":
     Find missing files for all experiments.
     """
 
-    DATA_DIR = "/media/sschoepp/easystore/shared"
-    # DATA_DIR = "/mnt/DATA/shared"
+    # DATA_DIR = "/media/sschoepp/easystore/shared"
+    DATA_DIR = "/mnt/DATA/shared"
 
     RUNS = 10
 
-    run("ppo", "fetchreach")
-    run("sac", "fetchreach")
+    # run("ppo", "fetchreach")
+    # run("sac", "fetchreach")
     run("ppo", "ant")
     run("sac", "ant")
 

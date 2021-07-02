@@ -67,8 +67,8 @@ def run(algorithm, env_name):
 
     if missing_pss_final_models:
         print(colored("missing pss final models for {} {}:".format(env_name, algorithm.upper()), "red"))
-        for key, value in missing_pss_final_models:
-            print(colored((key, value), "red"))
+        for item in missing_pss_final_models.items():
+            print(colored(item, "red"))
 
 
 if __name__ == "__main__":

@@ -57,7 +57,7 @@ if __name__ == "__main__":
     Find missing files for all experiments.
     """
 
-    DATA_DIR = "/mnt/DATA/shared"
+    DATA_DIR = "/media/sschoepp/easystore/shared"
 
     RUNS = 10
 

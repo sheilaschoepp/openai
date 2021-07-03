@@ -75,20 +75,16 @@ def get_ppo_data(directory):
         if os.path.exists(csv_filename):
 
             df = pd.read_csv(csv_filename)
-            df = df[["num_time_steps", "average_return"]]
+            df = df[["num_time_steps", "average_return"]].set_index("num_time_steps").rename(columns={"average_return": str(pss)})
             dfs.append(df)
-
-        else:
-
-            print("missing:", seed_foldername)
 
     if len(dfs) > 0:
 
         df = pd.concat(dfs)
         df = df.groupby(df.index)
 
-        df_mean = df.mean().rename(columns={"average_return": str(pss)})
-        df_sem = df.sem().rename(columns={"average_return": str(pss)})
+        df_mean = df.mean()
+        df_sem = df.sem()
 
         return df_mean, df_sem
 
@@ -167,10 +163,6 @@ def get_ppo_summary_data(directory):
             df = df["average_return"]
             dfs.append(df)
 
-        else:
-
-            print("missing:", seed_foldername)
-
     if len(dfs) > 0:
 
         df = pd.concat(dfs)
@@ -240,7 +232,7 @@ def get_sac_data(directory):
         if os.path.exists(csv_filename):
 
             df = pd.read_csv(csv_filename)
-            df = df[["num_time_steps", "average_return"]]
+            df = df[["num_time_steps", "average_return"]].set_index("num_time_steps").rename(columns={"average_return": str(pss)})
             dfs.append(df)
 
     if len(dfs) > 0:
@@ -311,10 +303,6 @@ def get_sac_summary_data(directory):
             df = pd.read_csv(csv_filename)
             df = df["average_return"]
             dfs.append(df)
-
-        else:
-            
-            print("missing:", seed_foldername)
 
     if len(dfs) > 0:
         
@@ -422,88 +410,48 @@ def plot_ant_sac(seeds, df_means, df_sems):
     # plt.close()
 
 
-def plot_fetchreach_ppo(seeds, df_means, df_sems):
+def plot_fetchreach(algorithm, seeds, df_means, df_sems):
+    """
+    Plot best hyperparameter settings for the FetchReach-v1 environment.
+
+    @param algorithm: string
+        algorithm name
+    @param seeds: list of int
+        list of five best performing seeds, ordered from best performing to least-best performing
+    @param df_means: list of df
+        list of the average returns for each parameter setting
+    @param df_sems: list of df
+        list of standard errors for each parameter setting
+    """
 
     plot_directory = os.getcwd() + "/plots/FetchReach-v1"
     os.makedirs(plot_directory, exist_ok=True)
 
-    x = df_means[0]["num_time_steps"]
+    colors = ["tab:blue", "tab:green", "tab:purple", "tab:orange", "tab:red"]
 
-    y0 = df_means[0]["average_return"]
-    y1 = df_means[1]["average_return"]
-    y2 = df_means[2]["average_return"]
-    y3 = df_means[3]["average_return"]
-    y4 = df_means[4]["average_return"]
+    df_means = pd.concat(df_means, axis=1)
+    df_sems = pd.concat(df_sems, axis=1)
 
-    s0 = df_sems[0]["average_return"]
-    s1 = df_sems[1]["average_return"]
-    s2 = df_sems[2]["average_return"]
-    s3 = df_sems[3]["average_return"]
-    s4 = df_sems[4]["average_return"]
+    x = df_means.index
 
-    sns.lineplot(data=df, palette="tab10")
-    plt.show()
+    indices = np.arange(NUM_BEST)
 
-    # plt.plot(x, y4, color="tab:purple", label=str(seeds[4]))
-    # plt.fill_between(x, y4 - s4, y4 + s4, color="tab:purple")
-    #
-    # plt.plot(x, y3, color="tab:red", label=str(seeds[3]))
-    # plt.fill_between(x, y3 - s3, y3 + s3, color="tab:red")
+    for i in np.flip(indices):
+        column = str(seeds[i])
+        y = df_means[str(seeds[i])]
+        lb = y - df_sems[str(seeds[i])]
+        ub = y + df_sems[str(seeds[i])]
+        color = colors[i]
+        plt.plot(x, y, color=color, label=column)
+        plt.fill_between(x, lb, ub, color=color, alpha=0.3)
 
-    plt.plot(x, y2, color="tab:green", label=str(seeds[2]))
-    plt.fill_between(x, y2 - s2, y2 + s2, color="tab:green")
-
-    plt.plot(x, y1, color="tab:orange", label=str(seeds[1]))
-    plt.fill_between(x, y1 - s1, y1 + s1, color="tab:orange")
-
-    plt.plot(x, y0, color="tab:blue", label=str(seeds[0]))
-    plt.fill_between(x, y0 - s0, y0 + s0, color="tab:blue")
-
-    plt.legend()
-
-    plt.savefig(plot_directory + "/FetchReach-v1_PPO_hps.jpg")
-    plt.close()
-
-
-def plot_fetchreach_sac(seeds, df_means, df_sems):
-
-    plot_directory = os.getcwd() + "/plots/FetchReach-v1"
-    os.makedirs(plot_directory, exist_ok=True)
-
-    pss.plot_settings()
-
-    x = df_means[0]["num_time_steps"]
-
-    y0 = df_means[0]["average_return"]
-    y1 = df_means[1]["average_return"]
-    y2 = df_means[2]["average_return"]
-    y3 = df_means[3]["average_return"]
-    y4 = df_means[4]["average_return"]
-
-    s0 = df_sems[0]["average_return"]
-    s1 = df_sems[1]["average_return"]
-    s2 = df_sems[2]["average_return"]
-    s3 = df_sems[3]["average_return"]
-    s4 = df_sems[4]["average_return"]
-
-    # plt.plot(x, y4, color="tab:purple", label=str(seeds[4]))
-    # plt.fill_between(x, y4 - s4, y4 + s4, color="tab:purple")
-
-    # plt.plot(x, y3, color="tab:red", label=str(seeds[3]))
-    # plt.fill_between(x, y3 - s3, y3 + s3, color="tab:red")
-
-    plt.plot(x, y2, color="tab:green", label=str(seeds[2]))
-    plt.fill_between(x, y2 - s2, y2 + s2, color="tab:green")
-
-    plt.plot(x, y1, color="tab:orange", label=str(seeds[1]))
-    plt.fill_between(x, y1 - s1, y1 + s1, color="tab:orange")
-
-    plt.plot(x, y0, color="tab:blue", label=str(seeds[0]))
-    plt.fill_between(x, y0 - s0, y0 + s0, color="tab:blue")
-
-    plt.legend()
-
-    plt.savefig(plot_directory + "/FetchReach-v1_SAC_hps.jpg")
+    plt.xlabel("time steps")
+    plt.ylim(YMIN, YMAX)
+    plt.ylabel("average\nreturn\n(10 seeds)", labelpad=35).set_rotation(0)
+    plt.title("FetchReach-v1 {} HPS".format(algorithm.upper()), fontweight="bold")
+    plt.legend(loc="lower right")
+    plt.tight_layout()
+    plt.savefig(plot_directory + "/FetchReach-v1_{}_hps.jpg".format(algorithm.upper()))
     plt.close()
 
 
@@ -612,19 +560,18 @@ def fetchreach():
     hps_data_dir = os.getcwd() + "/data/fetchreach"
     os.makedirs(hps_data_dir, exist_ok=True)
 
-    fetchreach_data_dir = DATA_DIR + "/fetchreach/hps"
-    fetchreach_data_dirs = os.listdir(fetchreach_data_dir)
-
     """
     PPO
     """
 
+    fetchreach_ppo_data_dir = DATA_DIR + "/fetchreach/hpsc/ppo"
+    fetchreach_ppo_data_dirs = os.listdir(fetchreach_ppo_data_dir)
+
     fetchreach_ppo_results = []
 
-    for dir_ in fetchreach_data_dirs:
-        if "PPO" in dir_:
-            fetchreach_ppo_result = get_ppo_summary_data(fetchreach_data_dir + "/" + dir_)
-            fetchreach_ppo_results.append(fetchreach_ppo_result)
+    for dir_ in fetchreach_ppo_data_dirs:
+        fetchreach_ppo_result = get_ppo_summary_data(fetchreach_ppo_data_dir + "/" + dir_)
+        fetchreach_ppo_results.append(fetchreach_ppo_result)
 
     df = pd.DataFrame(data=fetchreach_ppo_results,
                       columns=["ps seed",
@@ -644,24 +591,26 @@ def fetchreach():
     top_hps_seeds = df.values.tolist()
 
     for seed in top_hps_seeds:
-        for dir_ in fetchreach_data_dirs:
-            if "PPO" in dir_ and "pss:" + str(seed) == dir_[-(4 + len(str(seed))):]:
-                df_mean, df_sem = get_ppo_data(fetchreach_data_dir + "/" + dir_)
+        for dir_ in fetchreach_ppo_data_dirs:
+            if "pss:" + str(seed) == dir_[-(4 + len(str(seed))):]:
+                df_mean, df_sem = get_ppo_data(fetchreach_ppo_data_dir + "/" + dir_)
                 top_fetchreach_ppo_results_mean.append(df_mean)
                 top_fetchreach_ppo_results_sem.append(df_sem)
 
-    plot_fetchreach_ppo(top_hps_seeds, top_fetchreach_ppo_results_mean, top_fetchreach_ppo_results_sem)
+    plot_fetchreach("ppo", top_hps_seeds, top_fetchreach_ppo_results_mean, top_fetchreach_ppo_results_sem)
 
     """
     SAC
     """
 
+    fetchreach_sac_data_dir = DATA_DIR + "/fetchreach/hpsc/sac"
+    fetchreach_sac_data_dirs = os.listdir(fetchreach_sac_data_dir)
+
     fetchreach_sac_results = []
 
-    for dir_ in fetchreach_data_dirs:
-        if "SAC" in dir_:
-            fetchreach_sac_result = get_sac_summary_data(fetchreach_data_dir + "/" + dir_)
-            fetchreach_sac_results.append(fetchreach_sac_result)
+    for dir_ in fetchreach_sac_data_dirs:
+        fetchreach_sac_result = get_sac_summary_data(fetchreach_sac_data_dir + "/" + dir_)
+        fetchreach_sac_results.append(fetchreach_sac_result)
 
     df = pd.DataFrame(data=fetchreach_sac_results,
                       columns=["ps seed",
@@ -681,21 +630,25 @@ def fetchreach():
     top_hps_seeds = df.values.tolist()
 
     for seed in top_hps_seeds:
-        for dir_ in fetchreach_data_dirs:
-            if "SAC" in dir_ and "pss:" + str(seed) == dir_[-(4 + len(str(seed))):]:
-                df_mean, df_sem = get_sac_data(fetchreach_data_dir + "/" + dir_)
+        for dir_ in fetchreach_sac_data_dirs:
+            if "pss:" + str(seed) == dir_[-(4 + len(str(seed))):]:
+                df_mean, df_sem = get_sac_data(fetchreach_sac_data_dir + "/" + dir_)
                 top_fetchreach_sac_results_mean.append(df_mean)
                 top_fetchreach_sac_results_sem.append(df_sem)
 
-    plot_fetchreach_sac(top_hps_seeds, top_fetchreach_sac_results_mean, top_fetchreach_sac_results_sem)
+    plot_fetchreach("sac", top_hps_seeds, top_fetchreach_sac_results_mean, top_fetchreach_sac_results_sem)
 
 
 if __name__ == "__main__":
 
-    # DATA_DIR = "/Users/sheilaschoepp/Documents/DATA"
     DATA_DIR = "/mnt/DATA/shared"
 
-    RUNS = 10
+    RUNS = 10  # number of runs (seeds) to average across
 
-    # ant()
-    fetchreach()
+    NUM_BEST = 3  # plot the "NUM_BEST" best seeds
+
+    YMIN = -27.5  # min for y axis
+    YMAX = 2.5  # max for y axis
+
+    ant()
+    # fetchreach()

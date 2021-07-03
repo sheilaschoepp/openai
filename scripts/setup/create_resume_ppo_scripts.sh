@@ -4,5 +4,5 @@ echo 'RESUME_FILE="/home/sschoepp/Documents/openai/data/PPOv2_Ant-v2:1000000000_
 
 for s in {0..9}
 do
-  echo 'tmux new-session -d -s ppo33'$s' "python $PPO_N_CONTROLLER_ABSOLUTE_PATH --resume --resume_file $RESUME_FILE/seed$s"' >> melco2.sh
+  echo 'tmux new-session -d -s ppo33'$s' "python $PPO_N_CONTROLLER_ABSOLUTE_PATH --resume --resume_file $RESUME_FILE/seed'$s'"' >> melco2.sh
 done

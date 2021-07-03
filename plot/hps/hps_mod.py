@@ -343,8 +343,6 @@ def plot_modified_ant(algorithm, seeds, df_means, df_sems):
     ymin = -1000  # min for y axis
     ymax = 8000  # max for y axis
 
-    colors = ["tab:blue", "tab:green", "tab:purple", "tab:orange", "tab:red"]
-
     # df_means = pd.concat(df_means, axis=1)
     # df_sems = pd.concat(df_sems, axis=1)
 
@@ -357,7 +355,7 @@ def plot_modified_ant(algorithm, seeds, df_means, df_sems):
         y = df_means[i].reset_index()[str(seeds[i])][:163]
         lb = y - df_sems[i].reset_index()[str(seeds[i])][:163]
         ub = y + df_sems[i].reset_index()[str(seeds[i])][:163]
-        color = colors[i]
+        color = COLORS[i]
         plt.plot(x, y, color=color, label=column)
         plt.fill_between(x, lb, ub, color=color, alpha=0.3)
 
@@ -367,7 +365,7 @@ def plot_modified_ant(algorithm, seeds, df_means, df_sems):
     plt.title("Ant-v2 {} HPS".format(algorithm.upper()), fontweight="bold")
     plt.legend(loc="lower right")
     plt.tight_layout()
-    plt.savefig(plot_directory + "/Ant-v2_{}_hps_plot.jpg".format(algorithm.upper()))
+    plt.savefig(plot_directory + "/Ant-v2_{}_hps_plot_{}.jpg".format(algorithm.upper(), NUM_BEST))
     plt.show()
     plt.close()
 
@@ -392,8 +390,6 @@ def plot_ant(algorithm, seeds, df_means, df_sems):
     ymin = -1000  # min for y axis
     ymax = 8000  # max for y axis
 
-    colors = ["tab:blue", "tab:green", "tab:purple", "tab:orange", "tab:red"]
-
     df_means = pd.concat(df_means, axis=1)
     df_sems = pd.concat(df_sems, axis=1)
 
@@ -406,7 +402,7 @@ def plot_ant(algorithm, seeds, df_means, df_sems):
         y = df_means[str(seeds[i])]
         lb = y - df_sems[str(seeds[i])]
         ub = y + df_sems[str(seeds[i])]
-        color = colors[i]
+        color = COLORS[i]
         plt.plot(x, y, color=color, label=column)
         plt.fill_between(x, lb, ub, color=color, alpha=0.3)
 
@@ -441,8 +437,6 @@ def plot_fetchreach(algorithm, seeds, df_means, df_sems):
     ymin = -27.5  # min for y axis
     ymax = 2.5  # max for y axis
 
-    colors = ["tab:blue", "tab:green", "tab:purple", "tab:orange", "tab:red"]
-
     df_means = pd.concat(df_means, axis=1)
     df_sems = pd.concat(df_sems, axis=1)
 
@@ -455,7 +449,7 @@ def plot_fetchreach(algorithm, seeds, df_means, df_sems):
         y = df_means[str(seeds[i])]
         lb = y - df_sems[str(seeds[i])]
         ub = y + df_sems[str(seeds[i])]
-        color = colors[i]
+        color = COLORS[i]
         plt.plot(x, y, color=color, label=column)
         plt.fill_between(x, lb, ub, color=color, alpha=0.3)
 
@@ -496,12 +490,12 @@ def ant():
 
     df = df.sort_values(by=["performance_mean_sum"], ascending=False)
 
-    df.to_csv(hps_data_dir + "/Ant-v2_PPO_hps_data.csv", index=False)
+    df.to_csv(hps_data_dir + "/Ant-v2_PPO_hps_data_{}.csv".format(NUM_BEST), index=False)
 
     top_ppo_results_mean = []
     top_ppo_results_sem = []
 
-    df = df["ps seed"].head()
+    df = df["ps seed"].head(NUM_BEST)
     top_hps_seeds = df.values.tolist()
 
     for seed in top_hps_seeds:
@@ -540,7 +534,7 @@ def ant():
     # top_fetchreach_sac_results_mean = []
     # top_fetchreach_sac_results_sem = []
     #
-    # df = df["ps seed"].head()
+    # df = df["ps seed"].head(NUM_BEST)
     # top_hps_seeds = df.values.tolist()
     #
     # for seed in top_hps_seeds:
@@ -585,7 +579,7 @@ def fetchreach():
     top_ppo_results_mean = []
     top_ppo_results_sem = []
 
-    df = df["ps seed"].head()
+    df = df["ps seed"].head(NUM_BEST)
     top_hps_seeds = df.values.tolist()
 
     for seed in top_hps_seeds:
@@ -624,7 +618,7 @@ def fetchreach():
     top_fetchreach_sac_results_mean = []
     top_fetchreach_sac_results_sem = []
 
-    df = df["ps seed"].head()
+    df = df["ps seed"].head(NUM_BEST)
     top_hps_seeds = df.values.tolist()
 
     for seed in top_hps_seeds:
@@ -643,7 +637,10 @@ if __name__ == "__main__":
 
     RUNS = 10  # number of runs (seeds) to average across
 
-    NUM_BEST = 3  # plot the "NUM_BEST" best seeds
+    NUM_BEST = 2  # plot the "NUM_BEST" best seeds (max: 10)
+    assert 1 <= NUM_BEST <= 10, "hps.__main__: NUM_BEST must have a value between 1 and 10"
+
+    COLORS = ["tab:blue", "tab:orange", "tab:green", "tab:red", "tab:purple", "tab:brown", "tab:pink", "tab:grey","tab:olive", "tab:cyan"]
 
     ant()
     # fetchreach()

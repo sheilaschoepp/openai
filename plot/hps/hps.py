@@ -234,10 +234,10 @@ def plot_ant(algorithm, seeds, df_means, df_sems):
     indices = np.arange(NUM_BEST)
 
     for i in np.flip(indices):
-        column = str(seeds[i])
-        y = df_means[str(seeds[i])]
-        lb = y - df_sems[str(seeds[i])]
-        ub = y + df_sems[str(seeds[i])]
+        column = str(int(seeds[i]))
+        y = df_means[column]
+        lb = y - df_sems[column]
+        ub = y + df_sems[column]
         color = colors[i]
         plt.plot(x, y, color=color, label=column)
         plt.fill_between(x, lb, ub, color=color, alpha=0.3)
@@ -284,9 +284,9 @@ def plot_fetchreach(algorithm, seeds, df_means, df_sems):
 
     for i in np.flip(indices):
         column = str(seeds[i])
-        y = df_means[str(seeds[i])]
-        lb = y - df_sems[str(seeds[i])]
-        ub = y + df_sems[str(seeds[i])]
+        y = df_means[column]
+        lb = y - df_sems[column]
+        ub = y + df_sems[column]
         color = colors[i]
         plt.plot(x, y, color=color, label=column)
         plt.fill_between(x, lb, ub, color=color, alpha=0.3)
@@ -349,14 +349,15 @@ def ant():
     SAC
     """
 
-    sac_data_dir = DATA_DIR + "/fetchreach/hpsc/sac"
+    sac_data_dir = DATA_DIR + "/ant/hpsc/sac"
     sac_data_dirs = os.listdir(sac_data_dir)
 
     sac_results = []
 
     for dir_ in sac_data_dirs:
-        sac_result = get_sac_summary_data(sac_data_dir + "/" + dir_)
-        sac_results.append(sac_result)
+        if "resumed" in dir_:
+            sac_result = get_sac_summary_data(sac_data_dir + "/" + dir_)
+            sac_results.append(sac_result)
 
     df = pd.DataFrame(data=sac_results,
                       columns=["ps seed",
@@ -367,6 +368,8 @@ def ant():
 
     df = df.sort_values(by=["performance_mean_sum"], ascending=False)
 
+    df = df.replace(np.nan, 9999999)  # set default hp settings to pss 999
+
     df.to_csv(hps_data_dir + "/Ant-v2_SAC_hps_data.csv", index=False)
 
     top_sac_results_mean = []
@@ -376,11 +379,18 @@ def ant():
     top_hps_seeds = df.values.tolist()
 
     for seed in top_hps_seeds:
-        for dir_ in sac_data_dirs:
-            if "pss:" + str(seed) == dir_[-(4 + len(str(seed))):]:
-                df_mean, df_sem = get_sac_data(sac_data_dir + "/" + dir_)
-                top_sac_results_mean.append(df_mean)
-                top_sac_results_sem.append(df_sem)
+        if seed == float(9999999):  # default setting with no pss value
+            df_mean, df_sem = get_sac_data(sac_data_dir + "/" + "SACv2_Ant-v2:20000000_g:0.99_t:0.01_a:0.2_lr:0.0003_hd:256_rbs:1000000_bs:256_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_a:True_d:cuda_resumed")
+            df_mean.columns = [str(9999999)]
+            df_sem.columns = [str(9999999)]
+            top_sac_results_mean.append(df_mean)
+            top_sac_results_sem.append(df_sem)
+        else:
+            for dir_ in sac_data_dirs:
+                if "resumed" in dir_ and "pss:" + str(int(seed)) == dir_[-(10 + len(str(seed))):-8]:
+                    df_mean, df_sem = get_sac_data(sac_data_dir + "/" + dir_)
+                    top_sac_results_mean.append(df_mean)
+                    top_sac_results_sem.append(df_sem)
 
     plot_ant("sac", top_hps_seeds, top_sac_results_mean, top_sac_results_sem)
 

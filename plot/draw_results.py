@@ -21,20 +21,17 @@ parser.add_argument("-nte", "--num_top_experiments", default=10,
 
 args = parser.parse_args()
 
-parameters = None
 
-
-def load_parameters(data_dir):
+def find_pss(exp_dir):
     """
-    Load normal experiment parameters.
-
-    File format: .pickle
+    Finds pss from the name of the file.
     """
-    global parameters
-    pickle_foldername = data_dir + "/pickle"
-
-    with open(pickle_foldername + "/parameters.pickle", "rb") as f:
-        parameters = pickle.load(f)
+    params = str.split(exp_dir, '_')
+    pss = 0
+    for p in reversed(params):
+        if 'pss' in p:
+            pss = str.split(p, ':')[-1]
+    return pss
 
 
 def draw():
@@ -75,11 +72,11 @@ def draw():
     # draw results for each one
     with tqdm(total=len(experiments_list)) as pbar:
         for exp in experiments_list:
+            pss = find_pss(exp)
             num_seeds = len(experiment_seed[exp])
             try:
                 path = os.path.join(PATH, exp, 'seed0', 'csv', 'eval_data.csv')
                 data_temp = pd.read_csv(path)
-                load_parameters(os.path.join(PATH, exp, 'seed0'))
             except FileNotFoundError:
                 continue
 
@@ -105,7 +102,7 @@ def draw():
 
             x = np.array(data_temp['num_time_steps'])[:-1]
             experiments_statistical_info[exp] = {'avg': average, 'std_error': standard_error, 'time_step': x,
-                                                 'pss': parameters['param_search_seed']}
+                                                 'pss': pss}
             plt.figure(figsize=(12, 5))
             plt.plot(x, average, 'b')
             plt.fill_between(x, average - 2.26 * standard_error, average + 2.26 * standard_error, alpha=0.2)

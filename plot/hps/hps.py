@@ -481,7 +481,7 @@ if __name__ == "__main__":
 
     RUNS = 10  # number of runs (seeds) to average across
 
-    NUM_BEST = 5  # plot the "NUM_BEST" best seeds (max: 10)
+    NUM_BEST = 10  # plot the "NUM_BEST" best seeds (max: 10)
     assert 1 <= NUM_BEST <= 10, "hps.__main__: NUM_BEST must have a value between 1 and 10"
 
     COLORS = ["tab:blue", "tab:orange", "tab:green", "tab:red", "tab:purple", "tab:brown", "tab:pink", "tab:grey", "tab:olive", "tab:cyan"]

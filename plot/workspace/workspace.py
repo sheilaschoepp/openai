@@ -171,23 +171,20 @@ with tqdm(total=num_points) as pbar:
                                 functions.mj_forward(model, sim.data)
 
                                 point = sim.data.get_site_xpos("robot0:grip").copy()  # must use copy here; otherwise all points in list are same
-                                points.append(point)
+                                if point not in points:
+                                    points.append(point)
 
                                 pbar.update(1)
 
 # data
 
 print("points", len(points))
-unique_points = np.unique(points, axis=0)
-print("unique", len(unique_points))
 
 data_directory = os.getcwd() + "/data/{}".format(args.env_name)
 os.makedirs(data_directory, exist_ok=True)
 
 # np.save(data_directory + "/points.npy", points)
 np.savetxt(data_directory + "/{}_workspace_all_points.csv".format(args.env_name), points, delimiter=",")
-# np.save(data_directory + "/unique_points.npy", unique_points)
-np.savetxt(data_directory + "/{}_workspace_unique_points.csv".format(args.env_name), unique_points, delimiter=",")
 
 # plot
 
@@ -195,34 +192,34 @@ plot_directory = os.getcwd() + "/plots/{}".format(args.env_name)
 os.makedirs(plot_directory, exist_ok=True)
 
 # set min and max x,y,z to the x,y,z of the first point in list
-min_x = unique_points[0][0]
-min_y = unique_points[0][1]
-min_z = unique_points[0][2]
+min_x = points[0][0]
+min_y = points[0][1]
+min_z = points[0][2]
 
-max_x = unique_points[0][0]
-max_y = unique_points[0][1]
-max_z = unique_points[0][2]
+max_x = points[0][0]
+max_y = points[0][1]
+max_z = points[0][2]
 
-for up in unique_points:
+for p in points:
 
-    if up[0] < min_x:
-        min_x = up[0]
-    elif up[0] > max_x:
-        max_x = up[0]
+    if p[0] < min_x:
+        min_x = p[0]
+    elif p[0] > max_x:
+        max_x = p[0]
     else:
         pass
 
-    if up[1] < min_y:
-        min_y = up[1]
-    elif up[1] > max_y:
-        max_y = up[1]
+    if p[1] < min_y:
+        min_y = p[1]
+    elif p[1] > max_y:
+        max_y = p[1]
     else:
         pass
 
-    if up[2] < min_z:
-        min_z = up[2]
-    elif up[2] > max_z:
-        max_z = up[2]
+    if p[2] < min_z:
+        min_z = p[2]
+    elif p[2] > max_z:
+        max_z = p[2]
     else:
         pass
 
@@ -247,10 +244,10 @@ x_points = []
 y_points = []
 z_points = []
 
-for up in unique_points:
-    x_points.append(up[0])
-    y_points.append(up[1])
-    z_points.append(up[2])
+for p in points:
+    x_points.append(p[0])
+    y_points.append(p[1])
+    z_points.append(p[2])
 
 ax.scatter3D(x_points, y_points, z_points, c=z_points, cmap='hsv');
 

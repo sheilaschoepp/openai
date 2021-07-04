@@ -14,3 +14,4 @@ for e in range(10):
     while not done:
         action = env.action_space.sample()
         observation, reward, done, info = env.step(action)
+        env.render()

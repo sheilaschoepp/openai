@@ -104,7 +104,7 @@ def get_ppo_summary_data(directory):
 
         # confidence interval calculation: 9 degrees of freedom, 95% confidence (or alpha=0.025), table value is 2.262
         # https://www.statisticshowto.com/probability-and-statistics/confidence-interval/
-        return [pss, performance_mean, performance_mean - 2.262 * performance_sem, performance_mean + 2.262 * performance_sem, performance_mean_sum]
+        return df_mean, df_sem, [pss, performance_mean, performance_mean - 2.262 * performance_sem, performance_mean + 2.262 * performance_sem, performance_mean_sum]
 
 
 def get_sac_data(directory):
@@ -201,10 +201,55 @@ def get_sac_summary_data(directory):
 
         # confidence interval calculation: 9 degrees of freedom, 95% confidence (or alpha=0.025), table value is 2.262
         # https://www.statisticshowto.com/probability-and-statistics/confidence-interval/
-        return [pss, performance_mean, performance_mean - 2.262*performance_sem, performance_mean + 2.262*performance_sem, performance_mean_sum]
+        return df_mean, df_sem, [pss, performance_mean, performance_mean - 2.262*performance_sem, performance_mean + 2.262*performance_sem, performance_mean_sum]
 
 
-def plot_ant(algorithm, seeds, df_means, df_sems):
+def plot_ant_hps(directory, algorithm, df_mean, df_sem):
+    """
+    Plot hyperparameter settings for the Ant-v2 environment.
+
+    @param directory: string
+        data directory
+    @param algorithm: string
+        algorithm name
+    @param df_mean: df
+        average return for one parameter setting
+    @param df_sem: df
+        standard error for one parameter setting
+    """
+
+    parameters = directory.split("_")
+
+    pss = None
+    for p in parameters:
+        if p.startswith("pss:"):
+            pss = int(p.split(":")[1])
+
+    plot_directory = os.getcwd() + "/plots/Ant-v2/hps/{}".format(algorithm.upper())
+    os.makedirs(plot_directory, exist_ok=True)
+
+    ymin = -4000  # min for y axis
+    ymax = 8000  # max for y axis
+
+    x = df_mean.index
+
+    y = df_mean
+    lb = y - df_sem
+    ub = y + df_sem
+
+    plt.plot(x, y, color="tab:blue")
+    plt.fill_between(x, lb, ub, color="tab:blue", alpha=0.3)
+
+    plt.xlabel("time steps")
+    plt.ylim(ymin, ymax)
+    plt.ylabel("average\nreturn\n(10 seeds)", labelpad=35).set_rotation(0)
+    plt.title("Ant-v2 {} pss:{}".format(algorithm.upper(), pss), fontweight="bold")
+    plt.tight_layout()
+    plt.savefig(plot_directory + "/Ant-v2_{}_pss:{}.jpg".format(algorithm.upper(), pss))
+    plt.close()
+
+
+def plot_ant_top(algorithm, seeds, df_means, df_sems):
     """
     Plot best hyperparameter settings for the Ant-v2 environment.
 
@@ -218,7 +263,7 @@ def plot_ant(algorithm, seeds, df_means, df_sems):
         list of standard errors for each parameter setting
     """
 
-    plot_directory = os.getcwd() + "/plots/Ant-v2"
+    plot_directory = os.getcwd() + "/plots/Ant-v2/best/{}".format(algorithm.upper())
     os.makedirs(plot_directory, exist_ok=True)
 
     ymin = -1000  # min for y axis
@@ -247,11 +292,55 @@ def plot_ant(algorithm, seeds, df_means, df_sems):
     plt.legend(loc="lower right")
     plt.tight_layout()
     plt.savefig(plot_directory + "/Ant-v2_{}_hps_plot_{}.jpg".format(algorithm.upper(), NUM_BEST))
-    plt.show()
     plt.close()
 
 
-def plot_fetchreach(algorithm, seeds, df_means, df_sems):
+def plot_fetchreach_hps(directory, algorithm, df_mean, df_sem):
+    """
+    Plot hyperparameter settings for the FetchReach-v1 environment.
+
+    @param directory: string
+        data directory
+    @param algorithm: string
+        algorithm name
+    @param df_mean: df
+        average return for one parameter setting
+    @param df_sem: df
+        standard error for one parameter setting
+    """
+
+    parameters = directory.split("_")
+
+    pss = None
+    for p in parameters:
+        if p.startswith("pss:"):
+            pss = int(p.split(":")[1])
+
+    plot_directory = os.getcwd() + "/plots/FetchReach-v1/hps/{}".format(algorithm.upper())
+    os.makedirs(plot_directory, exist_ok=True)
+
+    ymin = -30  # min for y axis
+    ymax = 5  # max for y axis
+
+    x = df_mean.index
+
+    y = df_mean
+    lb = y - df_sem
+    ub = y + df_sem
+
+    plt.plot(x, y, color="tab:blue")
+    plt.fill_between(x, lb, ub, color="tab:blue", alpha=0.3)
+
+    plt.xlabel("time steps")
+    plt.ylim(ymin, ymax)
+    plt.ylabel("average\nreturn\n(10 seeds)", labelpad=35).set_rotation(0)
+    plt.title("FetchReach-v1 {} pss:{}".format(algorithm.upper(), pss), fontweight="bold")
+    plt.tight_layout()
+    plt.savefig(plot_directory + "/FetchReach-v1_{}_pss:{}.jpg".format(algorithm.upper(), pss))
+    plt.close()
+
+
+def plot_fetchreach_top(algorithm, seeds, df_means, df_sems):
     """
     Plot best hyperparameter settings for the FetchReach-v1 environment.
 
@@ -265,7 +354,7 @@ def plot_fetchreach(algorithm, seeds, df_means, df_sems):
         list of standard errors for each parameter setting
     """
 
-    plot_directory = os.getcwd() + "/plots/FetchReach-v1"
+    plot_directory = os.getcwd() + "/plots/FetchReach-v1/best/{}".format(algorithm.upper())
     os.makedirs(plot_directory, exist_ok=True)
 
     ymin = -27.5  # min for y axis
@@ -306,40 +395,41 @@ def ant():
     PPO
     """
 
-    # ppo_data_dir = DATA_DIR + "/ant/hpsc/ppo"
-    # ppo_data_dirs = os.listdir(ppo_data_dir)
-    # 
-    # ppo_results = []
-    # 
-    # for dir_ in ppo_data_dirs:
-    #     ppo_result = get_ppo_summary_data(ppo_data_dir + "/" + dir_)
-    #     ppo_results.append(ppo_result)
-    # 
-    # df = pd.DataFrame(data=ppo_results,
-    #                   columns=["ps seed",
-    #                            "performance mean",
-    #                            "ci lower",
-    #                            "ci upper",
-    #                            "performance_mean_sum"])
-    # 
-    # df = df.sort_values(by=["performance_mean_sum"], ascending=False)
-    # 
-    # df.to_csv(hps_data_dir + "/Ant-v2_PPO_hps_data_{}.csv".format(NUM_BEST), index=False)
-    # 
-    # top_ppo_results_mean = []
-    # top_ppo_results_sem = []
-    # 
-    # df = df["ps seed"].head(NUM_BEST)
-    # top_hps_seeds = df.values.tolist()
-    # 
-    # for seed in top_hps_seeds:
-    #     for dir_ in ppo_data_dirs:
-    #         if "pss:" + str(seed) == dir_[-(4 + len(str(seed))):]:
-    #             df_mean, df_sem = get_ppo_data(ppo_data_dir + "/" + dir_)
-    #             top_ppo_results_mean.append(df_mean)
-    #             top_ppo_results_sem.append(df_sem)
-    # 
-    # plot_ant("ppo", top_hps_seeds, top_ppo_results_mean, top_ppo_results_sem)
+    ppo_data_dir = DATA_DIR + "/ant/hpsc/ppo"
+    ppo_data_dirs = os.listdir(ppo_data_dir)
+
+    ppo_results = []
+
+    for dir_ in ppo_data_dirs:
+        df_mean, df_sem, ppo_result = get_ppo_summary_data(ppo_data_dir + "/" + dir_)
+        plot_ant_hps(dir_, "ppo", df_mean, df_sem)
+        ppo_results.append(ppo_result)
+
+    df = pd.DataFrame(data=ppo_results,
+                      columns=["ps seed",
+                               "performance mean",
+                               "ci lower",
+                               "ci upper",
+                               "performance_mean_sum"])
+
+    df = df.sort_values(by=["performance_mean_sum"], ascending=False)
+
+    df.to_csv(hps_data_dir + "/Ant-v2_PPO_hps_data_{}.csv".format(NUM_BEST), index=False)
+
+    top_ppo_results_mean = []
+    top_ppo_results_sem = []
+
+    df = df["ps seed"].head(NUM_BEST)
+    top_hps_seeds = df.values.tolist()
+
+    for seed in top_hps_seeds:
+        for dir_ in ppo_data_dirs:
+            if "pss:" + str(seed) == dir_[-(4 + len(str(seed))):]:
+                df_mean, df_sem = get_ppo_data(ppo_data_dir + "/" + dir_)
+                top_ppo_results_mean.append(df_mean)
+                top_ppo_results_sem.append(df_sem)
+
+    plot_ant_top("ppo", top_hps_seeds, top_ppo_results_mean, top_ppo_results_sem)
 
     """
     SAC
@@ -352,7 +442,8 @@ def ant():
 
     for dir_ in sac_data_dirs:
         if "resumed" in dir_:
-            sac_result = get_sac_summary_data(sac_data_dir + "/" + dir_)
+            df_mean, df_sem, sac_result = get_sac_summary_data(sac_data_dir + "/" + dir_)
+            plot_ant_hps(dir_, "sac", df_mean, df_sem)
             sac_results.append(sac_result)
 
     df = pd.DataFrame(data=sac_results,
@@ -388,7 +479,7 @@ def ant():
                     top_sac_results_mean.append(df_mean)
                     top_sac_results_sem.append(df_sem)
 
-    plot_ant("sac", top_hps_seeds, top_sac_results_mean, top_sac_results_sem)
+    plot_ant_top("sac", top_hps_seeds, top_sac_results_mean, top_sac_results_sem)
 
 
 def fetchreach():
@@ -406,7 +497,8 @@ def fetchreach():
     ppo_results = []
 
     for dir_ in ppo_data_dirs:
-        ppo_result = get_ppo_summary_data(ppo_data_dir + "/" + dir_)
+        df_mean, df_sem, ppo_result = get_ppo_summary_data(ppo_data_dir + "/" + dir_)
+        plot_fetchreach_hps(dir_, "ppo", df_mean, df_sem)
         ppo_results.append(ppo_result)
 
     df = pd.DataFrame(data=ppo_results,
@@ -433,7 +525,7 @@ def fetchreach():
                 top_ppo_results_mean.append(df_mean)
                 top_ppo_results_sem.append(df_sem)
 
-    plot_fetchreach("ppo", top_hps_seeds, top_ppo_results_mean, top_ppo_results_sem)
+    plot_fetchreach_top("ppo", top_hps_seeds, top_ppo_results_mean, top_ppo_results_sem)
 
     """
     SAC
@@ -445,7 +537,8 @@ def fetchreach():
     sac_results = []
 
     for dir_ in sac_data_dirs:
-        sac_result = get_sac_summary_data(sac_data_dir + "/" + dir_)
+        df_mean, df_sem, sac_result = get_sac_summary_data(sac_data_dir + "/" + dir_)
+        plot_fetchreach_hps(dir_, "sac", df_mean, df_sem)
         sac_results.append(sac_result)
 
     df = pd.DataFrame(data=sac_results,
@@ -472,7 +565,7 @@ def fetchreach():
                 top_sac_results_mean.append(df_mean)
                 top_sac_results_sem.append(df_sem)
 
-    plot_fetchreach("sac", top_hps_seeds, top_sac_results_mean, top_sac_results_sem)
+    plot_fetchreach_top("sac", top_hps_seeds, top_sac_results_mean, top_sac_results_sem)
 
 
 if __name__ == "__main__":
@@ -487,4 +580,4 @@ if __name__ == "__main__":
     COLORS = ["tab:blue", "tab:orange", "tab:green", "tab:red", "tab:purple", "tab:brown", "tab:pink", "tab:grey", "tab:olive", "tab:cyan"]
 
     ant()
-    # fetchreach()
+    fetchreach()

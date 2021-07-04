@@ -9,7 +9,8 @@ from mujoco_py import load_model_from_path, MjSim, functions
 from tqdm import tqdm
 from pathlib import Path
 
-import custom_gym_envs  # DO NOT DELETE
+import ray
+# import custom_gym_envs  # DO NOT DELETE
 
 parser = argparse.ArgumentParser(description='FetchReach Kinematics Arguments')
 

@@ -11,7 +11,7 @@ from pathlib import Path
 
 import custom_gym_envs  # DO NOT DELETE
 
-parser = argparse.ArgumentParser(description='FetchReach Kinematics Arguments')
+parser = argparse.ArgumentParser(description="FetchReach Kinematics Arguments")
 
 parser.add_argument("-e", "--env_name", default="FetchReach-v1",
                     help="name of normal (non-malfunctioning) MuJoCo Gym environment (default: FetchReach-v1)")
@@ -22,7 +22,7 @@ args = parser.parse_args()
 # pan motion is given a higher accuracy than lift/flex motions
 
 ACCURACY_LVL_1 = np.radians(5)  # radians
-ACCURACY_LVL_2 = np.radians(5)  # radians
+ACCURACY_LVL_2 = np.radians(10)  # radians
 
 # xml
 
@@ -171,10 +171,11 @@ with tqdm(total=num_points) as pbar:
                                 functions.mj_forward(model, sim.data)
 
                                 point = sim.data.get_site_xpos("robot0:grip").copy()  # must use copy here; otherwise all points in list are same
-                                if point not in points:
-                                    points.append(point)
+                                points.append(point)
 
                                 pbar.update(1)
+
+        points = list(np.unique(points, axis=0))
 
 # data
 
@@ -183,8 +184,7 @@ print("points", len(points))
 data_directory = os.getcwd() + "/data/{}".format(args.env_name)
 os.makedirs(data_directory, exist_ok=True)
 
-# np.save(data_directory + "/points.npy", points)
-np.savetxt(data_directory + "/{}_workspace_all_points.csv".format(args.env_name), points, delimiter=",")
+np.save(data_directory + "/points.npy", points)
 
 # plot
 
@@ -238,7 +238,7 @@ ax = plt.axes(projection="3d")
 z_line = np.linspace(start=min_z, stop=max_z, num=10)
 x_line = np.linspace(start=min_x, stop=max_x, num=10)
 y_line = np.linspace(start=min_y, stop=max_y, num=10)
-ax.plot3D(x_line, y_line, z_line, 'gray')
+ax.plot3D(x_line, y_line, z_line, "gray")
 
 x_points = []
 y_points = []
@@ -249,10 +249,10 @@ for p in points:
     y_points.append(p[1])
     z_points.append(p[2])
 
-ax.scatter3D(x_points, y_points, z_points, c=z_points, cmap='hsv');
+ax.scatter3D(x_points, y_points, z_points, c=z_points, cmap="hsv");
 
-ax.set_xlabel('x')
-ax.set_ylabel('y')
-ax.set_zlabel('z')
+ax.set_xlabel("x")
+ax.set_ylabel("y")
+ax.set_zlabel("z")
 
 plt.savefig(plot_directory + "/{}_robot_workspace.jpg".format(args.env_name))

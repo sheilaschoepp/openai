@@ -2,8 +2,7 @@
 data/**
 
 # ingore workspace data points
-**/*_workspace_all_points.csv
-**/*_workspace_unique_points.csv
+**/points.npy
 
 **/*.dat
 

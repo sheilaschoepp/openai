@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
+from termcolor import colored
 
 sns.set_theme()
 
@@ -234,7 +235,7 @@ def plot_ant_hps(directory, algorithm, df_mean, df_sem):
     plot_directory = os.getcwd() + "/plots/Ant-v2/hps/{}".format(algorithm.upper())
     os.makedirs(plot_directory, exist_ok=True)
 
-    ymin = -4000  # min for y axis
+    ymin = -2000  # min for y axis
     ymax = 8000  # max for y axis
 
     x = df_mean.index
@@ -325,7 +326,7 @@ def plot_fetchreach_hps(directory, algorithm, df_mean, df_sem):
     plot_directory = os.getcwd() + "/plots/FetchReach-v1/hps/{}".format(algorithm.upper())
     os.makedirs(plot_directory, exist_ok=True)
 
-    ymin = -30  # min for y axis
+    ymin = -40  # min for y axis
     ymax = 5  # max for y axis
 
     x = df_mean.index
@@ -594,6 +595,10 @@ if __name__ == "__main__":
     COLORS = ["tab:blue", "tab:orange", "tab:green", "tab:red", "tab:purple", "tab:brown", "tab:pink", "tab:grey", "tab:olive", "tab:cyan"]
 
     CI_Z = 2.262  # z-score for 95% confidence interval with 9 degrees of freedom
+
+    if args.plot_hps:
+        print(colored("plotting all hyperparameter settings", "red"))
+        print(colored("this may take awhile...", "red"))
 
     ant()
     fetchreach()

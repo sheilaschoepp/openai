@@ -9,8 +9,7 @@ from mujoco_py import load_model_from_path, MjSim, functions
 from tqdm import tqdm
 from pathlib import Path
 
-import ray
-# import custom_gym_envs  # DO NOT DELETE
+import custom_gym_envs  # DO NOT DELETE
 
 parser = argparse.ArgumentParser(description='FetchReach Kinematics Arguments')
 
@@ -22,8 +21,8 @@ args = parser.parse_args()
 # accuracy level
 # pan motion is given a higher accuracy than lift/flex motions
 
-ACCURACY_LVL_1 = np.radians(1)  # radians
-ACCURACY_LVL_2 = np.radians(1)  # radians
+ACCURACY_LVL_1 = np.radians(5)  # radians
+ACCURACY_LVL_2 = np.radians(5)  # radians
 
 # xml
 

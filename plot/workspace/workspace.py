@@ -21,8 +21,8 @@ args = parser.parse_args()
 # accuracy level
 # pan motion is given a higher accuracy than lift/flex motions
 
-ACCURACY_LVL_1 = np.radians(1)  # radians
-ACCURACY_LVL_2 = np.radians(1)  # radians
+ACCURACY_LVL_1 = np.radians(5)  # radians
+ACCURACY_LVL_2 = np.radians(5)  # radians
 
 # xml
 

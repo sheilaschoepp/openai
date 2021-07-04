@@ -22,7 +22,7 @@ args = parser.parse_args()
 # pan motion is given a higher accuracy than lift/flex motions
 
 ACCURACY_LVL_1 = np.radians(5)  # radians
-ACCURACY_LVL_2 = np.radians(5)  # radians
+ACCURACY_LVL_2 = np.radians(10)  # radians
 
 # xml
 
@@ -171,10 +171,11 @@ with tqdm(total=num_points) as pbar:
                                 functions.mj_forward(model, sim.data)
 
                                 point = sim.data.get_site_xpos("robot0:grip").copy()  # must use copy here; otherwise all points in list are same
-                                if point not in points:
-                                    points.append(point)
+                                points.append(point)
 
                                 pbar.update(1)
+
+        points = list(np.unique(points, axis=0))
 
 # data
 
@@ -183,8 +184,7 @@ print("points", len(points))
 data_directory = os.getcwd() + "/data/{}".format(args.env_name)
 os.makedirs(data_directory, exist_ok=True)
 
-# np.save(data_directory + "/points.npy", points)
-np.savetxt(data_directory + "/{}_workspace_all_points.csv".format(args.env_name), points, delimiter=",")
+np.save(data_directory + "/points.npy", points)
 
 # plot
 

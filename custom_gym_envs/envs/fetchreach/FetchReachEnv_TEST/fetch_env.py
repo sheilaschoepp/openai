@@ -1,6 +1,11 @@
+"""
+modifications: change from in import of robot_env, rotations and utils (line 8)
+"""
+
+
 import numpy as np
 
-from custom_gym_envs.envs.fetchreach.FetchReachEnv_v0_Normal import robot_env, rotations, utils
+from custom_gym_envs.envs.fetchreach.FetchReachEnv_TEST import robot_env, rotations, utils
 
 
 def goal_distance(goal_a, goal_b):

@@ -59,6 +59,9 @@ class RobotEnv(gym.GoalEnv):
     def step(self, action):
         action = np.clip(action, self.action_space.low, self.action_space.high)
         self._set_action(action)
+        copy = self.sim.data.qpos.copy()  # todo
+        print(copy)  # todo
+        self.sim.data.qpos = copy
         self.sim.step()
         self._step_callback()
         obs = self._get_obs()

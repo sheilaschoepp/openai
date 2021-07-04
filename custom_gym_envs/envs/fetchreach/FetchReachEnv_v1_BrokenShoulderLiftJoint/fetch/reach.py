@@ -1,3 +1,7 @@
+"""
+modifications: change from in import of fetch_env (line 7)
+"""
+
 import os
 from gym import utils
 from custom_gym_envs.envs.fetchreach.FetchReachEnv_v1_BrokenShoulderLiftJoint import fetch_env

@@ -255,4 +255,4 @@ ax.set_xlabel("x")
 ax.set_ylabel("y")
 ax.set_zlabel("z")
 
-plt.savefig(plot_directory + "/{}_robot_workspace.jpg".format(args.env_name))
+plt.savefig(plot_directory + "/{}_workspace.jpg".format(args.env_name))

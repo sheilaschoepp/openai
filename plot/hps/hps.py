@@ -103,11 +103,11 @@ def get_ppo_summary_data(directory):
         df_std = df.std()
         df_sem = df.sem()
 
-        performance_mean = df_mean["average_return"][-20:].mean()
-        performance_std = df_std["average_return"][-20:].mean()
-        performance_sem = df_sem["average_return"][-20:].mean()
+        performance_mean = df_mean.iloc[-20:, 0].mean()
+        performance_std = df_std.iloc[-20:, 0].mean()
+        performance_sem = df_sem.iloc[-20:, 0].mean()
 
-        performance_mean_sum = df_mean["average_return"].sum()
+        performance_mean_sum = df_mean.iloc[:, 0].sum()
 
         # confidence interval calculation: 9 degrees of freedom, 95% confidence (or alpha=0.025), table value is 2.262
         # https://www.statisticshowto.com/probability-and-statistics/confidence-interval/
@@ -200,11 +200,11 @@ def get_sac_summary_data(directory):
         df_std = df.std()
         df_sem = df.sem()
 
-        performance_mean = df_mean["average_return"][-20:].mean()
-        performance_std = df_std["average_return"][-20:].mean()
-        performance_sem = df_sem["average_return"][-20:].mean()
+        performance_mean = df_mean.iloc[-20:, 0].mean()
+        performance_std = df_std.iloc[-20:, 0].mean()
+        performance_sem = df_sem.iloc[-20:, 0].mean()
 
-        performance_mean_sum = df_mean["average_return"].sum()
+        performance_mean_sum = df_mean.iloc[:, 0].sum()
 
         # confidence interval calculation: 9 degrees of freedom, 95% confidence (or alpha=0.025), table value is 2.262
         # https://www.statisticshowto.com/probability-and-statistics/confidence-interval/
@@ -240,9 +240,9 @@ def plot_ant_hps(directory, algorithm, df_mean, df_sem):
 
     x = df_mean.index
 
-    y = df_mean.reset_index()["average_return"]
-    lb = y - CI_Z * df_sem.reset_index()["average_return"]
-    ub = y + CI_Z * df_sem.reset_index()["average_return"]
+    y = df_mean.iloc[:, 0]
+    lb = y - CI_Z * df_sem.iloc[:, 0]
+    ub = y + CI_Z * df_sem.iloc[:, 0]
 
     plt.plot(x, y, color="tab:blue")
     plt.fill_between(x, lb, ub, color="tab:blue", alpha=0.3)
@@ -331,9 +331,9 @@ def plot_fetchreach_hps(directory, algorithm, df_mean, df_sem):
 
     x = df_mean.index
 
-    y = df_mean.reset_index()["average_return"]
-    lb = y - CI_Z * df_sem.reset_index()["average_return"]
-    ub = y + CI_Z * df_sem.reset_index()["average_return"]
+    y = df_mean.iloc[:, 0]
+    lb = y - CI_Z * df_sem.iloc[:, 0]
+    ub = y + CI_Z * df_sem.iloc[:, 0]
 
     plt.plot(x, y, color="tab:blue")
     plt.fill_between(x, lb, ub, color="tab:blue", alpha=0.3)
@@ -589,7 +589,7 @@ if __name__ == "__main__":
 
     RUNS = 10  # number of runs (seeds) to average across
 
-    NUM_BEST = 10  # plot the "NUM_BEST" best seeds (max: 10)
+    NUM_BEST = 1  # plot the "NUM_BEST" best seeds (max: 10)
     assert 1 <= NUM_BEST <= 10, "hps.__main__: NUM_BEST must have a value between 1 and 10"
 
     COLORS = ["tab:blue", "tab:orange", "tab:green", "tab:red", "tab:purple", "tab:brown", "tab:pink", "tab:grey", "tab:olive", "tab:cyan"]

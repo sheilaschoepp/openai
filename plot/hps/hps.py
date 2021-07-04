@@ -1,13 +1,19 @@
-import csv
+import argparse
+import os
+
 import matplotlib.pyplot as plt
 import numpy as np
-import os
 import pandas as pd
 import seaborn as sns
 
-import utils.plot_style_settings as pss
-
 sns.set_theme()
+
+parser = argparse.ArgumentParser(description="HPS Arguments")
+
+parser.add_argument("-p", "--plot_hps", default=False, action="store_true",
+                    help="if True, plot each individual hyperparameter setting individually (default: False)")
+
+args = parser.parse_args()
 
 
 def get_ppo_data(directory):
@@ -84,7 +90,7 @@ def get_ppo_summary_data(directory):
         if os.path.exists(csv_filename):
 
             df = pd.read_csv(csv_filename)
-            df = df["average_return"]
+            df = df[["num_time_steps", "average_return"]].set_index("num_time_steps")
             dfs.append(df)
 
     if len(dfs) > 0:
@@ -96,15 +102,15 @@ def get_ppo_summary_data(directory):
         df_std = df.std()
         df_sem = df.sem()
 
-        performance_mean = df_mean[-20:].mean()
-        performance_std = df_std[-20:].mean()
-        performance_sem = df_sem[-20:].mean()
+        performance_mean = df_mean["average_return"][-20:].mean()
+        performance_std = df_std["average_return"][-20:].mean()
+        performance_sem = df_sem["average_return"][-20:].mean()
 
-        performance_mean_sum = df_mean.sum()
+        performance_mean_sum = df_mean["average_return"].sum()
 
         # confidence interval calculation: 9 degrees of freedom, 95% confidence (or alpha=0.025), table value is 2.262
         # https://www.statisticshowto.com/probability-and-statistics/confidence-interval/
-        return df_mean, df_sem, [pss, performance_mean, performance_mean - 2.262 * performance_sem, performance_mean + 2.262 * performance_sem, performance_mean_sum]
+        return df_mean, df_sem, [pss, performance_mean, performance_mean - CI_Z * performance_sem, performance_mean + CI_Z * performance_sem, performance_mean_sum]
 
 
 def get_sac_data(directory):
@@ -181,7 +187,7 @@ def get_sac_summary_data(directory):
         if os.path.exists(csv_filename):
 
             df = pd.read_csv(csv_filename)
-            df = df["average_return"]
+            df = df[["num_time_steps", "average_return"]].set_index("num_time_steps")
             dfs.append(df)
 
     if len(dfs) > 0:
@@ -193,15 +199,15 @@ def get_sac_summary_data(directory):
         df_std = df.std()
         df_sem = df.sem()
 
-        performance_mean = df_mean[-20:].mean()
-        performance_std = df_std[-20:].mean()
-        performance_sem = df_sem[-20:].mean()
+        performance_mean = df_mean["average_return"][-20:].mean()
+        performance_std = df_std["average_return"][-20:].mean()
+        performance_sem = df_sem["average_return"][-20:].mean()
 
-        performance_mean_sum = df_mean.sum()
+        performance_mean_sum = df_mean["average_return"].sum()
 
         # confidence interval calculation: 9 degrees of freedom, 95% confidence (or alpha=0.025), table value is 2.262
         # https://www.statisticshowto.com/probability-and-statistics/confidence-interval/
-        return df_mean, df_sem, [pss, performance_mean, performance_mean - 2.262*performance_sem, performance_mean + 2.262*performance_sem, performance_mean_sum]
+        return df_mean, df_sem, [pss, performance_mean, performance_mean - CI_Z * performance_sem, performance_mean + CI_Z * performance_sem, performance_mean_sum]
 
 
 def plot_ant_hps(directory, algorithm, df_mean, df_sem):
@@ -233,9 +239,9 @@ def plot_ant_hps(directory, algorithm, df_mean, df_sem):
 
     x = df_mean.index
 
-    y = df_mean
-    lb = y - df_sem
-    ub = y + df_sem
+    y = df_mean.reset_index()["average_return"]
+    lb = y - CI_Z * df_sem.reset_index()["average_return"]
+    ub = y + CI_Z * df_sem.reset_index()["average_return"]
 
     plt.plot(x, y, color="tab:blue")
     plt.fill_between(x, lb, ub, color="tab:blue", alpha=0.3)
@@ -279,8 +285,8 @@ def plot_ant_top(algorithm, seeds, df_means, df_sems):
     for i in np.flip(indices):
         column = str(int(seeds[i]))
         y = df_means[column]
-        lb = y - df_sems[column]
-        ub = y + df_sems[column]
+        lb = y - CI_Z * df_sems[column]
+        ub = y + CI_Z * df_sems[column]
         color = COLORS[i]
         plt.plot(x, y, color=color, label=column)
         plt.fill_between(x, lb, ub, color=color, alpha=0.3)
@@ -324,9 +330,9 @@ def plot_fetchreach_hps(directory, algorithm, df_mean, df_sem):
 
     x = df_mean.index
 
-    y = df_mean
-    lb = y - df_sem
-    ub = y + df_sem
+    y = df_mean.reset_index()["average_return"]
+    lb = y - CI_Z * df_sem.reset_index()["average_return"]
+    ub = y + CI_Z * df_sem.reset_index()["average_return"]
 
     plt.plot(x, y, color="tab:blue")
     plt.fill_between(x, lb, ub, color="tab:blue", alpha=0.3)
@@ -370,8 +376,8 @@ def plot_fetchreach_top(algorithm, seeds, df_means, df_sems):
     for i in np.flip(indices):
         column = str(seeds[i])
         y = df_means[column]
-        lb = y - df_sems[column]
-        ub = y + df_sems[column]
+        lb = y - CI_Z * df_sems[column]
+        ub = y + CI_Z * df_sems[column]
         color = COLORS[i]
         plt.plot(x, y, color=color, label=column)
         plt.fill_between(x, lb, ub, color=color, alpha=0.3)
@@ -402,7 +408,8 @@ def ant():
 
     for dir_ in ppo_data_dirs:
         df_mean, df_sem, ppo_result = get_ppo_summary_data(ppo_data_dir + "/" + dir_)
-        plot_ant_hps(dir_, "ppo", df_mean, df_sem)
+        if args.plot_hps:
+            plot_ant_hps(dir_, "ppo", df_mean, df_sem)
         ppo_results.append(ppo_result)
 
     df = pd.DataFrame(data=ppo_results,
@@ -414,7 +421,8 @@ def ant():
 
     df = df.sort_values(by=["performance_mean_sum"], ascending=False)
 
-    df.to_csv(hps_data_dir + "/Ant-v2_PPO_hps_data_{}.csv".format(NUM_BEST), index=False)
+    os.makedirs(os.path.join(hps_data_dir, "PPO"), exist_ok=True)
+    df.to_csv(hps_data_dir + "/PPO/Ant-v2_PPO_hps_data_{}.csv".format(NUM_BEST), index=False)
 
     top_ppo_results_mean = []
     top_ppo_results_sem = []
@@ -443,7 +451,8 @@ def ant():
     for dir_ in sac_data_dirs:
         if "resumed" in dir_:
             df_mean, df_sem, sac_result = get_sac_summary_data(sac_data_dir + "/" + dir_)
-            plot_ant_hps(dir_, "sac", df_mean, df_sem)
+            if args.plot_hps:
+                plot_ant_hps(dir_, "sac", df_mean, df_sem)
             sac_results.append(sac_result)
 
     df = pd.DataFrame(data=sac_results,
@@ -457,7 +466,8 @@ def ant():
 
     df = df.replace(np.nan, 9999999)  # set default hp settings to pss 999
 
-    df.to_csv(hps_data_dir + "/Ant-v2_SAC_hps_data_{}.csv".format(NUM_BEST), index=False)
+    os.makedirs(os.path.join(hps_data_dir, "SAC"), exist_ok=True)
+    df.to_csv(hps_data_dir + "/SAC/Ant-v2_SAC_hps_data_{}.csv".format(NUM_BEST), index=False)
 
     top_sac_results_mean = []
     top_sac_results_sem = []
@@ -498,7 +508,8 @@ def fetchreach():
 
     for dir_ in ppo_data_dirs:
         df_mean, df_sem, ppo_result = get_ppo_summary_data(ppo_data_dir + "/" + dir_)
-        plot_fetchreach_hps(dir_, "ppo", df_mean, df_sem)
+        if args.plot_hps:
+            plot_fetchreach_hps(dir_, "ppo", df_mean, df_sem)
         ppo_results.append(ppo_result)
 
     df = pd.DataFrame(data=ppo_results,
@@ -510,7 +521,8 @@ def fetchreach():
 
     df = df.sort_values(by=["performance_mean_sum"], ascending=False)
 
-    df.to_csv(hps_data_dir + "/FetchReach-v1_PPO_hps_data_{}.csv".format(NUM_BEST), index=False)
+    os.makedirs(os.path.join(hps_data_dir, "PPO"), exist_ok=True)
+    df.to_csv(hps_data_dir + "/PPO/FetchReach-v1_PPO_hps_data_{}.csv".format(NUM_BEST), index=False)
 
     top_ppo_results_mean = []
     top_ppo_results_sem = []
@@ -538,7 +550,8 @@ def fetchreach():
 
     for dir_ in sac_data_dirs:
         df_mean, df_sem, sac_result = get_sac_summary_data(sac_data_dir + "/" + dir_)
-        plot_fetchreach_hps(dir_, "sac", df_mean, df_sem)
+        if args.plot_hps:
+            plot_fetchreach_hps(dir_, "sac", df_mean, df_sem)
         sac_results.append(sac_result)
 
     df = pd.DataFrame(data=sac_results,
@@ -550,7 +563,8 @@ def fetchreach():
 
     df = df.sort_values(by=["performance_mean_sum"], ascending=False)
 
-    df.to_csv(hps_data_dir + "/FetchReach-v1_SAC_hps_data_{}.csv".format(NUM_BEST), index=False)
+    os.makedirs(os.path.join(hps_data_dir, "SAC"), exist_ok=True)
+    df.to_csv(hps_data_dir + "/SAC/FetchReach-v1_SAC_hps_data_{}.csv".format(NUM_BEST), index=False)
 
     top_sac_results_mean = []
     top_sac_results_sem = []
@@ -574,10 +588,12 @@ if __name__ == "__main__":
 
     RUNS = 10  # number of runs (seeds) to average across
 
-    NUM_BEST = 10  # plot the "NUM_BEST" best seeds (max: 10)
+    NUM_BEST = 2  # plot the "NUM_BEST" best seeds (max: 10)
     assert 1 <= NUM_BEST <= 10, "hps.__main__: NUM_BEST must have a value between 1 and 10"
 
     COLORS = ["tab:blue", "tab:orange", "tab:green", "tab:red", "tab:purple", "tab:brown", "tab:pink", "tab:grey", "tab:olive", "tab:cyan"]
+
+    CI_Z = 2.262  # z-score for 95% confidence interval with 9 degrees of freedom
 
     ant()
     fetchreach()

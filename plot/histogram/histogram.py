@@ -53,7 +53,7 @@ def plot_ant_histograms():
 
     df = pd.DataFrame(ant_histogram_data[0], columns=["radians"])
     sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(-0.6, 0.6, 0.1)).set_title("{}, {}: hip_1".format(algorithm, env_name), fontweight="bold")
-    plt.savefig(histogram_plot_directory + "/{}_{}_hip_1.jpg".format(algorithm, env_name))
+    plt.savefig(histogram_plot_directory + "/{}_{}_hip_1_{}.jpg".format(algorithm, env_name, args.num_seeds))
     plt.show()
     # plt.close()
 
@@ -132,7 +132,7 @@ def save_ant_histogram_data():
     histogram_data_directory = os.getcwd() + "/data/ant/{}/{}".format(env_name, algorithm)
     os.makedirs(histogram_data_directory, exist_ok=True)
 
-    np.save(histogram_data_directory + "/{}_{}_histogram_data.npy".format(env_name, algorithm), ant_histogram_data)
+    np.save(histogram_data_directory + "/{}_{}_histogram_data_{}.npy".format(env_name, algorithm, args.num_seeds), ant_histogram_data)
 
 
 def save_ant_joint_angles(s):
@@ -297,44 +297,44 @@ def plot_fetchreach_histograms():
     global fetchreach_histogram_data
 
     histogram_data_directory = os.getcwd() + "/data/fetchreach/{}/{}".format(algorithm, env_name)
-    fetchreach_histogram_data = np.load(histogram_data_directory + "/{}_{}_histogram_data.npy".format(algorithm, env_name))
+    fetchreach_histogram_data = np.load(histogram_data_directory + "/{}_{}_histogram_data_{}.npy".format(algorithm, env_name, args.num_seeds))
 
     histogram_plot_directory = os.getcwd() + "/plots/fetchreach/{}/{}".format(algorithm, env_name)
     os.makedirs(histogram_plot_directory, exist_ok=True)
 
     df = pd.DataFrame(fetchreach_histogram_data[0], columns=["radians"])
     sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(0, 0.5, 0.01)).set_title("{}, {}: robot0:torso_lift_joint".format(algorithm, env_name), fontweight="bold")
-    plt.savefig(histogram_plot_directory + "/{}_{}_torso_lift_joint.jpg".format(algorithm, env_name))
+    plt.savefig(histogram_plot_directory + "/{}_{}_torso_lift_joint_{}.jpg".format(algorithm, env_name, args.num_seeds))
     plt.close()
 
     df = pd.DataFrame(fetchreach_histogram_data[1], columns=["radians"])
     sns.histplot(data=df, x="radians", color="tab:blue", stat="probability",  bins=np.arange(-1.6, 1.7, 0.1)).set_title("{}, {}: robot0:head_pan_joint".format(algorithm, env_name), fontweight="bold")
-    plt.savefig(histogram_plot_directory + "/{}_{}_head_pan_joint.jpg".format(algorithm, env_name))
+    plt.savefig(histogram_plot_directory + "/{}_{}_head_pan_joint_{}.jpg".format(algorithm, env_name, args.num_seeds))
     plt.close()
 
     df = pd.DataFrame(fetchreach_histogram_data[2], columns=["radians"])
     sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(-0.7, 1.6, 0.1)).set_title("{}, {}: robot0:head_tilt_joint".format(algorithm, env_name), fontweight="bold")
-    plt.savefig(histogram_plot_directory + "/{}_{}_head_tilt_joint.jpg".format(algorithm, env_name))
+    plt.savefig(histogram_plot_directory + "/{}_{}_head_tilt_joint_{}.jpg".format(algorithm, env_name, args.num_seeds))
     plt.close()
 
     df = pd.DataFrame(fetchreach_histogram_data[3], columns=["radians"])
     sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(-1.7, 1.8, 0.1)).set_title("{}, {}: robot0:shoulder_pan_joint".format(algorithm, env_name), fontweight="bold")
-    plt.savefig(histogram_plot_directory + "/{}_{}_shoulder_pan_joint.jpg".format(algorithm, env_name))
+    plt.savefig(histogram_plot_directory + "/{}_{}_shoulder_pan_joint_{}.jpg".format(algorithm, env_name, args.num_seeds))
     plt.close()
 
     df = pd.DataFrame(fetchreach_histogram_data[4], columns=["radians"])
     sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(-1.3, 1.7, 0.1)).set_title("{}, {}: robot0:shoulder_lift_joint".format(algorithm, env_name), fontweight="bold")
-    plt.savefig(histogram_plot_directory + "/{}_{}_shoulder_lift_joint.jpg".format(algorithm, env_name))
+    plt.savefig(histogram_plot_directory + "/{}_{}_shoulder_lift_joint_{}.jpg".format(algorithm, env_name, args.num_seeds))
     plt.close()
 
     df = pd.DataFrame(fetchreach_histogram_data[5], columns=["radians"])
     sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(-2.3, 2.4, 0.1)).set_title("{}, {}: robot0:elbow_flex_joint".format(algorithm, env_name), fontweight="bold")
-    plt.savefig(histogram_plot_directory + "/{}_{}_elbow_flex_joint.jpg".format(algorithm, env_name))
+    plt.savefig(histogram_plot_directory + "/{}_{}_elbow_flex_joint_{}.jpg".format(algorithm, env_name, args.num_seeds))
     plt.close()
 
     df = pd.DataFrame(fetchreach_histogram_data[6], columns=["radians"])
     sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(-2.2, 2.3, 0.1)).set_title("{}, {}: robot0:wrist_flex_joint".format(algorithm, env_name), fontweight="bold")
-    plt.savefig(histogram_plot_directory + "/{}_{}_wrist_flex_joint.jpg".format(algorithm, env_name))
+    plt.savefig(histogram_plot_directory + "/{}_{}_wrist_flex_joint_{}.jpg".format(algorithm, env_name, args.num_seeds))
     plt.close()
 
 
@@ -350,7 +350,7 @@ def plot_fetchreach_heatmap():
     global fetchreach_histogram_data
 
     histogram_data_directory = os.getcwd() + "/data/fetchreach/{}/{}".format(algorithm, env_name)
-    fetchreach_histogram_data = np.load(histogram_data_directory + "/{}_{}_histogram_data.npy".format(algorithm, env_name))
+    fetchreach_histogram_data = np.load(histogram_data_directory + "/{}_{}_histogram_data_{}.npy".format(algorithm, env_name, args.num_seeds))
 
     fetchreach_histogram_count_data = []
     bins = [-2.3, -2.2, -2.1, -2.0, -1.9, -1.8, -1.7, -1.6, -1.5, -1.4, -1.3, -1.2, -1.1, -1.0, -0.9, -0.8, -0.7, -0.6,
@@ -369,7 +369,7 @@ def plot_fetchreach_heatmap():
 
     sns.heatmap(data=df, cmap="viridis").set_title("{}, {}: Visited Joint Angles".format(algorithm, env_name), fontweight="bold")
     plt.tight_layout()
-    plt.savefig(histogram_plot_directory + "/{}_{}_heatmap.jpg".format(algorithm, env_name))
+    plt.savefig(histogram_plot_directory + "/{}_{}_heatmap_{}.jpg".format(algorithm, env_name, args.num_seeds))
 
 
 def save_fetchreach_histogram_data():
@@ -384,10 +384,10 @@ def save_fetchreach_histogram_data():
     histogram_data_directory = os.getcwd() + "/data/fetchreach/{}/{}".format(algorithm, env_name)
     os.makedirs(histogram_data_directory, exist_ok=True)
 
-    np.save(histogram_data_directory + "/{}_{}_histogram_data.npy".format(algorithm, env_name), fetchreach_histogram_data)
+    np.save(histogram_data_directory + "/{}_{}_histogram_data_{}.npy".format(algorithm, env_name, args.num_seeds), fetchreach_histogram_data)
 
     df = pd.DataFrame(np.array(fetchreach_histogram_data).T, columns=["torso_lift_joint", "head_pan_joint", "head_tilt_joint", "shoulder_pan_joint", "shoulder_lift_joint", "elbow_flex_joint", "wrist_flex_joint"])
-    df.to_pickle(histogram_data_directory + "/{}_{}_histogram_data.pkl".format(algorithm, env_name))
+    df.to_pickle(histogram_data_directory + "/{}_{}_histogram_data_{}.pkl".format(algorithm, env_name, args.num_seeds))
 
 
 def save_fetchreach_joint_angles(d):

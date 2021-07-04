@@ -37,7 +37,7 @@ home_dir = str(Path.home())
 
 model_xml = None
 if args.env_name == "FetchReach-v1":
-    model_xml = anaconda_path + "/envs/openai/lib/python3.7/site-packages/gym/envs/robotics/assets/fetch/reach.xml"
+    model_xml = anaconda_path + "/envs/openai/lib/python3.9/site-packages/gym/envs/robotics/assets/fetch/reach.xml"
 elif args.env_name == "FetchReachEnv-v0":
     model_xml = home_dir + "/Documents/openai/custom_gym_envs/envs/fetchreach/FetchReachEnv_v0_Normal/assets/fetch/reach.xml"
 elif args.env_name == "FetchReachEnv-v1":

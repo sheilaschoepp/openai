@@ -451,6 +451,7 @@ def ant():
 
     sac_data_dir = DATA_DIR + "/ant/hps/sac"
     sac_data_dirs = os.listdir(sac_data_dir)
+    sac_data_dirs.remove("resumed")
 
     sac_results = []
 

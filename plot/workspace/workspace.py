@@ -21,8 +21,11 @@ args = parser.parse_args()
 # accuracy level
 # pan motion is given a higher accuracy than lift/flex motions
 
-ACCURACY_LVL_1 = np.radians(5)  # radians
-ACCURACY_LVL_2 = np.radians(10)  # radians
+LVL_1 = 5
+LVL_2 = 10
+
+ACCURACY_LVL_1 = np.radians(LVL_1)  # radians
+ACCURACY_LVL_2 = np.radians(LVL_2)  # radians
 
 # xml
 
@@ -184,7 +187,7 @@ print("points", len(points))
 data_directory = os.getcwd() + "/data/{}".format(args.env_name)
 os.makedirs(data_directory, exist_ok=True)
 
-np.save(data_directory + "/points.npy", points)
+np.save(data_directory + "/{}_points_{}_{}.npy".format(args.env_name, LVL_1, LVL_2), points)
 
 # plot
 
@@ -255,4 +258,4 @@ ax.set_xlabel("x")
 ax.set_ylabel("y")
 ax.set_zlabel("z")
 
-plt.savefig(plot_directory + "/{}_workspace.jpg".format(args.env_name))
+plt.savefig(plot_directory + "/{}_workspace_{}_{}.jpg".format(args.env_name, LVL_1, LVL_2))

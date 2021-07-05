@@ -18,12 +18,17 @@ echo 'SAC_N_CONTROLLER_ABSOLUTE_PATH="/home/sschoepp/Documents/openai/controller
 #  echo 'tmux new-session -d -s ppod'$i' "python $PPO_N_CONTROLLER_ABSOLUTE_PATH -lrd -s '$i'"' >> melco2.sh
 #done
 
-for s in 2 3 4 7
+for s in 9
 do
-  echo 'tmux new-session -d -s sac99'$s' "CUDA_VISIBLE_DEVICES=4 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -a -c -e FetchReach-v1 -s '$s' -t 2000000 -tef 10000 -ps -pss 99"' >> melco2.sh
+  echo 'tmux new-session -d -s sac82'$s' "CUDA_VISIBLE_DEVICES=0 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -a -c -e FetchReach-v1 -s '$s' -t 2000000 -tef 10000 -ps -pss 82"' >> melco2.sh
 done
 
-for s in 8 9
+for s in 9
 do
-  echo 'tmux new-session -d -s sac99'$s' "CUDA_VISIBLE_DEVICES=0 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -a -c -e FetchReach-v1 -s '$s' -t 2000000 -tef 10000 -ps -pss 99"' >> melco2.sh
+  echo 'tmux new-session -d -s sac83'$s' "CUDA_VISIBLE_DEVICES=0 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -a -c -e FetchReach-v1 -s '$s' -t 2000000 -tef 10000 -ps -pss 83"' >> melco2.sh
+done
+
+for s in 5 10
+do
+  echo 'tmux new-session -d -s sac20'$s' "CUDA_VISIBLE_DEVICES=0 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -a -c -e FetchReach-v1 -s '$s' -t 2000000 -tef 10000 -ps -pss 20"' >> melco2.sh
 done

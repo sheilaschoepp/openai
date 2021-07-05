@@ -402,8 +402,9 @@ def ant():
     PPO
     """
 
-    ppo_data_dir = DATA_DIR + "/ant/hpsc/ppo"
+    ppo_data_dir = DATA_DIR + "/ant/hps/ppo"
     ppo_data_dirs = os.listdir(ppo_data_dir)
+    ppo_data_dirs.remove("resumed")
 
     ppo_results = []
 
@@ -437,6 +438,10 @@ def ant():
                 df_mean, df_sem = get_ppo_data(ppo_data_dir + "/" + dir_)
                 top_ppo_results_mean.append(df_mean)
                 top_ppo_results_sem.append(df_sem)
+            elif "_resumed" in dir_ and "pss:" + str(seed) == dir_[-(12 + len(str(seed))):-8]:
+                df_mean, df_sem = get_ppo_data(ppo_data_dir + "/" + dir_)
+                top_ppo_results_mean.append(df_mean)
+                top_ppo_results_sem.append(df_sem)
 
     plot_ant_top("ppo", top_hps_seeds, top_ppo_results_mean, top_ppo_results_sem)
 
@@ -444,7 +449,7 @@ def ant():
     SAC
     """
 
-    sac_data_dir = DATA_DIR + "/ant/hpsc/sac"
+    sac_data_dir = DATA_DIR + "/ant/hps/sac"
     sac_data_dirs = os.listdir(sac_data_dir)
 
     sac_results = []
@@ -502,7 +507,7 @@ def fetchreach():
     PPO
     """
 
-    ppo_data_dir = DATA_DIR + "/fetchreach/hpsc/ppo"
+    ppo_data_dir = DATA_DIR + "/fetchreach/hps/ppo"
     ppo_data_dirs = os.listdir(ppo_data_dir)
 
     ppo_results = []
@@ -544,7 +549,7 @@ def fetchreach():
     SAC
     """
 
-    sac_data_dir = DATA_DIR + "/fetchreach/hpsc/sac"
+    sac_data_dir = DATA_DIR + "/fetchreach/hps/sac"
     sac_data_dirs = os.listdir(sac_data_dir)
 
     sac_results = []

@@ -3,8 +3,8 @@ import gym
 import time
 from environment.basic_wrapper import BasicWrapper
 
-# env = BasicWrapper(gym.make("FetchReachEnv-v999"))
-env = gym.make("FetchReachEnv-v999")
+env = BasicWrapper(gym.make("FetchReachEnv-v999"))
+# env = gym.make("FetchReachEnv-v0")
 
 # action space: Box(-1.0, 1.0, (4,), float32)
 # observation_space["observation"]: Box(-inf, inf, (25,), float32)

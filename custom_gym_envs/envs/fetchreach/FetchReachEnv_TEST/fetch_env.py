@@ -144,11 +144,6 @@ class FetchEnv(robot_env.RobotEnv):
     def _reset_sim(self):
         self.sim.set_state(self.initial_state)
 
-        environment_path = os.getenv("HOME") + "/Documents/openai/environment"
-        np.save(environment_path + "/fetchreach_initial_state.npy", self.initial_state)
-        with open(environment_path + "/fetchreach_initial_state.pkl", "wb") as f:
-            pickle.dump(self.initial_state, f, protocol=pickle.HIGHEST_PROTOCOL)
-
         # Randomize start position of object.
         if self.has_object:
             object_xpos = self.initial_gripper_xpos[:2]

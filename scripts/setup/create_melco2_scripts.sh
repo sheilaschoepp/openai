@@ -6,10 +6,15 @@ echo 'SAC_N_CONTROLLER_ABSOLUTE_PATH="/home/sschoepp/Documents/openai/controller
 #  echo 'tmux new-session -d -s sac'$i'b "CUDA_VISIBLE_DEVICES=7 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -a -c -e FetchReach-v1 -s 5 -t 2000000 -tef 10000 -ps -pss '$i'; CUDA_VISIBLE_DEVICES=7 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -a -c -e FetchReach-v1 -s 6 -t 2000000 -tef 10000 -ps -pss '$i'; CUDA_VISIBLE_DEVICES=7 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -a -c -e FetchReach-v1 -s 7 -t 2000000 -tef 10000 -ps -pss '$i'; CUDA_VISIBLE_DEVICES=7 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -a -c -e FetchReach-v1 -s 8 -t 2000000 -tef 10000 -ps -pss '$i'; CUDA_VISIBLE_DEVICES=7 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -a -c -e FetchReach-v1 -s 9 -t 2000000 -tef 10000 -ps -pss '$i'"' >> melco2.sh
 #done
 
-#for i in 45 46 47 48
-#do
-#  echo 'tmux new-session -d -s sac'$i' "CUDA_VISIBLE_DEVICES=1 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -a -c -e FetchReach-v1 -s 9 -t 2000000 -tef 10000 -ps -pss '$i'"' >> melco2.sh
-#done
+for s in {0..4}
+do
+  echo 'tmux new-session -d -s sac76'$s' "CUDA_VISIBLE_DEVICES=0 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -a -c -e FetchReach-v1 -s '$s' -t 2000000 -tef 10000 -ps -pss 76"' >> melco2.sh
+done
+
+for s in {5..9}
+do
+  echo 'tmux new-session -d -s sac76'$s' "CUDA_VISIBLE_DEVICES=1 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -a -c -e FetchReach-v1 -s '$s' -t 2000000 -tef 10000 -ps -pss 76"' >> melco2.sh
+done
 
 #echo 'PPO_N_CONTROLLER_ABSOLUTE_PATH="/home/sschoepp/Documents/openai/controllers/ppov2/ppov2_n_controller.py"' > melco2.sh
 #
@@ -17,18 +22,3 @@ echo 'SAC_N_CONTROLLER_ABSOLUTE_PATH="/home/sschoepp/Documents/openai/controller
 #do
 #  echo 'tmux new-session -d -s ppod'$i' "python $PPO_N_CONTROLLER_ABSOLUTE_PATH -lrd -s '$i'"' >> melco2.sh
 #done
-
-for s in 9
-do
-  echo 'tmux new-session -d -s sac82'$s' "CUDA_VISIBLE_DEVICES=0 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -a -c -e FetchReach-v1 -s '$s' -t 2000000 -tef 10000 -ps -pss 82"' >> melco2.sh
-done
-
-for s in 9
-do
-  echo 'tmux new-session -d -s sac83'$s' "CUDA_VISIBLE_DEVICES=0 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -a -c -e FetchReach-v1 -s '$s' -t 2000000 -tef 10000 -ps -pss 83"' >> melco2.sh
-done
-
-for s in 5 10
-do
-  echo 'tmux new-session -d -s sac20'$s' "CUDA_VISIBLE_DEVICES=0 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -a -c -e FetchReach-v1 -s '$s' -t 2000000 -tef 10000 -ps -pss 20"' >> melco2.sh
-done

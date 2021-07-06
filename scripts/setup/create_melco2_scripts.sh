@@ -41,5 +41,5 @@ echo 'PPO_N_CONTROLLER_ABSOLUTE_PATH="/home/sschoepp/Documents/openai/controller
 
 for i in {10..29}
 do
-  echo 'tmux new-session -d -s ppo61'$i' "python $PPO_N_CONTROLLER_ABSOLUTE_PATH -lrd -s '$i' -ps -pss 61"' >> melco2.sh
+  echo 'tmux new-session -d -s ppo61'$i' "python $PPO_N_CONTROLLER_ABSOLUTE_PATH -lrd -s '$i' -ps -pss 33 --resumable"' >> melco2.sh
 done

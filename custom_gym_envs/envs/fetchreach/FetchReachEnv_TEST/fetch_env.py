@@ -1,12 +1,12 @@
 """
 modifications: change from in import of robot_env, rotations and utils (line 8)
 """
-
+import pickle
 
 import numpy as np
 
 from custom_gym_envs.envs.fetchreach.FetchReachEnv_TEST import robot_env, rotations, utils
-
+import os
 
 def goal_distance(goal_a, goal_b):
     assert goal_a.shape == goal_b.shape
@@ -143,6 +143,11 @@ class FetchEnv(robot_env.RobotEnv):
 
     def _reset_sim(self):
         self.sim.set_state(self.initial_state)
+
+        environment_path = os.getenv("HOME") + "/Documents/openai/environment"
+        np.save(environment_path + "/fetchreach_initial_state.npy", self.initial_state)
+        with open(environment_path + "/fetchreach_initial_state.pkl", "wb") as f:
+            pickle.dump(self.initial_state, f, protocol=pickle.HIGHEST_PROTOCOL)
 
         # Randomize start position of object.
         if self.has_object:

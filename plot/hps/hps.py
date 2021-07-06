@@ -14,6 +14,9 @@ parser = argparse.ArgumentParser(description="HPS Arguments")
 parser.add_argument("-p", "--plot_hps", default=False, action="store_true",
                     help="if True, plot each individual hyperparameter setting individually (default: False)")
 
+parser.add_argument("-n", "--num_best", type=int, default=10, metavar="N",
+                    help="plot n best hyperparameter settings (default: 10)")
+
 args = parser.parse_args()
 
 
@@ -281,7 +284,7 @@ def plot_ant_top(algorithm, seeds, df_means, df_sems):
 
     x = df_means.index
 
-    indices = np.arange(NUM_BEST)
+    indices = np.arange(args.num_best)
 
     for i in np.flip(indices):
         column = str(int(seeds[i]))
@@ -298,7 +301,7 @@ def plot_ant_top(algorithm, seeds, df_means, df_sems):
     plt.title("Ant-v2 {} HPS".format(algorithm.upper()), fontweight="bold")
     plt.legend(loc="lower right")
     plt.tight_layout()
-    plt.savefig(plot_directory + "/Ant-v2_{}_hps_plot_{}.jpg".format(algorithm.upper(), NUM_BEST))
+    plt.savefig(plot_directory + "/Ant-v2_{}_hps_plot_{}.jpg".format(algorithm.upper(), args.num_best))
     plt.close()
 
 
@@ -372,7 +375,7 @@ def plot_fetchreach_top(algorithm, seeds, df_means, df_sems):
 
     x = df_means.index
 
-    indices = np.arange(NUM_BEST)
+    indices = np.arange(args.num_best)
 
     for i in np.flip(indices):
         column = str(seeds[i])
@@ -389,7 +392,7 @@ def plot_fetchreach_top(algorithm, seeds, df_means, df_sems):
     plt.title("FetchReach-v1 {} HPS".format(algorithm.upper()), fontweight="bold")
     plt.legend(loc="lower right")
     plt.tight_layout()
-    plt.savefig(plot_directory + "/FetchReach-v1_{}_hps_plot_{}.jpg".format(algorithm.upper(), NUM_BEST))
+    plt.savefig(plot_directory + "/FetchReach-v1_{}_hps_plot_{}.jpg".format(algorithm.upper(), args.num_best))
     plt.close()
 
 
@@ -424,12 +427,12 @@ def ant():
     df = df.sort_values(by=["performance_mean_sum"], ascending=False)
 
     os.makedirs(os.path.join(hps_data_dir, "PPO"), exist_ok=True)
-    df.to_csv(hps_data_dir + "/PPO/Ant-v2_PPO_hps_data_{}.csv".format(NUM_BEST), index=False)
+    df.to_csv(hps_data_dir + "/PPO/Ant-v2_PPO_hps_data.csv", index=False)
 
     top_ppo_results_mean = []
     top_ppo_results_sem = []
 
-    df = df["ps seed"].head(NUM_BEST)
+    df = df["ps seed"].head(args.num_best)
     top_hps_seeds = df.values.tolist()
 
     for seed in top_hps_seeds:
@@ -474,12 +477,12 @@ def ant():
     df = df.replace(np.nan, 9999999)  # set default hp settings to pss 999
 
     os.makedirs(os.path.join(hps_data_dir, "SAC"), exist_ok=True)
-    df.to_csv(hps_data_dir + "/SAC/Ant-v2_SAC_hps_data_{}.csv".format(NUM_BEST), index=False)
+    df.to_csv(hps_data_dir + "/SAC/Ant-v2_SAC_hps_data.csv", index=False)
 
     top_sac_results_mean = []
     top_sac_results_sem = []
 
-    df = df["ps seed"].head(NUM_BEST)
+    df = df["ps seed"].head(args.num_best)
     top_hps_seeds = df.values.tolist()
 
     for seed in top_hps_seeds:
@@ -529,12 +532,12 @@ def fetchreach():
     df = df.sort_values(by=["performance_mean_sum"], ascending=False)
 
     os.makedirs(os.path.join(hps_data_dir, "PPO"), exist_ok=True)
-    df.to_csv(hps_data_dir + "/PPO/FetchReach-v1_PPO_hps_data_{}.csv".format(NUM_BEST), index=False)
+    df.to_csv(hps_data_dir + "/PPO/FetchReach-v1_PPO_hps_data.csv", index=False)
 
     top_ppo_results_mean = []
     top_ppo_results_sem = []
 
-    df = df["ps seed"].head(NUM_BEST)
+    df = df["ps seed"].head(args.num_best)
     top_hps_seeds = df.values.tolist()
 
     for seed in top_hps_seeds:
@@ -571,12 +574,12 @@ def fetchreach():
     df = df.sort_values(by=["performance_mean_sum"], ascending=False)
 
     os.makedirs(os.path.join(hps_data_dir, "SAC"), exist_ok=True)
-    df.to_csv(hps_data_dir + "/SAC/FetchReach-v1_SAC_hps_data_{}.csv".format(NUM_BEST), index=False)
+    df.to_csv(hps_data_dir + "/SAC/FetchReach-v1_SAC_hps_data.csv", index=False)
 
     top_sac_results_mean = []
     top_sac_results_sem = []
 
-    df = df["ps seed"].head(NUM_BEST)
+    df = df["ps seed"].head(args.num_best)
     top_hps_seeds = df.values.tolist()
 
     for seed in top_hps_seeds:
@@ -595,8 +598,7 @@ if __name__ == "__main__":
 
     RUNS = 10  # number of runs (seeds) to average across
 
-    NUM_BEST = 10  # plot the "NUM_BEST" best seeds (max: 10)
-    assert 1 <= NUM_BEST <= 10, "hps.__main__: NUM_BEST must have a value between 1 and 10"
+    assert 1 <= args.num_best <= 10, "args.num_best must have a value between 1 and 10"
 
     COLORS = ["tab:blue", "tab:orange", "tab:green", "tab:red", "tab:purple", "tab:brown", "tab:pink", "tab:grey", "tab:olive", "tab:cyan"]
 

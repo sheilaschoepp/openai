@@ -17,14 +17,25 @@ class BasicWrapper(gym.Wrapper):
 
     def reset(self):
 
-        if not self.computecanada:
-            environment_path = os.getenv("HOME") + "/Documents/openai/environment"
-        else:
-            environment_path = os.getenv("HOME") + "/scratch/openai/environment"
+        def reset_sim():
+            if not self.computecanada:
+                environment_path = os.getenv("HOME") + "/Documents/openai/environment"
+            else:
+                environment_path = os.getenv("HOME") + "/scratch/openai/environment"
 
-        with open(environment_path + "/fetchreach_initial_state.pkl", "rb") as f:
-            initial_state_copy = pickle.load(f)
+            with open(environment_path + "/fetchreach_initial_state.pkl", "rb") as f:
+                initial_state_copy = pickle.load(f)
 
-        self.env.sim.set_state(initial_state_copy)
+            self.env.sim.set_state(initial_state_copy)
 
-        self.env.sim.forward()  # forward dynamics: same as mj_step but do not integrate in time
+            self.env.sim.forward()  # forward dynamics: same as mj_step but do not integrate in time
+
+            return True
+
+        did_reset_sim = False
+        while not did_reset_sim:
+            did_reset_sim = reset_sim()
+
+        self.env.goal = self.env._sample_goal().copy()
+        obs = self.env._get_obs()
+        return obs

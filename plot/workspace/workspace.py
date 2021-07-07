@@ -40,7 +40,7 @@ home_dir = str(Path.home())
 
 model_xml = None
 if args.env_name == "FetchReach-v1":
-    model_xml = anaconda_path + "/envs/openai2/lib/python3.9/site-packages/gym/envs/robotics/assets/fetch/reach.xml"
+    model_xml = anaconda_path + "/envs/openai/lib/python3.9/site-packages/gym/envs/robotics/assets/fetch/reach.xml"
 elif args.env_name == "FetchReachEnv-v0":
     model_xml = home_dir + "/Documents/openai/custom_gym_envs/envs/fetchreach/FetchReachEnv_v0_Normal/assets/fetch/reach.xml"
 elif args.env_name == "FetchReachEnv-v1":
@@ -63,6 +63,8 @@ shoulder_pan_joint_range = None
 shoulder_lift_joint_range = None
 elbow_flex_joint_range = None
 wrist_flex_joint_range = None
+r_gripper_finger_joint_range = None
+l_gripper_finger_joint_range = None
 
 for child in root.iter():
     attrib = child.attrib
@@ -81,7 +83,14 @@ for child in root.iter():
         elbow_flex_joint_range = np.array(attrib.get("range").split(" "), dtype=float)
     elif name == "robot0:wrist_flex_joint":
         wrist_flex_joint_range = np.array(attrib.get("range").split(" "), dtype=float)
+    elif name == "robot0:r_gripper_finger_joint":
+        r_gripper_finger_joint_range = np.array(attrib.get("range").split(" "), dtype=float)
+    elif name == "robot0:l_gripper_finger_joint":
+        l_gripper_finger_joint_range = np.array(attrib.get("range").split(" "), dtype=float)
 
+upperarm_roll_joint_range = np.array([-np.pi, np.pi])
+forearm_roll_joint_range = np.array([-np.pi, np.pi])
+wrist_roll_joint_range = np.array([-np.pi, np.pi])
 
 # joint angles
 
@@ -111,24 +120,33 @@ shoulder_pan_joint_angles = np.linspace(start=shoulder_pan_joint_range[0], stop=
 num = max(math.ceil((shoulder_lift_joint_range[1] - shoulder_lift_joint_range[0]) / ACCURACY_LVL_2), 2)
 shoulder_lift_joint_angles = np.linspace(start=shoulder_lift_joint_range[0], stop=shoulder_lift_joint_range[1], num=num)
 
-# robot0:upperarm_roll_joint, no range
+# robot0:upperarm_roll_joint, limited=false, range -pi, pi
+num = max(math.ceil((upperarm_roll_joint_range[1] - upperarm_roll_joint_range[0]) / ACCURACY_LVL_2), 2)
+upperarm_roll_joint_angles = np.linspace(start=upperarm_roll_joint_range[0], stop=upperarm_roll_joint_range[1], num=num)
 
 # robot0:elbow_flex_joint, range -2.251 2.251
 num = max(math.ceil((elbow_flex_joint_range[1] - elbow_flex_joint_range[0]) / ACCURACY_LVL_2), 2)
 elbow_flex_joint_angles = np.linspace(start=elbow_flex_joint_range[0], stop=elbow_flex_joint_range[1], num=num)
 
-# robot0:forearm_roll_joint, no range
+# robot0:forearm_roll_joint, limited=false, range -pi, pi
+num = max(math.ceil((forearm_roll_joint_range[1] - forearm_roll_joint_range[0]) / ACCURACY_LVL_2), 2)
+forearm_roll_joint_angles = np.linspace(start=forearm_roll_joint_range[0], stop=forearm_roll_joint_range[1], num=num)
 
 # robot0:wrist_flex_joint, range -2.16 2.16
 num = max(math.ceil((wrist_flex_joint_range[1] - wrist_flex_joint_range[0]) / ACCURACY_LVL_2), 2)
 wrist_flex_joint_angles = np.linspace(start=wrist_flex_joint_range[0], stop=wrist_flex_joint_range[1], num=num)
 
-# robot0:wrist_roll_joint, no range
+# robot0:wrist_roll_joint, limited=false, range -pi, pi
+num = max(math.ceil((wrist_roll_joint_range[1] - wrist_roll_joint_range[0]) / ACCURACY_LVL_2), 2)
+wrist_roll_joint_angles = np.linspace(start=wrist_roll_joint_range[0], stop=wrist_roll_joint_range[1], num=num)
 
 # robot0:r_gripper_finger_joint, range 0 0.05  # not included, no effect on end effector position
+num = max(math.ceil((r_gripper_finger_joint_range[1] - r_gripper_finger_joint_range[0]) / ACCURACY_LVL_2), 2)
+r_gripper_finger_joint_angles = np.linspace(start=r_gripper_finger_joint_range[0], stop=r_gripper_finger_joint_range[1], num=num)
 
 # robot0:l_gripper_finger_joint, range 0 0.05  # not included, no effect on end effector position
-
+num = max(math.ceil((l_gripper_finger_joint_range[1] - l_gripper_finger_joint_range[0]) / ACCURACY_LVL_2), 2)
+l_gripper_finger_joint_angles = np.linspace(start=l_gripper_finger_joint_range[0], stop=l_gripper_finger_joint_range[1], num=num)
 
 # scan through joint angles
 
@@ -143,119 +161,292 @@ num_points = torso_lift_joint_angles.shape[0] * \
              elbow_flex_joint_angles.shape[0] * \
              wrist_flex_joint_angles.shape[0]
 
-points = []
 
-functions.mj_kinematics(model, sim.data)  # run forward kinematics, returns None
-functions.mj_forward(model, sim.data)  # same as mj_step but does not integrate in time, returns None
+def test():
+    """
+    test how each joint affects the robot0:grip position (use PyCharm debugger)
+    """
 
-with tqdm(total=num_points) as pbar:
-    for i in torso_lift_joint_angles:
+    functions.mj_kinematics(model, sim.data)  # run forward kinematics, returns None
+    functions.mj_forward(model, sim.data)  # same as mj_step but does not integrate in time, returns None
+
+    test_points = []
+
+    for i in torso_lift_joint_angles:  # result: affects the z coordinate robot0:grip
         sim.data.set_joint_qpos("robot0:torso_lift_joint", i)
 
-        for j in head_pan_joint_angles:
-            sim.data.set_joint_qpos("robot0:head_pan_joint", j)
+        functions.mj_kinematics(model, sim.data)
+        functions.mj_forward(model, sim.data)
 
-            for k in head_tilt_joint_angles:
-                sim.data.set_joint_qpos("robot0:head_tilt_joint", k)
+        point = sim.data.get_site_xpos("robot0:grip").copy()
+        test_points.append(point)
 
-                for l in shoulder_pan_joint_angles:
-                    sim.data.set_joint_qpos("robot0:shoulder_pan_joint", l)
+    test_points = []
 
-                    for m in shoulder_lift_joint_angles:
-                        sim.data.set_joint_qpos("robot0:shoulder_lift_joint", m)
+    for j in head_pan_joint_angles:  # result: does not affect robot0:grip position
+        sim.data.set_joint_qpos("robot0:head_pan_joint", j)
 
-                        for n in elbow_flex_joint_angles:
-                            sim.data.set_joint_qpos("robot0:elbow_flex_joint", n)
+        functions.mj_kinematics(model, sim.data)
+        functions.mj_forward(model, sim.data)
 
-                            for o in wrist_flex_joint_angles:
-                                sim.data.set_joint_qpos("robot0:wrist_flex_joint", o)
+        point = sim.data.get_site_xpos("robot0:grip").copy()
+        test_points.append(point)
 
-                                functions.mj_kinematics(model, sim.data)
-                                functions.mj_forward(model, sim.data)
+    test_points = []
 
-                                point = sim.data.get_site_xpos("robot0:grip").copy()  # must use copy here; otherwise all points in list are same
-                                points.append(point)
+    for k in head_tilt_joint_angles:  # result: does not affect robot0:grip position
+        sim.data.set_joint_qpos("robot0:head_tilt_joint", k)
 
-                                pbar.update(1)
+        functions.mj_kinematics(model, sim.data)
+        functions.mj_forward(model, sim.data)
 
-        points = list(np.unique(points, axis=0))
+        point = sim.data.get_site_xpos("robot0:grip").copy()
+        test_points.append(point)
 
-# data
+    test_points = []
 
-print("points", len(points))
+    for l in shoulder_pan_joint_angles:  # result: does affect robot0:grip position
+        sim.data.set_joint_qpos("robot0:shoulder_pan_joint", l)
 
-data_directory = os.getcwd() + "/data/{}".format(args.env_name)
-os.makedirs(data_directory, exist_ok=True)
+        functions.mj_kinematics(model, sim.data)
+        functions.mj_forward(model, sim.data)
 
-np.save(data_directory + "/{}_points_{}_{}.npy".format(args.env_name, LVL_1, LVL_2), points)
+        point = sim.data.get_site_xpos("robot0:grip").copy()
+        test_points.append(point)
 
-# plot
+    test_points = []
 
-plot_directory = os.getcwd() + "/plots/{}".format(args.env_name)
-os.makedirs(plot_directory, exist_ok=True)
+    for m in shoulder_lift_joint_angles:  # result: does affect robot0:grip position
+        sim.data.set_joint_qpos("robot0:shoulder_lift_joint", m)
 
-# set min and max x,y,z to the x,y,z of the first point in list
-min_x = points[0][0]
-min_y = points[0][1]
-min_z = points[0][2]
+        functions.mj_kinematics(model, sim.data)
+        functions.mj_forward(model, sim.data)
 
-max_x = points[0][0]
-max_y = points[0][1]
-max_z = points[0][2]
+        point = sim.data.get_site_xpos("robot0:grip").copy()
+        test_points.append(point)
 
-for p in points:
+    test_points = []
 
-    if p[0] < min_x:
-        min_x = p[0]
-    elif p[0] > max_x:
-        max_x = p[0]
-    else:
-        pass
+    for n in upperarm_roll_joint_angles:  # result: does affect robot0:grip position (although it is not apparent in the points list)
+        sim.data.set_joint_qpos("robot0:upperarm_roll_joint", n)
 
-    if p[1] < min_y:
-        min_y = p[1]
-    elif p[1] > max_y:
-        max_y = p[1]
-    else:
-        pass
+        functions.mj_kinematics(model, sim.data)
+        functions.mj_forward(model, sim.data)
 
-    if p[2] < min_z:
-        min_z = p[2]
-    elif p[2] > max_z:
-        max_z = p[2]
-    else:
-        pass
+        point = sim.data.get_site_xpos("robot0:grip").copy()
+        test_points.append(point)
 
-print("x: [{}, {}]".format(min_x, max_x))
-print("y: [{}, {}]".format(min_y, max_y))
-print("z: [{}, {}]".format(min_z, max_z))
+    test_points = []
 
-# important: this is for num=2 so it may not be accurate!
-# x: [0.30064826525514765, 0.32427078476066545]
-# y: [-0.2773406216316236, 0.8055406216316235]
-# z: [0.3371634300212859, 1.7125604647595976]
+    for o in elbow_flex_joint_angles:  # result: does affect robot0:grip position
+        sim.data.set_joint_qpos("robot0:elbow_flex_joint", o)
 
-fig = plt.figure()
-ax = plt.axes(projection="3d")
+        functions.mj_kinematics(model, sim.data)
+        functions.mj_forward(model, sim.data)
 
-z_line = np.linspace(start=min_z, stop=max_z, num=10)
-x_line = np.linspace(start=min_x, stop=max_x, num=10)
-y_line = np.linspace(start=min_y, stop=max_y, num=10)
-ax.plot3D(x_line, y_line, z_line, "gray")
+        point = sim.data.get_site_xpos("robot0:grip").copy()
+        test_points.append(point)
 
-x_points = []
-y_points = []
-z_points = []
+    test_points = []
 
-for p in points:
-    x_points.append(p[0])
-    y_points.append(p[1])
-    z_points.append(p[2])
+    for p in forearm_roll_joint_angles:  # result: does affect robot0:grip position (although it is not apparent in the points list)
+        sim.data.set_joint_qpos("robot0:forearm_roll_joint", p)
 
-ax.scatter3D(x_points, y_points, z_points, c=z_points, cmap="hsv");
+        functions.mj_kinematics(model, sim.data)
+        functions.mj_forward(model, sim.data)
 
-ax.set_xlabel("x")
-ax.set_ylabel("y")
-ax.set_zlabel("z")
+        point = sim.data.get_site_xpos("robot0:grip").copy()
+        test_points.append(point)
 
-plt.savefig(plot_directory + "/{}_workspace_{}_{}.jpg".format(args.env_name, LVL_1, LVL_2))
+    test_points = []
+
+    for q in wrist_flex_joint_angles:  # result: does affect robot0:grip position
+        sim.data.set_joint_qpos("robot0:wrist_flex_joint", q)
+
+        functions.mj_kinematics(model, sim.data)
+        functions.mj_forward(model, sim.data)
+
+        point = sim.data.get_site_xpos("robot0:grip").copy()
+        test_points.append(point)
+
+    test_points = []
+    
+    for r in wrist_roll_joint_angles:  # result: does affect robot0:grip position (although it is not apparent in the points list)
+        sim.data.set_joint_qpos("robot0:wrist_roll_joint", r)
+
+        functions.mj_kinematics(model, sim.data)
+        functions.mj_forward(model, sim.data)
+
+        point = sim.data.get_site_xpos("robot0:grip").copy()
+        test_points.append(point)
+
+    test_points = []
+
+    for s in r_gripper_finger_joint_angles:  # result: does affect robot0:grip position
+        sim.data.set_joint_qpos("robot0:r_gripper_finger_joint", s)
+
+        functions.mj_kinematics(model, sim.data)
+        functions.mj_forward(model, sim.data)
+
+        point = sim.data.get_site_xpos("robot0:grip").copy()
+        test_points.append(point)
+
+    test_points = []
+
+    for t in l_gripper_finger_joint_angles:  # result: does affect robot0:grip position
+        sim.data.set_joint_qpos("robot0:l_gripper_finger_joint", t)
+
+        functions.mj_kinematics(model, sim.data)
+        functions.mj_forward(model, sim.data)
+
+        point = sim.data.get_site_xpos("robot0:grip").copy()
+        test_points.append(point)
+
+    test_points = []
+
+
+# test()
+
+
+def workspace_points():
+    """
+    scan through each possible joint angle combination to plot the workspace
+
+    torso_lift_joint_angles i
+    head_pan_joint_angles j
+    head_tilt_joint_angles k
+    shoulder_pan_joint_angles l
+    shoulder_lift_joint_angles m
+    upperarm_roll_joint_angles n
+    elbow_flex_joint_angles o
+    forearm_roll_joint_angles p
+    wrist_flex_joint_angles q
+    wrist_roll_joint_angles r
+    r_gripper_finger_joint_angles s
+    l_gripper_finger_joint_angles t
+    """
+
+    points = []
+
+    functions.mj_kinematics(model, sim.data)  # run forward kinematics, returns None
+    functions.mj_forward(model, sim.data)  # same as mj_step but does not integrate in time, returns None
+
+    with tqdm(total=num_points) as pbar:
+        for i in torso_lift_joint_angles:
+            sim.data.set_joint_qpos("robot0:torso_lift_joint", i)
+
+            for l in shoulder_pan_joint_angles:
+                sim.data.set_joint_qpos("robot0:shoulder_pan_joint", l)
+
+                for m in shoulder_lift_joint_angles:
+                    sim.data.set_joint_qpos("robot0:shoulder_lift_joint", m)
+
+                    for n in upperarm_roll_joint_angles:
+                        sim.data.set_joint_qpos("robot0:upperarm_roll_joint", n)
+
+                        for o in elbow_flex_joint_angles:
+                            sim.data.set_joint_qpos("robot0:elbow_flex_joint", o)
+                            
+                            for p in forearm_roll_joint_angles:
+                                sim.data.set_joint_qpos("robot0:forearm_roll_joint", p)
+                                
+                                for q in wrist_flex_joint_angles:
+                                    sim.data.set_joint_qpos("robot0:wrist_flex_joint", q)
+                                    
+                                    for r in wrist_roll_joint_angles:
+                                        sim.data.set_joint_qpos("robot0:wrist_roll_joint", r)
+
+                                        functions.mj_kinematics(model, sim.data)
+                                        functions.mj_forward(model, sim.data)
+            
+                                        point = sim.data.get_site_xpos("robot0:grip").copy()  # must use copy here; otherwise all points in list are same
+                                        points.append(point)
+            
+                                        pbar.update(1)
+
+            points = list(np.unique(points, axis=0))
+
+    print("points", len(points))
+
+    data_directory = os.getcwd() + "/data/{}".format(args.env_name)
+    os.makedirs(data_directory, exist_ok=True)
+
+    np.save(data_directory + "/{}_points_{}_{}.npy".format(args.env_name, LVL_1, LVL_2), points)
+
+    return points
+
+
+def plot(points):
+    """
+    plot the points generated in the call to the workspace_points method (or the robot's approximate 3D workspace)
+    """
+
+    plot_directory = os.getcwd() + "/plots/{}".format(args.env_name)
+    os.makedirs(plot_directory, exist_ok=True)
+
+    # set min and max x,y,z to the x,y,z of the first point in list
+    min_x = points[0][0]
+    min_y = points[0][1]
+    min_z = points[0][2]
+
+    max_x = points[0][0]
+    max_y = points[0][1]
+    max_z = points[0][2]
+
+    for p in points:
+
+        if p[0] < min_x:
+            min_x = p[0]
+        elif p[0] > max_x:
+            max_x = p[0]
+        else:
+            pass
+
+        if p[1] < min_y:
+            min_y = p[1]
+        elif p[1] > max_y:
+            max_y = p[1]
+        else:
+            pass
+
+        if p[2] < min_z:
+            min_z = p[2]
+        elif p[2] > max_z:
+            max_z = p[2]
+        else:
+            pass
+
+    print("x: [{}, {}]".format(min_x, max_x))
+    print("y: [{}, {}]".format(min_y, max_y))
+    print("z: [{}, {}]".format(min_z, max_z))
+
+    fig = plt.figure()
+    ax = plt.axes(projection="3d")
+
+    z_line = np.linspace(start=min_z, stop=max_z, num=10)
+    x_line = np.linspace(start=min_x, stop=max_x, num=10)
+    y_line = np.linspace(start=min_y, stop=max_y, num=10)
+    ax.plot3D(x_line, y_line, z_line, "gray")
+
+    x_points = []
+    y_points = []
+    z_points = []
+
+    for p in points:
+        x_points.append(p[0])
+        y_points.append(p[1])
+        z_points.append(p[2])
+
+    ax.scatter3D(x_points, y_points, z_points, c=z_points, cmap="hsv");
+
+    ax.set_xlabel("x")
+    ax.set_ylabel("y")
+    ax.set_zlabel("z")
+
+    plt.savefig(plot_directory + "/{}_workspace_{}_{}.jpg".format(args.env_name, LVL_1, LVL_2))
+
+
+if __name__ == "__main__":
+
+    wp = workspace_points()
+    plot(wp)

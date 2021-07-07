@@ -6,7 +6,7 @@ commented out (line 192) and moved it (to line 183) to set the gripper_initial_x
 
 import numpy as np
 
-from custom_gym_envs.envs.fetchreach.FetchReachEnv_v2_BrokenElbowFlexJoint import robot_env, rotations, utils
+from custom_gym_envs.envs.fetchreach.FetchReachEnv_v2_BrokenElbowFlexJoint import robot_env, rotations, utils  # todo: changed from in import
 
 
 def goal_distance(goal_a, goal_b):

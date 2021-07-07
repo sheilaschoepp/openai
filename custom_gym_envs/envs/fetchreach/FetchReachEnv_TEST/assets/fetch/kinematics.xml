@@ -2,10 +2,9 @@
 
 <!--
 modifications:
-added a (commented out) duplicate element for each joint
-deleted mujoco's commented out lines (for cleanness)
-modified meshdir and texturedir in compiler element (line 12)
-remove include tags for shared.xml and robot.xml, replacing them with the xml from these files
+modified meshdir and texturedir in compiler element (line 11)
+modified include file for shared.xml (line 16)
+modified include file for robot.sml (line 24)
 -->
 
 <mujoco>

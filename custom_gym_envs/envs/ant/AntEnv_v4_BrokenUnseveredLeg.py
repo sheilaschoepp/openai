@@ -1,14 +1,22 @@
+"""
+modifications:
+renamed env to AntEnvV4
+modified filepath in __init__ method (line 18)
+added code to viewer_setup method to modify the camera perspective while rendering Ant
+modified _get_obs method by removing the last element for qpos and qvel, and the last 6 elements of cfrc_ext - these were added because we added an extra joint but this joint is not conrolled, so we can remove them to retain the state dimension
+"""
+
 import numpy as np
 from gym import utils
 from gym.envs.mujoco import mujoco_env
 from pathlib import Path
-from mujoco_py.generated import const
+from mujoco_py.generated import const  # do not delete; may need in viewer_setup method
 
 
-class AntEnvV4(mujoco_env.MujocoEnv, utils.EzPickle):  # TODO
+class AntEnvV4(mujoco_env.MujocoEnv, utils.EzPickle):  # todo: renamed to AntEnvV4
     def __init__(self):
         home = str(Path.home())
-        filepath = home + "/Documents/openai/custom_gym_envs/envs/ant/xml/AntEnv_v4_ab_addedlink.xml"  # TODO
+        filepath = home + "/Documents/openai/custom_gym_envs/envs/ant/xml/AntEnv_v4_ab_addedlink.xml"  # todo: modified xml filepath
         mujoco_env.MujocoEnv.__init__(self, filepath, 5)
         utils.EzPickle.__init__(self)
 
@@ -35,9 +43,9 @@ class AntEnvV4(mujoco_env.MujocoEnv, utils.EzPickle):  # TODO
 
     def _get_obs(self):
         return np.concatenate([
-            self.sim.data.qpos.flat[2:-1],
-            self.sim.data.qvel.flat[:-1],
-            np.clip(self.sim.data.cfrc_ext, -1, 1).flat[:-6],
+            self.sim.data.qpos.flat[2:-1],  # todo: removed last qpos for added joint
+            self.sim.data.qvel.flat[:-1],  # todo: removed last qvel for added joint
+            np.clip(self.sim.data.cfrc_ext, -1, 1).flat[:-6],  # todo: removed last 6 contact forces for added joint
         ])
 
     def reset_model(self):
@@ -49,7 +57,7 @@ class AntEnvV4(mujoco_env.MujocoEnv, utils.EzPickle):  # TODO
     def viewer_setup(self):
         self.viewer.cam.distance = self.model.stat.extent * 0.5
 
-        # === YOUR CODE HERE === #
+        # todo: modified camera view angle
         self.viewer.cam.type = const.CAMERA_FIXED
         self.viewer.cam.fixedcamid = 0
 
@@ -57,4 +65,3 @@ class AntEnvV4(mujoco_env.MujocoEnv, utils.EzPickle):  # TODO
         # self.viewer.cam.distance = self.model.stat.extent * 2.0
         # self.viewer.cam.lookat[2] += .8
         # self.viewer.cam.elevation = -20
-        # ====================== #

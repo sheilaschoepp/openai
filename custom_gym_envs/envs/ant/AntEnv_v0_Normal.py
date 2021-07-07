@@ -1,3 +1,10 @@
+"""
+modifications:
+renamed env to AntEnvV0
+modified filepath in __init__ method (line 18)
+added code to viewer_setup method to modify the camera perspective while rendering Ant
+"""
+
 import numpy as np
 from gym import utils
 from gym.envs.mujoco import mujoco_env
@@ -5,13 +12,10 @@ from pathlib import Path
 from mujoco_py.generated import const  # do not delete; may need in viewer_setup method
 
 
-class AntEnvV0(mujoco_env.MujocoEnv, utils.EzPickle):
-    """
-    Original Ant-v2 environment.
-    """
+class AntEnvV0(mujoco_env.MujocoEnv, utils.EzPickle):  # todo: renamed to AntEnvV1
     def __init__(self):
         home = str(Path.home())
-        filepath = home + "/Documents/openai/custom_gym_envs/envs/ant/xml/AntEnv_v0_normal.xml"
+        filepath = home + "/Documents/openai/custom_gym_envs/envs/ant/xml/AntEnv_v0_normal.xml"  # todo: modified xml filepath
         mujoco_env.MujocoEnv.__init__(self, filepath, 5)
         utils.EzPickle.__init__(self)
 
@@ -52,7 +56,7 @@ class AntEnvV0(mujoco_env.MujocoEnv, utils.EzPickle):
     def viewer_setup(self):
         self.viewer.cam.distance = self.model.stat.extent * 0.5
 
-        # === YOUR CODE HERE === #
+        # todo: modified camera view angle
         self.viewer.cam.type = const.CAMERA_FIXED
         self.viewer.cam.fixedcamid = 0
 
@@ -60,4 +64,3 @@ class AntEnvV0(mujoco_env.MujocoEnv, utils.EzPickle):
         # self.viewer.cam.distance = self.model.stat.extent * 2.0
         # self.viewer.cam.lookat[2] += .8
         # self.viewer.cam.elevation = -20
-        # ====================== #

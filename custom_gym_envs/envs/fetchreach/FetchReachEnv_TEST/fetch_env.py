@@ -1,12 +1,11 @@
 """
 modifications: change from in import of robot_env, rotations and utils (line 8)
 """
-import pickle
 
 import numpy as np
 
 from custom_gym_envs.envs.fetchreach.FetchReachEnv_TEST import robot_env, rotations, utils
-import os
+
 
 def goal_distance(goal_a, goal_b):
     assert goal_a.shape == goal_b.shape

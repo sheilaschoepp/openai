@@ -74,6 +74,8 @@ class Kinematics:
         self.forearm_roll_joint_range = np.array([-np.pi, np.pi])
         self.wrist_roll_joint_range = np.array([-np.pi, np.pi])
 
+        self.min_z = 0.42  # z less than this will result in a goal being in the table
+
         self.line = "------------------------------------------------------------------------------------------------"
 
     def check_reachable(self, goal):
@@ -93,7 +95,7 @@ class Kinematics:
         qpos = {}
         reachable = False
 
-        if goal[2] < 0.42:
+        if goal[2] < self.min_z:
 
             print("goal {} in table".format(str(goal)))
 
@@ -150,14 +152,14 @@ class Kinematics:
 
             if result.success:
 
-                reachable = (self.torso_lift_joint_range[0] < torso_lift_joint_pos < self.torso_lift_joint_range[1]) and \
-                            (self.shoulder_pan_joint_range[0] < shoulder_pan_joint_pos < self.shoulder_pan_joint_range[1]) and \
-                            (self.shoulder_lift_joint_range[0] < shoulder_lift_joint_pos < self.shoulder_lift_joint_range[1]) and \
-                            (self.upperarm_roll_joint_range[0] < upperarm_roll_joint_pos < self.upperarm_roll_joint_range[1]) and \
-                            (self.elbow_flex_joint_range[0] < elbow_flex_joint_pos < self.elbow_flex_joint_range[1]) and \
-                            (self.forearm_roll_joint_range[0] < forearm_roll_joint_pos < self.forearm_roll_joint_range[1]) and \
-                            (self.wrist_flex_joint_range[0] < wrist_flex_joint_pos < self.wrist_flex_joint_range[1]) and \
-                            (self.wrist_roll_joint_range[0] < wrist_roll_joint_pos < self.wrist_roll_joint_range[1])
+                # not included: upperarm_roll_joint, forearm_roll_joint, wrist_roll_joint
+                torso_lift_joint_inrange = self.torso_lift_joint_range[0] < torso_lift_joint_pos < self.torso_lift_joint_range[1]
+                shoulder_pan_joint_inrange = self.shoulder_pan_joint_range[0] < shoulder_pan_joint_pos < self.shoulder_pan_joint_range[1]
+                shoulder_lift_joint_inrange = self.shoulder_lift_joint_range[0] < shoulder_lift_joint_pos < self.shoulder_lift_joint_range[1]
+                elbow_flex_joint_inrange = self.elbow_flex_joint_range[0] < elbow_flex_joint_pos < self.elbow_flex_joint_range[1]
+                wrist_flex_joint_inrange = self.wrist_flex_joint_range[0] < wrist_flex_joint_pos < self.wrist_flex_joint_range[1]
+
+                reachable = torso_lift_joint_inrange and shoulder_pan_joint_inrange and shoulder_lift_joint_inrange and elbow_flex_joint_inrange and wrist_flex_joint_inrange
 
                 if reachable:
 
@@ -175,6 +177,15 @@ class Kinematics:
                 else:
 
                     print("goal {} not reachable".format(str(goal)))
+
+                    print("torso_lift_joint:", self.torso_lift_joint_range, torso_lift_joint_pos, "inrange:", torso_lift_joint_inrange)
+                    print("shoulder_pan_joint:", self.shoulder_pan_joint_range, shoulder_pan_joint_pos, "inrange:", shoulder_pan_joint_inrange)
+                    print("shoulder_lift_joint:", self.shoulder_lift_joint_range, shoulder_lift_joint_pos, "inrange:", shoulder_lift_joint_inrange)
+                    print("upperarm_roll_joint:", self.upperarm_roll_joint_range, upperarm_roll_joint_pos, "inrange: N/A")
+                    print("elbow_flex_joint:", self.elbow_flex_joint_range, elbow_flex_joint_pos, "inrange:", elbow_flex_joint_inrange)
+                    print("forearm_roll_joint:", self.forearm_roll_joint_range, forearm_roll_joint_pos, "inrange: N/A")
+                    print("wrist_flex_joint:", self.wrist_flex_joint_range, wrist_flex_joint_pos, "inrange:", wrist_flex_joint_inrange)
+                    print("wrist_roll_joint:", self.wrist_roll_joint_range, wrist_roll_joint_pos, "inrange: N/A")
 
         return qpos, reachable
 
@@ -212,19 +223,60 @@ class Kinematics:
                 for i in range(10):
                     env.sim.step()
                 print(goal, "goal")
-                print(env.sim.data.get_site_xpos('robot0:grip'), "gripper xpos after setting joint angles and stepping")
+                print(env.sim.data.get_site_xpos('robot0:grip'), "xpos after setting joint angles and simulation steps")
 
             print(self.line)
+
+    def test_taskspace(self):
+
+        print(self.line)
+
+        env = gym.make(self.env_name)
+        env.reset()
+
+        reachable_points = []
+        unreachable_points = []
+
+        bins = 10
+        accuracy = 0.005  # radians
+
+        initial_gripper_pos = np.array([1.34183226, 0.74910038, 0.53472284])
+        target_range = 0.15
+
+        for x in np.linspace(initial_gripper_pos[0] - target_range, initial_gripper_pos[0] + target_range, bins):
+            for y in np.linspace(initial_gripper_pos[1] - target_range, initial_gripper_pos[1] + target_range, bins):
+                for z in np.linspace(max(initial_gripper_pos[2] - target_range, self.min_z), initial_gripper_pos[2] + target_range, bins):
+                    point = [x, y, z]
+                    _, reachable = self.check_reachable(point)
+                    if reachable:
+                        reachable_points.append(point)
+                    else:
+                        unreachable_points.append(point)
+
+                        gripper_target = np.array(point)
+                        gripper_rotation = np.array([1., 0., 1., 0.])
+                        env.sim.data.set_mocap_pos('robot0:mocap', gripper_target)
+                        env.sim.data.set_mocap_quat('robot0:mocap', gripper_rotation)
+                        for _ in range(20):
+                            env.sim.step()
+                        xpos = env.sim.data.get_site_xpos('robot0:grip')
+                        print(xpos, "xpos after setting gripper position/orientation and simulation steps")
+                        print(self.line)
+
+        print("num reachable:", len(reachable_points), "/", bins**3)
+        print("num unreachable:", len(unreachable_points), "/", bins**3)
+
+        np.save("{}_reachable_points_.npy".format(self.env_name), reachable_points)
 
 
 if __name__ == "__main__":
 
-    env_name = "FetchReach-v1"
-    # env_name = "FetchReachEnv-v999"
+    # env_name = "FetchReach-v1"
+    env_name = "FetchReachEnv-v999"
 
     k = Kinematics(env_name)
     # k.check_reachable([1.34183265, 0.74910039, 0.53472272])  # starting position in FetchReach-v1
     # k.check_reachable([100, 100, 100])  # not reachable (impossible)
     # k.check_reachable([0, 0, 0.39])  # in table
-    k.test_accuracy()
-
+    # k.test_accuracy()
+    k.test_taskspace()

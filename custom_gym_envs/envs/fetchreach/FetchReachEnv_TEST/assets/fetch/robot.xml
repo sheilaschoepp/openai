@@ -6,7 +6,7 @@
 		<geom conaffinity="0" contype="0" pos="0 0 0" rgba="0 0.5 0 0.1" size="0.005 0.005 1" type="box"></geom>
 	</body>
 	<body childclass="robot0:fetch" name="robot0:base_link" pos="0.2869 0.2641 0">
-		<joint armature="0.0001" axis="1 0 0" damping="1e+11" name="robot0:slide0" pos="0 0 0" type="slide"></joint>
+		<joint armature="0.0001" axis="1 0 0" damping="1e+11" name="robot0:slide0" pos="1 0 0" type="slide"></joint>
 		<joint armature="0.0001" axis="0 1 0" damping="1e+11" name="robot0:slide1" pos="0 0 0" type="slide"></joint>
 		<joint armature="0.0001" axis="0 0 1" damping="1e+11" name="robot0:slide2" pos="0 0 0" type="slide"></joint>
 		<inertial diaginertia="1.2869 1.2236 0.9868" mass="70.1294" pos="-0.0036 0 0.0014" quat="0.7605 -0.0133 -0.0061 0.6491"></inertial>

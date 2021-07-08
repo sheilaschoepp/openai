@@ -1,7 +1,7 @@
 """
 modifications:
 change from in import of robot_env, rotations and utils (line 8)
-commented out (line 192) and moved it (to line 183) to set the gripper_initial_xpos before calling self.sim.step() so that it is static across all envs (see todos)
+commented out (line 191) and added line (line 192) to set the gripper_initial_xpos to that from the FetchReach-v1 environment
 """
 
 import numpy as np
@@ -179,9 +179,6 @@ class FetchEnv(robot_env.RobotEnv):
         utils.reset_mocap_welds(self.sim)
         self.sim.forward()
 
-        # Extract information for sampling goals.
-        self.initial_gripper_xpos = self.sim.data.get_site_xpos('robot0:grip').copy()  # todo: moved from below to here
-
         # Move end effector into position.
         gripper_target = np.array([-0.498, 0.005, -0.431 + self.gripper_extra_height]) + self.sim.data.get_site_xpos('robot0:grip')
         gripper_rotation = np.array([1., 0., 1., 0.])
@@ -191,7 +188,8 @@ class FetchEnv(robot_env.RobotEnv):
             self.sim.step()
 
         # Extract information for sampling goals.
-        # self.initial_gripper_xpos = self.sim.data.get_site_xpos('robot0:grip').copy()  # todo: commented out and moved above (before self.sim.step())
+        # self.initial_gripper_xpos = self.sim.data.get_site_xpos('robot0:grip').copy()  # todo: commented out added line below
+        self.initial_gripper_xpos = np.array([1.34183226, 0.74910038, 0.53472284])  # todo: set to initial_gripper_pos for normal FetchReach-v1 env
         if self.has_object:
             self.height_offset = self.sim.data.get_site_xpos('object0')[2]
 

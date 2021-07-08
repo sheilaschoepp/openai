@@ -102,13 +102,19 @@ class Kinematics:
         # At runtime the positions and orientations of all joints defined in the model are stored in the vector mjData.qpos,
         # in the order in which the appear in the kinematic tree (source: http://www.mujoco.org/book/XMLreference.html#joint)
         # 0: robot0:slide0
+        # N/A
         # 1: robot0:slide1
+        # N/A
         # 2: robot0:slide2
+        # N/A
 
         # 3: robot0:torso_lift_joint
         torso_lift_joint_pos = result.qpos[3]
+
         # 4: robot0:head_pan_joint
+        # N/A
         # 5: robot0:head_tilt_joint
+        # N/A
 
         # 6: robot0:shoulder_pan_joint
         shoulder_pan_joint_pos = result.qpos[6]
@@ -126,10 +132,13 @@ class Kinematics:
         wrist_roll_joint_pos = result.qpos[12]
 
         # 13: robot0:r_gripper_finger_joint
+        # N/A
         # 14: robot0:l_gripper_finger_joint
+        # N/A
 
-        reachable = result.success and \
-                    (self.torso_lift_joint_range[0] < torso_lift_joint_pos < self.torso_lift_joint_range[1]) and \
+        print(result.success)  # todo add this into the equation somewhere
+
+        reachable = (self.torso_lift_joint_range[0] < torso_lift_joint_pos < self.torso_lift_joint_range[1]) and \
                     (self.shoulder_pan_joint_range[0] < shoulder_pan_joint_pos < self.shoulder_pan_joint_range[1]) and \
                     (self.shoulder_lift_joint_range[0] < shoulder_lift_joint_pos < self.shoulder_lift_joint_range[1]) and \
                     (self.upperarm_roll_joint_range[0] < upperarm_roll_joint_pos < self.upperarm_roll_joint_range[1]) and \
@@ -184,4 +193,3 @@ if __name__ == "__main__":
     k = Kinematics(env_name)
     # k.check_reachable([1.3418, 0.7491, 0.555])
     k.check_reachable([1.34183265, 0.74910039, 0.53472272])
-    k.test()

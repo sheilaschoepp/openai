@@ -28,23 +28,23 @@ class Kinematics:
         else:
             anaconda_path = os.getenv("HOME") + "/anaconda3"
 
-        model_xml = None
+        self.model_xml = None
         # if self.env_name == "FetchReach-v1":
-        #     model_xml = anaconda_path + "/envs/openai2/lib/python3.9/site-packages/gym/envs/robotics/assets/fetch/reach.xml"  # TODO fix this
+        #     self.model_xml = anaconda_path + "/envs/openai2/lib/python3.9/site-packages/gym/envs/robotics/assets/fetch/reach.xml"  # TODO fix this
         if self.env_name == "FetchReachEnv-v0":
-            model_xml = str(Path.home()) + "/Documents/openai/custom_gym_envs/envs/fetchreach/FetchReachEnv_v0_Normal/assets/fetch/kinematics.xml"
+            self.model_xml = str(Path.home()) + "/Documents/openai/custom_gym_envs/envs/fetchreach/FetchReachEnv_v0_Normal/assets/fetch/reach.xml"
         elif self.env_name == "FetchReachEnv-v1":
-            model_xml = str(Path.home()) + "/Documents/openai/custom_gym_envs/envs/fetchreach/FetchReachEnv_v1_BrokenShoulderLiftJoint/assets/fetch/kinematics.xml"
+            self.model_xml = str(Path.home()) + "/Documents/openai/custom_gym_envs/envs/fetchreach/FetchReachEnv_v1_BrokenShoulderLiftJoint/assets/fetch/reach.xml"
         elif self.env_name == "FetchReachEnv-v2":
-            model_xml = str(Path.home()) + "/Documents/openai/custom_gym_envs/envs/fetchreach/FetchReachEnv_v2_BrokenElbowFlexJoint/assets/fetch/kinematics.xml"
+            self.model_xml = str(Path.home()) + "/Documents/openai/custom_gym_envs/envs/fetchreach/FetchReachEnv_v2_BrokenElbowFlexJoint/assets/fetch/reach.xml"
         elif self.env_name == "FetchReachEnv-v3":
-            model_xml = str(Path.home()) + "/Documents/openai/custom_gym_envs/envs/fetchreach/FetchReachEnv_v3_BrokenWristFlexJoint/assets/fetch/kinematics.xml"
+            self.model_xml = str(Path.home()) + "/Documents/openai/custom_gym_envs/envs/fetchreach/FetchReachEnv_v3_BrokenWristFlexJoint/assets/fetch/reach.xml"
         elif self.env_name == "FetchReachEnv-v4":
-            model_xml = str(Path.home()) + "/Documents/openai/custom_gym_envs/envs/fetchreach/FetchReachEnv_v4_BrokenGrip/assets/fetch/kinematics.xml"
+            self.model_xml = str(Path.home()) + "/Documents/openai/custom_gym_envs/envs/fetchreach/FetchReachEnv_v4_BrokenGrip/assets/fetch/reach.xml"
         elif self.env_name == "FetchReachEnv-v999":
-            model_xml = str(Path.home()) + "/Documents/openai/custom_gym_envs/envs/fetchreach/FetchReachEnv_TEST/assets/fetch/kinematics.xml"
+            self.model_xml = str(Path.home()) + "/Documents/openai/custom_gym_envs/envs/fetchreach/FetchReachEnv_TEST/assets/fetch/reach.xml"
 
-        robot_xml = model_xml[:-14] + "robot.xml"
+        robot_xml = self.model_xml[:-9] + "robot.xml"
         tree = ET.parse(robot_xml)
         root = tree.getroot()
 
@@ -74,8 +74,6 @@ class Kinematics:
         self.forearm_roll_joint_range = np.array([-np.pi, np.pi])
         self.wrist_roll_joint_range = np.array([-np.pi, np.pi])
 
-        self.model_xml_string = assets.get_contents(model_xml)
-
         self.line = "------------------------------------------------------------------------------------------------"
 
     def check_reachable(self, goal):
@@ -92,15 +90,16 @@ class Kinematics:
             if true, goal is not in the table and is reachable
         """
 
+        qpos = {}
+        reachable = False
+
         if goal[2] < 0.42:
 
             print("goal {} in table".format(str(goal)))
 
-            return {}, False
-
         else:
 
-            physics = mujoco.Physics.from_xml_string(self.model_xml_string)
+            physics = mujoco.Physics.from_xml_path(self.model_xml)
             site_name = "robot0:grip"
             target_pos = np.array(goal)
             target_quat = np.array([1., 0., 1., 0.])  # in fetch_env._env_setup and fetch_env._set_action they always set the orientation to a static value
@@ -149,45 +148,35 @@ class Kinematics:
             # 14: robot0:l_gripper_finger_joint
             # N/A
 
-            # print(result.success)  # todo add this into the equation somewhere
+            if result.success:
 
-            qpos = {
-                "robot0:torso_lift_joint": torso_lift_joint_pos,
-                "robot0:shoulder_pan_joint": shoulder_pan_joint_pos,
-                "robot0:shoulder_lift_joint": shoulder_lift_joint_pos,
-                "robot0:upperarm_roll_joint": upperarm_roll_joint_pos,
-                "robot0:elbow_flex_joint": elbow_flex_joint_pos,
-                "robot0:forearm_roll_joint": forearm_roll_joint_pos,
-                "robot0:wrist_flex_joint": wrist_flex_joint_pos,
-                "robot0:wrist_roll_joint": wrist_roll_joint_pos,
-            }
+                reachable = (self.torso_lift_joint_range[0] < torso_lift_joint_pos < self.torso_lift_joint_range[1]) and \
+                            (self.shoulder_pan_joint_range[0] < shoulder_pan_joint_pos < self.shoulder_pan_joint_range[1]) and \
+                            (self.shoulder_lift_joint_range[0] < shoulder_lift_joint_pos < self.shoulder_lift_joint_range[1]) and \
+                            (self.upperarm_roll_joint_range[0] < upperarm_roll_joint_pos < self.upperarm_roll_joint_range[1]) and \
+                            (self.elbow_flex_joint_range[0] < elbow_flex_joint_pos < self.elbow_flex_joint_range[1]) and \
+                            (self.forearm_roll_joint_range[0] < forearm_roll_joint_pos < self.forearm_roll_joint_range[1]) and \
+                            (self.wrist_flex_joint_range[0] < wrist_flex_joint_pos < self.wrist_flex_joint_range[1]) and \
+                            (self.wrist_roll_joint_range[0] < wrist_roll_joint_pos < self.wrist_roll_joint_range[1])
 
-            reachable = (self.torso_lift_joint_range[0] < torso_lift_joint_pos < self.torso_lift_joint_range[1]) and \
-                        (self.shoulder_pan_joint_range[0] < shoulder_pan_joint_pos < self.shoulder_pan_joint_range[1]) and \
-                        (self.shoulder_lift_joint_range[0] < shoulder_lift_joint_pos < self.shoulder_lift_joint_range[1]) and \
-                        (self.upperarm_roll_joint_range[0] < upperarm_roll_joint_pos < self.upperarm_roll_joint_range[1]) and \
-                        (self.elbow_flex_joint_range[0] < elbow_flex_joint_pos < self.elbow_flex_joint_range[1]) and \
-                        (self.forearm_roll_joint_range[0] < forearm_roll_joint_pos < self.forearm_roll_joint_range[1]) and \
-                        (self.wrist_flex_joint_range[0] < wrist_flex_joint_pos < self.wrist_flex_joint_range[1]) and \
-                        (self.wrist_roll_joint_range[0] < wrist_roll_joint_pos < self.wrist_roll_joint_range[1])
+                if reachable:
 
-            # print("reachable:", reachable)
-            # print("torso_lift_joint:", self.torso_lift_joint_range, torso_lift_joint_pos)
-            # print("shoulder_pan_joint:", self.shoulder_pan_joint_range, shoulder_pan_joint_pos)
-            # print("shoulder_lift_joint:", self.shoulder_lift_joint_range, shoulder_lift_joint_pos)
-            # print("upperarm_roll_joint:", self.upperarm_roll_joint_range, upperarm_roll_joint_pos)
-            # print("elbow_flex_joint:", self.elbow_flex_joint_range, elbow_flex_joint_pos)
-            # print("forearm_roll_joint:", self.forearm_roll_joint_range, forearm_roll_joint_pos)
-            # print("wrist_flex_joint:", self.wrist_flex_joint_range, wrist_flex_joint_pos)
-            # print("wrist_roll_joint:", self.wrist_roll_joint_range, wrist_roll_joint_pos)
+                    qpos = {
+                        "robot0:torso_lift_joint": torso_lift_joint_pos,
+                        "robot0:shoulder_pan_joint": shoulder_pan_joint_pos,
+                        "robot0:shoulder_lift_joint": shoulder_lift_joint_pos,
+                        "robot0:upperarm_roll_joint": upperarm_roll_joint_pos,
+                        "robot0:elbow_flex_joint": elbow_flex_joint_pos,
+                        "robot0:forearm_roll_joint": forearm_roll_joint_pos,
+                        "robot0:wrist_flex_joint": wrist_flex_joint_pos,
+                        "robot0:wrist_roll_joint": wrist_roll_joint_pos,
+                    }
 
-            if not reachable:
+                else:
 
-                qpos = {}
+                    print("goal {} not reachable".format(str(goal)))
 
-                print("goal {} not reachable".format(str(goal)))
-
-            return qpos, reachable
+        return qpos, reachable
 
     def test(self):
 

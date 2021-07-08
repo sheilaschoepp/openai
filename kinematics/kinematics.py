@@ -29,8 +29,8 @@ class Kinematics:
             anaconda_path = os.getenv("HOME") + "/anaconda3"
 
         self.model_xml = None
-        # if self.env_name == "FetchReach-v1":
-        #     self.model_xml = anaconda_path + "/envs/openai2/lib/python3.9/site-packages/gym/envs/robotics/assets/fetch/reach.xml"  # TODO fix this
+        if self.env_name == "FetchReach-v1":
+            self.model_xml = anaconda_path + "/envs/openai/lib/python3.9/site-packages/gym/envs/robotics/assets/fetch/reach.xml"
         if self.env_name == "FetchReachEnv-v0":
             self.model_xml = str(Path.home()) + "/Documents/openai/custom_gym_envs/envs/fetchreach/FetchReachEnv_v0_Normal/assets/fetch/reach.xml"
         elif self.env_name == "FetchReachEnv-v1":
@@ -178,7 +178,17 @@ class Kinematics:
 
         return qpos, reachable
 
-    def test(self):
+    def test_accuracy(self):
+        """
+        Test the accuracy of the kinematics.
+
+        Note:
+        - Sample goal.
+        - Use inverse kinematics to obtain joint positions to reach goal.
+        - Apply joint positions to robot and step to reach the positions.
+        - Get the position of the robot's end effector.
+        - Confirm sampled goal and robot's end effector position are similar.
+        """
 
         print(self.line)
 
@@ -209,11 +219,12 @@ class Kinematics:
 
 if __name__ == "__main__":
 
-    env_name = "FetchReachEnv-v999"
+    env_name = "FetchReach-v1"
+    # env_name = "FetchReachEnv-v999"
 
     k = Kinematics(env_name)
     # k.check_reachable([1.34183265, 0.74910039, 0.53472272])  # starting position in FetchReach-v1
     # k.check_reachable([100, 100, 100])  # not reachable (impossible)
     # k.check_reachable([0, 0, 0.39])  # in table
-    k.test()
+    k.test_accuracy()
 

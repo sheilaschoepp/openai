@@ -152,7 +152,7 @@ class Kinematics:
 
             if result.success:
 
-                # not included: upperarm_roll_joint, forearm_roll_joint, wrist_roll_joint
+                # not included: upperarm_roll_joint, forearm_roll_joint, wrist_roll_joint (these have full ROM)
                 torso_lift_joint_inrange = self.torso_lift_joint_range[0] < torso_lift_joint_pos < self.torso_lift_joint_range[1]
                 shoulder_pan_joint_inrange = self.shoulder_pan_joint_range[0] < shoulder_pan_joint_pos < self.shoulder_pan_joint_range[1]
                 shoulder_lift_joint_inrange = self.shoulder_lift_joint_range[0] < shoulder_lift_joint_pos < self.shoulder_lift_joint_range[1]
@@ -186,6 +186,8 @@ class Kinematics:
                     print("forearm_roll_joint:", self.forearm_roll_joint_range, forearm_roll_joint_pos, "inrange: N/A")
                     print("wrist_flex_joint:", self.wrist_flex_joint_range, wrist_flex_joint_pos, "inrange:", wrist_flex_joint_inrange)
                     print("wrist_roll_joint:", self.wrist_roll_joint_range, wrist_roll_joint_pos, "inrange: N/A")
+
+                    print(self.line)
 
         return qpos, reachable
 
@@ -272,7 +274,7 @@ class Kinematics:
 if __name__ == "__main__":
 
     # env_name = "FetchReach-v1"
-    env_name = "FetchReachEnv-v999"
+    env_name = "FetchReachEnv-v2"
 
     k = Kinematics(env_name)
     # k.check_reachable([1.34183265, 0.74910039, 0.53472272])  # starting position in FetchReach-v1

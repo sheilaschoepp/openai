@@ -1,12 +1,21 @@
+import argparse
 import os
 import xml.etree.ElementTree as ET
 from pathlib import Path
+
 import gym
-import custom_gym_envs
 import numpy as np
 from dm_control import mujoco
-from dm_control.mujoco.testing import assets
 from dm_control.utils import inverse_kinematics as ik
+
+import custom_gym_envs
+
+parser = argparse.ArgumentParser(description="HPS Arguments")
+
+parser.add_argument("-d", "--debug", default=False, action="store_true",
+                    help="if True, debug mode with print statements (default: False)")
+
+args = parser.parse_args()
 
 
 class Kinematics:
@@ -97,7 +106,8 @@ class Kinematics:
 
         if goal[2] < self.min_z:
 
-            print("goal {} in table".format(str(goal)))
+            if args.dubug:
+                print("{} in table".format(str(goal)))
 
         else:
 
@@ -176,18 +186,18 @@ class Kinematics:
 
                 else:
 
-                    print("goal {} not reachable".format(str(goal)))
+                    if args.debug:
 
-                    print("torso_lift_joint:", self.torso_lift_joint_range, torso_lift_joint_pos, "inrange:", torso_lift_joint_inrange)
-                    print("shoulder_pan_joint:", self.shoulder_pan_joint_range, shoulder_pan_joint_pos, "inrange:", shoulder_pan_joint_inrange)
-                    print("shoulder_lift_joint:", self.shoulder_lift_joint_range, shoulder_lift_joint_pos, "inrange:", shoulder_lift_joint_inrange)
-                    print("upperarm_roll_joint:", self.upperarm_roll_joint_range, upperarm_roll_joint_pos, "inrange: N/A")
-                    print("elbow_flex_joint:", self.elbow_flex_joint_range, elbow_flex_joint_pos, "inrange:", elbow_flex_joint_inrange)
-                    print("forearm_roll_joint:", self.forearm_roll_joint_range, forearm_roll_joint_pos, "inrange: N/A")
-                    print("wrist_flex_joint:", self.wrist_flex_joint_range, wrist_flex_joint_pos, "inrange:", wrist_flex_joint_inrange)
-                    print("wrist_roll_joint:", self.wrist_roll_joint_range, wrist_roll_joint_pos, "inrange: N/A")
+                        print("{} not reachable".format(str(goal)))
 
-                    print(self.line)
+                        # print("torso_lift_joint:", self.torso_lift_joint_range, torso_lift_joint_pos, "inrange:", torso_lift_joint_inrange)
+                        # print("shoulder_pan_joint:", self.shoulder_pan_joint_range, shoulder_pan_joint_pos, "inrange:", shoulder_pan_joint_inrange)
+                        # print("shoulder_lift_joint:", self.shoulder_lift_joint_range, shoulder_lift_joint_pos, "inrange:", shoulder_lift_joint_inrange)
+                        # print("upperarm_roll_joint:", self.upperarm_roll_joint_range, upperarm_roll_joint_pos, "inrange: N/A")
+                        # print("elbow_flex_joint:", self.elbow_flex_joint_range, elbow_flex_joint_pos, "inrange:", elbow_flex_joint_inrange)
+                        # print("forearm_roll_joint:", self.forearm_roll_joint_range, forearm_roll_joint_pos, "inrange: N/A")
+                        # print("wrist_flex_joint:", self.wrist_flex_joint_range, wrist_flex_joint_pos, "inrange:", wrist_flex_joint_inrange)
+                        # print("wrist_roll_joint:", self.wrist_roll_joint_range, wrist_roll_joint_pos, "inrange: N/A")
 
         return qpos, reachable
 
@@ -229,9 +239,17 @@ class Kinematics:
 
             print(self.line)
 
-    def test_taskspace(self):
+    def test_task_space(self):
+        """
+        Test to see if goals within the goal space are reachable.
 
-        print(self.line)
+        Note: Use inverse kinematics to compute the required joint positions to reach a target position (goal).
+        Check: If a goal is deemed unreachable, send a command to the robot to reach the unreachable goal.
+        If working correctly, the gripper xpos will never reach target position (goal).
+        """
+
+        if args.debug:
+            print(self.line)
 
         env = gym.make(self.env_name)
         env.reset()
@@ -239,11 +257,10 @@ class Kinematics:
         reachable_points = []
         unreachable_points = []
 
-        bins = 10
-        accuracy = 0.005  # radians
-
         initial_gripper_pos = np.array([1.34183226, 0.74910038, 0.53472284])
         target_range = 0.15
+
+        bins = 10  # number of x, y and z values to test from within the goal space
 
         for x in np.linspace(initial_gripper_pos[0] - target_range, initial_gripper_pos[0] + target_range, bins):
             for y in np.linspace(initial_gripper_pos[1] - target_range, initial_gripper_pos[1] + target_range, bins):
@@ -255,20 +272,25 @@ class Kinematics:
                     else:
                         unreachable_points.append(point)
 
+                        # set target position (goal) and orientation of the gripper
                         gripper_target = np.array(point)
                         gripper_rotation = np.array([1., 0., 1., 0.])
                         env.sim.data.set_mocap_pos('robot0:mocap', gripper_target)
                         env.sim.data.set_mocap_quat('robot0:mocap', gripper_rotation)
+                        # perform simulation steps
                         for _ in range(20):
                             env.sim.step()
+                        # get gripper position to compare to target postion (goal)
                         xpos = env.sim.data.get_site_xpos('robot0:grip')
-                        print(xpos, "xpos after setting gripper position/orientation and simulation steps")
-                        print(self.line)
+                        if args.debug:
+                            print(xpos, "xpos after setting gripper position/orientation and simulation steps")
+                            print(self.line)
 
         print("num reachable:", len(reachable_points), "/", bins**3)
         print("num unreachable:", len(unreachable_points), "/", bins**3)
 
-        np.save("{}_reachable_points_.npy".format(self.env_name), reachable_points)
+        np.save("{}_reachable_points_{}.npy".format(self.env_name, bins), reachable_points)
+        np.save("{}_unreachable_points_{}.npy".format(self.env_name, bins), unreachable_points)
 
 
 if __name__ == "__main__":
@@ -281,4 +303,4 @@ if __name__ == "__main__":
     # k.check_reachable([100, 100, 100])  # not reachable (impossible)
     # k.check_reachable([0, 0, 0.39])  # in table
     # k.test_accuracy()
-    k.test_taskspace()
+    k.test_task_space()

@@ -371,7 +371,7 @@ def workspace_points():
     data_directory = os.getcwd() + "/data/{}".format(args.env_name)
     os.makedirs(data_directory, exist_ok=True)
 
-    np.save(data_directory + "/{}_points_{}_{}.npy".format(args.env_name, LVL_1, LVL_2), points)
+    np.save(data_directory + "/{}_points_lvl1:{}_lvl2:{}.npy".format(args.env_name, LVL_1, LVL_2), points)
 
     return points
 

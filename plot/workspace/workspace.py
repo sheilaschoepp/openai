@@ -441,7 +441,7 @@ def plot(points):
     ax.set_ylabel("y")
     ax.set_zlabel("z")
 
-    plt.savefig(plot_directory + "/{}_workspace_{}_{}.jpg".format(args.env_name, LVL_1, LVL_2))
+    plt.savefig(plot_directory + "/{}_workspace_lvl1:{}_lvl2{}.jpg".format(args.env_name, LVL_1, LVL_2))
 
 
 if __name__ == "__main__":

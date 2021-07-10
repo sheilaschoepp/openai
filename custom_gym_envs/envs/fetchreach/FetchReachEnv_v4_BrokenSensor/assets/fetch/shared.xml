@@ -61,10 +61,6 @@
             <default class="robot0:blue">
                 <geom rgba="0.086 0.506 0.767 1.0"></geom>
             </default>
-            <default class="robot0:red">
-                <geom rgba="1 0 0 1.0"></geom>
-            </default>
-
         </default>
     </default>
 </mujoco>

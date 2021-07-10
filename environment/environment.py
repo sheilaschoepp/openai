@@ -10,6 +10,7 @@ from environment.fetchreach_observation_wrapper import FetchReachObservationWrap
 
 class Environment(BaseEnvironment):
     """
+    print(state)
     OpenAI environment.
 
     The environment class implements the dynamics of the task and generates the observations and rewards.  -Brian Tanner & Adam White

@@ -154,12 +154,13 @@ model = load_model_from_path(model_xml)
 sim = MjSim(model)
 
 num_points = torso_lift_joint_angles.shape[0] * \
-             head_pan_joint_angles.shape[0] * \
-             head_tilt_joint_angles.shape[0] * \
              shoulder_pan_joint_angles.shape[0] * \
              shoulder_lift_joint_angles.shape[0] * \
+             upperarm_roll_joint_angles.shape[0] * \
              elbow_flex_joint_angles.shape[0] * \
-             wrist_flex_joint_angles.shape[0]
+             forearm_roll_joint_angles.shape[0] * \
+             wrist_flex_joint_angles.shape[0] * \
+             wrist_roll_joint_angles.shape[0]
 
 
 def test():
@@ -270,7 +271,7 @@ def test():
         test_points.append(point)
 
     test_points = []
-    
+
     for r in wrist_roll_joint_angles:  # result: does affect robot0:grip position (although it is not apparent in the points list)
         sim.data.set_joint_qpos("robot0:wrist_roll_joint", r)
 
@@ -303,9 +304,6 @@ def test():
         test_points.append(point)
 
     test_points = []
-
-
-# test()
 
 
 def workspace_points():
@@ -346,25 +344,25 @@ def workspace_points():
 
                         for o in elbow_flex_joint_angles:
                             sim.data.set_joint_qpos("robot0:elbow_flex_joint", o)
-                            
+
                             for p in forearm_roll_joint_angles:
                                 sim.data.set_joint_qpos("robot0:forearm_roll_joint", p)
-                                
+
                                 for q in wrist_flex_joint_angles:
                                     sim.data.set_joint_qpos("robot0:wrist_flex_joint", q)
-                                    
+
                                     for r in wrist_roll_joint_angles:
                                         sim.data.set_joint_qpos("robot0:wrist_roll_joint", r)
 
                                         functions.mj_kinematics(model, sim.data)
                                         functions.mj_forward(model, sim.data)
-            
+
                                         point = sim.data.get_site_xpos("robot0:grip").copy()  # must use copy here; otherwise all points in list are same
                                         points.append(point)
-            
+
                                         pbar.update(1)
 
-            points = list(np.unique(points, axis=0))
+                points = list(np.unique(points, axis=0))
 
     print("points", len(points))
 
@@ -447,6 +445,8 @@ def plot(points):
 
 
 if __name__ == "__main__":
+
+    # test()
 
     wp = workspace_points()
     plot(wp)

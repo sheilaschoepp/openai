@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+modifications:
+changed the table geom element, size attribute from 0.25 0.35 0.2 to 0.25 0.35 0.16
+-->
 <mujoco>
 	<compiler angle="radian" coordinate="local" meshdir="../stls/fetch" texturedir="../textures"></compiler>
 	<option timestep="0.002">

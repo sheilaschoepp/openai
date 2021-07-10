@@ -190,24 +190,26 @@ class Kinematics:
 
             else:
 
-                print("{} not reachable".format(str(goal)))
+                # print("{} not reachable".format(str(goal)))
 
-                if not torso_lift_joint_inrange:
-                    print("torso_lift_joint_range:", self.torso_lift_joint_range, "position:", torso_lift_joint_pos)
-                if not shoulder_pan_joint_inrange:
-                    print("shoulder_pan_joint_range:", self.shoulder_pan_joint_range, "position:", shoulder_pan_joint_pos)
-                if not shoulder_lift_joint_inrange:
-                    print("shoulder_lift_joint_range:", self.shoulder_lift_joint_range, "position:", shoulder_lift_joint_pos)
-                if not upperarm_roll_joint_inrange:
-                    print("upperarm_roll_joint_range:", self.upperarm_roll_joint_range, "position:", upperarm_roll_joint_pos)
-                if not elbow_flex_joint_inrange:
-                    print("elbow_flex_joint_range:", self.elbow_flex_joint_range, "position:", elbow_flex_joint_pos)
-                if not forearm_roll_joint_inrange:
-                    print("forearm_roll_joint_range:", self.forearm_roll_joint_range, "position:", forearm_roll_joint_pos)
-                if not wrist_flex_joint_inrange:
-                    print("wrist_flex_joint_range:", self.wrist_flex_joint_range, "position:", wrist_flex_joint_pos)
-                if not wrist_roll_joint_inrange:
-                    print("wrist_roll_joint_range:", self.wrist_roll_joint_range, "position:", wrist_roll_joint_pos)
+                # if not torso_lift_joint_inrange:
+                #     print("torso_lift_joint_range:", self.torso_lift_joint_range, "position:", torso_lift_joint_pos)
+                # if not shoulder_pan_joint_inrange:
+                #     print("shoulder_pan_joint_range:", self.shoulder_pan_joint_range, "position:", shoulder_pan_joint_pos)
+                # if not shoulder_lift_joint_inrange:
+                #     print("shoulder_lift_joint_range:", self.shoulder_lift_joint_range, "position:", shoulder_lift_joint_pos)
+                # if not upperarm_roll_joint_inrange:
+                #     print("upperarm_roll_joint_range:", self.upperarm_roll_joint_range, "position:", upperarm_roll_joint_pos)
+                # if not elbow_flex_joint_inrange:
+                #     print("elbow_flex_joint_range:", self.elbow_flex_joint_range, "position:", elbow_flex_joint_pos)
+                # if not forearm_roll_joint_inrange:
+                #     print("forearm_roll_joint_range:", self.forearm_roll_joint_range, "position:", forearm_roll_joint_pos)
+                # if not wrist_flex_joint_inrange:
+                #     print("wrist_flex_joint_range:", self.wrist_flex_joint_range, "position:", wrist_flex_joint_pos)
+                # if not wrist_roll_joint_inrange:
+                #     print("wrist_roll_joint_range:", self.wrist_roll_joint_range, "position:", wrist_roll_joint_pos)
+
+                pass
 
         return qpos, reachable
 
@@ -258,7 +260,7 @@ class Kinematics:
         If working correctly, the gripper xpos will never reach target position (goal).
         """
 
-        print(self.line)
+        # print(self.line)
 
         env = gym.make(self.env_name)
         env.reset()
@@ -271,7 +273,7 @@ class Kinematics:
 
         bins = 10  # number of x, y and z values to test from within the goal space
 
-        num_success = 0
+        num_false_negatives = 0
 
         for x in np.linspace(initial_gripper_pos[0] - target_range, initial_gripper_pos[0] + target_range, bins):
             for y in np.linspace(initial_gripper_pos[1] - target_range, initial_gripper_pos[1] + target_range, bins):
@@ -294,21 +296,21 @@ class Kinematics:
                         # get gripper position to compare to target postion (goal)
                         xpos = env.sim.data.get_site_xpos('robot0:grip')
 
-                        print(xpos, "xpos after setting gripper position/orientation and simulation steps")
+                        # print(xpos, "xpos after setting gripper position/orientation and simulation steps")
 
                         d = np.linalg.norm(xpos - point, axis=-1)  # euclidean distance
-                        success = d < env.distance_threshold
-                        print("success:", success)
+                        false_negative = d < env.distance_threshold
+                        # print("false negative:", false_negative)
 
-                        if success:
-                            num_success += 1
+                        if false_negative:
+                            num_false_negatives += 1
 
-                        print(self.line)
+                        # print(self.line)
 
         print("num reachable:", len(reachable_points), "/", bins**3)
         print("num unreachable:", len(unreachable_points), "/", bins**3)
 
-        print("false negatives (successes):", str(num_success), "/", len(unreachable_points))
+        print("false negatives:", str(num_false_negatives), "/", len(unreachable_points))
 
         # np.save("{}_reachable_points_{}.npy".format(self.env_name, bins), reachable_points)
         # np.save("{}_unreachable_points_{}.npy".format(self.env_name, bins), unreachable_points)
@@ -317,7 +319,7 @@ class Kinematics:
 if __name__ == "__main__":
 
     # env_name = "FetchReach-v1"
-    env_name = "FetchReachEnv-v999"
+    env_name = "FetchReachEnv-v2"
 
     k = Kinematics(env_name)
     # k.check_reachable([1.34183265, 0.74910039, 0.53472272])  # starting position in FetchReach-v1

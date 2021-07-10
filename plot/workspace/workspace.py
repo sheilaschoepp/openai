@@ -51,6 +51,8 @@ elif args.env_name == "FetchReachEnv-v3":
     model_xml = home_dir + "/Documents/openai/custom_gym_envs/envs/fetchreach/FetchReachEnv_v3_BrokenWristFlexJoint/assets/fetch/reach.xml"
 elif args.env_name == "FetchReachEnv-v4":
     model_xml = home_dir + "/Documents/openai/custom_gym_envs/envs/fetchreach/FetchReachEnv_v4_BrokenGrip/assets/fetch/reach.xml"
+elif args.env_name == "FetchReachEnv-v999":
+    model_xml = home_dir + "/Documents/openai/custom_gym_envs/envs/fetchreach/FetchReachEnv_TEST/assets/fetch/reach.xml"
 
 robot_xml = model_xml[:-9] + "robot.xml"
 tree = ET.parse(robot_xml)

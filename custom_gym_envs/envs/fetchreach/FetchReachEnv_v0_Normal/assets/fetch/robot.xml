@@ -57,8 +57,6 @@
 							<inertial diaginertia="0.0086 0.0084 0.002" mass="2.1299" pos="0.1279 0.0073 0" quat="0.4332 0.4332 0.5589 0.5589"></inertial>
 							<joint axis="0 1 0" name="robot0:elbow_flex_joint" range="-2.251 2.251"></joint>
 							<geom mesh="robot0:elbow_flex_link" name="robot0:elbow_flex_link" material="robot0:arm_mat" class="robot0:blue"></geom>
-<!--							<joint axis="0 1 0" name="robot0:elbow_flex_joint" range="-0.251 0.251" limited="true"></joint>-->
-<!--							<geom mesh="robot0:elbow_flex_link" name="robot0:elbow_flex_link" material="robot0:arm_mat" class="robot0:red"></geom>-->
 							<body name="robot0:forearm_roll_link" pos="0.197 0 0">
 								<inertial diaginertia="0.0035 0.0031 0.0015" mass="1.6563" pos="0.1097 -0.0266 0" quat="-0.0715 0.7035 0.0715 0.7035"></inertial>
 								<joint armature="2.7538" axis="1 0 0" damping="3.5247" frictionloss="0" limited="false" name="robot0:forearm_roll_joint" stiffness="10"></joint>
@@ -94,7 +92,6 @@
 												<inertial diaginertia="0.1 0.1 0.1" mass="4" pos="-0.01 0 0"></inertial>
 												<joint axis="0 -1 0" name="robot0:l_gripper_finger_joint" range="0 0.05"></joint>
 												<geom pos="0 0.008 0" size="0.0385 0.007 0.0135" type="box" name="robot0:l_gripper_finger_link" material="robot0:gripper_finger_mat" condim="4" friction="1 0.05 0.01"></geom>
-<!--												<geom pos="-0.02 0.008 0" size="0.0185 0.007 0.0135" type="box" name="robot0:l_gripper_finger_link" material="robot0:gripper_finger_mat" condim="4" friction="1 0.05 0.01" class="robot0:red"></geom>-->
 											</body>
 											<site name="robot0:grip" pos="0.02 0 0" rgba="0 0 0 0" size="0.02 0.02 0.02"></site>
 										</body>

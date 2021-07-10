@@ -21,8 +21,8 @@ args = parser.parse_args()
 # accuracy level
 # pan motion is given a higher accuracy than lift/flex motions
 
-LVL_1 = 5
-LVL_2 = 10
+LVL_1 = 20
+LVL_2 = 20
 
 ACCURACY_LVL_1 = np.radians(LVL_1)  # radians
 ACCURACY_LVL_2 = np.radians(LVL_2)  # radians
@@ -441,7 +441,7 @@ def plot(points):
     ax.set_ylabel("y")
     ax.set_zlabel("z")
 
-    plt.savefig(plot_directory + "/{}_workspace_{}_{}.jpg".format(args.env_name, LVL_1, LVL_2))
+    plt.savefig(plot_directory + "/{}_workspace_lvl1:{}_lvl2{}.jpg".format(args.env_name, LVL_1, LVL_2))
 
 
 if __name__ == "__main__":

@@ -251,7 +251,7 @@ class Kinematics:
 
         bins = 10  # number of x, y and z values to test from within the goal space
 
-        successes = 0
+        num_success = 0
 
         for x in np.linspace(initial_gripper_pos[0] - target_range, initial_gripper_pos[0] + target_range, bins):
             for y in np.linspace(initial_gripper_pos[1] - target_range, initial_gripper_pos[1] + target_range, bins):
@@ -276,20 +276,19 @@ class Kinematics:
 
                         print(xpos, "xpos after setting gripper position/orientation and simulation steps")
 
-                        distance_threshold = 0.05
                         d = np.linalg.norm(xpos - point, axis=-1)  # euclidean distance
-                        success = d < distance_threshold
+                        success = d < env.distance_threshold
                         print("success:", success)
 
                         if success:
-                            successes += 1
+                            num_success += 1
 
                         print(self.line)
 
         print("num reachable:", len(reachable_points), "/", bins**3)
         print("num unreachable:", len(unreachable_points), "/", bins**3)
 
-        print("false negatives (successes):", str(successes), "/", len(unreachable_points))
+        print("false negatives (successes):", str(num_success), "/", len(unreachable_points))
 
         # np.save("{}_reachable_points_{}.npy".format(self.env_name, bins), reachable_points)
         # np.save("{}_unreachable_points_{}.npy".format(self.env_name, bins), unreachable_points)
@@ -298,7 +297,7 @@ class Kinematics:
 if __name__ == "__main__":
 
     # env_name = "FetchReach-v1"
-    env_name = "FetchReachEnv-v2"
+    env_name = "FetchReachEnv-v999"
 
     k = Kinematics(env_name)
     # k.check_reachable([1.34183265, 0.74910039, 0.53472272])  # starting position in FetchReach-v1

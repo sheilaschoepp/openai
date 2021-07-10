@@ -39,7 +39,7 @@ echo 'SAC_N_CONTROLLER_ABSOLUTE_PATH="/home/sschoepp/Documents/openai/controller
 
 echo 'PPO_N_CONTROLLER_ABSOLUTE_PATH="/home/sschoepp/Documents/openai/controllers/ppov2/ppov2_n_controller.py"' > melco2.sh
 
-for i in {10..29}
+for i in {0..29}
 do
   echo 'tmux new-session -d -s ppo61'$i' "python $PPO_N_CONTROLLER_ABSOLUTE_PATH -lrd -s '$i' -ps -pss 33 --resumable"' >> melco2.sh
 done

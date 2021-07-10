@@ -2,7 +2,7 @@
 data/**
 
 # ingore workspace data points
-**/points.npy
+**/plot/workspace/data/*
 
 **/*.dat
 

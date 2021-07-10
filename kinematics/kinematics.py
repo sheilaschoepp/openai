@@ -72,11 +72,9 @@ class Kinematics:
             elif name == "robot0:l_gripper_finger_joint":
                 self.l_gripper_finger_joint_range = np.array(attrib.get("range").split(" "), dtype=float)
 
-        self.upperarm_roll_joint_range = np.array([-np.pi, np.pi])
-        self.forearm_roll_joint_range = np.array([-np.pi, np.pi])
-        self.wrist_roll_joint_range = np.array([-np.pi, np.pi])
-
-        self.min_z = 0.42  # z less than this will result in a goal being in the table
+        self.upperarm_roll_joint_range = np.array([-np.inf, np.inf])
+        self.forearm_roll_joint_range = np.array([-np.inf, np.inf])
+        self.wrist_roll_joint_range = np.array([-np.inf, np.inf])
 
         self.line = "------------------------------------------------------------------------------------------------"
 
@@ -97,97 +95,108 @@ class Kinematics:
         qpos = {}
         reachable = False
 
-        if goal[2] < self.min_z:
+        physics = mujoco.Physics.from_xml_path(self.model_xml)
+        site_name = "robot0:grip"
+        target_pos = np.array(goal)
+        target_quat = np.array([1., 0., 1., 0.])  # in fetch_env._env_setup and fetch_env._set_action they always set the orientation to a static value
+        joint_names = None  # all joints will be manipulated to reach the target position and quaternion
 
-            print("{} in table".format(str(goal)))
+        result = ik.qpos_from_site_pose(physics=physics,
+                                        site_name=site_name,
+                                        target_pos=target_pos,
+                                        target_quat=target_quat,
+                                        joint_names=joint_names)
 
-        else:
+        # At runtime the positions and orientations of all joints defined in the model are stored in the vector mjData.qpos,
+        # in the order in which the appear in the kinematic tree (source: http://www.mujoco.org/book/XMLreference.html#joint)
+        # 0: robot0:slide0
+        # N/A
+        # 1: robot0:slide1
+        # N/A
+        # 2: robot0:slide2
+        # N/A
 
-            physics = mujoco.Physics.from_xml_path(self.model_xml)
-            site_name = "robot0:grip"
-            target_pos = np.array(goal)
-            target_quat = np.array([1., 0., 1., 0.])  # in fetch_env._env_setup and fetch_env._set_action they always set the orientation to a static value
-            joint_names = None  # all joints will be manipulated to reach the target position and quaternion
+        # 3: robot0:torso_lift_joint
+        torso_lift_joint_pos = result.qpos[3]
 
-            result = ik.qpos_from_site_pose(physics=physics,
-                                            site_name=site_name,
-                                            target_pos=target_pos,
-                                            target_quat=target_quat,
-                                            joint_names=joint_names)
+        # 4: robot0:head_pan_joint
+        # head_pan_joint_pos = result.qpos[4]
+        # 5: robot0:head_tilt_joint
+        # head_tilt_joint_pos = result.qpos[5]
 
-            # At runtime the positions and orientations of all joints defined in the model are stored in the vector mjData.qpos,
-            # in the order in which the appear in the kinematic tree (source: http://www.mujoco.org/book/XMLreference.html#joint)
-            # 0: robot0:slide0
-            # N/A
-            # 1: robot0:slide1
-            # N/A
-            # 2: robot0:slide2
-            # N/A
+        # 6: robot0:shoulder_pan_joint
+        shoulder_pan_joint_pos = result.qpos[6]
+        # 7: robot0:shoulder_lift_joint
+        shoulder_lift_joint_pos = result.qpos[7]
+        # 8: robot0:upperarm_roll_joint
+        upperarm_roll_joint_pos = result.qpos[8]
+        # 9: robot0:elbow_flex_joint
+        elbow_flex_joint_pos = result.qpos[9]
+        # 10: robot0:forearm_roll_joint
+        forearm_roll_joint_pos = result.qpos[10]
+        # 11: robot0:wrist_flex_joint
+        wrist_flex_joint_pos = result.qpos[11]
+        # 12: robot0:wrist_roll_joint
+        wrist_roll_joint_pos = result.qpos[12]
 
-            # 3: robot0:torso_lift_joint
-            torso_lift_joint_pos = result.qpos[3]
+        # 13: robot0:r_gripper_finger_joint
+        # r_gripper_finger_joint_pos = result.qpos[13]
+        # 14: robot0:l_gripper_finger_joint
+        # l_gripper_finger_joint_pos = result.qpos[14]
 
-            # 4: robot0:head_pan_joint
-            # N/A
-            # 5: robot0:head_tilt_joint
-            # N/A
+        if result.success:
 
-            # 6: robot0:shoulder_pan_joint
-            shoulder_pan_joint_pos = result.qpos[6]
-            # 7: robot0:shoulder_lift_joint
-            shoulder_lift_joint_pos = result.qpos[7]
-            # 8: robot0:upperarm_roll_joint
-            upperarm_roll_joint_pos = result.qpos[8]
-            # 9: robot0:elbow_flex_joint
-            elbow_flex_joint_pos = result.qpos[9]
-            # 10: robot0:forearm_roll_joint
-            forearm_roll_joint_pos = result.qpos[10]
-            # 11: robot0:wrist_flex_joint
-            wrist_flex_joint_pos = result.qpos[11]
-            # 12: robot0:wrist_roll_joint
-            wrist_roll_joint_pos = result.qpos[12]
+            torso_lift_joint_inrange = self.torso_lift_joint_range[0] < torso_lift_joint_pos < self.torso_lift_joint_range[1]
+            shoulder_pan_joint_inrange = self.shoulder_pan_joint_range[0] < shoulder_pan_joint_pos < self.shoulder_pan_joint_range[1]
+            shoulder_lift_joint_inrange = self.shoulder_lift_joint_range[0] < shoulder_lift_joint_pos < self.shoulder_lift_joint_range[1]
+            upperarm_roll_joint_inrange = self.upperarm_roll_joint_range[0] < upperarm_roll_joint_pos < self.upperarm_roll_joint_range[1]
+            elbow_flex_joint_inrange = self.elbow_flex_joint_range[0] < elbow_flex_joint_pos < self.elbow_flex_joint_range[1]
+            forearm_roll_joint_inrange = self.forearm_roll_joint_range[0] < forearm_roll_joint_pos < self.forearm_roll_joint_range[1]
+            wrist_flex_joint_inrange = self.wrist_flex_joint_range[0] < wrist_flex_joint_pos < self.wrist_flex_joint_range[1]
+            wrist_roll_joint_inrange = self.wrist_roll_joint_range[0] < wrist_roll_joint_pos < self.wrist_roll_joint_range[1]
 
-            # 13: robot0:r_gripper_finger_joint
-            # N/A
-            # 14: robot0:l_gripper_finger_joint
-            # N/A
+            reachable = torso_lift_joint_inrange and \
+                        shoulder_pan_joint_inrange and \
+                        shoulder_lift_joint_inrange and \
+                        upperarm_roll_joint_inrange and \
+                        elbow_flex_joint_inrange and \
+                        forearm_roll_joint_inrange and \
+                        wrist_flex_joint_inrange and \
+                        wrist_roll_joint_inrange
 
-            if result.success:
+            if reachable:
 
-                # not included: upperarm_roll_joint, forearm_roll_joint, wrist_roll_joint (these have full ROM)
-                torso_lift_joint_inrange = self.torso_lift_joint_range[0] < torso_lift_joint_pos < self.torso_lift_joint_range[1]
-                shoulder_pan_joint_inrange = self.shoulder_pan_joint_range[0] < shoulder_pan_joint_pos < self.shoulder_pan_joint_range[1]
-                shoulder_lift_joint_inrange = self.shoulder_lift_joint_range[0] < shoulder_lift_joint_pos < self.shoulder_lift_joint_range[1]
-                elbow_flex_joint_inrange = self.elbow_flex_joint_range[0] < elbow_flex_joint_pos < self.elbow_flex_joint_range[1]
-                wrist_flex_joint_inrange = self.wrist_flex_joint_range[0] < wrist_flex_joint_pos < self.wrist_flex_joint_range[1]
+                qpos = {
+                    "robot0:torso_lift_joint": torso_lift_joint_pos,
+                    "robot0:shoulder_pan_joint": shoulder_pan_joint_pos,
+                    "robot0:shoulder_lift_joint": shoulder_lift_joint_pos,
+                    "robot0:upperarm_roll_joint": upperarm_roll_joint_pos,
+                    "robot0:elbow_flex_joint": elbow_flex_joint_pos,
+                    "robot0:forearm_roll_joint": forearm_roll_joint_pos,
+                    "robot0:wrist_flex_joint": wrist_flex_joint_pos,
+                    "robot0:wrist_roll_joint": wrist_roll_joint_pos,
+                }
 
-                reachable = torso_lift_joint_inrange and shoulder_pan_joint_inrange and shoulder_lift_joint_inrange and elbow_flex_joint_inrange and wrist_flex_joint_inrange
+            else:
 
-                if reachable:
+                print("{} not reachable".format(str(goal)))
 
-                    qpos = {
-                        "robot0:torso_lift_joint": torso_lift_joint_pos,
-                        "robot0:shoulder_pan_joint": shoulder_pan_joint_pos,
-                        "robot0:shoulder_lift_joint": shoulder_lift_joint_pos,
-                        "robot0:upperarm_roll_joint": upperarm_roll_joint_pos,
-                        "robot0:elbow_flex_joint": elbow_flex_joint_pos,
-                        "robot0:forearm_roll_joint": forearm_roll_joint_pos,
-                        "robot0:wrist_flex_joint": wrist_flex_joint_pos,
-                        "robot0:wrist_roll_joint": wrist_roll_joint_pos,
-                    }
-
-                else:
-
-                    print("{} not reachable".format(str(goal)))
-
-                    # print("torso_lift_joint:", self.torso_lift_joint_range, torso_lift_joint_pos, "inrange:", torso_lift_joint_inrange)
-                    # print("shoulder_pan_joint:", self.shoulder_pan_joint_range, shoulder_pan_joint_pos, "inrange:", shoulder_pan_joint_inrange)
-                    # print("shoulder_lift_joint:", self.shoulder_lift_joint_range, shoulder_lift_joint_pos, "inrange:", shoulder_lift_joint_inrange)
-                    # print("upperarm_roll_joint:", self.upperarm_roll_joint_range, upperarm_roll_joint_pos, "inrange: N/A")
-                    # print("elbow_flex_joint:", self.elbow_flex_joint_range, elbow_flex_joint_pos, "inrange:", elbow_flex_joint_inrange)
-                    # print("forearm_roll_joint:", self.forearm_roll_joint_range, forearm_roll_joint_pos, "inrange: N/A")
-                    # print("wrist_flex_joint:", self.wrist_flex_joint_range, wrist_flex_joint_pos, "inrange:", wrist_flex_joint_inrange)
-                    # print("wrist_roll_joint:", self.wrist_roll_joint_range, wrist_roll_joint_pos, "inrange: N/A")
+                if not torso_lift_joint_inrange:
+                    print("torso_lift_joint_range:", self.torso_lift_joint_range, "position:", torso_lift_joint_pos)
+                if not shoulder_pan_joint_inrange:
+                    print("shoulder_pan_joint_range:", self.shoulder_pan_joint_range, "position:", shoulder_pan_joint_pos)
+                if not shoulder_lift_joint_inrange:
+                    print("shoulder_lift_joint_range:", self.shoulder_lift_joint_range, "position:", shoulder_lift_joint_pos)
+                if not upperarm_roll_joint_inrange:
+                    print("upperarm_roll_joint_range:", self.upperarm_roll_joint_range, "position:", upperarm_roll_joint_pos)
+                if not elbow_flex_joint_inrange:
+                    print("elbow_flex_joint_range:", self.elbow_flex_joint_range, "position:", elbow_flex_joint_pos)
+                if not forearm_roll_joint_inrange:
+                    print("forearm_roll_joint_range:", self.forearm_roll_joint_range, "position:", forearm_roll_joint_pos)
+                if not wrist_flex_joint_inrange:
+                    print("wrist_flex_joint_range:", self.wrist_flex_joint_range, "position:", wrist_flex_joint_pos)
+                if not wrist_roll_joint_inrange:
+                    print("wrist_roll_joint_range:", self.wrist_roll_joint_range, "position:", wrist_roll_joint_pos)
 
         return qpos, reachable
 
@@ -251,11 +260,11 @@ class Kinematics:
 
         bins = 10  # number of x, y and z values to test from within the goal space
 
-        successes = 0
+        num_success = 0
 
         for x in np.linspace(initial_gripper_pos[0] - target_range, initial_gripper_pos[0] + target_range, bins):
             for y in np.linspace(initial_gripper_pos[1] - target_range, initial_gripper_pos[1] + target_range, bins):
-                for z in np.linspace(max(initial_gripper_pos[2] - target_range, self.min_z), initial_gripper_pos[2] + target_range, bins):
+                for z in np.linspace(initial_gripper_pos[2] - target_range, initial_gripper_pos[2] + target_range, bins):
                     point = [x, y, z]
                     _, reachable = self.check_reachable(point)
                     if reachable:
@@ -276,20 +285,19 @@ class Kinematics:
 
                         print(xpos, "xpos after setting gripper position/orientation and simulation steps")
 
-                        distance_threshold = 0.05
                         d = np.linalg.norm(xpos - point, axis=-1)  # euclidean distance
-                        success = d < distance_threshold
+                        success = d < env.distance_threshold
                         print("success:", success)
 
                         if success:
-                            successes += 1
+                            num_success += 1
 
                         print(self.line)
 
         print("num reachable:", len(reachable_points), "/", bins**3)
         print("num unreachable:", len(unreachable_points), "/", bins**3)
 
-        print("false negatives (successes):", str(successes), "/", len(unreachable_points))
+        print("false negatives (successes):", str(num_success), "/", len(unreachable_points))
 
         # np.save("{}_reachable_points_{}.npy".format(self.env_name, bins), reachable_points)
         # np.save("{}_unreachable_points_{}.npy".format(self.env_name, bins), unreachable_points)
@@ -298,7 +306,7 @@ class Kinematics:
 if __name__ == "__main__":
 
     # env_name = "FetchReach-v1"
-    env_name = "FetchReachEnv-v2"
+    env_name = "FetchReachEnv-v999"
 
     k = Kinematics(env_name)
     # k.check_reachable([1.34183265, 0.74910039, 0.53472272])  # starting position in FetchReach-v1

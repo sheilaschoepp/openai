@@ -6,7 +6,7 @@ commented out (line 191) and added line (line 192) to set the gripper_initial_xp
 
 import numpy as np
 
-from custom_gym_envs.envs.fetchreach.FetchReachEnv_v4_BrokenGrip import robot_env, rotations, utils  # todo: changed from in import
+from custom_gym_envs.envs.fetchreach.FetchReachEnv_v0_Normal import robot_env, rotations, utils  # todo: changed from in import
 
 
 def goal_distance(goal_a, goal_b):

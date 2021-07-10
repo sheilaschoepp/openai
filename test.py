@@ -1,7 +1,7 @@
 import gym
 import custom_gym_envs
 import time
-env = gym.make("FetchReachEnv-v2")
+env = gym.make("FetchReachEnv-v999")
 # env = gym.make("FetchReachEnv-v1")
 
 # action space: Box(-1.0, 1.0, (4,), float32)

@@ -15,7 +15,7 @@ from mujoco_py.generated import const  # do not delete; may need in viewer_setup
 class AntEnvV2(mujoco_env.MujocoEnv, utils.EzPickle):  # todo: renamed to AntEnvV2
     def __init__(self):
         home = str(Path.home())
-        filepath = home + "/Documents/openai/custom_gym_envs/envs/ant/xml/AntEnv_v2_hip4rom.xml"  # todo: modified xml filepath
+        filepath = home + "/scratch/openai/custom_gym_envs/envs/ant/xml/AntEnv_v2_hip4rom.xml"  # todo: modified xml filepath
         mujoco_env.MujocoEnv.__init__(self, filepath, 5)
         utils.EzPickle.__init__(self)
 

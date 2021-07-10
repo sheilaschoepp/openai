@@ -14,4 +14,4 @@
 #SBATCH --mail-type=REQUEUE
 #SBATCH --mail-type=ALL
 
-parallel < sv1a.txt
+parallel < sac_v1a.txt

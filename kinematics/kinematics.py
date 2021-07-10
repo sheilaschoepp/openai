@@ -63,18 +63,29 @@ class Kinematics:
                 self.shoulder_pan_joint_range = np.array(attrib.get("range").split(" "), dtype=float)
             elif name == "robot0:shoulder_lift_joint":
                 self.shoulder_lift_joint_range = np.array(attrib.get("range").split(" "), dtype=float)
+            elif name == "robot0:upperarm_roll_joint":
+                if attrib.get("range") is not None:
+                    self.upperarm_roll_joint_range = np.array(attrib.get("range").split(" "), dtype=float)
+                else:
+                    self.upperarm_roll_joint_range = np.array([-np.inf, np.inf])
             elif name == "robot0:elbow_flex_joint":
                 self.elbow_flex_joint_range = np.array(attrib.get("range").split(" "), dtype=float)
+            elif name == "robot0:forearm_roll_joint":
+                if attrib.get("range") is not None:
+                    self.forearm_roll_joint_range = np.array(attrib.get("range").split(" "), dtype=float)
+                else:
+                    self.forearm_roll_joint_range = np.array([-np.inf, np.inf])
             elif name == "robot0:wrist_flex_joint":
                 self.wrist_flex_joint_range = np.array(attrib.get("range").split(" "), dtype=float)
+            elif name == "robot0:wrist_roll_joint":
+                if attrib.get("range") is not None:
+                    self.wrist_roll_joint_range = np.array(attrib.get("range").split(" "), dtype=float)
+                else:
+                    self.wrist_roll_joint_range = np.array([-np.inf, np.inf])
             elif name == "robot0:r_gripper_finger_joint":
                 self.r_gripper_finger_joint_range = np.array(attrib.get("range").split(" "), dtype=float)
             elif name == "robot0:l_gripper_finger_joint":
                 self.l_gripper_finger_joint_range = np.array(attrib.get("range").split(" "), dtype=float)
-
-        self.upperarm_roll_joint_range = np.array([-np.inf, np.inf])
-        self.forearm_roll_joint_range = np.array([-np.inf, np.inf])
-        self.wrist_roll_joint_range = np.array([-np.inf, np.inf])
 
         self.line = "------------------------------------------------------------------------------------------------"
 

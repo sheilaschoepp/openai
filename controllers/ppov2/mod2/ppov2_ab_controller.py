@@ -22,7 +22,7 @@ import torch
 from termcolor import colored
 
 import utils.plot_style_settings as pss
-from controllers.ppov2.ppov2_agent import PPOv2
+from controllers.ppov2.mod2.ppov2_agent import PPOv2
 from environment.environment import Environment
 from utils.rl_glue import RLGlue
 
@@ -130,6 +130,7 @@ class AbnormalController:
                  + "_" + self.parameters["n_env_name"] + ":" + str(self.parameters["n_time_steps"]) \
                  + "_lr:" + str(self.parameters["lr"]) \
                  + "_lrd:" + str(self.parameters["linear_lr_decay"]) \
+                 + "_slrd:" + str(self.parameters["slow_lrd"]) \
                  + "_g:" + str(self.parameters["gamma"]) \
                  + "_ns:" + str(self.parameters["num_samples"]) \
                  + "_mbs:" + str(self.parameters["mini_batch_size"]) \
@@ -221,6 +222,7 @@ class AbnormalController:
                            self.parameters["log_std"],
                            self.parameters["lr"],
                            self.parameters["linear_lr_decay"],
+                           self.parameters["slow_lrd"],
                            self.parameters["gamma"],
                            self.parameters["ab_time_steps"],
                            self.parameters["num_samples"],

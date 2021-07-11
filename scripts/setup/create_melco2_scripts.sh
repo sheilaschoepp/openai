@@ -1,4 +1,4 @@
-echo 'SAC_N_CONTROLLER_ABSOLUTE_PATH="/home/sschoepp/Documents/openai/controllers/sacv2/sacv2_n_controller.py"' > melco2.sh
+#echo 'SAC_N_CONTROLLER_ABSOLUTE_PATH="/home/sschoepp/Documents/openai/controllers/sacv2/sacv2_n_controller.py"' > melco2.sh
 
 #for i in 99
 #do
@@ -37,9 +37,24 @@ echo 'SAC_N_CONTROLLER_ABSOLUTE_PATH="/home/sschoepp/Documents/openai/controller
 #  echo 'tmux new-session -d -s sac61'$s' "CUDA_VISIBLE_DEVICES=1 python $SAC_N_CONTROLLER_ABSOLUTE_PATH --resume --resume_file $RESUME_FILE/seed'$s' -t 25000000"' >> melco2.sh
 #done
 
-echo 'PPO_N_CONTROLLER_ABSOLUTE_PATH="/home/sschoepp/Documents/openai/controllers/ppov2/ppov2_n_controller.py"' > melco2.sh
+echo 'PPO_N_CONTROLLER_ABSOLUTE_PATH="/home/sschoepp/Documents/openai/controllers/ppov2/mod2/ppov2_n_controller.py"' > melco2.sh
 
-for i in {0..29}
+for i in {0..9}
 do
-  echo 'tmux new-session -d -s ppo61'$i' "python $PPO_N_CONTROLLER_ABSOLUTE_PATH -lrd -s '$i' -ps -pss 33 --resumable"' >> melco2.sh
+  echo 'tmux new-session -d -s ppo33-25'$i' "python $PPO_N_CONTROLLER_ABSOLUTE_PATH -lrd -slrd 0.25 -s '$i' -t 600000000 -tef 3000000 -ps -pss 33 --resumable"' >> melco2.sh
+done
+
+for i in {0..9}
+do
+  echo 'tmux new-session -d -s ppo33-50'$i' "python $PPO_N_CONTROLLER_ABSOLUTE_PATH -lrd -slrd 0.50 -s '$i' -t 600000000 -tef 3000000 -ps -pss 33 --resumable"' >> melco2.sh
+done
+
+for i in {0..9}
+do
+  echo 'tmux new-session -d -s ppo33-37'$i' "python $PPO_N_CONTROLLER_ABSOLUTE_PATH -lrd -slrd 0.375 -s '$i' -t 600000000 -tef 3000000 -ps -pss 33 --resumable"' >> melco2.sh
+done
+
+for i in {0..9}
+do
+  echo 'tmux new-session -d -s ppo33-62'$i' "python $PPO_N_CONTROLLER_ABSOLUTE_PATH -lrd -slrd 0.625 -s '$i' -t 600000000 -tef 3000000 -ps -pss 33 --resumable"' >> melco2.sh
 done

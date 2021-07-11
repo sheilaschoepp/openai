@@ -83,6 +83,14 @@ register(
     max_episode_steps=50,
 )
 
+register(
+    id="FetchReachEnv-v5",
+    entry_point="custom_gym_envs.envs.fetchreach.FetchReachEnv_v5_CombinationalFault.fetch.reach:FetchReachEnv",
+    kwargs={"reward_type": "dense"},
+    max_episode_steps=50,
+)
+
+
 
 # FetchPickAndPlace
 

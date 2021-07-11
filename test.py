@@ -4,7 +4,7 @@ from tqdm import tqdm
 import numpy as np
 import custom_gym_envs
 
-env = gym.make('FetchReachEnv-v3')
+env = gym.make('FetchReachEnv-v4')
 
 # print(env.observation_space['achieved_goal'])
 # print(env.observation_space['desired_goal'])
@@ -16,7 +16,7 @@ offset_original = env.distance_threshold
 # offset = 0.02
 num_points_per_axis = 10
 counter = 0
-render = False
+render = True
 
 _INITIAL_GRIPPER_POS = np.array([1.34183226, 0.74910038, 0.53472284])
 # _INITIAL_GRIPPER_POS = env.initial_gripper_xpos[:3]

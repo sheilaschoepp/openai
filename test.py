@@ -2,79 +2,41 @@
 import gym
 from tqdm import tqdm
 import numpy as np
-from mujoco_py import functions, load_model_from_path
-from environment.environment import Environment
 import custom_gym_envs
 
+env = gym.make('FetchReachEnv-v3')
 
-# Setting MountainCar-v0 as the environment
-# env = Environment('FetchPickAndPlace-v0', 0)
-# env = gym.make('FetchPickAndPlaceDense-v0')
-env = gym.make('FetchReach-v0')
-# env = gym.make('FetchReachFaultyJoint-v1')
-# env = gym.make('FetchReachFaultyJoint-v2')
-# env = gym.make('FetchReachFaultyJoint-v3')
-# env = gym.make('FetchReachFaultyBrokenGrip-v0')
-# env = gym.make('FetchReach-v1')
-# env = gym.make('AntEnv-v0')
-
-print(env.observation_space['achieved_goal'])
-print(env.observation_space['desired_goal'])
-print(env.observation_space['observation'])
+# print(env.observation_space['achieved_goal'])
+# print(env.observation_space['desired_goal'])
+# print(env.observation_space['observation'])
 
 env._max_episode_steps = 300
-offset = 0.0167
+offset = 0.001
+offset_original = env.distance_threshold
 # offset = 0.02
-velocity = 0.1
-num_points_per_axis = 20
+num_points_per_axis = 10
 counter = 0
-reward = -1
-render = True
+render = False
 
+_INITIAL_GRIPPER_POS = np.array([1.34183226, 0.74910038, 0.53472284])
+# _INITIAL_GRIPPER_POS = env.initial_gripper_xpos[:3]
 points = np.zeros([num_points_per_axis ** 3, 4])
+points_false_negative = np.zeros([num_points_per_axis ** 3, 4])
 
 
 def reduce_distance():
     global current_pos, state, reward, done
+    goal = env.goal.copy()
     action = np.zeros(4)
-    while abs(goal[0] - current_pos[0]) > offset and reward != 0 and not done:
-        if goal[0] > current_pos[0]:
-            action[0] = velocity
-        else:
-            action[0] = -velocity
-        prev_pos = current_pos
-        state, reward, done, info = env.step(action)
+    while np.linalg.norm(goal - current_pos, axis=-1) > offset and not done:
+        action[:3] = goal - current_pos
+        state, _, done, _ = env.step(action)
         current_pos = state['achieved_goal']
-        print(abs(prev_pos - current_pos))
         if render:
             env.render()
-    action = np.zeros(4)
-    while abs(goal[1] - current_pos[1]) > offset and reward != 0 and not done:
-        current_pos = state['achieved_goal']
-        if goal[1] > current_pos[1]:
-            action[1] = velocity
-        else:
-            action[1] = -velocity
-        prev_pos = current_pos
-        state, reward, done, info = env.step(action)
-        current_pos = state['achieved_goal']
-        print(abs(prev_pos - current_pos))
-        if render:
-            env.render()
-    action = np.zeros(4)
-    while abs(goal[2] - current_pos[2]) > offset and reward != 0 and not done:
-        current_pos = state['achieved_goal']
-        prev_pos = current_pos
-        if goal[2] > current_pos[2]:
-            action[2] = velocity
-        else:
-            action[2] = -velocity
-        prev_pos = current_pos
-        state, reward, done, info = env.step(action)
-        current_pos = state['achieved_goal']
-        print(abs(prev_pos - current_pos))
-        if render:
-            env.render()
+
+    return np.linalg.norm(goal - current_pos, axis=-1) <= offset, \
+           np.linalg.norm(goal - current_pos, axis=-1) <= offset_original
 
 
 with tqdm(total=num_points_per_axis ** 3) as pbar:
@@ -83,21 +45,31 @@ with tqdm(total=num_points_per_axis ** 3) as pbar:
             for z in np.linspace(-0.15, 0.15, num_points_per_axis):
                 done = False
                 reward = -1
-                goal = env.initial_gripper_xpos[:3] + np.array([x, y, z])
-                env.set_goal(goal)
+                goal = _INITIAL_GRIPPER_POS + np.array([x, y, z])
                 state = env.reset()
+                env.set_goal(goal)
                 if render:
                     env.render()
                 # action = env.action_space.sample()
                 goal = state['desired_goal']
                 current_pos = state['achieved_goal']
 
-                while (abs(current_pos - goal) > offset).any() and reward != 0 and not done:
-                    reduce_distance()
-
                 points[counter, :3] = goal
-                points[counter, 3] = (True if (reward == 0) else False)
+                points_false_negative[counter, :3] = goal
+                points[counter, 3], points_false_negative[counter, 3] = reduce_distance()
                 counter += 1
                 pbar.update(1)
+
+reachable = points[np.where(points[:, -1] == 1)[0], :]
+unreachable = points[np.where(points[:, -1] == 0)[0], :]
+reachable_false_negative = points_false_negative[np.where(points_false_negative[:, -1] == 1)[0], :]
+unreachable_false_negative = points_false_negative[np.where(points_false_negative[:, -1] == 0)[0], :]
+
+print(reachable.shape)
+print(unreachable.shape)
+
+print('False Negative')
+print(reachable_false_negative.shape)
+print(unreachable_false_negative.shape)
 
 env.close()

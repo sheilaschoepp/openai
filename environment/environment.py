@@ -2,11 +2,15 @@ import os
 import pickle
 
 import gym
+import numpy as np
+
 from utils.rl_glue import BaseEnvironment
+from environment.fetchreach_observation_wrapper import FetchReachObservationWrapper
 
 
 class Environment(BaseEnvironment):
     """
+    print(state)
     OpenAI environment.
 
     The environment class implements the dynamics of the task and generates the observations and rewards.  -Brian Tanner & Adam White
@@ -25,11 +29,15 @@ class Environment(BaseEnvironment):
         """
 
         super(Environment, self).__init__()
-        
+
         self.env_name = env_name
         self.render = render
 
-        self.env = gym.make(self.env_name)
+        if "FetchReach" in self.env_name:
+            self.env = FetchReachObservationWrapper(gym.make(self.env_name, reward_type="dense"))
+        else:
+            self.env = gym.make(self.env_name)
+
         self.env_seed(seed)
 
     def env_init(self):
@@ -210,10 +218,6 @@ class Environment(BaseEnvironment):
             the state dimension
         """
 
-        if type(self.env.observation_space) == gym.spaces.dict.Dict:
-            state_dim = self.env.observation_space['observation'].shape[0]
-            # state_dim += self.env.observation_space['desired_goal'].shape[0]
-        else:
-            state_dim = self.env.observation_space.shape[0]
+        state_dim = self.env.observation_space.shape[0]
 
         return state_dim

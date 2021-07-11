@@ -188,3 +188,6 @@ class FetchEnv(robot_env.RobotEnv):
 
     def render(self, mode='human', width=500, height=500):
         return super(FetchEnv, self).render(mode, width, height)
+
+    def set_goal(self, coord):
+        self.goal = coord.copy()

@@ -8,7 +8,7 @@ sns.set_theme()
 
 def get_data(directory):
     """
-    Obtain the average return for 200 policy evaluations (or an entire run) across 10 runs for a single hyperparameter setting.
+    Obtain the average return across 10 runs for a single experiment.
 
     @param directory: string
         directory for experiment data
@@ -42,7 +42,7 @@ def get_data(directory):
 
 def plot(directory, algorithm, df_mean, df_sem):
     """
-    Plot experiment for Ant-v2 environment.
+    Plot experiment.
 
     @param algorithm: string
         algorithm name

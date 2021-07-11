@@ -40,7 +40,7 @@ home_dir = str(Path.home())
 
 model_xml = None
 if args.env_name == "FetchReach-v1":
-    model_xml = anaconda_path + "/envs/openai2/lib/python3.9/site-packages/gym/envs/robotics/assets/fetch/reach.xml"
+    model_xml = anaconda_path + "/envs/openai2/lib/python3.7/site-packages/gym/envs/robotics/assets/fetch/reach.xml"
 elif args.env_name == "FetchReachEnv-v0":
     model_xml = home_dir + "/Documents/openai/custom_gym_envs/envs/fetchreach/FetchReachEnv_v0_Normal/assets/fetch/reach.xml"
 elif args.env_name == "FetchReachEnv-v1":
@@ -96,7 +96,7 @@ wrist_roll_joint_range = np.array([-np.pi, np.pi])
 
 # joint angles
 
-# robot0:slide0, no range
+# robot0:slide0, no range todo fix the slide joints
 
 # robot0:slide1, no range
 
@@ -448,7 +448,7 @@ def plot(points):
 
 if __name__ == "__main__":
 
-    # test()
+    test()  # todo fix the slide joints
 
     wp = workspace_points()
     plot(wp)

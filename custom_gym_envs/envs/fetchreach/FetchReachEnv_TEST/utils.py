@@ -24,9 +24,9 @@ def ctrl_set_action(sim, action):
     """For torque actuators it copies the action into mujoco ctrl field.
     For position actuators it sets the target relative to the current qpos.
     """
-    if sim.model.nmocap > 0:
-        _, action = np.split(action, (sim.model.nmocap * 7, ))
-    if sim.data.ctrl is not None:
+    if sim.model.nmocap > 0:  # 1
+        _, action = np.split(action, (sim.model.nmocap * 7, ))  # action [0, 0] (gripper)
+    if sim.data.ctrl is not None:  # None
         for i in range(action.shape[0]):
             if sim.model.actuator_biastype[i] == 0:
                 sim.data.ctrl[i] = action[i]
@@ -44,12 +44,12 @@ def mocap_set_action(sim, action):
     the target body according to the delta, and the MuJoCo equality
     constraint optimizer tries to center the welded body on the mocap.
     """
-    if sim.model.nmocap > 0:
-        action, _ = np.split(action, (sim.model.nmocap * 7, ))
-        action = action.reshape(sim.model.nmocap, 7)
+    if sim.model.nmocap > 0:   # 1
+        action, _ = np.split(action, (sim.model.nmocap * 7, ))  # removes the gripper positions
+        action = action.reshape(sim.model.nmocap, 7)  # makes an array of arrays
 
-        pos_delta = action[:, :3]
-        quat_delta = action[:, 3:]
+        pos_delta = action[:, :3]  # takes first 3 elements (position)
+        quat_delta = action[:, 3:]  # takes last 4 elements (orientation)
 
         reset_mocap2body_xpos(sim)
         sim.data.mocap_pos[:] = sim.data.mocap_pos + pos_delta

@@ -290,9 +290,13 @@ class Kinematics:
                         gripper_rotation = np.array([1., 0., 1., 0.])
                         env.sim.data.set_mocap_pos('robot0:mocap', gripper_target)
                         env.sim.data.set_mocap_quat('robot0:mocap', gripper_rotation)
+
                         # perform simulation steps
                         for _ in range(20):
+
                             env.sim.step()
+
+                        # todo test this and move it into loop
                         # get gripper position to compare to target postion (goal)
                         xpos = env.sim.data.get_site_xpos('robot0:grip')
 
@@ -304,6 +308,7 @@ class Kinematics:
 
                         if false_negative:
                             num_false_negatives += 1
+                            # break  todo
 
                         # print(self.line)
 
@@ -319,7 +324,7 @@ class Kinematics:
 if __name__ == "__main__":
 
     # env_name = "FetchReach-v1"
-    env_name = "FetchReachEnv-v2"
+    env_name = "FetchReachEnv-v999"
 
     k = Kinematics(env_name)
     # k.check_reachable([1.34183265, 0.74910039, 0.53472272])  # starting position in FetchReach-v1

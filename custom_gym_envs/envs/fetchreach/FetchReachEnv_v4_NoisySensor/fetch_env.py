@@ -111,7 +111,7 @@ class FetchEnv(robot_env.RobotEnv):
             achieved_goal = np.squeeze(object_pos.copy())
 
         # Noise added to the position of the end-effector
-        grip_pos += self.np_random.uniform(-0.01, 0.01, size=3)
+        grip_pos += self.np_random.uniform(-0.05, 0.05, size=3)
 
         obs = np.concatenate([
             grip_pos, object_pos.ravel(), object_rel_pos.ravel(), gripper_state, object_rot.ravel(),

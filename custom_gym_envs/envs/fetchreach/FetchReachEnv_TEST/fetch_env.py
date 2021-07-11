@@ -84,7 +84,7 @@ class FetchEnv(robot_env.RobotEnv):
         assert gripper_ctrl.shape == (2,)
         if self.block_gripper:
             gripper_ctrl = np.zeros_like(gripper_ctrl)
-        action = np.concatenate([pos_ctrl, rot_ctrl, gripper_ctrl])
+        action = np.concatenate([pos_ctrl, rot_ctrl, gripper_ctrl])  # pos: 3, rot: 4, gripper: 2
 
         # Apply action to simulation.
         utils.ctrl_set_action(self.sim, action)

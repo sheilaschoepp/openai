@@ -22,11 +22,9 @@ import torch
 from termcolor import colored
 
 import utils.plot_style_settings as pss
-from controllers.ppov2.ppov2_agent import PPOv2
+from controllers.ppov2.mod2.ppov2_agent import PPOv2
 from environment.environment import Environment
 from utils.rl_glue import RLGlue
-
-import custom_gym_envs  # do not delete; required for custom gym environments
 
 parser = argparse.ArgumentParser(description="PyTorch Proximal Policy Optimization Arguments")
 
@@ -39,6 +37,8 @@ parser.add_argument("--lr", type=float, default=0.00025, metavar="G",
                     help="learning rate (default: 0.0003)")
 parser.add_argument("-lrd", "--linear_lr_decay", default=False, action="store_true",
                     help="if true, decrease learning rate linearly (default: False)")
+parser.add_argument("-slrd", "--slow_lrd", type=float, default=0.5, metavar="G",
+                    help="slow learning rate decay by this percentage (default: 0.5)")
 parser.add_argument("--gamma", type=float, default=0.98, metavar="G",
                     help="discount factor (default: 0.99)")
 
@@ -137,6 +137,7 @@ class NormalController:
                                "n_time_steps": args.n_time_steps,
                                "lr": args.lr,
                                "linear_lr_decay": args.linear_lr_decay,
+                               "slow_lrd": args.slow_lrd,
                                "gamma": args.gamma,
                                "num_samples": args.num_samples,
                                "mini_batch_size": args.mini_batch_size,
@@ -186,6 +187,7 @@ class NormalController:
         suffix = self.parameters["n_env_name"] + ":" + str(self.parameters["n_time_steps"]) \
                  + "_lr:" + str(self.parameters["lr"]) \
                  + "_lrd:" + str(self.parameters["linear_lr_decay"]) \
+                 + "_slrd:" + str(self.parameters["slow_lrd"]) \
                  + "_g:" + str(self.parameters["gamma"]) \
                  + "_ns:" + str(self.parameters["num_samples"]) \
                  + "_mbs:" + str(self.parameters["mini_batch_size"]) \
@@ -283,6 +285,7 @@ class NormalController:
                            self.parameters["log_std"],
                            self.parameters["lr"],
                            self.parameters["linear_lr_decay"],
+                           self.parameters["slow_lrd"],
                            self.parameters["gamma"],
                            self.parameters["n_time_steps"],
                            self.parameters["num_samples"],
@@ -346,6 +349,7 @@ class NormalController:
         print("normal time steps:", highlight_non_default_values("n_time_steps"))
         print("lr:", highlight_non_default_values("lr"))
         print("linear lr decay:", highlight_non_default_values("linear_lr_decay"))
+        print("slow linear lr decay:", highlight_non_default_values("slow_lrd"))
         print("gamma:", highlight_non_default_values("gamma"))
         print("number of samples:", highlight_non_default_values("num_samples"))
         print("mini-batch size:", highlight_non_default_values("mini_batch_size"))

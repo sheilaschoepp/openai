@@ -132,6 +132,7 @@ class Kinematics:
                                         target_pos=target_pos,
                                         target_quat=target_quat,
                                         joint_names=joint_names,
+                                        tol=env_copy.distance_threshold,  # TODO
                                         max_steps=100)
 
         # At runtime the positions and orientations of all joints defined in the model are stored in the vector mjData.qpos,
@@ -216,19 +217,40 @@ class Kinematics:
                 print("{} not reachable".format(str(goal)))
 
                 if not shoulder_pan_joint_inrange:
-                    print("shoulder_pan_joint_range:", np.around(np.degrees(self.shoulder_pan_joint_range), 2), "position:", np.around(np.degrees(shoulder_pan_joint_pos), 2))
+                    print("shoulder_pan_joint:")
+                    print("original range: [-1.6056 1.6056]")
+                    print("modified range:", np.around(self.shoulder_pan_joint_range, 2))
+                    print("required position:", np.around(shoulder_pan_joint_pos, 2))
                 if not shoulder_lift_joint_inrange:
-                    print("shoulder_lift_joint_range:", np.around(np.degrees(self.shoulder_lift_joint_range), 2), "position:", np.around(np.degrees(shoulder_lift_joint_pos), 2))
+                    print("shoulder_lift_joint:")
+                    print("original range: [-1.221 1.518]")
+                    print("modified range:", np.around(self.shoulder_lift_joint_range, 2))
+                    print("required position:", np.around(shoulder_lift_joint_pos, 2))
                 if not upperarm_roll_joint_inrange:
-                    print("upperarm_roll_joint_range:", np.around(np.degrees(self.upperarm_roll_joint_range), 2), "position:", np.around(np.degrees(upperarm_roll_joint_pos), 2))
+                    print("upperarm_roll_joint:")
+                    print("original range: [-inf inf]")
+                    print("modified range:", np.around(self.upperarm_roll_joint_range, 2))
+                    print("required position:", np.around(upperarm_roll_joint_pos, 2))
                 if not elbow_flex_joint_inrange:
-                    print("elbow_flex_joint_range:", np.around(np.degrees(self.elbow_flex_joint_range), 2), "position:", np.around(np.degrees(elbow_flex_joint_pos), 2))
+                    print("elbow_flex_joint:")
+                    print("original range: [-2.251 2.251]")
+                    print("modified range:", np.around(self.elbow_flex_joint_range, 2))
+                    print("required position:", np.around(elbow_flex_joint_pos, 2))
                 if not forearm_roll_joint_inrange:
-                    print("forearm_roll_joint_range:", np.around(np.degrees(self.forearm_roll_joint_range), 2), "position:", np.around(np.degrees(forearm_roll_joint_pos), 2))
+                    print("forearm_roll_joint:")
+                    print("original range: [-inf inf]")
+                    print("modified range:", np.around(self.forearm_roll_joint_range, 2))
+                    print("required position:", np.around(forearm_roll_joint_pos, 2))
                 if not wrist_flex_joint_inrange:
-                    print("wrist_flex_joint_range:", np.around(np.degrees(self.wrist_flex_joint_range), 2), "position:", np.around(np.degrees(wrist_flex_joint_pos), 2))
+                    print("wrist_flex_joint:")
+                    print("original range: [-2.16 2.16]")
+                    print("modified range:", np.around(self.wrist_flex_joint_range, 2))
+                    print("required position:", np.around(wrist_flex_joint_pos, 2))
                 if not wrist_roll_joint_inrange:
-                    print("wrist_roll_joint_range:", np.around(np.degrees(self.wrist_roll_joint_range), 2), "position:", np.around(np.degrees(wrist_roll_joint_pos), 2))
+                    print("wrist_roll_joint:")
+                    print("original range: [-inf inf]")
+                    print("modified range:", np.around(self.wrist_roll_joint_range, 2))
+                    print("required position:", np.around(wrist_roll_joint_pos, 2))
 
                 print(self.line)
 
@@ -444,8 +466,8 @@ class Kinematics:
 
 if __name__ == "__main__":
 
-    env_name = "FetchReach-v0"
-    # env_name = "FetchReachEnv-v999"
+    # env_name = "FetchReach-v0"
+    env_name = "FetchReachEnv-v999"
 
     k = Kinematics(env_name)
     # k.check_reachable([1.34183265, 0.74910039, 0.53472272])  # starting position in FetchReach-v1

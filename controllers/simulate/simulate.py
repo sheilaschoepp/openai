@@ -155,6 +155,9 @@ class Simulate:
             max_steps_this_episode = 1000
             while not terminal and ((max_steps_this_episode <= 0) or (self.rlg.num_ep_steps() < max_steps_this_episode)):
                 _, _, terminal, _ = self.rlg.rl_step()
+
+                # print(self.env.env.sim.data.get_joint_qpos("robot0:shoulder_pan_joint"))
+
                 time.sleep(0.1)
 
 

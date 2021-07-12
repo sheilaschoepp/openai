@@ -3,27 +3,27 @@ echo 'RESUME_FILE="/local/melco2-1/shared/ant/normal/SACv2_Ant-v2:20000000_g:0.9
 
 for s in {0..4}
 do
-  echo 'tmux new-session -d -s sac61'$s' "CUDA_VISIBLE_DEVICES=0 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -e AntEnv-v3 -t 20000000 -c -f $RESUME_FILE/seed'$s' --resumable -ps -pss 61 -tl 4"' >> melco2.sh
+  echo 'tmux new-session -d -s sac61'$s' "CUDA_VISIBLE_DEVICES=0 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -e AntEnv-v3 -t 20000000 -c -f $RESUME_FILE/seed'$s' --resumable -tl 4"' >> melco2.sh
 done
 for s in {5..9}
 do
-  echo 'tmux new-session -d -s sac61'$s' "CUDA_VISIBLE_DEVICES=1 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -e AntEnv-v3 -t 20000000 -c -f $RESUME_FILE/seed'$s' --resumable -ps -pss 61 -tl 4"' >> melco2.sh
+  echo 'tmux new-session -d -s sac61'$s' "CUDA_VISIBLE_DEVICES=1 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -e AntEnv-v3 -t 20000000 -c -f $RESUME_FILE/seed'$s' --resumable -tl 4"' >> melco2.sh
 done
 
 for s in {0..4}
 do
-  echo 'tmux new-session -d -s sac61'$s'crb "CUDA_VISIBLE_DEVICES=3 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -e AntEnv-v3 -t 20000000 -c -f $RESUME_FILE/seed'$s' --resumable -ps -pss 61 -tl 4 -crb"' >> melco2.sh
+  echo 'tmux new-session -d -s sac61'$s'crb "CUDA_VISIBLE_DEVICES=3 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -e AntEnv-v3 -t 20000000 -c -f $RESUME_FILE/seed'$s' --resumable -tl 4 -crb"' >> melco2.sh
 done
 for s in {5..9}
 do
-  echo 'tmux new-session -d -s sac61'$s'crb "CUDA_VISIBLE_DEVICES=4 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -e AntEnv-v3 -t 20000000 -c -f $RESUME_FILE/seed'$s' --resumable -ps -pss 61 -tl 4 -crb"' >> melco2.sh
+  echo 'tmux new-session -d -s sac61'$s'crb "CUDA_VISIBLE_DEVICES=4 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -e AntEnv-v3 -t 20000000 -c -f $RESUME_FILE/seed'$s' --resumable -tl 4 -crb"' >> melco2.sh
 done
 
 for s in {0..4}
 do
-  echo 'tmux new-session -d -s sac61'$s'rn "CUDA_VISIBLE_DEVICES=6 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -e AntEnv-v3 -t 20000000 -c -f $RESUME_FILE/seed'$s' --resumable -ps -pss 61 -tl 4 -rn"' >> melco2.sh
+  echo 'tmux new-session -d -s sac61'$s'rn "CUDA_VISIBLE_DEVICES=6 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -e AntEnv-v3 -t 20000000 -c -f $RESUME_FILE/seed'$s' --resumable -tl 4 -rn"' >> melco2.sh
 done
 for s in {5..9}
 do
-  echo 'tmux new-session -d -s sac61'$s'rn "CUDA_VISIBLE_DEVICES=7 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -e AntEnv-v3 -t 20000000 -c -f $RESUME_FILE/seed'$s' --resumable -ps -pss 61 -tl 4 -rn"' >> melco2.sh
+  echo 'tmux new-session -d -s sac61'$s'rn "CUDA_VISIBLE_DEVICES=7 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -e AntEnv-v3 -t 20000000 -c -f $RESUME_FILE/seed'$s' --resumable -tl 4 -rn"' >> melco2.sh
 done

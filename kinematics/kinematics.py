@@ -2,6 +2,8 @@ import argparse
 import os
 import xml.etree.ElementTree as ET
 from pathlib import Path
+import time
+import copy
 
 import gym
 import numpy as np
@@ -89,13 +91,15 @@ class Kinematics:
 
         self.line = "------------------------------------------------------------------------------------------------"
 
-    def check_reachable(self, goal):
+    def check_reachable(self, env_copy, goal):
         """
         Check if a goal is reachable.
 
         Note: If a goal is in the table (z < 0.42), it is not reachable.  Otherwise, compute the joint angles required
         to reach the goal and verify that they fall within the allowed joint ranges.
 
+        @param env_copy: MuJoCo Gym environment copy
+            a copy of the learning environment
         @param goal: float64 numpy array with shape (3,)
             the (target) goal position of the robot end effector
 
@@ -103,20 +107,32 @@ class Kinematics:
             if true, goal is not in the table and is reachable
         """
 
-        qpos = {}
         reachable = False
+        qpos = {}
 
         physics = mujoco.Physics.from_xml_path(self.model_xml)
+
+        state = env_copy.env.sim.get_state()
+        flattened_state = np.append(state.qpos, state.qvel)
+        physics.set_state(flattened_state)
+
         site_name = "robot0:grip"
         target_pos = np.array(goal)
         target_quat = np.array([1., 0., 1., 0.])  # in fetch_env._env_setup and fetch_env._set_action they always set the orientation to a static value
-        joint_names = None  # all joints will be manipulated to reach the target position and quaternion
+        joint_names = ["robot0:shoulder_pan_joint",  # manipulate only these joints to reach the target position and quaternion
+                       "robot0:shoulder_lift_joint",
+                       "robot0:upperarm_roll_joint",
+                       "robot0:elbow_flex_joint",
+                       "robot0:forearm_roll_joint",
+                       "robot0:wrist_flex_joint",
+                       "robot0:wrist_roll_joint"]
 
         result = ik.qpos_from_site_pose(physics=physics,
                                         site_name=site_name,
                                         target_pos=target_pos,
                                         target_quat=target_quat,
-                                        joint_names=joint_names)
+                                        joint_names=joint_names,
+                                        max_steps=100)
 
         # At runtime the positions and orientations of all joints defined in the model are stored in the vector mjData.qpos,
         # in the order in which the appear in the kinematic tree (source: http://www.mujoco.org/book/XMLreference.html#joint)
@@ -157,7 +173,6 @@ class Kinematics:
 
         if result.success:
 
-            torso_lift_joint_inrange = self.torso_lift_joint_range[0] <= torso_lift_joint_pos <= self.torso_lift_joint_range[1]
             shoulder_pan_joint_inrange = self.shoulder_pan_joint_range[0] <= shoulder_pan_joint_pos <= self.shoulder_pan_joint_range[1]
             shoulder_lift_joint_inrange = self.shoulder_lift_joint_range[0] <= shoulder_lift_joint_pos <= self.shoulder_lift_joint_range[1]
             upperarm_roll_joint_inrange = self.upperarm_roll_joint_range[0] <= upperarm_roll_joint_pos <= self.upperarm_roll_joint_range[1]
@@ -165,19 +180,14 @@ class Kinematics:
             forearm_roll_joint_inrange = self.forearm_roll_joint_range[0] <= forearm_roll_joint_pos <= self.forearm_roll_joint_range[1]
             wrist_flex_joint_inrange = self.wrist_flex_joint_range[0] <= wrist_flex_joint_pos <= self.wrist_flex_joint_range[1]
             wrist_roll_joint_inrange = self.wrist_roll_joint_range[0] <= wrist_roll_joint_pos <= self.wrist_roll_joint_range[1]
-            r_gripper_finger_joint_inrange = self.r_gripper_finger_joint_range[0] <= r_gripper_finger_joint_pos <= self.r_gripper_finger_joint_range[1]
-            l_gripper_finger_joint_inrange = self.l_gripper_finger_joint_range[0] <= l_gripper_finger_joint_pos <= self.l_gripper_finger_joint_range[1]
 
-            reachable = torso_lift_joint_inrange and \
-                        shoulder_pan_joint_inrange and \
+            reachable = shoulder_pan_joint_inrange and \
                         shoulder_lift_joint_inrange and \
                         upperarm_roll_joint_inrange and \
                         elbow_flex_joint_inrange and \
                         forearm_roll_joint_inrange and \
                         wrist_flex_joint_inrange and \
-                        wrist_roll_joint_inrange and \
-                        r_gripper_finger_joint_inrange and \
-                        l_gripper_finger_joint_inrange
+                        wrist_roll_joint_inrange
 
             qpos = {
                 "robot0:slide0": slide0_pos,
@@ -201,32 +211,30 @@ class Kinematics:
                 "robot0:l_gripper_finger_joint": l_gripper_finger_joint_pos,
             }
 
-            # if not reachable:
-            #
-            #     print("{} not reachable".format(str(goal)))
-            #
-            #     if not torso_lift_joint_inrange:
-            #         print("torso_lift_joint_range:", self.torso_lift_joint_range, "position:", torso_lift_joint_pos)
-            #     if not shoulder_pan_joint_inrange:
-            #         print("shoulder_pan_joint_range:", self.shoulder_pan_joint_range, "position:", shoulder_pan_joint_pos)
-            #     if not shoulder_lift_joint_inrange:
-            #         print("shoulder_lift_joint_range:", self.shoulder_lift_joint_range, "position:", shoulder_lift_joint_pos)
-            #     if not upperarm_roll_joint_inrange:
-            #         print("upperarm_roll_joint_range:", self.upperarm_roll_joint_range, "position:", upperarm_roll_joint_pos)
-            #     if not elbow_flex_joint_inrange:
-            #         print("elbow_flex_joint_range:", self.elbow_flex_joint_range, "position:", elbow_flex_joint_pos)
-            #     if not forearm_roll_joint_inrange:
-            #         print("forearm_roll_joint_range:", self.forearm_roll_joint_range, "position:", forearm_roll_joint_pos)
-            #     if not wrist_flex_joint_inrange:
-            #         print("wrist_flex_joint_range:", self.wrist_flex_joint_range, "position:", wrist_flex_joint_pos)
-            #     if not wrist_roll_joint_inrange:
-            #         print("wrist_roll_joint_range:", self.wrist_roll_joint_range, "position:", wrist_roll_joint_pos)
-            #     if not r_gripper_finger_joint_inrange:
-            #         print("r_gripper_finger_joint_range:", self.r_gripper_finger_joint_range, "position:", r_gripper_finger_joint_pos)
-            #     if not l_gripper_finger_joint_inrange:
-            #         print("l_tripper_finger_joint_range:", self.l_gripper_finger_joint_range, "position:", l_gripper_finger_joint_pos)
+            if not reachable:
 
-        return qpos, reachable
+                print("{} not reachable".format(str(goal)))
+
+                if not shoulder_pan_joint_inrange:
+                    print("shoulder_pan_joint_range:", np.around(np.degrees(self.shoulder_pan_joint_range), 2), "position:", np.around(np.degrees(shoulder_pan_joint_pos), 2))
+                if not shoulder_lift_joint_inrange:
+                    print("shoulder_lift_joint_range:", np.around(np.degrees(self.shoulder_lift_joint_range), 2), "position:", np.around(np.degrees(shoulder_lift_joint_pos), 2))
+                if not upperarm_roll_joint_inrange:
+                    print("upperarm_roll_joint_range:", np.around(np.degrees(self.upperarm_roll_joint_range), 2), "position:", np.around(np.degrees(upperarm_roll_joint_pos), 2))
+                if not elbow_flex_joint_inrange:
+                    print("elbow_flex_joint_range:", np.around(np.degrees(self.elbow_flex_joint_range), 2), "position:", np.around(np.degrees(elbow_flex_joint_pos), 2))
+                if not forearm_roll_joint_inrange:
+                    print("forearm_roll_joint_range:", np.around(np.degrees(self.forearm_roll_joint_range), 2), "position:", np.around(np.degrees(forearm_roll_joint_pos), 2))
+                if not wrist_flex_joint_inrange:
+                    print("wrist_flex_joint_range:", np.around(np.degrees(self.wrist_flex_joint_range), 2), "position:", np.around(np.degrees(wrist_flex_joint_pos), 2))
+                if not wrist_roll_joint_inrange:
+                    print("wrist_roll_joint_range:", np.around(np.degrees(self.wrist_roll_joint_range), 2), "position:", np.around(np.degrees(wrist_roll_joint_pos), 2))
+
+                print(self.line)
+
+                pass
+
+        return reachable, qpos, result
 
     def test_accuracy(self):
         """
@@ -235,7 +243,7 @@ class Kinematics:
         Note:
         - Sample goal.
         - Use inverse kinematics to obtain joint positions to reach goal.
-        - Apply joint positions to robot and step to reach the positions.
+        - Apply joint positions to robot and forward to reach the positions.
         - Get the position of the robot's end effector.
         - Confirm sampled goal and robot's end effector position are similar.
         """
@@ -243,43 +251,54 @@ class Kinematics:
         print(self.line)
 
         env = gym.make(self.env_name)
+        env_copy = copy.deepcopy(env)  # we use a copy of the environment with the check_reachable method
 
-        np.random.seed(0)
-        env.seed(0)
+        # np.random.seed(0)
+        # env.seed(0)
 
         episodes = 100
-        reachable_goals = 0  # number of goals classified as reachable
-        successes = 0  # number of times the goal is reached
+
+        result_successes = 0
+
+        kin_reachable_goals = 0
+        kin_unreachable_goals = 0
 
         for i in range(episodes):
 
-            obs = env.reset()
-
+            obs = env_copy.reset()
             goal = obs["desired_goal"]
 
-            qpos, reachable = self.check_reachable(goal)
+            reachable, qpos, result = self.check_reachable(env_copy, goal)
 
             if reachable:
 
-                reachable_goals += 1
+                kin_reachable_goals += 1
 
-                for name, value in qpos.items():
-                    env.sim.data.set_joint_qpos(name, value)
+            else:
 
-                env.sim.forward()
+                kin_unreachable_goals += 1
 
-                xpos = env.sim.data.get_site_xpos('robot0:grip')
+            if result.success:
 
-                d = np.linalg.norm(xpos - goal, axis=-1)  # euclidean distance
-                success = d <= env.distance_threshold
+                result_successes += 1
 
-                if success:  # goal reached through simulation
-                    successes += 1
+            #     for name, value in qpos.items():  todo: remove this because it doesn't help us, we are setting joint positions to invalid values
+            #         env_copy.sim.data.set_joint_qpos(name, value)
+            #
+            #     env_copy.sim.forward()
+            #
+            #     xpos = env_copy.sim.data.get_site_xpos('robot0:grip')
+            #
+            #     d = np.linalg.norm(xpos - goal, axis=-1)  # euclidean distance
+            #     goal_reached = d <= env_copy.distance_threshold
+            #
+            #     if not reachable and goal_reached:
+            #         kin_inaccurate_goals += 1
 
-        print("reachable goals:", reachable_goals)
-        print("successes:", successes)
+        print("kinematics result rate:", str(result_successes / episodes * 100) + "%")
 
-        print("accuracy:", str(int(successes/reachable_goals*100)) + "%")
+        print("kin reachable goals:", str(int(kin_reachable_goals / episodes * 100)) + "%")
+        print("kin unreachable goals:", str(int(kin_unreachable_goals / episodes * 100)) + "%")
 
         print(self.line)
 
@@ -313,7 +332,7 @@ class Kinematics:
 
                     goal = [x, y, z]
 
-                    _, reachable = self.check_reachable(goal)
+                    reachable, _, _ = self.check_reachable(goal)
 
                     if reachable:
                         reachable_goals.append(goal)
@@ -343,9 +362,7 @@ class Kinematics:
 
                         if false_negative:
                             num_false_negatives += 1
-                            # break  todo
-
-                        # print(self.line)
+                            # break todo
 
         print("num reachable:", len(reachable_goals), "/", bins**3)
         print("num unreachable:", len(unreachable_goals), "/", bins**3)
@@ -355,11 +372,80 @@ class Kinematics:
         # np.save("{}_reachable_points_{}.npy".format(self.env_name, bins), reachable_points)
         # np.save("{}_unreachable_points_{}.npy".format(self.env_name, bins), unreachable_points)
 
+    def test_unreachable(self):
+        """
+        Test an unreachable point.
+
+        Note:
+        - Create unreachable goal.
+        - Use inverse kinematics to obtain joint positions to reach goal.
+        - Apply joint positions to robot and forward to reach the positions.
+        - Get the position of the robot's end effector.
+        - Get the position of the robot's joints.
+        """
+
+        print(self.line)
+
+        env = gym.make(self.env_name)
+
+        np.random.seed(0)
+        env.seed(0)
+
+        for _ in range(10):
+
+            obs = env.reset()
+
+            # goal = np.array([1.0, 1.0, 1.0])
+            # goal = np.array([0.7, 0.7, 0.7])
+            goal = obs["desired_goal"]
+            print("goal:", goal)
+            print(self.line)
+
+            reachable, qpos, result = self.check_reachable(copy.deepcopy(env), goal)
+
+            if qpos is not {}:
+                for name, value in qpos.items():
+                    print(name, value)
+                print(self.line)
+
+            for name, value in qpos.items():
+                env.sim.data.set_joint_qpos(name, value)
+
+            env.sim.forward()
+
+            env.render()
+            time.sleep(2)
+
+            if qpos is not {}:
+                for name, _ in qpos.items():
+                    print(name, env.sim.data.get_joint_qpos(name))
+                print(self.line)
+
+            xpos = env.sim.data.get_site_xpos('robot0:grip')
+
+            d = np.linalg.norm(xpos - goal, axis=-1)  # euclidean distance
+            success = d <= env.distance_threshold
+
+            print("inverse kinematics results:")
+            print("success:", result.success)
+            print("err_norm:", result.err_norm)  # must be < 1e-14 to have success
+            print("steps:", result.steps)  # must be < 100 to have success
+            if result.success:
+                print(self.line)
+                print("forward results:")
+                print("success (reached goal):", success)
+                print("distance:", d)
+                print(self.line)
+                print("check reachable results:")
+                print("reachable:", reachable)  # joint pos must be within strict limits
+
+            print(self.line)
+
 
 if __name__ == "__main__":
 
-    # env_name = "FetchReach-v1"
-    env_name = "FetchReachEnv-v999"
+    env_name = "FetchReachEnv-v0"
+    # env_name = "FetchReachEnv-v999"
 
     k = Kinematics(env_name)
     # k.check_reachable([1.34183265, 0.74910039, 0.53472272])  # starting position in FetchReach-v1
@@ -367,3 +453,4 @@ if __name__ == "__main__":
     # k.check_reachable([0, 0, 0.39])  # in table
     k.test_accuracy()
     # k.test_task_space()
+    # k.test_unreachable()

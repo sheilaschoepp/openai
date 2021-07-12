@@ -45,7 +45,9 @@ class Simulate:
             print("loading normal environment")
             env_name = self.parameters["n_env_name"]
             if env_name == "Ant-v2":
-                env_name = "AntEnv-v0"  # use our own ant class so that we can view ant properly
+                env_name = "AntEnv-v0"  # use our own ant class so that we can view rendering of ant properly
+            elif env_name == "FetchReach-v1":
+                env_name = "FetchReachEnv-v0"
 
         # seeds
 

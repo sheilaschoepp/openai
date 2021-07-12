@@ -444,7 +444,7 @@ class Kinematics:
 
 if __name__ == "__main__":
 
-    env_name = "FetchReachEnv-v2"
+    env_name = "FetchReach-v0"
     # env_name = "FetchReachEnv-v999"
 
     k = Kinematics(env_name)

@@ -20,7 +20,7 @@ parser.add_argument("-f", "--file", default="",
 parser.add_argument("-t", "--time_steps", default="",
                     help="the number of time steps into learning")
 
-parser.add_argument("-e", "--env_name", default=None,  # run the learned model in a environment different from the learning environment
+parser.add_argument("-e", "--env_name", default=None,  # run the learned model in a environment different from the environment found in the filename (learning environment)
                     help="name of MuJoCo Gym environment (default: None)")
 
 args = parser.parse_args()
@@ -155,12 +155,6 @@ class Simulate:
             max_steps_this_episode = 1000
             while not terminal and ((max_steps_this_episode <= 0) or (self.rlg.num_ep_steps() < max_steps_this_episode)):
                 _, _, terminal, _ = self.rlg.rl_step()
-
-                # print("slide0:", self.env.env.sim.data.get_joint_qpos("robot0:slide0"))
-                # print("slide1:", self.env.env.sim.data.get_joint_qpos("robot0:slide1"))
-                # print("slide2:", self.env.env.sim.data.get_joint_qpos("robot0:slide2"))
-                # print("torso lift:", self.env.env.sim.data.get_joint_qpos("robot0:torso_lift_joint"))
-
                 time.sleep(0.1)
 
 
@@ -176,6 +170,3 @@ if __name__ == "__main__":
 
         print("keyboard interrupt")
         sim.cleanup()
-
-# -f /mnt/DATA/normal/PPOv2_FetchReach-v1:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:100000_d:cpu_ps:True_pss:43/seed0 -t 6000000
-# -f /mnt/DATA/normal/SACv2_FetchReach-v1:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:1000000_a:True_d:cuda_ps:True_pss:21/seed0 -t 2000000

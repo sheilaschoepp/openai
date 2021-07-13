@@ -4,9 +4,9 @@ https://github.com/openai/gym/edit/master/gym/envs/robotics/assets/robot.xml
 http://www.mujoco.org/book/XMLreference.html#joint
 http://www.mujoco.org/book/XMLreference.html#geom
 
-modifications: elbow_flex_joint
+modifications:
 name="robot0:elbow_flex_joint", range="-2.251 2.251" changed to range="-0.2 0.2", added limited="true" \\
-name="upperarm_roll_link", added class="robot0:red"
+name="upperarm_roll_link", added class="robot0:red" \\
 name="robot0:elbow_flex_link", class="robot0:blue" changed to class="robot0:red" \\
 -->
 

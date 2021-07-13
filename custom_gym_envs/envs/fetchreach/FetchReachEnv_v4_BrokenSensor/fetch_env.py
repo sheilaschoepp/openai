@@ -1,12 +1,12 @@
 """
 modifications:
-change from in import of robot_env, rotations and utils (line 8)
-commented out (line 191) and added line (line 192) to set the gripper_initial_xpos to that from the FetchReach-v1 environment
+change from in import of robot_env, rotations and utils
+commented out and added line to set the gripper_initial_xpos to that from the FetchReach-v1 environment
 """
 
 import numpy as np
 
-from custom_gym_envs.envs.fetchreach.FetchReachEnv_v0_Normal import robot_env, rotations, utils  # todo: changed from in import
+from custom_gym_envs.envs.fetchreach.FetchReachEnv_v4_BrokenSensor import robot_env, rotations, utils  # todo: changed from in import
 
 
 def goal_distance(goal_a, goal_b):

@@ -16,14 +16,13 @@ import gym
 import numpy as np
 from mujoco_py import functions, load_model_from_path
 import custom_gym_envs
-env = gym.make('FetchReach-v0')
+
+
+env = gym.make('FetchReachEnv-v0')
 env.reset()
 sim = env.sim
 # model = load_model_from_path("/home/mehran/Documents/openai/custom_gym_envs/envs/FetchReach/Normal/assets/fetch/reach.xml")
 prev = sim.data.qfrc_inverse
-
-
-
 
 
 for x in np.linspace(-0.15, 0.15, 20):
@@ -45,4 +44,3 @@ for x in np.linspace(-0.15, 0.15, 20):
 #             functions.mj_kinematics(env.sim.model, env.sim.data)
 #             # functions.mj_step(sim.model, sim.data)
 #             functions.mj_forward(env.sim.model, env.sim.data)
-

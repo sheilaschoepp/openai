@@ -94,11 +94,11 @@ class FetchEnv(robot_env.RobotEnv):
 
     def _get_obs(self):
 
-        # todo: start of modifications part 1
+        # todo: start of modifications part 1 / 2
         old_value = self.sim.data.get_joint_qpos("robot0:torso_lift_joint")
         self.sim.data.set_joint_qpos("robot0:torso_lift_joint", 1.5)
         self.sim.forward()
-        # todo: end of modifications part 1
+        # todo: end of modifications part 1 / 2
 
         # positions
         grip_pos = self.sim.data.get_site_xpos('robot0:grip')
@@ -129,10 +129,10 @@ class FetchEnv(robot_env.RobotEnv):
             object_velp.ravel(), object_velr.ravel(), grip_velp, gripper_vel
         ])
 
-        # todo: start of modifications part 2
+        # todo: start of modifications part 2 / 2
         self.sim.data.set_joint_qpos("robot0:torso_lift_joint", old_value)
         self.sim.forward()
-        # todo: end of modifications part 2
+        # todo: end of modifications part 2 / 2
 
         return {
             'observation': obs.copy(),

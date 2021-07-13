@@ -5,8 +5,7 @@ http://www.mujoco.org/book/XMLreference.html#joint
 http://www.mujoco.org/book/XMLreference.html#geom
 
 modifications:
-None!
-No malfunction added!
+no malfunction added
 -->
 
 <mujoco model="ant">
@@ -81,10 +80,10 @@ No malfunction added!
         <geom fromto="0.0 0.0 0.0 0.2 -0.2 0.0" name="aux_4_geom" size="0.08" type="capsule"/>
         <body name="aux_4" pos="0.2 -0.2 0">
           <joint axis="0 0 1" name="hip_4" pos="0.0 0.0 0.0" range="-30 30" type="hinge" limited="true"/> <!-- added limited="true" -->
-          <geom fromto="0.0 0.0 0.0 0.2 -0.2 0.0" name="rightback_leg_geom" size="0.08" type="capsule" rgba="0.3 0 0 1"/>
+          <geom fromto="0.0 0.0 0.0 0.2 -0.2 0.0" name="rightback_leg_geom" size="0.08" type="capsule"/>
           <body pos="0.2 -0.2 0">
             <joint axis="1 1 0" name="ankle_4" pos="0.0 0.0 0.0" range="30 70" type="hinge" limited="true"/> <!-- added limited="true" -->
-            <geom fromto="0.0 0.0 0.0 0.4 -0.4 0.0" name="fourth_ankle_geom" size="0.08" type="capsule" rgba="0.3 0 0 1"/>
+            <geom fromto="0.0 0.0 0.0 0.4 -0.4 0.0" name="fourth_ankle_geom" size="0.08" type="capsule"/>
           </body>
         </body>
       </body>

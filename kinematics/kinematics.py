@@ -181,7 +181,7 @@ class Kinematics:
 
         if result.success:
 
-            soft_limit = 0.1
+            soft_limit = 0
             shoulder_pan_joint_inrange = self.shoulder_pan_joint_range[0] - soft_limit <= shoulder_pan_joint_pos <= self.shoulder_pan_joint_range[1] + soft_limit
             shoulder_lift_joint_inrange = self.shoulder_lift_joint_range[0] - soft_limit <= shoulder_lift_joint_pos <= self.shoulder_lift_joint_range[1] + soft_limit
             upperarm_roll_joint_inrange = self.upperarm_roll_joint_range[0] - soft_limit <= upperarm_roll_joint_pos <= self.upperarm_roll_joint_range[1] + soft_limit

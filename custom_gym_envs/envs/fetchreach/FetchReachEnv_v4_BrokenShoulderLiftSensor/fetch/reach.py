@@ -5,7 +5,7 @@ change from in import of fetch_env
 
 import os
 from gym import utils
-from custom_gym_envs.envs.fetchreach.FetchReachEnv_v4_BrokenSensor import fetch_env  # todo
+from custom_gym_envs.envs.fetchreach.FetchReachEnv_v4_BrokenShoulderLiftSensor import fetch_env  # todo
 
 # Ensure we get the path separator correct on windows
 MODEL_XML_PATH = os.path.join('fetch', 'reach.xml')

@@ -1,12 +1,14 @@
 """
 modifications:
-change from in import of robot_env, rotations and utils (line 8)
-commented out (line 191) and added line (line 192) to set the gripper_initial_xpos to that from the FetchReach-v1 environment
+change from in import of robot_env, rotations and utils
+commented out and added line to set the gripper_initial_xpos to that from the FetchReach-v1 environment
+modified _get_obs method: set qpos and then run forward to get a new gripper xpos; next, set qpos back to its original value and run forward.
+note: forward does not advance the simulation.  It only fills in the MjData.
 """
 
 import numpy as np
 
-from custom_gym_envs.envs.fetchreach.FetchReachEnv_v0_Normal import robot_env, rotations, utils  # todo: changed from in import
+from custom_gym_envs.envs.fetchreach.FetchReachEnv_v4_BrokenSensor import robot_env, rotations, utils  # todo: changed from in import
 
 
 def goal_distance(goal_a, goal_b):
@@ -91,6 +93,13 @@ class FetchEnv(robot_env.RobotEnv):
         utils.mocap_set_action(self.sim, action)
 
     def _get_obs(self):
+
+        # todo: start of modifications part 1
+        old_value = self.sim.data.get_joint_qpos("robot0:torso_lift_joint")
+        self.sim.data.set_joint_qpos("robot0:torso_lift_joint", 1.5)
+        self.sim.forward()
+        # todo: end of modifications part 1
+
         # positions
         grip_pos = self.sim.data.get_site_xpos('robot0:grip')
         dt = self.sim.nsubsteps * self.sim.model.opt.timestep
@@ -119,6 +128,11 @@ class FetchEnv(robot_env.RobotEnv):
             grip_pos, object_pos.ravel(), object_rel_pos.ravel(), gripper_state, object_rot.ravel(),
             object_velp.ravel(), object_velr.ravel(), grip_velp, gripper_vel
         ])
+
+        # todo: start of modifications part 2
+        self.sim.data.set_joint_qpos("robot0:torso_lift_joint", old_value)
+        self.sim.forward()
+        # todo: end of modifications part 2
 
         return {
             'observation': obs.copy(),

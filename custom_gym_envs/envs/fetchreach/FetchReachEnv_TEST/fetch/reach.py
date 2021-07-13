@@ -6,7 +6,7 @@ changed distance_threshold from 0.05 to 0.001
 
 import os
 from gym import utils
-from custom_gym_envs.envs.fetchreach.FetchReachEnv_TEST import fetch_env  # todo
+from custom_gym_envs.envs.fetchreach.FetchReachEnv_TEST import fetch_env  # modification here
 
 # Ensure we get the path separator correct on windows
 MODEL_XML_PATH = os.path.join('fetch', 'reach.xml')
@@ -22,6 +22,6 @@ class FetchReachEnv(fetch_env.FetchEnv, utils.EzPickle):
         fetch_env.FetchEnv.__init__(
             self, MODEL_XML_PATH, has_object=False, block_gripper=True, n_substeps=20,
             gripper_extra_height=0.2, target_in_the_air=True, target_offset=0.0,
-            obj_range=0.15, target_range=0.15, distance_threshold=0.001,  # todo
+            obj_range=0.15, target_range=0.15, distance_threshold=0.001,  # modification here
             initial_qpos=initial_qpos, reward_type=reward_type)
         utils.EzPickle.__init__(self)

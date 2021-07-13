@@ -58,7 +58,7 @@ parser.add_argument("--target_update_interval", type=int, default=1, metavar="N"
                     help="number of target value network updates per number of gradient steps (network updates) (default: 1)")
 
 parser.add_argument("-tef", "--time_step_eval_frequency", type=int, default=100000, metavar="N",  # todo
-                    help="frequency of policy evaluation during learning (default: 10000)")
+                    help="frequency of policy evaluation during learning (default: 100000)")
 parser.add_argument("-ee", "--eval_episodes", type=int, default=10, metavar="N",
                     help="number of episodes in policy evaluation roll-out (default: 10)")
 parser.add_argument("-tmsf", "--time_step_model_save_frequency", type=int, default=1000000, metavar="N",  # todo

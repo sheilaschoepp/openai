@@ -62,7 +62,7 @@ parser.add_argument("-tef", "--time_step_eval_frequency", type=int, default=1000
 parser.add_argument("-ee", "--eval_episodes", type=int, default=10, metavar="N",
                     help="number of episodes in policy evaluation roll-out (default: 10)")
 parser.add_argument("-tmsf", "--time_step_model_save_frequency", type=int, default=1000000, metavar="N",  # todo
-                    help="frequency of saving models during learning (default: 100000)")
+                    help="frequency of saving models during learning (default: 1000000)")
 
 parser.add_argument("-a", "--automatic_entropy_tuning", default=False, action="store_true",
                     help="if true, automatically tune the temperature (default: False)")

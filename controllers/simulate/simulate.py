@@ -20,6 +20,9 @@ parser.add_argument("-f", "--file", default="",
 parser.add_argument("-t", "--time_steps", default="",
                     help="the number of time steps into learning")
 
+parser.add_argument("-e", "--env_name", default=None,  # run the learned model in a environment different from the environment found in the filename (learning environment)
+                    help="name of MuJoCo Gym environment (default: None)")
+
 args = parser.parse_args()
 
 
@@ -39,15 +42,16 @@ class Simulate:
         self.load_parameters()
 
         if "ab_env_name" in self.parameters:
-            print("loading abnormal environment")
             env_name = self.parameters["ab_env_name"]
         else:
-            print("loading normal environment")
             env_name = self.parameters["n_env_name"]
             if env_name == "Ant-v2":
                 env_name = "AntEnv-v0"  # use our own ant class so that we can view rendering of ant properly
             elif env_name == "FetchReach-v1":
                 env_name = "FetchReachEnv-v0"
+
+        if args.env_name is not None:  # if we have specified an ab_env_name argument, we are attempting to see the policy learned in the normal environment in the abnormal env
+            env_name = args.env_name
 
         # seeds
 
@@ -151,6 +155,9 @@ class Simulate:
             max_steps_this_episode = 1000
             while not terminal and ((max_steps_this_episode <= 0) or (self.rlg.num_ep_steps() < max_steps_this_episode)):
                 _, _, terminal, _ = self.rlg.rl_step()
+
+                # print(self.env.env.sim.data.get_joint_qpos("robot0:shoulder_pan_joint"))
+
                 time.sleep(0.1)
 
 

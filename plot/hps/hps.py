@@ -287,12 +287,11 @@ def plot_ant_top(algorithm, seeds, df_means, df_sems):
     indices = np.arange(args.num_best)
 
     for i in np.flip(indices):
-        column = str(int(seeds[i]))
-        y = df_means[column]
-        lb = y - CI_Z * df_sems[column]
-        ub = y + CI_Z * df_sems[column]
+        y = df_means.iloc[:, i]
+        lb = y - CI_Z * df_sems.iloc[:, i]
+        ub = y + CI_Z * df_sems.iloc[:, i]
         color = COLORS[i]
-        plt.plot(x, y, color=color, label=column)
+        plt.plot(x, y, color=color, label=str(seeds[i]))
         plt.fill_between(x, lb, ub, color=color, alpha=0.3)
 
     plt.xlabel("time steps")
@@ -378,12 +377,11 @@ def plot_fetchreach_top(algorithm, seeds, df_means, df_sems):
     indices = np.arange(args.num_best)
 
     for i in np.flip(indices):
-        column = str(seeds[i])
-        y = df_means[column]
-        lb = y - CI_Z * df_sems[column]
-        ub = y + CI_Z * df_sems[column]
+        y = df_means.iloc[:, i]
+        lb = y - CI_Z * df_sems.iloc[:, i]
+        ub = y + CI_Z * df_sems.iloc[:, i]
         color = COLORS[i]
-        plt.plot(x, y, color=color, label=column)
+        plt.plot(x, y, color=color, label=str(seeds[i]))
         plt.fill_between(x, lb, ub, color=color, alpha=0.3)
 
     plt.xlabel("time steps")

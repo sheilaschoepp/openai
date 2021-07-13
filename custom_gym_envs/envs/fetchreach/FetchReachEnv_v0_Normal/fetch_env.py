@@ -115,7 +115,7 @@ class FetchEnv(robot_env.RobotEnv):
         # ])
 
         obs = np.concatenate([robot_qpos, robot_qvel])
-        print(obs.shape)
+
         return {
             'observation': obs.copy(),
             'achieved_goal': achieved_goal.copy(),

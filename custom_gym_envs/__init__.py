@@ -62,6 +62,13 @@ register(
 )
 
 register(
+    id="FetchReachEnv-v4",
+    entry_point="custom_gym_envs.envs.fetchreach.FetchReachEnv_v4_BrokenSensor.fetch.reach:FetchReachEnv",
+    kwargs={"reward_type": "dense"},
+    max_episode_steps=50,
+)
+
+register(
     id="FetchReachEnv-v999",
     entry_point="custom_gym_envs.envs.fetchreach.FetchReachEnv_TEST.fetch.reach:FetchReachEnv",
     kwargs={"reward_type": "dense"},

@@ -156,7 +156,7 @@ class Simulate:
             while not terminal and ((max_steps_this_episode <= 0) or (self.rlg.num_ep_steps() < max_steps_this_episode)):
                 _, _, terminal, _ = self.rlg.rl_step()
 
-                # print(self.env.env.sim.data.get_joint_qpos("robot0:shoulder_pan_joint"))
+                print(self.env.env.sim.data.get_joint_qpos("robot0:shoulder_lift_joint"))
 
                 time.sleep(0.1)
 
@@ -173,3 +173,5 @@ if __name__ == "__main__":
 
         print("keyboard interrupt")
         sim.cleanup()
+
+"-f /mnt/DATA/shared/fetchreach/normal/PPOv2_FetchReach-v1:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:100000_d:cpu_ps:True_pss:43/seed0 -t 6000000"

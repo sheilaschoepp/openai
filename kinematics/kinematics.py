@@ -117,6 +117,10 @@ class Kinematics:
         reachable = False
         qpos = {}
 
+        # if goal[2] < 0.43:  # todo add in a check for goals in table
+        #
+        #     return reachable, qpos, None
+
         physics = mujoco.Physics.from_xml_path(self.model_xml)
 
         state = env_copy.env.sim.get_state()
@@ -424,7 +428,7 @@ class Kinematics:
 if __name__ == "__main__":
 
     # env_name = "FetchReach-v0"
-    env_name = "FetchReachEnv-v999"  # todo: set distance threshold to 0.005
+    env_name = "FetchReachEnv-v0"  # todo: set distance threshold to 0.005
 
     k = Kinematics(env_name)
     # k.check_reachable([1.34183265, 0.74910039, 0.53472272])  # starting position in FetchReach-v1
@@ -432,4 +436,4 @@ if __name__ == "__main__":
     # k.check_reachable([0, 0, 0.39])  # in table
     # k.test_percent_reachable()
     # k.test_task_space()  # todo: set distance threshold to 0.005 because inverse kinematics is very precise!
-    # k.test_render_kinematics()  # todo: show the result of setting the distance threshold too high!!
+    k.test_render_kinematics()  # todo: show the result of setting the distance threshold too high!!

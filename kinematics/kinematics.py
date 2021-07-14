@@ -32,28 +32,26 @@ class Kinematics:
 
         self.env_name = env_name
 
-        if "melco2" in os.uname()[1]:
+        if "melco2" in os.uname()[1]:  # todo add in CC
             anaconda_path = "/opt/anaconda3"
         elif "melco" in os.uname()[1]:
             anaconda_path = "/local/melco2/sschoepp/anaconda3"
         else:
             anaconda_path = os.getenv("HOME") + "/anaconda3"
 
-        self.model_xml = None
+        self.model_xml = None  # todo add in CC paths
         if self.env_name == "FetchReach-v1":
-            self.model_xml = anaconda_path + "/envs/openai2/lib/python3.7/site-packages/gym/envs/robotics/assets/fetch/reach.xml"
-        if self.env_name == "FetchReachEnv-v0":
+            self.model_xml = anaconda_path + "/envs/openai2/lib/python3.7/site-packages/gym/envs/robotics/assets/fetch/reach.xml"  # todo
+        if "v0" in self.env_name:
             self.model_xml = str(Path.home()) + "/Documents/openai/custom_gym_envs/envs/fetchreach/FetchReachEnv_v0_Normal/assets/fetch/reach.xml"
-        elif self.env_name == "FetchReachEnv-v1":
+        elif "v1" in self.env_name:
             self.model_xml = str(Path.home()) + "/Documents/openai/custom_gym_envs/envs/fetchreach/FetchReachEnv_v1_BrokenShoulderLiftJoint/assets/fetch/reach.xml"
-        elif self.env_name == "FetchReachEnv-v2":
+        elif "v2" in self.env_name:
             self.model_xml = str(Path.home()) + "/Documents/openai/custom_gym_envs/envs/fetchreach/FetchReachEnv_v2_BrokenElbowFlexJoint/assets/fetch/reach.xml"
-        elif self.env_name == "FetchReachEnv-v3":
+        elif "v3" in self.env_name:
             self.model_xml = str(Path.home()) + "/Documents/openai/custom_gym_envs/envs/fetchreach/FetchReachEnv_v3_BrokenWristFlexJoint/assets/fetch/reach.xml"
-        elif self.env_name == "FetchReachEnv-v4":
-            self.model_xml = str(Path.home()) + "/Documents/openai/custom_gym_envs/envs/fetchreach/FetchReachEnv_v4_BrokenGrip/assets/fetch/reach.xml"
-        elif self.env_name == "FetchReachEnv-v999":
-            self.model_xml = str(Path.home()) + "/Documents/openai/custom_gym_envs/envs/fetchreach/FetchReachEnv_TEST/assets/fetch/reach.xml"
+        elif "v4" in self.env_name:
+            self.model_xml = str(Path.home()) + "/Documents/openai/custom_gym_envs/envs/fetchreach/FetchReachEnv_v4_BrokenShoulderLiftSensor/assets/fetch/reach.xml"
 
         robot_xml = self.model_xml[:-9] + "robot.xml"
         tree = ET.parse(robot_xml)
@@ -98,20 +96,24 @@ class Kinematics:
 
         self.line = "------------------------------------------------------------------------------------------------"
 
-    def check_reachable(self, env_copy, goal):
+    def check_reachable(self, env_state, goal):
         """
         Check if a goal is reachable.
 
         Note: If a goal is in the table (z < 0.42), it is not reachable.  Otherwise, compute the joint angles required
         to reach the goal and verify that they fall within the allowed joint ranges.
 
-        @param env_copy: MuJoCo Gym environment copy
-            a copy of the learning environment
+        @param env_state: float64 numpy array with shape (30,)
+            copy of the environment state (qpos.copy() + qvel.copy())
         @param goal: float64 numpy array with shape (3,)
             the (target) goal position of the robot end effector
 
         @return reachable: bool
             if true, goal is not in the table and is reachable
+        @return qpos: dict
+            dictionary of the joint angles to touch end effector (gripper) to goal
+        @return result: dict
+            inverse kinematics result
         """
 
         reachable = False
@@ -128,10 +130,7 @@ class Kinematics:
         else:
 
             physics = mujoco.Physics.from_xml_path(self.model_xml)
-
-            state = env_copy.env.sim.get_state()
-            flattened_state = np.append(state.qpos, state.qvel)
-            physics.set_state(flattened_state)
+            physics.set_state(env_state)
 
             site_name = "robot0:grip"
             target_pos = np.array(goal)
@@ -149,7 +148,7 @@ class Kinematics:
                                             target_pos=target_pos,
                                             target_quat=target_quat,
                                             joint_names=joint_names,
-                                            tol=env_copy.distance_threshold,  # TODO
+                                            tol=0.001,
                                             max_steps=100)
 
             # At runtime the positions and orientations of all joints defined in the model are stored in the vector mjData.qpos,
@@ -287,7 +286,9 @@ class Kinematics:
         print(self.line)
 
         env = gym.make(self.env_name)
-        env_copy = copy.deepcopy(env)  # we use a copy of the environment with the check_reachable method
+
+        state = env.env.sim.get_state()
+        flattened_state = np.append(state.qpos.copy(), state.qvel.copy())
 
         # np.random.seed(0)
         # env.seed(0)
@@ -303,10 +304,10 @@ class Kinematics:
 
         for i in range(episodes):
 
-            obs = env_copy.reset()
+            obs = env.reset()
             goal = obs["desired_goal"]
 
-            reachable, qpos, result = self.check_reachable(env_copy, goal)
+            reachable, qpos, result = self.check_reachable(flattened_state, goal)
 
             if result is not None:
 
@@ -347,9 +348,11 @@ class Kinematics:
         print(self.line)
 
         env = gym.make(self.env_name)
-        env_copy = copy.deepcopy(env)  # we use a copy of the environment with the check_reachable method
 
-        env_copy.reset()
+        state = env.env.sim.get_state()
+        flattened_state = np.append(state.qpos.copy(), state.qvel.copy())
+
+        env.reset()
 
         initial_gripper_pos = np.array([1.34183226, 0.74910038, 0.53472284])
         target_range = 0.15
@@ -366,9 +369,9 @@ class Kinematics:
                 for z in np.linspace(initial_gripper_pos[2] - target_range, initial_gripper_pos[2] + target_range, bins):
 
                     goal = [x, y, z]
-                    env_copy.env.goal = np.array(goal)
+                    env.env.goal = np.array(goal)
 
-                    reachable, _, result = self.check_reachable(env_copy, goal)
+                    reachable, _, result = self.check_reachable(flattened_state, goal)
 
                     if result is not None:
 
@@ -380,19 +383,19 @@ class Kinematics:
                             # set target position (goal) and orientation of the gripper
                             gripper_target = np.array(goal)
                             gripper_rotation = np.array([1., 0., 1., 0.])
-                            env_copy.sim.data.set_mocap_pos('robot0:mocap', gripper_target)
-                            env_copy.sim.data.set_mocap_quat('robot0:mocap', gripper_rotation)
+                            env.sim.data.set_mocap_pos('robot0:mocap', gripper_target)
+                            env.sim.data.set_mocap_quat('robot0:mocap', gripper_rotation)
 
                             # perform simulation steps
                             for _ in range(20):
-                                env_copy.sim.step()
-                                # env_copy.render()
+                                env.sim.step()
+                                # env.render()
 
                             # get gripper position to compare to target postion (goal)
-                            xpos = env_copy.sim.data.get_site_xpos('robot0:grip')
+                            xpos = env.sim.data.get_site_xpos('robot0:grip')
 
                             d = np.linalg.norm(xpos - goal)  # euclidean distance
-                            goal_reached = d <= env_copy.distance_threshold
+                            goal_reached = d <= env.distance_threshold
 
                             if args.debug:
                                 x_diff = np.round(xpos[0] - goal[0], 2)
@@ -411,7 +414,6 @@ class Kinematics:
 
         print("kinematics reachable goals:", str(round(kinematics_reachable_goals / (bins**3 - table_goals) * 100, 2)) + "%")
         print("kinematics unreachable goals:", str(round(kinematics_unreachable_goals / (bins**3 - table_goals) * 100, 2)) + "%")
-        print("distance threshold:", env_copy.distance_threshold)
         print("false negatives:", str(round(false_negatives / (bins**3 - table_goals) * 100, 2)) + "%")
 
     def test_render_kinematics(self):
@@ -428,37 +430,37 @@ class Kinematics:
         """
 
         env = gym.make(self.env_name)
-        env_copy = copy.deepcopy(env)
 
-        episodes = 100
+        state = env.env.sim.get_state()
+        flattened_state = np.append(state.qpos.copy(), state.qvel.copy())
+
+        episodes = 10
 
         for _ in range(episodes):
 
-            obs = env_copy.reset()
+            obs = env.reset()
 
             goal = obs["desired_goal"]
 
-            reachable, qpos, result = self.check_reachable(env_copy, goal)
+            reachable, qpos, result = self.check_reachable(flattened_state, goal)
 
             if result is not None and result.success:
 
                 for name, value in qpos.items():
-                    env_copy.sim.data.set_joint_qpos(name, value)
+                    env.sim.data.set_joint_qpos(name, value)
 
-                env_copy.sim.forward()
-                env_copy.render()
+                env.sim.forward()
+                env.render()
                 time.sleep(1)
 
 
 if __name__ == "__main__":
 
-    # env_name = "FetchReach-v0"
     env_name = "FetchReachEnv-v0"
 
     k = Kinematics(env_name)
-    # k.check_reachable([1.34183265, 0.74910039, 0.53472272])  # starting position in FetchReach-v1
-    # k.check_reachable([100, 100, 100])  # not reachable (impossible)
-    # k.check_reachable([0, 0, 0.39])  # in table
+
+    # TESTS
     # k.test_percent_reachable()
     # k.test_task_space()
-    k.test_render_kinematics()
+    # k.test_render_kinematics()

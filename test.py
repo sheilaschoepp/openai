@@ -3,7 +3,7 @@ import numpy as np
 
 import custom_gym_envs
 
-env = gym.make("FetchReachEnv-v4")
+env = gym.make("FetchReachEnvGE-v0")
 # env = gym.make("FetchReachEnv-v1")
 
 # action space: Box(-1.0, 1.0, (4,), float32)

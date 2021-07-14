@@ -287,8 +287,8 @@ class Kinematics:
             env.reset()  # slow step if goals are not reachable!!
 
         if "GE" in self.env_name:
-            print("reachable sampled goals:", str(round(env.reachable_sampled_goals / env.total_sampled_goals * 100, 2)))
-            print("unreachable sampled goals:", str(round(env.unreachable_sampled_goals / env.total_sampled_goals * 100, 2)))
+            print("reachable sampled goals:", str(round(env.reachable_sampled_goals / env.total_sampled_goals * 100, 2)) + "%")
+            print("unreachable sampled goals:", str(round(env.unreachable_sampled_goals / env.total_sampled_goals * 100, 2)) + "%")
 
         print(self.line)
 
@@ -306,11 +306,10 @@ class Kinematics:
         print(self.line)
 
         env = gym.make(self.env_name)
+        env.reset()
 
         state = env.env.sim.get_state()
         flattened_state = np.append(state.qpos.copy(), state.qvel.copy())
-
-        env.reset()
 
         initial_gripper_pos = np.array([1.34183226, 0.74910038, 0.53472284])
         target_range = 0.15
@@ -371,10 +370,10 @@ class Kinematics:
 
                             table_goals += 1
 
-            pbar.update(1)
+                        pbar.update(1)
 
-        print("kinematics reachable goals:", str(round(kinematics_reachable_goals / (bins**3 - table_goals) * 100, 2)) + "%")
-        print("kinematics unreachable goals:", str(round(kinematics_unreachable_goals / (bins**3 - table_goals) * 100, 2)) + "%")
+        print("reachable sampled goals:", str(round(kinematics_reachable_goals / (bins**3 - table_goals) * 100, 2)) + "%")
+        print("unreachable sampled goals:", str(round(kinematics_unreachable_goals / (bins**3 - table_goals) * 100, 2)) + "%")
         print("false negatives:", str(round(false_negatives / (bins**3 - table_goals) * 100, 2)) + "%")
 
     def test_render_kinematics(self):

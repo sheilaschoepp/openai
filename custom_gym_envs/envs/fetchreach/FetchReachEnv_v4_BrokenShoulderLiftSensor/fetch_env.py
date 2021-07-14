@@ -8,7 +8,7 @@ note: forward does not advance the simulation.  It only fills in the MjData.
 
 import numpy as np
 
-from custom_gym_envs.envs.fetchreach.FetchReachEnv_v4_BrokenShoulderLiftSensor import robot_env, rotations, utils  # todo: changed from in import
+from custom_gym_envs.envs.fetchreach.FetchReachEnv_v4_BrokenShoulderLiftSensor import robot_env, rotations, utils  # modification here
 
 
 def goal_distance(goal_a, goal_b):
@@ -94,11 +94,11 @@ class FetchEnv(robot_env.RobotEnv):
 
     def _get_obs(self):
 
-        # todo: start of modifications part 1 / 2
+        # modification here: start part 1 / 2
         old_value = self.sim.data.get_joint_qpos("robot0:torso_lift_joint")
         self.sim.data.set_joint_qpos("robot0:torso_lift_joint", 1.5)
         self.sim.forward()
-        # todo: end of modifications part 1 / 2
+        # modfiication here: end part 1 / 2
 
         # positions
         grip_pos = self.sim.data.get_site_xpos('robot0:grip')
@@ -129,10 +129,10 @@ class FetchEnv(robot_env.RobotEnv):
             object_velp.ravel(), object_velr.ravel(), grip_velp, gripper_vel
         ])
 
-        # todo: start of modifications part 2 / 2
+        # modification here: start part 2 / 2
         self.sim.data.set_joint_qpos("robot0:torso_lift_joint", old_value)
         self.sim.forward()
-        # todo: end of modifications part 2 / 2
+        # modification here: end part 2 / 2
 
         return {
             'observation': obs.copy(),
@@ -202,8 +202,8 @@ class FetchEnv(robot_env.RobotEnv):
             self.sim.step()
 
         # Extract information for sampling goals.
-        # self.initial_gripper_xpos = self.sim.data.get_site_xpos('robot0:grip').copy()  # todo: commented out added line below
-        self.initial_gripper_xpos = np.array([1.34183226, 0.74910038, 0.53472284])  # todo: set to initial_gripper_pos for normal FetchReach-v1 env
+        # self.initial_gripper_xpos = self.sim.data.get_site_xpos('robot0:grip').copy()  # modification here
+        self.initial_gripper_xpos = np.array([1.34183226, 0.74910038, 0.53472284])  # modification here
         if self.has_object:
             self.height_offset = self.sim.data.get_site_xpos('object0')[2]
 

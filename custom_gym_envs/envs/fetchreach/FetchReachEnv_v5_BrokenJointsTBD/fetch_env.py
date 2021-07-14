@@ -1,12 +1,12 @@
 """
 modifications:
-change from in import of robot_env, rotations and utils (line 8)
-commented out (line 191) and added line (line 192) to set the gripper_initial_xpos to that from the FetchReach-v1 environment
+change from in import of robot_env, rotations and utils
+commented out and added line to set the gripper_initial_xpos to that from the FetchReach-v1 environment
 """
 
 import numpy as np
 
-from custom_gym_envs.envs.fetchreach.FetchReachEnv_v5_BrokenJointsTBD import robot_env, rotations, utils  # todo: changed from in import
+from custom_gym_envs.envs.fetchreach.FetchReachEnv_v5_BrokenJointsTBD import robot_env, rotations, utils  # modification here
 
 
 def goal_distance(goal_a, goal_b):
@@ -188,8 +188,8 @@ class FetchEnv(robot_env.RobotEnv):
             self.sim.step()
 
         # Extract information for sampling goals.
-        # self.initial_gripper_xpos = self.sim.data.get_site_xpos('robot0:grip').copy()  # todo: commented out added line below
-        self.initial_gripper_xpos = np.array([1.34183226, 0.74910038, 0.53472284])  # todo: set to initial_gripper_pos for normal FetchReach-v1 env
+        # self.initial_gripper_xpos = self.sim.data.get_site_xpos('robot0:grip').copy()  # modification here
+        self.initial_gripper_xpos = np.array([1.34183226, 0.74910038, 0.53472284])  # modification here
         if self.has_object:
             self.height_offset = self.sim.data.get_site_xpos('object0')[2]
 

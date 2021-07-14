@@ -2,14 +2,14 @@
 modifications:
 change from in import of robot_env, rotations and utils
 commented out and added line to set the gripper_initial_xpos to that from the FetchReach-v1 environment
-imported kinematics
+imported kinematics, termcolor
 added goal_elimination as argument in __init__ method and added an argument description
-created class instance variables in __init__ (self.goal_elimination and self.kinematics)
+created class instance variables in __init__
 modified _sample_goal method to eliminate unreachable goals is self.goal_elimination=True
+IMPORTANT: you must set env_name in __init__
 """
-import logging
-
 import numpy as np
+from termcolor import colored  # modification here
 
 from custom_gym_envs.envs.fetchreach.FetchReachEnv_v5_BrokenJointsTBD import robot_env, rotations, utils  # modification here
 from kinematics.kinematics import Kinematics  # modification here
@@ -58,8 +58,11 @@ class FetchEnv(robot_env.RobotEnv):
 
         # modification here: start
         self.goal_elimination = goal_elimination
-        env_name = "FetchReachEnv{}-v0".format("GE" if self.goal_elimination else "")
+        env_name = "FetchReachEnv{}-v5".format("GE" if self.goal_elimination else "")
         self.kinematics = Kinematics(env_name)
+        self.total_sampled_goals = 0
+        self.reachable_sampled_goals = 0
+        self.unreachable_sampled_goals = 0
         # modification here: end
 
         super(FetchEnv, self).__init__(
@@ -189,15 +192,21 @@ class FetchEnv(robot_env.RobotEnv):
                 count = 0
                 while not reachable:
                     goal = self.initial_gripper_xpos[:3] + self.np_random.uniform(-self.target_range, self.target_range, size=3)
+                    self.total_sampled_goals += 1
                     state = self.sim.get_state()
                     flattened_state = np.append(state.qpos.copy(), state.qvel.copy())
                     reachable, _, _ = self.kinematics.check_reachable(flattened_state, goal)
                     if not reachable:
                         count += 1
+                        self.reachable_sampled_goals += 1
                     else:
                         count = 0
-                    if count >= 100:  # sanity check
-                        logging.warning("fetch_env._sample_goal: 100 consecutive unreachable goals sampled")
+                        self.unreachable_sampled_goals += 1
+                    if count % 1000 == 0:  # sanity check
+                        if count == 0:
+                            pass
+                        else:
+                            print(colored("fetch_env._sample_goal: {} consecutive unreachable goals sampled".format(count), "red"))
             else:
                 goal = self.initial_gripper_xpos[:3] + self.np_random.uniform(-self.target_range, self.target_range, size=3)
             # modification here: end

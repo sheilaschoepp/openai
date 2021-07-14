@@ -65,7 +65,7 @@ for goal_elimination in [True, False]:
     )
     register(
         id="FetchReachEnv{}-v4".format(suffix),
-        entry_point="custom_gym_envs.envs.fetchreach.FetchReachEnv_v4_BrokenJointsTBD.fetch.reach:FetchReachEnv",
+        entry_point="custom_gym_envs.envs.fetchreach.FetchReachEnv_v4_BrokenShoulderLiftSensor.fetch.reach:FetchReachEnv",
         kwargs=kwargs,
         max_episode_steps=50,
     )

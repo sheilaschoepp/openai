@@ -1,16 +1,13 @@
-import argparse
 import os
+import time
 import xml.etree.ElementTree as ET
 from pathlib import Path
-import time
-import copy
 
 import gym
 import numpy as np
 from dm_control import mujoco
 from dm_control.utils import inverse_kinematics as ik
-
-import custom_gym_envs
+from tqdm import tqdm
 
 
 class Kinematics:
@@ -274,7 +271,7 @@ class Kinematics:
         Find the percentage of sampled goals that are reachable in an environment.
 
         Note:
-        - Sample 100 goals.
+        - Sample 100 goals (sampled in call to env.reset())
         - For each goal, use inverse kinematics to determine if goal is reachable.  Maintain a count.
         - Compute percentages.
         """
@@ -283,50 +280,14 @@ class Kinematics:
 
         env = gym.make(self.env_name)
 
-        state = env.env.sim.get_state()
-        flattened_state = np.append(state.qpos.copy(), state.qvel.copy())
-
-        # np.random.seed(0)
-        # env.seed(0)
-
         episodes = 100
 
-        result_successes = 0
+        for _ in tqdm(range(episodes)):
 
-        kinematics_reachable_goals = 0
-        kinematics_unreachable_goals = 0
-        kinematics_results = 0
-        table_goals = 0
+            env.reset()  # slow step if goals are not reachable!!
 
-        for i in range(episodes):
-
-            obs = env.reset()  # slow step if goals are not reachable!!
-            goal = obs["desired_goal"]
-
-            reachable, qpos, result = self.check_reachable(flattened_state, goal)
-
-            if result is not None:
-
-                kinematics_results += 1
-
-                if reachable:
-                    kinematics_reachable_goals += 1
-                else:
-                    kinematics_unreachable_goals += 1
-
-                if result.success:
-                    result_successes += 1
-
-            else:
-
-                table_goals += 1
-
-        print("kinematics result rate:", str(round(result_successes / kinematics_results * 100, 2)) + "%")
-
-        print("kinematics reachable goals:", str(round(kinematics_reachable_goals / episodes * 100, 2)) + "%")
-        print("kinematics unreachable goals:", str(round(kinematics_unreachable_goals / episodes * 100, 2)) + "%")
-
-        print("goals in table:", str(round(table_goals / episodes * 100, 2)) + "%")
+        print("reachable sampled goals:", str(round(env.reachable_sampled_goals / env.total_sampled_goals * 100, 2)))
+        print("unreachable sampled goals:", str(round(env.unreachable_sampled_goals / env.total_sampled_goals * 100, 2)))
 
         print(self.line)
 
@@ -360,53 +321,56 @@ class Kinematics:
         table_goals = 0
         false_negatives = 0
 
-        for x in np.linspace(initial_gripper_pos[0] - target_range, initial_gripper_pos[0] + target_range, bins):
-            for y in np.linspace(initial_gripper_pos[1] - target_range, initial_gripper_pos[1] + target_range, bins):
-                for z in np.linspace(initial_gripper_pos[2] - target_range, initial_gripper_pos[2] + target_range, bins):
+        with tqdm(total=bins**3) as pbar:
+            for x in np.linspace(initial_gripper_pos[0] - target_range, initial_gripper_pos[0] + target_range, bins):
+                for y in np.linspace(initial_gripper_pos[1] - target_range, initial_gripper_pos[1] + target_range, bins):
+                    for z in np.linspace(initial_gripper_pos[2] - target_range, initial_gripper_pos[2] + target_range, bins):
 
-                    goal = [x, y, z]
-                    env.env.goal = np.array(goal)
+                        goal = [x, y, z]
+                        env.env.goal = np.array(goal)
 
-                    reachable, _, result = self.check_reachable(flattened_state, goal)
+                        reachable, _, result = self.check_reachable(flattened_state, goal)
 
-                    if result is not None:
+                        if result is not None:
 
-                        if reachable:
-                            kinematics_reachable_goals += 1
-                        elif not reachable:
-                            kinematics_unreachable_goals += 1
+                            if reachable:
+                                kinematics_reachable_goals += 1
+                            elif not reachable:
+                                kinematics_unreachable_goals += 1
 
-                            # set target position (goal) and orientation of the gripper
-                            gripper_target = np.array(goal)
-                            gripper_rotation = np.array([1., 0., 1., 0.])
-                            env.sim.data.set_mocap_pos('robot0:mocap', gripper_target)
-                            env.sim.data.set_mocap_quat('robot0:mocap', gripper_rotation)
+                                # set target position (goal) and orientation of the gripper
+                                gripper_target = np.array(goal)
+                                gripper_rotation = np.array([1., 0., 1., 0.])
+                                env.sim.data.set_mocap_pos('robot0:mocap', gripper_target)
+                                env.sim.data.set_mocap_quat('robot0:mocap', gripper_rotation)
 
-                            # perform simulation steps
-                            for _ in range(20):
-                                env.sim.step()
-                                # env.render()
+                                # perform simulation steps
+                                for _ in range(20):
+                                    env.sim.step()
+                                    # env.render()
 
-                            # get gripper position to compare to target postion (goal)
-                            xpos = env.sim.data.get_site_xpos('robot0:grip')
+                                # get gripper position to compare to target postion (goal)
+                                xpos = env.sim.data.get_site_xpos('robot0:grip')
 
-                            d = np.linalg.norm(xpos - goal)  # euclidean distance
-                            goal_reached = d <= env.distance_threshold
+                                d = np.linalg.norm(xpos - goal)  # euclidean distance
+                                goal_reached = d <= env.distance_threshold
 
-                            if self.debug:
-                                x_diff = np.round(xpos[0] - goal[0], 2)
-                                y_diff = np.round(xpos[1] - goal[1], 2)
-                                z_diff = np.round(xpos[2] - goal[2], 2)
-                                print("x_diff: {}, y_diff: {}, z_diff: {}".format(x_diff, y_diff, z_diff))
-                                print(self.line)
-                                print(self.line)
+                                if self.debug:
+                                    x_diff = np.round(xpos[0] - goal[0], 2)
+                                    y_diff = np.round(xpos[1] - goal[1], 2)
+                                    z_diff = np.round(xpos[2] - goal[2], 2)
+                                    print("x_diff: {}, y_diff: {}, z_diff: {}".format(x_diff, y_diff, z_diff))
+                                    print(self.line)
+                                    print(self.line)
 
-                            if goal_reached:
-                                false_negatives += 1
+                                if goal_reached:
+                                    false_negatives += 1
 
-                    else:
+                        else:
 
-                        table_goals += 1
+                            table_goals += 1
+
+            pbar.update(1)
 
         print("kinematics reachable goals:", str(round(kinematics_reachable_goals / (bins**3 - table_goals) * 100, 2)) + "%")
         print("kinematics unreachable goals:", str(round(kinematics_unreachable_goals / (bins**3 - table_goals) * 100, 2)) + "%")
@@ -432,7 +396,7 @@ class Kinematics:
 
         episodes = 10
 
-        for _ in range(episodes):
+        for _ in tqdm(range(episodes)):
 
             obs = env.reset()
 

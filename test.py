@@ -5,7 +5,7 @@ import numpy as np
 
 import custom_gym_envs
 
-env = gym.make("FetchReachEnvGE-v3")
+env = gym.make("FetchReachEnvGE-v2")
 # env = gym.make("FetchReachEnv-v1")
 
 env.kinematics.test_percent_reachable()

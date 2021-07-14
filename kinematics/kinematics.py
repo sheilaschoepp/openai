@@ -12,25 +12,21 @@ from dm_control.utils import inverse_kinematics as ik
 
 import custom_gym_envs
 
-parser = argparse.ArgumentParser(description="Kinematics")
-
-parser.add_argument("-d", "--debug", default=False, action="store_true",
-                    help="if true, run debug mode with print statements")
-
-args = parser.parse_args()
-
 
 class Kinematics:
 
-    def __init__(self, env_name):
+    def __init__(self, env_name, debug=False):
         """
         Initialize Kinematics class by loading thx XML as a string.
 
         @param env_name: string
             name of MuJoCo Gym environment
+        @param debug: bool
+            if True, debug mode (view print statements)
         """
 
         self.env_name = env_name
+        self.debug = debug
 
         if "melco2" in os.uname()[1]:  # todo add in CC
             anaconda_path = "/opt/anaconda3"
@@ -121,7 +117,7 @@ class Kinematics:
 
         if goal[2] < 0.42:
 
-            if args.debug:
+            if self.debug:
                 print("{} in table".format(goal))
                 print(self.line)
 
@@ -229,7 +225,7 @@ class Kinematics:
                     "robot0:l_gripper_finger_joint": l_gripper_finger_joint_pos,
                 }
 
-                if not reachable and args.debug:
+                if not reachable and self.debug:
 
                     print("{} not reachable".format(str(goal)))
 
@@ -304,7 +300,7 @@ class Kinematics:
 
         for i in range(episodes):
 
-            obs = env.reset()
+            obs = env.reset()  # slow step if goals are not reachable!!
             goal = obs["desired_goal"]
 
             reachable, qpos, result = self.check_reachable(flattened_state, goal)
@@ -397,7 +393,7 @@ class Kinematics:
                             d = np.linalg.norm(xpos - goal)  # euclidean distance
                             goal_reached = d <= env.distance_threshold
 
-                            if args.debug:
+                            if self.debug:
                                 x_diff = np.round(xpos[0] - goal[0], 2)
                                 y_diff = np.round(xpos[1] - goal[1], 2)
                                 z_diff = np.round(xpos[2] - goal[2], 2)

@@ -2,15 +2,14 @@
 modifications:
 change from in import of robot_env, rotations and utils
 commented out and added line to set the gripper_initial_xpos to that from the FetchReach-v1 environment
-imported kinematics
+imported kinematics, termcolor
 added goal_elimination as argument in __init__ method and added an argument description
 created class instance variables in __init__ (self.goal_elimination and self.kinematics)
 modified _sample_goal method to eliminate unreachable goals is self.goal_elimination=True
 IMPORTANT: you must set env_name in __init__
 """
-import logging
-
 import numpy as np
+from termcolor import colored  # modification here
 
 from custom_gym_envs.envs.fetchreach.FetchReachEnv_v1_BrokenShoulderLiftJoint import robot_env, rotations, utils  # modification here
 from kinematics.kinematics import Kinematics  # modification here
@@ -197,8 +196,11 @@ class FetchEnv(robot_env.RobotEnv):
                         count += 1
                     else:
                         count = 0
-                    if count >= 100:  # sanity check
-                        logging.warning("fetch_env._sample_goal: 100 consecutive unreachable goals sampled")
+                    if count % 1000 == 0:  # sanity check
+                        if count == 0:
+                            pass
+                        else:
+                            print(colored("fetch_env._sample_goal: {} consecutive unreachable goals sampled".format(count), "red"))
             else:
                 goal = self.initial_gripper_xpos[:3] + self.np_random.uniform(-self.target_range, self.target_range, size=3)
             # modification here: end

@@ -8,6 +8,7 @@ created class instance variables in __init__ (self.goal_elimination and self.kin
 modified _sample_goal method to eliminate unreachable goals is self.goal_elimination=True
 modified _get_obs method: set qpos and then run forward to get a new gripper xpos; next, set qpos back to its original value and run forward
 note: forward does not advance the simulation.  It only fills in the MjData
+IMPORTANT: you must set env_name in __init__
 """
 import logging
 
@@ -60,7 +61,7 @@ class FetchEnv(robot_env.RobotEnv):
 
         # modification here: start
         self.goal_elimination = goal_elimination
-        env_name = "FetchReachEnv{}-v0".format("GE" if self.goal_elimination else "")
+        env_name = "FetchReachEnv{}-v4".format("GE" if self.goal_elimination else "")
         self.kinematics = Kinematics(env_name)
         # modification here: end
 

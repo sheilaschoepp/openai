@@ -6,6 +6,7 @@ imported kinematics
 added goal_elimination as argument in __init__ method and added an argument description
 created class instance variables in __init__ (self.goal_elimination and self.kinematics)
 modified _sample_goal method to eliminate unreachable goals is self.goal_elimination=True
+IMPORTANT: you must set env_name in __init__
 """
 import logging
 
@@ -58,7 +59,7 @@ class FetchEnv(robot_env.RobotEnv):
 
         # modification here: start
         self.goal_elimination = goal_elimination
-        env_name = "FetchReachEnv{}-v0".format("GE" if self.goal_elimination else "")
+        env_name = "FetchReachEnv{}-v3".format("GE" if self.goal_elimination else "")
         self.kinematics = Kinematics(env_name)
         # modification here: end
 

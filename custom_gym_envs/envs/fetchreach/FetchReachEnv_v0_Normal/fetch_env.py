@@ -5,6 +5,7 @@ commented out and added line to set the gripper_initial_xpos to that from the Fe
 added goal_elimination as argument in __init__ method and added an argument description
 imported kinematics
 created class instance variables in __init__ (self.goal_elimination and self.kinematics)
+IMPORTANT: you must set env_name in __init__
 """
 import logging
 

@@ -6,7 +6,7 @@ changed distance_threshold from 0.05 to 0.001
 
 import os
 from gym import utils
-from custom_gym_envs.envs.fetchreach.FetchReachEnv_v3_BrokenWristFlexJoint import fetch_env  # modification here
+from custom_gym_envs.envs.fetchreach.FetchReachEnv_v3_BrokenWristFlexJointReachable import fetch_env  # modification here
 
 # Ensure we get the path separator correct on windows
 MODEL_XML_PATH = os.path.join('fetch', 'reach.xml')

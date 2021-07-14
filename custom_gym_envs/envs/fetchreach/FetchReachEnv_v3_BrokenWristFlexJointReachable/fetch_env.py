@@ -6,7 +6,7 @@ commented out and added line to set the gripper_initial_xpos to that from the Fe
 
 import numpy as np
 
-from custom_gym_envs.envs.fetchreach.FetchReachEnv_v3_BrokenWristFlexJoint import robot_env, rotations, utils  # modification here
+from custom_gym_envs.envs.fetchreach.FetchReachEnv_v3_BrokenWristFlexJointReachable import robot_env, rotations, utils  # modification here
 
 
 def goal_distance(goal_a, goal_b):

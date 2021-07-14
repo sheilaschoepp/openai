@@ -52,7 +52,7 @@ name="robot0:shoulder_lift_link", class="robot0:blue" changed to class="robot0:r
 						</body>
 					</body>
 				</body>
-			</body> <!-- robot arm joints start HERE class="robot0:red" -->
+			</body> <!-- robot arm joints start HERE -->
 			<body name="robot0:shoulder_pan_link" pos="0.1195 0 0.3486">
 				<inertial diaginertia="0.009 0.0086 0.0041" mass="2.5587" pos="0.0927 -0.0056 0.0564" quat="-0.1364 0.7624 -0.1562 0.613"></inertial>
 				<joint axis="0 0 1" name="robot0:shoulder_pan_joint" range="-1.6056 1.6056"></joint>

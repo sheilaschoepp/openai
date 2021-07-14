@@ -2,11 +2,17 @@
 modifications:
 change from in import of robot_env, rotations and utils
 commented out and added line to set the gripper_initial_xpos to that from the FetchReach-v1 environment
+imported kinematics, termcolor
+added goal_elimination as argument in __init__ method and added an argument description
+created class instance variables in __init__
+modified _sample_goal method to eliminate unreachable goals is self.goal_elimination=True
+IMPORTANT: you must set env_name in __init__
 """
-
 import numpy as np
+from termcolor import colored  # modification here
 
 from custom_gym_envs.envs.fetchreach.FetchReachEnv_v0_Normal import robot_env, rotations, utils  # modification here
+from kinematics.kinematics import Kinematics  # modification here
 
 
 def goal_distance(goal_a, goal_b):
@@ -21,7 +27,7 @@ class FetchEnv(robot_env.RobotEnv):
     def __init__(
         self, model_path, n_substeps, gripper_extra_height, block_gripper,
         has_object, target_in_the_air, target_offset, obj_range, target_range,
-        distance_threshold, initial_qpos, reward_type,
+        distance_threshold, initial_qpos, reward_type, goal_elimination,  # modification here
     ):
         """Initializes a new Fetch environment.
 
@@ -38,6 +44,7 @@ class FetchEnv(robot_env.RobotEnv):
             distance_threshold (float): the threshold after which a goal is considered achieved
             initial_qpos (dict): a dictionary of joint names and values that define the initial configuration
             reward_type ('sparse' or 'dense'): the reward type, i.e. sparse or dense
+            goal_elimination (bool): if true, eliminate unreachable goals   # modification here
         """
         self.gripper_extra_height = gripper_extra_height
         self.block_gripper = block_gripper
@@ -48,6 +55,15 @@ class FetchEnv(robot_env.RobotEnv):
         self.target_range = target_range
         self.distance_threshold = distance_threshold
         self.reward_type = reward_type
+
+        # modification here: start
+        self.goal_elimination = goal_elimination
+        env_name = "FetchReachEnv{}-v0".format("GE" if self.goal_elimination else "")
+        self.kinematics = Kinematics(env_name)
+        self.total_sampled_goals = 0
+        self.reachable_sampled_goals = 0
+        self.unreachable_sampled_goals = 0
+        # modification here: end
 
         super(FetchEnv, self).__init__(
             model_path=model_path, n_substeps=n_substeps, n_actions=4,
@@ -166,7 +182,35 @@ class FetchEnv(robot_env.RobotEnv):
             if self.target_in_the_air and self.np_random.uniform() < 0.5:
                 goal[2] += self.np_random.uniform(0, 0.45)
         else:
-            goal = self.initial_gripper_xpos[:3] + self.np_random.uniform(-self.target_range, self.target_range, size=3)
+
+            # goal = self.initial_gripper_xpos[:3] + self.np_random.uniform(-self.target_range, self.target_range, size=3)
+
+            # modification here: start
+            goal = None
+            if self.goal_elimination:
+                reachable = False
+                count = 0
+                while not reachable:
+                    goal = self.initial_gripper_xpos[:3] + self.np_random.uniform(-self.target_range, self.target_range, size=3)
+                    self.total_sampled_goals += 1
+                    state = self.sim.get_state()
+                    flattened_state = np.append(state.qpos.copy(), state.qvel.copy())
+                    reachable, _, _ = self.kinematics.check_reachable(flattened_state, goal)
+                    if not reachable:
+                        count += 1
+                        self.unreachable_sampled_goals += 1
+                    else:
+                        count = 0
+                        self.reachable_sampled_goals += 1
+                    if count % 1000 == 0:  # sanity check
+                        if count == 0:
+                            pass
+                        else:
+                            print(colored("fetch_env._sample_goal: {} consecutive unreachable goals sampled".format(count), "red"))
+            else:
+                goal = self.initial_gripper_xpos[:3] + self.np_random.uniform(-self.target_range, self.target_range, size=3)
+            # modification here: end
+
         return goal.copy()
 
     def _is_success(self, achieved_goal, desired_goal):

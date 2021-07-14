@@ -1,0 +1,25 @@
+FetchReachEnvGE-v0
+kinematics reachable goals: 88.25%
+kinematics unreachable goals: 11.75%
+false negatives: 0.0%
+
+FetchReachEnvGE-v1
+reachable sampled goals: 9.5%
+unreachable sampled goals: 90.5%
+false negatives: 0.0%
+
+FetchReachEnvGE-v2
+reachable sampled goals: 1.0%
+unreachable sampled goals: 99.0%
+false negatives: 0.0%
+
+FetchReachEnvGE-v3
+incomplete: cannot even finish the env initialization (which samples goals in an infinite loop)
+
+FetchReachEnvGE-v4
+reachable sampled goals: 88.25%
+unreachable sampled goals: 11.75%
+false negatives: 0.0%
+
+FetchReachEnvGE-v5
+TBD

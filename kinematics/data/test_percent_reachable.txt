@@ -1,0 +1,20 @@
+FetchReachEnvGE-v0
+reachable sampled goals: 82.79%
+unreachable sampled goals: 17.21%
+
+FetchReachEnvGE-v1
+reachable sampled goals: 8.78%
+unreachable sampled goals: 91.22%
+
+FetchReachEnvGE-v2
+
+
+FetchReachEnvGE-v3
+incomplete: cannot even finish the env initialization (which samples goals in an infinite loop)
+
+FetchReachEnvGE-v4
+reachable sampled goals: 77.69%
+unreachable sampled goals: 22.31%
+
+FetchReachEnvGE-v5
+TBD

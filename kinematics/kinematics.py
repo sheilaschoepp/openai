@@ -452,15 +452,3 @@ class Kinematics:
                 env.sim.forward()
                 env.render()
                 time.sleep(1)
-
-
-if __name__ == "__main__":
-
-    env_name = "FetchReachEnv-v0"
-
-    k = Kinematics(env_name)
-
-    # TESTS
-    # k.test_percent_reachable()
-    # k.test_task_space()
-    # k.test_render_kinematics()

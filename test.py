@@ -1,10 +1,14 @@
+import time
+
 import gym
 import numpy as np
 
 import custom_gym_envs
 
-env = gym.make("FetchReachEnvGE-v0")
+env = gym.make("FetchReachEnvGE-v3")
 # env = gym.make("FetchReachEnv-v1")
+
+env.kinematics.test_percent_reachable()
 
 # action space: Box(-1.0, 1.0, (4,), float32)
 # observation_space["observation"]: Box(-inf, inf, (25,), float32)
@@ -20,4 +24,5 @@ for e in range(100):
     while not done:
         action = env.action_space.sample()
         observation, reward, done, info = env.step(action)
-        # env.render()
+        env.render()
+        time.sleep(2)

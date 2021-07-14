@@ -8,7 +8,7 @@ note: forward does not advance the simulation.  It only fills in the MjData.
 
 import numpy as np
 
-from custom_gym_envs.envs.fetchreach.FetchReachEnv_v4_BrokenShoulderLiftSensor import robot_env, rotations, utils  # modification here
+from custom_gym_envs.envs.fetchreach.FetchReachEnv_v4_BrokenShoulderLiftSensorReachable import robot_env, rotations, utils  # modification here
 
 
 def goal_distance(goal_a, goal_b):

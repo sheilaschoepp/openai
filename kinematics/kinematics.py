@@ -286,8 +286,9 @@ class Kinematics:
 
             env.reset()  # slow step if goals are not reachable!!
 
-        print("reachable sampled goals:", str(round(env.reachable_sampled_goals / env.total_sampled_goals * 100, 2)))
-        print("unreachable sampled goals:", str(round(env.unreachable_sampled_goals / env.total_sampled_goals * 100, 2)))
+        if "GE" in self.env_name:
+            print("reachable sampled goals:", str(round(env.reachable_sampled_goals / env.total_sampled_goals * 100, 2)))
+            print("unreachable sampled goals:", str(round(env.unreachable_sampled_goals / env.total_sampled_goals * 100, 2)))
 
         print(self.line)
 

@@ -212,10 +212,10 @@ class FetchEnv(robot_env.RobotEnv):
                     reachable, _, _ = self.kinematics.check_reachable(flattened_state, goal)
                     if not reachable:
                         count += 1
-                        self.reachable_sampled_goals += 1
+                        self.unreachable_sampled_goals += 1
                     else:
                         count = 0
-                        self.unreachable_sampled_goals += 1
+                        self.reachable_sampled_goals += 1
                     if count % 1000 == 0:  # sanity check
                         if count == 0:
                             pass

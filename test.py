@@ -1,19 +1,19 @@
-import time
+import argparse
 
 import gym
-import numpy as np
 
 import custom_gym_envs
 
-env = gym.make("FetchReachEnvGE-v1")
-# env = gym.make("FetchReachEnv-v1")
+parser = argparse.ArgumentParser(description="PyTorch Soft Actor-Critic Arguments")
+
+parser.add_argument("-e", "--env_name", default="FetchReachEnvGE-v1",
+                    help="name of MuJoCo Gym environment (default: FetchReachEnvGE-v0)")
+
+args = parser.parse_args()
+
+env = gym.make(args.env_name)
 
 env.kinematics.test_percent_reachable()
-
-# action space: Box(-1.0, 1.0, (4,), float32)
-# observation_space["observation"]: Box(-inf, inf, (25,), float32)
-# observation_space["achieved_goal"]: Box(-inf, inf, (3,), float32)
-# env.observation_space["desired_goal"]: Box(-inf, inf, (3,), float32)
 
 # env.seed(0)
 # np.random.seed(0)

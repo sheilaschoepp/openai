@@ -119,9 +119,9 @@ class Kinematics:
 
         if goal[2] < 0.42:
 
-            # if args.debug:
-            #     print("{} in table".format(goal))
-            #     print(self.line)
+            if args.debug:
+                print("{} in table".format(goal))
+                print(self.line)
 
             return reachable, qpos, None
 

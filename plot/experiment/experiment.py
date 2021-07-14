@@ -8,10 +8,10 @@ sns.set_theme()
 
 def get_data(directory):
     """
-    Obtain the average return across 10 runs for a single experiment.
+    Obtain the average return across multiple runs for a single experiment.
 
     @param directory: string
-        directory for experiment data
+        absolute path for experiment seed directory
     """
 
     dfs = []
@@ -44,12 +44,14 @@ def plot(title, df_mean, df_sem, ymin, ymax):
 
     @param title: string
         title for the plot
-    @param algorithm: string
-        algorithm name
     @param df_mean: df
         average return for one parameter setting
     @param df_sem: df
         standard error for one parameter setting
+    @param ymin: int
+        minimum y value on y-axis
+    @param ymax: int
+        maximum y value on y-axis
     """
 
     plot_directory = os.getcwd() + "/plots"

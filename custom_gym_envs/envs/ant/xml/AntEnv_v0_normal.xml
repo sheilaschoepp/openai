@@ -5,7 +5,7 @@ http://www.mujoco.org/book/XMLreference.html#joint
 http://www.mujoco.org/book/XMLreference.html#geom
 
 modifications:
-added limited="true" to all limb joints \\
+added limited="true" to all leg joints \\
 -->
 
 <mujoco model="ant">

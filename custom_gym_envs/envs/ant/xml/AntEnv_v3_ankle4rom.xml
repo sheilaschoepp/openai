@@ -5,9 +5,9 @@ http://www.mujoco.org/book/XMLreference.html#joint
 http://www.mujoco.org/book/XMLreference.html#geom
 
 modifications:
-added limited="true" to all leg joints
-name="ankle_4", range="30 70" changed to range="65 70", added limited="true"
-added rgba to color the rightback_leg_geom and fourth_ankle_geom joint capsules
+added limited="true" to all leg joints \\
+name="ankle_4", range="30 70" changed to range="65 70", added limited="true" \\
+added rgba to color the rightback_leg_geom and fourth_ankle_geom joint capsules \\
 -->
 
 <mujoco model="ant">
@@ -38,26 +38,30 @@ added rgba to color the rightback_leg_geom and fourth_ankle_geom joint capsules
       <geom name="torso_geom" pos="0 0 0" size="0.25" type="sphere"/>
       <joint armature="0" damping="0" limited="false" margin="0.01" name="root" pos="0 0 0" type="free"/>
 
-      <!-- front right leg -->
+      <!-- front left leg -->
       <body name="front_left_leg" pos="0 0 0">
         <geom fromto="0.0 0.0 0.0 0.2 0.2 0.0" name="aux_1_geom" size="0.08" type="capsule"/>
         <body name="aux_1" pos="0.2 0.2 0">
+<!--          <joint axis="0 0 1" name="hip_1" pos="0.0 0.0 0.0" range="-30 30" type="hinge"/>-->
           <joint axis="0 0 1" name="hip_1" pos="0.0 0.0 0.0" range="-30 30" type="hinge" limited="true"/> <!-- modification here -->
           <geom fromto="0.0 0.0 0.0 0.2 0.2 0.0" name="left_leg_geom" size="0.08" type="capsule"/>
           <body pos="0.2 0.2 0">
+<!--            <joint axis="-1 1 0" name="ankle_1" pos="0.0 0.0 0.0" range="30 70" type="hinge"/>-->
             <joint axis="-1 1 0" name="ankle_1" pos="0.0 0.0 0.0" range="30 70" type="hinge" limited="true"/> <!-- modification here -->
             <geom fromto="0.0 0.0 0.0 0.4 0.4 0.0" name="left_ankle_geom" size="0.08" type="capsule"/>
           </body>
         </body>
       </body>
 
-      <!-- front left leg -->
+      <!-- front right leg -->
       <body name="front_right_leg" pos="0 0 0">
         <geom fromto="0.0 0.0 0.0 -0.2 0.2 0.0" name="aux_2_geom" size="0.08" type="capsule"/>
         <body name="aux_2" pos="-0.2 0.2 0">
+<!--          <joint axis="0 0 1" name="hip_2" pos="0.0 0.0 0.0" range="-30 30" type="hinge"/>-->
           <joint axis="0 0 1" name="hip_2" pos="0.0 0.0 0.0" range="-30 30" type="hinge" limited="true"/> <!-- modification here -->
           <geom fromto="0.0 0.0 0.0 -0.2 0.2 0.0" name="right_leg_geom" size="0.08" type="capsule"/>
           <body pos="-0.2 0.2 0">
+<!--            <joint axis="1 1 0" name="ankle_2" pos="0.0 0.0 0.0" range="-70 -30" type="hinge"/>-->
             <joint axis="1 1 0" name="ankle_2" pos="0.0 0.0 0.0" range="-70 -30" type="hinge" limited="true"/> <!-- modification here -->
             <geom fromto="0.0 0.0 0.0 -0.4 0.4 0.0" name="right_ankle_geom" size="0.08" type="capsule"/>
           </body>
@@ -68,9 +72,11 @@ added rgba to color the rightback_leg_geom and fourth_ankle_geom joint capsules
       <body name="back_leg" pos="0 0 0">
         <geom fromto="0.0 0.0 0.0 -0.2 -0.2 0.0" name="aux_3_geom" size="0.08" type="capsule"/>
         <body name="aux_3" pos="-0.2 -0.2 0">
+<!--          <joint axis="0 0 1" name="hip_3" pos="0.0 0.0 0.0" range="-30 30" type="hinge"/>-->
           <joint axis="0 0 1" name="hip_3" pos="0.0 0.0 0.0" range="-30 30" type="hinge" limited="true"/> <!-- modification here -->
           <geom fromto="0.0 0.0 0.0 -0.2 -0.2 0.0" name="back_leg_geom" size="0.08" type="capsule"/>
           <body pos="-0.2 -0.2 0">
+<!--            <joint axis="-1 1 0" name="ankle_3" pos="0.0 0.0 0.0" range="-70 -30" type="hinge"/>-->
             <joint axis="-1 1 0" name="ankle_3" pos="0.0 0.0 0.0" range="-70 -30" type="hinge" limited="true"/> <!-- modification here -->
             <geom fromto="0.0 0.0 0.0 -0.4 -0.4 0.0" name="third_ankle_geom" size="0.08" type="capsule"/>
           </body>
@@ -81,16 +87,20 @@ added rgba to color the rightback_leg_geom and fourth_ankle_geom joint capsules
       <body name="right_back_leg" pos="0 0 0">
         <geom fromto="0.0 0.0 0.0 0.2 -0.2 0.0" name="aux_4_geom" size="0.08" type="capsule"/>
         <body name="aux_4" pos="0.2 -0.2 0">
+<!--          <joint axis="0 0 1" name="hip_4" pos="0.0 0.0 0.0" range="-30 30" type="hinge"/>-->
           <joint axis="0 0 1" name="hip_4" pos="0.0 0.0 0.0" range="-30 30" type="hinge" limited="true"/> <!-- modification here -->
+<!--          <geom fromto="0.0 0.0 0.0 0.2 -0.2 0.0" name="rightback_leg_geom" size="0.08" type="capsule"/>-->
           <geom fromto="0.0 0.0 0.0 0.2 -0.2 0.0" name="rightback_leg_geom" size="0.08" type="capsule" rgba="0.4 0 0 1"/> <!-- modification here -->
           <body pos="0.2 -0.2 0">
+<!--            <joint axis="1 1 0" name="ankle_4" pos="0.0 0.0 0.0" range="30 70" type="hinge"/>-->
             <joint axis="1 1 0" name="ankle_4" pos="0.0 0.0 0.0" range="65 70" type="hinge" limited="true"/> <!-- modification here -->
+<!--            <geom fromto="0.0 0.0 0.0 0.4 -0.4 0.0" name="fourth_ankle_geom" size="0.08" type="capsule"/>-->
             <geom fromto="0.0 0.0 0.0 0.4 -0.4 0.0" name="fourth_ankle_geom" size="0.08" type="capsule" rgba="0.4 0 0 1"/> <!-- modification here -->
           </body>
         </body>
       </body>
-    </body>
 
+    </body>
   </worldbody>
 
   <actuator>

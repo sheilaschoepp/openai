@@ -179,6 +179,8 @@ class FetchEnv(robot_env.RobotEnv):
                 goal[2] += self.np_random.uniform(0, 0.45)
         else:
 
+            # goal = self.initial_gripper_xpos[:3] + self.np_random.uniform(-self.target_range, self.target_range, size=3)
+
             # modification here: start
             goal = None
             if self.goal_elimination:

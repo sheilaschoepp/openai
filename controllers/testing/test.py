@@ -3,9 +3,11 @@ import time
 
 import gym
 
+import custom_gym_envs
+
 parser = argparse.ArgumentParser(description="PyTorch Soft Actor-Critic Arguments")
 
-parser.add_argument("-e", "--env_name", default="FetchReachEnvGE-v0",
+parser.add_argument("-e", "--env_name", default="FetchReachEnvGE-v5",
                     help="name of MuJoCo Gym environment (default: FetchReachEnvGE-v0)")
 
 args = parser.parse_args()

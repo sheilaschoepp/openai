@@ -7,7 +7,8 @@ reachable sampled goals: 8.78%
 unreachable sampled goals: 91.22%
 
 FetchReachEnvGE-v2
-
+reachable sampled goals: 0.37%
+unreachable sampled goals: 99.63%
 
 FetchReachEnvGE-v3
 incomplete: cannot even finish the env initialization (which samples goals in an infinite loop)

@@ -69,3 +69,9 @@ for goal_elimination in [True, False]:
         kwargs=kwargs,
         max_episode_steps=50,
     )
+    register(
+        id="FetchReachEnv{}-v5".format(suffix),
+        entry_point="custom_gym_envs.envs.fetchreach.FetchReachEnv_v5_BrokenJointsTBD.fetch.reach:FetchReachEnv",
+        kwargs=kwargs,
+        max_episode_steps=50,
+    )

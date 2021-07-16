@@ -13,4 +13,4 @@
 #SBATCH --mail-type=REQUEUE
 #SBATCH --mail-type=ALL
 
-parallel < s51.txt
+parallel < s43.txt

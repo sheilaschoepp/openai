@@ -1,1 +1,10 @@
-python controllers/ppov2/ppov2_n_controller.py -e "FetchReachEnv-v0" -t 6000000 -lrd -tef 10000 -tmsf 500000  -s 0 -pss 43
+python /home/taghianj/scratch/develop/openai/controllers/ppov2/ppov2_n_controller.py -e "FetchReachEnv-v0" -t 6000000 -lrd -tef 10000 -tmsf 500000  -s 0 -pss 43
+python /home/taghianj/scratch/develop/openai/controllers/ppov2/ppov2_n_controller.py -e "FetchReachEnv-v0" -t 6000000 -lrd -tef 10000 -tmsf 500000  -s 1 -pss 43
+python /home/taghianj/scratch/develop/openai/controllers/ppov2/ppov2_n_controller.py -e "FetchReachEnv-v0" -t 6000000 -lrd -tef 10000 -tmsf 500000  -s 2 -pss 43
+python /home/taghianj/scratch/develop/openai/controllers/ppov2/ppov2_n_controller.py -e "FetchReachEnv-v0" -t 6000000 -lrd -tef 10000 -tmsf 500000  -s 3 -pss 43
+python /home/taghianj/scratch/develop/openai/controllers/ppov2/ppov2_n_controller.py -e "FetchReachEnv-v0" -t 6000000 -lrd -tef 10000 -tmsf 500000  -s 4 -pss 43
+python /home/taghianj/scratch/develop/openai/controllers/ppov2/ppov2_n_controller.py -e "FetchReachEnv-v0" -t 6000000 -lrd -tef 10000 -tmsf 500000  -s 5 -pss 43
+python /home/taghianj/scratch/develop/openai/controllers/ppov2/ppov2_n_controller.py -e "FetchReachEnv-v0" -t 6000000 -lrd -tef 10000 -tmsf 500000  -s 6 -pss 43
+python /home/taghianj/scratch/develop/openai/controllers/ppov2/ppov2_n_controller.py -e "FetchReachEnv-v0" -t 6000000 -lrd -tef 10000 -tmsf 500000  -s 7 -pss 43
+python /home/taghianj/scratch/develop/openai/controllers/ppov2/ppov2_n_controller.py -e "FetchReachEnv-v0" -t 6000000 -lrd -tef 10000 -tmsf 500000  -s 8 -pss 43
+python /home/taghianj/scratch/develop/openai/controllers/ppov2/ppov2_n_controller.py -e "FetchReachEnv-v0" -t 6000000 -lrd -tef 10000 -tmsf 500000  -s 9 -pss 43

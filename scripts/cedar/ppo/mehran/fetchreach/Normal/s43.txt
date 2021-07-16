@@ -1,0 +1,1 @@
+python controllers/ppov2/ppov2_n_controller.py -e "FetchReachEnv-v0" -t 6000000 -lrd -tef 10000 -tmsf 500000  -s 0 -pss 43

@@ -3,39 +3,39 @@ echo 'RESUME_FILE="/local/melco2-1/shared/ant/normal/SACv2_Ant-v2:20000000_g:0.9
 
 #for s in {0..4}
 #do
-#  echo 'tmux new-session -d -s sac61'$s' "CUDA_VISIBLE_DEVICES=0 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -e AntEnv-v3 -t 20000000 -c -f $RESUME_FILE/seed'$s' --resumable"' >> melco2.sh
+#  echo 'tmux new-session -d -s sac61'$s' "CUDA_VISIBLE_DEVICES=0 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -e AntEnv-v2 -t 20000000 -c -f $RESUME_FILE/seed'$s' --resumable"' >> melco2.sh
 #done
 #for s in {5..9}
 #do
-#  echo 'tmux new-session -d -s sac61'$s' "CUDA_VISIBLE_DEVICES=1 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -e AntEnv-v3 -t 20000000 -c -f $RESUME_FILE/seed'$s' --resumable"' >> melco2.sh
-#done
-#
-#for s in {0..4}
-#do
-#  echo 'tmux new-session -d -s sac61'$s'crb "CUDA_VISIBLE_DEVICES=3 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -e AntEnv-v3 -t 20000000 -c -f $RESUME_FILE/seed'$s' --resumable -crb"' >> melco2.sh
-#done
-#for s in {5..9}
-#do
-#  echo 'tmux new-session -d -s sac61'$s'crb "CUDA_VISIBLE_DEVICES=4 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -e AntEnv-v3 -t 20000000 -c -f $RESUME_FILE/seed'$s' --resumable -crb"' >> melco2.sh
-#done
-#
-#for s in {0..4}
-#do
-#  echo 'tmux new-session -d -s sac61'$s'rn "CUDA_VISIBLE_DEVICES=6 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -e AntEnv-v3 -t 20000000 -c -f $RESUME_FILE/seed'$s' --resumable -rn"' >> melco2.sh
-#done
-#for s in {5..9}
-#do
-#  echo 'tmux new-session -d -s sac61'$s'rn "CUDA_VISIBLE_DEVICES=7 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -e AntEnv-v3 -t 20000000 -c -f $RESUME_FILE/seed'$s' --resumable -rn"' >> melco2.sh
+#  echo 'tmux new-session -d -s sac61'$s' "CUDA_VISIBLE_DEVICES=1 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -e AntEnv-v2 -t 20000000 -c -f $RESUME_FILE/seed'$s' --resumable"' >> melco2.sh
 #done
 
-for s in {0..4}
-do
-  echo 'tmux new-session -d -s sac61'$s'crbrn "CUDA_VISIBLE_DEVICES=0 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -e AntEnv-v3 -t 20000000 -c -f $RESUME_FILE/seed'$s' --resumable -crb -rn"' >> melco2.sh
-done
-for s in {5..9}
-do
-  echo 'tmux new-session -d -s sac61'$s'crbrn "CUDA_VISIBLE_DEVICES=1 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -e AntEnv-v3 -t 20000000 -c -f $RESUME_FILE/seed'$s' --resumable -crb -rn"' >> melco2.sh
-done
+#for s in {0..4}
+#do
+#  echo 'tmux new-session -d -s sac61'$s'crb "CUDA_VISIBLE_DEVICES=3 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -e AntEnv-v2 -t 20000000 -c -f $RESUME_FILE/seed'$s' --resumable -crb"' >> melco2.sh
+#done
+#for s in {5..9}
+#do
+#  echo 'tmux new-session -d -s sac61'$s'crb "CUDA_VISIBLE_DEVICES=4 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -e AntEnv-v2 -t 20000000 -c -f $RESUME_FILE/seed'$s' --resumable -crb"' >> melco2.sh
+#done
+#
+#for s in {0..4}
+#do
+#  echo 'tmux new-session -d -s sac61'$s'rn "CUDA_VISIBLE_DEVICES=6 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -e AntEnv-v2 -t 20000000 -c -f $RESUME_FILE/seed'$s' --resumable -rn"' >> melco2.sh
+#done
+#for s in {5..9}
+#do
+#  echo 'tmux new-session -d -s sac61'$s'rn "CUDA_VISIBLE_DEVICES=7 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -e AntEnv-v2 -t 20000000 -c -f $RESUME_FILE/seed'$s' --resumable -rn"' >> melco2.sh
+#done
+#
+#for s in {0..4}
+#do
+#  echo 'tmux new-session -d -s sac61'$s'crbrn "CUDA_VISIBLE_DEVICES=0 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -e AntEnv-v2 -t 20000000 -c -f $RESUME_FILE/seed'$s' --resumable -crb -rn"' >> melco2.sh
+#done
+#for s in {5..9}
+#do
+#  echo 'tmux new-session -d -s sac61'$s'crbrn "CUDA_VISIBLE_DEVICES=1 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -e AntEnv-v2 -t 20000000 -c -f $RESUME_FILE/seed'$s' --resumable -crb -rn"' >> melco2.sh
+#done
 
 #echo 'SAC_N_CONTROLLER_ABSOLUTE_PATH="/home/sschoepp/Documents/openai/controllers/sacv2/sacv2_n_controller.py"' > melco2.sh
 #
@@ -43,34 +43,10 @@ done
 #do
 #  echo 'tmux new-session -d -s sac61'$s' "CUDA_VISIBLE_DEVICES=0 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -a -c -s '$s' --resumable -ps -pss 61"' >> melco2.sh
 #done
-#for s in {15..19}
-#do
-#  echo 'tmux new-session -d -s sac61'$s' "CUDA_VISIBLE_DEVICES=1 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -a -c -s '$s' --resumable -ps -pss 61"' >> melco2.sh
-#done
 
 #echo 'PPO_N_CONTROLLER_ABSOLUTE_PATH="/home/sschoepp/Documents/openai/controllers/ppov2/mod2/ppov2_n_controller.py"' > melco2.sh
 
 #for i in {0..9}
 #do
 #  echo 'tmux new-session -d -s ppo33-25'$i' "python $PPO_N_CONTROLLER_ABSOLUTE_PATH -lrd -slrd 0.25 -s '$i' -t 600000000 -tef 3000000 -ps -pss 33 --resumable"' >> melco2.sh
-#done
-#
-#for i in {0..9}
-#do
-#  echo 'tmux new-session -d -s ppo33-50'$i' "python $PPO_N_CONTROLLER_ABSOLUTE_PATH -lrd -slrd 0.50 -s '$i' -t 600000000 -tef 3000000 -ps -pss 33 --resumable"' >> melco2.sh
-#done
-#
-#for i in {0..9}
-#do
-#  echo 'tmux new-session -d -s ppo33-37'$i' "python $PPO_N_CONTROLLER_ABSOLUTE_PATH -lrd -slrd 0.375 -s '$i' -t 600000000 -tef 3000000 -ps -pss 33 --resumable"' >> melco2.sh
-#done
-#
-#for i in {0..9}
-#do
-#  echo 'tmux new-session -d -s ppo33-62'$i' "python $PPO_N_CONTROLLER_ABSOLUTE_PATH -lrd -slrd 0.625 -s '$i' -t 600000000 -tef 3000000 -ps -pss 33 --resumable"' >> melco2.sh
-#done
-#
-#for i in {0..9}
-#do
-#  echo 'tmux new-session -d -s ppo33-75'$i' "python $PPO_N_CONTROLLER_ABSOLUTE_PATH -lrd -slrd 0.75 -s '$i' -t 600000000 -tef 3000000 -ps -pss 33 --resumable"' >> melco2.sh
 #done

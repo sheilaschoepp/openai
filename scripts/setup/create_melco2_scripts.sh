@@ -48,10 +48,22 @@ echo 'PPO_N_CONTROLLER_ABSOLUTE_PATH="/home/sschoepp/Documents/openai/controller
 
 for i in {0..9}
 do
-  echo 'tmux new-session -d -s ppoGE-'$i' "python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReachEnvGE-v0 -lrd -t 6000000 -tef 30000 -tmsf 50000 -ps -pss 43"' >> melco2.sh
+  echo 'tmux new-session -d -s ppoGE-'$i' "python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReachEnvGE-v0 -lrd -t 6000000 -tef 30000 -tmsf 60000 -ps -pss 43"' >> melco2.sh
 done
 
 for i in {0..9}
 do
-  echo 'tmux new-session -d -s ppo-'$i' "python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReachEnv-v0 -lrd -t 6000000 -tef 30000 -tmsf 50000 -ps -pss 43"' >> melco2.sh
+  echo 'tmux new-session -d -s ppo-'$i' "python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReachEnv-v0 -lrd -t 6000000 -tef 30000 -tmsf 60000 -ps -pss 43"' >> melco2.sh
+done
+
+echo 'SAC_N_CONTROLLER_ABSOLUTE_PATH="/home/sschoepp/Documents/openai/controllers/sacv2/sacv2_n_controller.py"' >> melco2.sh
+
+for i in {0..9}
+do
+  echo 'tmux new-session -d -s sacGE-'$i' "python $SAC_N_CONTROLLER_ABSOLUTE_PATH -e FetchReachEnvGE-v0 -a -t 2000000 -tef 10000 -tmsf 20000 -ps -pss 21"' >> melco2.sh
+done
+
+for i in {0..9}
+do
+  echo 'tmux new-session -d -s sac'$i' "python $SAC_N_CONTROLLER_ABSOLUTE_PATH -e FetchReachEnv-v0 -a -t 2000000 -tef 10000 -tmsf 20000 -ps -pss 21"' >> melco2.sh
 done

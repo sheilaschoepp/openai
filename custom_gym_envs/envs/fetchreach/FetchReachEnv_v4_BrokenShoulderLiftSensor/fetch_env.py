@@ -222,7 +222,12 @@ class FetchEnv(robot_env.RobotEnv):
                         else:
                             print(colored("fetch_env._sample_goal: {} consecutive unreachable goals sampled".format(count), "red"))
             else:
-                goal = self.initial_gripper_xpos[:3] + self.np_random.uniform(-self.target_range, self.target_range, size=3)
+                reachable = False
+                while not reachable:
+                    goal = self.initial_gripper_xpos[:3] + self.np_random.uniform(-self.target_range, self.target_range, size=3)
+                    if goal[2] >= 0.42:
+                        reachable = True
+
             # modification here: end
 
         return goal.copy()

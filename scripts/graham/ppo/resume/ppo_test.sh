@@ -3,7 +3,7 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=10
 #SBATCH --mem=128000M
-#SBATCH --time=7-00:00
+#SBATCH --time=0-00:20
 #SBATCH --job-name=ppo_test
 #SBATCH --output=%x-%j.out
 #SBATCH --mail-user=sschoepp@ualberta.ca

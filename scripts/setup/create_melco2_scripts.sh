@@ -44,9 +44,14 @@
 #  echo 'tmux new-session -d -s sac61'$s' "CUDA_VISIBLE_DEVICES=0 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -a -c -s '$s' --resumable -ps -pss 61"' >> melco2.sh
 #done
 
-echo 'PPO_N_CONTROLLER_ABSOLUTE_PATH="/home/sschoepp/Documents/openai/controllers/ppov2/mod2/ppov2_n_controller.py"' > melco2.sh
+echo 'PPO_N_CONTROLLER_ABSOLUTE_PATH="/home/sschoepp/Documents/openai/controllers/ppov2/ppov2_n_controller.py"' > melco2.sh
 
 for i in {0..9}
 do
-  echo 'tmux new-session -d -s ppo33-25'$i' "python $PPO_N_CONTROLLER_ABSOLUTE_PATH --resume -rf /local/melco2-1/shared/ant/lr/PPOv2_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_d:cpu_ps:True_pss:33_r/seed'$i'"' >> melco2.sh
+  echo 'tmux new-session -d -s ppoGE-'$i' "python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReachEnvGE-v0 -lrd -t 6000000 -tef 30000 -tmsf 50000 -ps -pss 43"' >> melco2.sh
+done
+
+for i in {0..9}
+do
+  echo 'tmux new-session -d -s ppo-'$i' "python $PPO_N_CONTROLLER_ABSOLUTE_PATH -e FetchReachEnv-v0 -lrd -t 6000000 -tef 30000 -tmsf 50000 -ps -pss 43"' >> melco2.sh
 done

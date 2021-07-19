@@ -126,6 +126,8 @@ class NormalController:
         # hostname
 
         self.hostname = os.uname()[1]
+        self.localhosts = ["melco", "Legion", "amii", "mehran"]
+        self.computecanada = not any(host in self.hostname for host in self.localhosts)
 
         # experiment parameters
 
@@ -210,19 +212,17 @@ class NormalController:
 
         self.experiment = "PPOv2_" + suffix
 
-        if "cedar" in self.hostname or "beluga" in self.hostname or "gra" in self.hostname:
+        if self.computecanada:
             # path for compute canada
             self.data_dir = os.getenv("HOME") + "/scratch/openai/data/" + self.experiment + "/seed" + str(self.parameters["seed"])
         else:
             # path for servers and local machines
             self.data_dir = os.getenv("HOME") + "/Documents/openai/data/" + self.experiment + "/seed" + str(self.parameters["seed"])
 
-        # does the user wants to restart training?
-        if "cedar" in self.hostname or "beluga" in self.hostname or "gra" in self.hostname:
-            pass
-        else:
-            # yes
-            # do the data files for the selected seed already exist?
+        # old data
+
+        if not self.computecanada:
+            # are we restarting training?  do the data files for the selected seed already exist?
             if path.exists(self.data_dir):
 
                 print(self.LINE)
@@ -468,9 +468,7 @@ class NormalController:
         print("time to complete one run:", run_time, "h:m:s")
         print(self.LINE)
 
-        if "cedar" in self.hostname or "beluga" in self.hostname or "gra" in self.hostname:
-            pass
-        else:
+        if not self.computecanada:
             self.send_email(run_time)
 
         text_file = open(self.data_dir + "/run_summary.txt", "w")

@@ -360,7 +360,7 @@ class NormalController:
         print("clipped value function:", highlight_non_default_values("clipped_value_fn"))
         print("max norm of gradients:", highlight_non_default_values("max_grad_norm"))
         print("use generalized advantage estimation:", highlight_non_default_values("use_gae"))
-        print("gae smoothing coefficient (lambda)", highlight_non_default_values("gae_lambda"))
+        print("gae smoothing coefficient (lambda):", highlight_non_default_values("gae_lambda"))
         print("hidden dimension:", highlight_non_default_values("hidden_dim"))
         print("log_std:", highlight_non_default_values("log_std"))
         print("time step evaluation frequency:", highlight_non_default_values("time_step_eval_frequency"))

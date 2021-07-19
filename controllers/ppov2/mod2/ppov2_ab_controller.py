@@ -303,7 +303,7 @@ class AbnormalController:
         print("clipped value function:", self.parameters["clipped_value_fn"])
         print("max norm of gradients:", self.parameters["max_grad_norm"])
         print("use generalized advantage estimation:", self.parameters["use_gae"])
-        print("gae smoothing coefficient (lambda)", self.parameters["gae_lambda"])
+        print("gae smoothing coefficient (lambda):", self.parameters["gae_lambda"])
         print("hidden dimension:", self.parameters["hidden_dim"])
         print("log_std:", self.parameters["log_std"])
         print("time step evaluation frequency:", self.parameters["time_step_eval_frequency"])

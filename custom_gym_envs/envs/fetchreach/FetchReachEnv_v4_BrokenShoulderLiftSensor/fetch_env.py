@@ -6,7 +6,7 @@ imported kinematics, termcolor
 added goal_elimination as argument in __init__ method and added an argument description
 created class instance variables in __init__
 modified _sample_goal method to eliminate unreachable goals is self.goal_elimination=True
-modified _get_obs method: set qpos and then run forward to get a new gripper xpos; next, set qpos back to its original value and run forward
+modified _get_obs method: set qpos and then run forward to get a new obs; next, set qpos back to its original value and run forward
 note: forward does not advance the simulation.  It only fills in the MjData
 IMPORTANT: you must set env_name in __init__
 """
@@ -110,12 +110,6 @@ class FetchEnv(robot_env.RobotEnv):
 
     def _get_obs(self):
 
-        # modification here: start part 1 / 2
-        old_value = self.sim.data.get_joint_qpos("robot0:torso_lift_joint")
-        self.sim.data.set_joint_qpos("robot0:torso_lift_joint", 1.5)
-        self.sim.forward()
-        # modfiication here: end part 1 / 2
-
         # positions
         grip_pos = self.sim.data.get_site_xpos('robot0:grip')
         dt = self.sim.nsubsteps * self.sim.model.opt.timestep
@@ -145,10 +139,18 @@ class FetchEnv(robot_env.RobotEnv):
             object_velp.ravel(), object_velr.ravel(), grip_velp, gripper_vel
         ])
 
-        # modification here: start part 2 / 2
+        # modification here
+        old_value = self.sim.data.get_joint_qpos("robot0:torso_lift_joint")
+        self.sim.data.set_joint_qpos("robot0:torso_lift_joint", 1.5)
+        self.sim.forward()
+        grip_pos = self.sim.data.get_site_xpos('robot0:grip')
+        obs = np.concatenate([
+            grip_pos, object_pos.ravel(), object_rel_pos.ravel(), gripper_state, object_rot.ravel(),
+            object_velp.ravel(), object_velr.ravel(), grip_velp, gripper_vel
+        ])
         self.sim.data.set_joint_qpos("robot0:torso_lift_joint", old_value)
         self.sim.forward()
-        # modification here: end part 2 / 2
+        # modification here
 
         return {
             'observation': obs.copy(),

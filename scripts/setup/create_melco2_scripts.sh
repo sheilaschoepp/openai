@@ -3,13 +3,20 @@ echo 'RESUME_FILE="/local/melco2-1/shared/fetchreach/normal/SACv2_FetchReachEnv-
 
 for s in {0..4}
 do
-  echo 'tmux new-session -d -s sacv1-'$s' "CUDA_VISIBLE_DEVICES=0 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -e FetchReachEnv-v1 -t 2000000 -c -f $RESUME_FILE/seed'$s'"' >> melco2.sh
+  echo 'tmux new-session -d -s sacv1rn-'$s' "CUDA_VISIBLE_DEVICES=0 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -e FetchReachEnv-v1 -t 2000000 -c -f $RESUME_FILE/seed'$s' -rn"' >> melco2.sh
 done
 for s in {5..9}
 do
-  echo 'tmux new-session -d -s sacv1-'$s' "CUDA_VISIBLE_DEVICES=1 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -e FetchReachEnv-v1 -t 2000000 -c -f $RESUME_FILE/seed'$s'"' >> melco2.sh
+  echo 'tmux new-session -d -s sacv1rn-'$s' "CUDA_VISIBLE_DEVICES=1 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -e FetchReachEnv-v1 -t 2000000 -c -f $RESUME_FILE/seed'$s' -rn"' >> melco2.sh
 done
-
+for s in {5..6}
+do
+  echo 'tmux new-session -d -s sacv1crb-'$s' "CUDA_VISIBLE_DEVICES=0 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -e FetchReachEnv-v1 -t 2000000 -c -f $RESUME_FILE/seed'$s' -crb"' >> melco2.sh
+done
+for s in {7..8}
+do
+  echo 'tmux new-session -d -s sacv1crb-'$s' "CUDA_VISIBLE_DEVICES=1 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -e FetchReachEnv-v1 -t 2000000 -c -f $RESUME_FILE/seed'$s' -crb"' >> melco2.sh
+done
 
 
 echo 'PPO_AB_CONTROLLER_ABSOLUTE_PATH="/home/sschoepp/Documents/openai/controllers/ppov2/ppov2_ab_controller.py"' >> melco2.sh
@@ -17,25 +24,20 @@ echo 'RESUME_FILE="/local/melco2-1/shared/fetchreach/normal/PPOv2_FetchReachEnv-
 
 for s in {0..9}
 do
-  echo 'tmux new-session -d -s ppov1-'$s' "python $PPO_AB_CONTROLLER_ABSOLUTE_PATH -e FetchReachEnv-v1 -t 6000000 -f $RESUME_FILE/seed'$s'"' >> melco2.sh
-done
-
-for s in {0..9}
-do
-  echo 'tmux new-session -d -s ppov1cm-'$s' "python $PPO_AB_CONTROLLER_ABSOLUTE_PATH -e FetchReachEnv-v1 -t 6000000 -f $RESUME_FILE/seed'$s' -cm"' >> melco2.sh
-done
-
-for s in {0..9}
-do
-  echo 'tmux new-session -d -s ppov1rn-'$s' "python $PPO_AB_CONTROLLER_ABSOLUTE_PATH -e FetchReachEnv-v1 -t 6000000 -f $RESUME_FILE/seed'$s' -rn"' >> melco2.sh
-done
-
-for s in {0..9}
-do
-  echo 'tmux new-session -d -s ppov1cmrn-'$s' "python $PPO_AB_CONTROLLER_ABSOLUTE_PATH -e FetchReachEnv-v1 -t 6000000 -f $RESUME_FILE/seed'$s' -cm -rn"' >> melco2.sh
-done
-
-for s in {0..9}
-do
   echo 'tmux new-session -d -s ppov4-'$s' "python $PPO_AB_CONTROLLER_ABSOLUTE_PATH -e FetchReachEnv-v4 -t 6000000 -f $RESUME_FILE/seed'$s'"' >> melco2.sh
+done
+
+for s in {0..9}
+do
+  echo 'tmux new-session -d -s ppov4cm-'$s' "python $PPO_AB_CONTROLLER_ABSOLUTE_PATH -e FetchReachEnv-v4 -t 6000000 -f $RESUME_FILE/seed'$s' -cm"' >> melco2.sh
+done
+
+for s in {0..9}
+do
+  echo 'tmux new-session -d -s ppov4rn-'$s' "python $PPO_AB_CONTROLLER_ABSOLUTE_PATH -e FetchReachEnv-v4 -t 6000000 -f $RESUME_FILE/seed'$s' -rn"' >> melco2.sh
+done
+
+for s in {0..9}
+do
+  echo 'tmux new-session -d -s ppov4cmrn-'$s' "python $PPO_AB_CONTROLLER_ABSOLUTE_PATH -e FetchReachEnv-v4 -t 6000000 -f $RESUME_FILE/seed'$s' -cm -rn"' >> melco2.sh
 done

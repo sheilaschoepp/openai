@@ -95,7 +95,7 @@ class FetchEnv(robot_env.RobotEnv):
         pos_ctrl, gripper_ctrl = action[:3], action[3]
 
         # Modification here: maximum change in position given by a random number generator
-        pos_ctrl *= self.np_random.uniform(-0.1, 0.1)  # limit maximum change in position
+        pos_ctrl *= self.np_random.uniform(-0.05, 0.05)  # limit maximum change in position
         # pos_ctrl *= 0.05  # limit maximum change in position
 
         rot_ctrl = [1., 0., 1., 0.]  # fixed rotation of the end effector, expressed as a quaternion

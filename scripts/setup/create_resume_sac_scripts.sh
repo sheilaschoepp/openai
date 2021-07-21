@@ -1,16 +1,12 @@
 echo 'SAC_N_CONTROLLER_ABSOLUTE_PATH="/home/sschoepp/Documents/openai/controllers/sacv2/sacv2_n_controller.py"' > melco2.sh
+echo 'RESUME_FILE="/local/melco2-1/shared/ant/faulty/v1/SACv2_AntEnv-v1:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:False_rn:False_a:True_d:cuda_r"' >> melco2.sh
 
-#echo 'RESUME_FILE="/local/melco2-1/shared/ant/"' >> melco2.sh
-#echo 'tmux new-session -d -s sac4 "CUDA_VISIBLE_DEVICES=1 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -c --resume --resume_file $RESUME_FILE/seed0; CUDA_VISIBLE_DEVICES=1 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -c --resume --resume_file $RESUME_FILE/seed1; CUDA_VISIBLE_DEVICES=1 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -c --resume --resume_file $RESUME_FILE/seed2; CUDA_VISIBLE_DEVICES=1 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -c --resume --resume_file $RESUME_FILE/seed3; CUDA_VISIBLE_DEVICES=1 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -c --resume --resume_file $RESUME_FILE/seed4; CUDA_VISIBLE_DEVICES=1 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -c --resume --resume_file $RESUME_FILE/seed5; CUDA_VISIBLE_DEVICES=1 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -c --resume --resume_file $RESUME_FILE/seed6; CUDA_VISIBLE_DEVICES=1 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -c --resume --resume_file $RESUME_FILE/seed7; CUDA_VISIBLE_DEVICES=1 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -c --resume --resume_file $RESUME_FILE/seed8; CUDA_VISIBLE_DEVICES=1 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -c --resume --resume_file $RESUME_FILE/seed9"' >> melco2.sh
-#
-#echo 'RESUME_FILE="/local/melco2-1/shared/ant/"' >> melco2.sh
-#echo 'tmux new-session -d -s sac5 "CUDA_VISIBLE_DEVICES=1 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -c --resume --resume_file $RESUME_FILE/seed0; CUDA_VISIBLE_DEVICES=1 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -c --resume --resume_file $RESUME_FILE/seed1; CUDA_VISIBLE_DEVICES=1 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -c --resume --resume_file $RESUME_FILE/seed2; CUDA_VISIBLE_DEVICES=1 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -c --resume --resume_file $RESUME_FILE/seed3; CUDA_VISIBLE_DEVICES=1 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -c --resume --resume_file $RESUME_FILE/seed4; CUDA_VISIBLE_DEVICES=1 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -c --resume --resume_file $RESUME_FILE/seed5; CUDA_VISIBLE_DEVICES=1 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -c --resume --resume_file $RESUME_FILE/seed6; CUDA_VISIBLE_DEVICES=1 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -c --resume --resume_file $RESUME_FILE/seed7; CUDA_VISIBLE_DEVICES=1 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -c --resume --resume_file $RESUME_FILE/seed8; CUDA_VISIBLE_DEVICES=1 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -c --resume --resume_file $RESUME_FILE/seed9"' >> melco2.sh
+for i in {0..4}
+do
+  echo 'tmux new-session -d -s sac'$i' "CUDA_VISIBLE_DEVICES=0 python $SAC_N_CONTROLLER_ABSOLUTE_PATH --resume --resume_file $RESUME_FILE/seed'$i'"' >> melco2.sh
+done
 
-echo 'RESUME_FILE="/local/melco2-1/shared/ant/SACv2_Ant-v2:20000000_g:0.8513_t:0.0664_a:0.2_lr:0.004104_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_a:True_d:cuda_ps:True_pss:83_r"' >> melco2.sh
-echo 'tmux new-session -d -s sac83 "CUDA_VISIBLE_DEVICES=1 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -c --resume --resume_file $RESUME_FILE/seed0; CUDA_VISIBLE_DEVICES=1 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -c --resume --resume_file $RESUME_FILE/seed1; CUDA_VISIBLE_DEVICES=1 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -c --resume --resume_file $RESUME_FILE/seed2; CUDA_VISIBLE_DEVICES=1 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -c --resume --resume_file $RESUME_FILE/seed3; CUDA_VISIBLE_DEVICES=1 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -c --resume --resume_file $RESUME_FILE/seed4; CUDA_VISIBLE_DEVICES=1 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -c --resume --resume_file $RESUME_FILE/seed5; CUDA_VISIBLE_DEVICES=1 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -c --resume --resume_file $RESUME_FILE/seed6; CUDA_VISIBLE_DEVICES=1 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -c --resume --resume_file $RESUME_FILE/seed7; CUDA_VISIBLE_DEVICES=1 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -c --resume --resume_file $RESUME_FILE/seed8; CUDA_VISIBLE_DEVICES=1 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -c --resume --resume_file $RESUME_FILE/seed9"' >> melco2.sh
-
-#echo 'RESUME_FILE="/local/melco2-1/shared/ant/SACv2_Ant-v2:20000000_g:0.8592_t:0.0351_a:0.2_lr:0.004855_hd:256_rbs:10000_bs:64_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_a:True_d:cpu_ps:True_pss:69_r"' >> melco2.sh
-#for i in {0..9}
-#do
-#  echo 'tmux new-session -d -s sac73'$i' "python $SAC_N_CONTROLLER_ABSOLUTE_PATH --resume --resume_file $RESUME_FILE/seed'$i'"' >> melco2.sh
-#done
+for i in {5..9}
+do
+  echo 'tmux new-session -d -s sac'$i' "CUDA_VISIBLE_DEVICES=1 python $SAC_N_CONTROLLER_ABSOLUTE_PATH --resume --resume_file $RESUME_FILE/seed'$i'"' >> melco2.sh
+done

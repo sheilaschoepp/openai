@@ -9,14 +9,6 @@ for s in {5..9}
 do
   echo 'tmux new-session -d -s sacv1rn-'$s' "CUDA_VISIBLE_DEVICES=1 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -e FetchReachEnv-v1 -t 2000000 -c -f $RESUME_FILE/seed'$s' -rn"' >> melco2.sh
 done
-for s in {5..6}
-do
-  echo 'tmux new-session -d -s sacv1crb-'$s' "CUDA_VISIBLE_DEVICES=0 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -e FetchReachEnv-v1 -t 2000000 -c -f $RESUME_FILE/seed'$s' -crb"' >> melco2.sh
-done
-for s in {7..8}
-do
-  echo 'tmux new-session -d -s sacv1crb-'$s' "CUDA_VISIBLE_DEVICES=1 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -e FetchReachEnv-v1 -t 2000000 -c -f $RESUME_FILE/seed'$s' -crb"' >> melco2.sh
-done
 
 
 echo 'PPO_AB_CONTROLLER_ABSOLUTE_PATH="/home/sschoepp/Documents/openai/controllers/ppov2/ppov2_ab_controller.py"' >> melco2.sh

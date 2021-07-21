@@ -25,14 +25,14 @@ class Kinematics:
         self.env_name = env_name
         self.debug = debug
 
-        if "melco2" in os.uname()[1]:  # todo add in CC
+        if "melco2" in os.uname()[1]:
             anaconda_path = "/opt/anaconda3"
         elif "melco" in os.uname()[1]:
             anaconda_path = "/local/melco2/sschoepp/anaconda3"
         else:
             anaconda_path = os.getenv("HOME") + "/anaconda3"
 
-        self.model_xml = None  # todo add in CC paths
+        self.model_xml = None
         if self.env_name == "FetchReach-v1":
             self.model_xml = anaconda_path + "/envs/openai2/lib/python3.7/site-packages/gym/envs/robotics/assets/fetch/reach.xml"  # todo
         if "v0" in self.env_name:

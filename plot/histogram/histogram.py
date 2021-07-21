@@ -1,9 +1,9 @@
 import argparse
-import math
 import os
 import pickle
 import random
 import xml.etree.ElementTree as ET
+from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -285,14 +285,94 @@ class AntHistogram:
                 save_ant_joint_angles(state)
 
 
-def plot_fetchreach_histograms():
+def get_fetchrach_xml_data():
+
+    if "melco2" in os.uname()[1]:
+        anaconda_path = "/opt/anaconda3"
+    elif "melco" in os.uname()[1]:
+        anaconda_path = "/local/melco2/sschoepp/anaconda3"
+    else:
+        anaconda_path = os.getenv("HOME") + "/anaconda3"
+
+    model_xml = None
+    if env_name == "FetchReach-v1":
+        model_xml = anaconda_path + "/envs/openai3.7/lib/python3.7/site-packages/gym/envs/robotics/assets/fetch/reach.xml"  # todo
+    if "v0" in env_name:
+        model_xml = str(Path.home()) + "/Documents/openai/custom_gym_envs/envs/fetchreach/FetchReachEnv_v0_Normal/assets/fetch/reach.xml"
+    elif "v1" in env_name:
+        model_xml = str(Path.home()) + "/Documents/openai/custom_gym_envs/envs/fetchreach/FetchReachEnv_v1_BrokenShoulderLiftJoint/assets/fetch/reach.xml"
+    elif "v2" in env_name:
+        model_xml = str(Path.home()) + "/Documents/openai/custom_gym_envs/envs/fetchreach/FetchReachEnv_v2_BrokenElbowFlexJoint/assets/fetch/reach.xml"
+    elif "v3" in env_name:
+        model_xml = str(Path.home()) + "/Documents/openai/custom_gym_envs/envs/fetchreach/FetchReachEnv_v3_BrokenWristFlexJoint/assets/fetch/reach.xml"
+    elif "v4" in env_name:
+        model_xml = str(Path.home()) + "/Documents/openai/custom_gym_envs/envs/fetchreach/FetchReachEnv_v4_BrokenShoulderLiftSensor/assets/fetch/reach.xml"
+    elif "v5" in env_name:
+        model_xml = str(Path.home()) + "/Documents/openai/custom_gym_envs/envs/fetchreach/FetchReachEnv_v5_BrokenJointsTBD/assets/fetch/reach.xml"
+
+    robot_xml = model_xml[:-9] + "robot.xml"
+    tree = ET.parse(robot_xml)
+    root = tree.getroot()
+
+    shoulder_pan_joint_range = None
+    shoulder_lift_joint_range = None
+    upperarm_roll_joint_range = None
+    elbow_flex_joint_range = None
+    forearm_roll_joint_range = None
+    wrist_flex_joint_range = None
+    wrist_roll_joint_range = None
+
+    for child in root.iter():
+        attrib = child.attrib
+        name = attrib.get("name")
+        if name == "robot0:torso_lift_joint":
+            torso_lift_joint_range = np.array(attrib.get("range").split(" "), dtype=float)
+        elif name == "robot0:head_pan_joint":
+            head_pan_joint_range = np.array(attrib.get("range").split(" "), dtype=float)
+        elif name == "robot0:head_tilt_joint":
+            head_tilt_joint_range = np.array(attrib.get("range").split(" "), dtype=float)
+        elif name == "robot0:shoulder_pan_joint":
+            shoulder_pan_joint_range = np.array(attrib.get("range").split(" "), dtype=float)
+        elif name == "robot0:shoulder_lift_joint":
+            shoulder_lift_joint_range = np.array(attrib.get("range").split(" "), dtype=float)
+        elif name == "robot0:upperarm_roll_joint":
+            if attrib.get("range") is not None:
+                upperarm_roll_joint_range = np.array(attrib.get("range").split(" "), dtype=float)
+            else:
+                upperarm_roll_joint_range = np.array([-3.14, 3.14])
+        elif name == "robot0:elbow_flex_joint":
+            elbow_flex_joint_range = np.array(attrib.get("range").split(" "), dtype=float)
+        elif name == "robot0:forearm_roll_joint":
+            if attrib.get("range") is not None:
+                forearm_roll_joint_range = np.array(attrib.get("range").split(" "), dtype=float)
+            else:
+                forearm_roll_joint_range = np.array([-3.14, 3.14])
+        elif name == "robot0:wrist_flex_joint":
+            wrist_flex_joint_range = np.array(attrib.get("range").split(" "), dtype=float)
+        elif name == "robot0:wrist_roll_joint":
+            if attrib.get("range") is not None:
+                wrist_roll_joint_range = np.array(attrib.get("range").split(" "), dtype=float)
+            else:
+                wrist_roll_joint_range = np.array([-3.14, 3.14])
+        elif name == "robot0:r_gripper_finger_joint":
+            r_gripper_finger_joint_range = np.array(attrib.get("range").split(" "), dtype=float)
+        elif name == "robot0:l_gripper_finger_joint":
+            l_gripper_finger_joint_range = np.array(attrib.get("range").split(" "), dtype=float)
+
+    return shoulder_pan_joint_range, shoulder_lift_joint_range, upperarm_roll_joint_range, elbow_flex_joint_range, forearm_roll_joint_range, wrist_flex_joint_range, wrist_roll_joint_range
+
+
+def plot_fetchreach_histograms(ranges):
     """
     Load data and plots FetchReach histograms.
 
     histogram data:
-    [torso_lift_joint, head_pan_joint, head_tilt_joint, shoulder_pan_joint, shoulder_lift_joint, elbow_flex_joint, wrist_flex_joint]
+    [shoulder_pan_joint, shoulder_lift_joint, upperarm_roll_joint, elbow_flex_joint, forearm_roll_joint, wrist_flex_joint, wrist_roll_joint]
 
     format: .jpg
+
+    @param ranges: tuple of numpy arrays
+        joint ranges
     """
     global fetchreach_histogram_data
 
@@ -302,72 +382,96 @@ def plot_fetchreach_histograms():
     histogram_plot_directory = os.getcwd() + "/plots/fetchreach/{}/{}".format(algorithm, env_name)
     os.makedirs(histogram_plot_directory, exist_ok=True)
 
-    df = pd.DataFrame(fetchreach_histogram_data[0], columns=["radians"])
-    sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(0, 0.5, 0.01)).set_title("{}, {}: robot0:torso_lift_joint".format(algorithm, env_name), fontweight="bold")
-    plt.savefig(histogram_plot_directory + "/{}_{}_torso_lift_joint_{}.jpg".format(algorithm, env_name, args.num_seeds))
-    plt.close()
-
-    df = pd.DataFrame(fetchreach_histogram_data[1], columns=["radians"])
-    sns.histplot(data=df, x="radians", color="tab:blue", stat="probability",  bins=np.arange(-1.6, 1.7, 0.1)).set_title("{}, {}: robot0:head_pan_joint".format(algorithm, env_name), fontweight="bold")
-    plt.savefig(histogram_plot_directory + "/{}_{}_head_pan_joint_{}.jpg".format(algorithm, env_name, args.num_seeds))
-    plt.close()
-
-    df = pd.DataFrame(fetchreach_histogram_data[2], columns=["radians"])
-    sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(-0.7, 1.6, 0.1)).set_title("{}, {}: robot0:head_tilt_joint".format(algorithm, env_name), fontweight="bold")
-    plt.savefig(histogram_plot_directory + "/{}_{}_head_tilt_joint_{}.jpg".format(algorithm, env_name, args.num_seeds))
-    plt.close()
-
-    df = pd.DataFrame(fetchreach_histogram_data[3], columns=["radians"])
-    sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(-1.7, 1.8, 0.1)).set_title("{}, {}: robot0:shoulder_pan_joint".format(algorithm, env_name), fontweight="bold")
+    index = 0  # shoulder_pan_joint
+    df = pd.DataFrame(fetchreach_histogram_data[index], columns=["radians"])
+    sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.1)).set_title("{}, {}: robot0:shoulder_pan_joint".format(algorithm, env_name), fontweight="bold")
     plt.savefig(histogram_plot_directory + "/{}_{}_shoulder_pan_joint_{}.jpg".format(algorithm, env_name, args.num_seeds))
     plt.close()
 
-    df = pd.DataFrame(fetchreach_histogram_data[4], columns=["radians"])
-    sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(-1.3, 1.7, 0.1)).set_title("{}, {}: robot0:shoulder_lift_joint".format(algorithm, env_name), fontweight="bold")
+    index = 1  # shoulder_lift_joint
+    df = pd.DataFrame(fetchreach_histogram_data[index], columns=["radians"])
+    sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.1)).set_title("{}, {}: robot0:shoulder_lift_joint".format(algorithm, env_name), fontweight="bold")
     plt.savefig(histogram_plot_directory + "/{}_{}_shoulder_lift_joint_{}.jpg".format(algorithm, env_name, args.num_seeds))
     plt.close()
 
-    df = pd.DataFrame(fetchreach_histogram_data[5], columns=["radians"])
-    sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(-2.3, 2.4, 0.1)).set_title("{}, {}: robot0:elbow_flex_joint".format(algorithm, env_name), fontweight="bold")
+    index = 2  # upperarm_roll_joint
+    df = pd.DataFrame(fetchreach_histogram_data[index], columns=["radians"])
+    sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.1)).set_title("{}, {}: robot0:upperarm_roll_joint".format(algorithm, env_name), fontweight="bold")
+    plt.savefig(histogram_plot_directory + "/{}_{}_upperarm_roll_joint_{}.jpg".format(algorithm, env_name, args.num_seeds))
+    plt.close()
+
+    index = 3  # elbow_flex_joint
+    df = pd.DataFrame(fetchreach_histogram_data[index], columns=["radians"])
+    sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.1)).set_title("{}, {}: robot0:elbow_flex_joint".format(algorithm, env_name), fontweight="bold")
     plt.savefig(histogram_plot_directory + "/{}_{}_elbow_flex_joint_{}.jpg".format(algorithm, env_name, args.num_seeds))
     plt.close()
 
-    df = pd.DataFrame(fetchreach_histogram_data[6], columns=["radians"])
-    sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(-2.2, 2.3, 0.1)).set_title("{}, {}: robot0:wrist_flex_joint".format(algorithm, env_name), fontweight="bold")
+    index = 4  # forearm_roll_joint
+    df = pd.DataFrame(fetchreach_histogram_data[index], columns=["radians"])
+    sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.1)).set_title("{}, {}: robot0:forearm_roll_joint".format(algorithm, env_name), fontweight="bold")
+    plt.savefig(histogram_plot_directory + "/{}_{}_forearm_roll_joint_{}.jpg".format(algorithm, env_name, args.num_seeds))
+    plt.close()
+
+    index = 5  # wrist_flex_joint
+    df = pd.DataFrame(fetchreach_histogram_data[index], columns=["radians"])
+    sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.1)).set_title("{}, {}: robot0:wrist_flex_joint".format(algorithm, env_name), fontweight="bold")
     plt.savefig(histogram_plot_directory + "/{}_{}_wrist_flex_joint_{}.jpg".format(algorithm, env_name, args.num_seeds))
     plt.close()
 
+    index = 6  # wrist_roll_joint
+    df = pd.DataFrame(fetchreach_histogram_data[index], columns=["radians"])
+    sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.1)).set_title("{}, {}: robot0:wrist_roll_joint".format(algorithm, env_name), fontweight="bold")
+    plt.savefig(histogram_plot_directory + "/{}_{}_wrist_roll_joint_{}.jpg".format(algorithm, env_name, args.num_seeds))
+    plt.close()
 
-def plot_fetchreach_heatmap():
+
+def plot_fetchreach_heatmap(ranges):
     """
     Plot FetchReach heatmap.
 
     histogram data:
-    [torso_lift_joint, head_pan_joint, head_tilt_joint, shoulder_pan_joint, shoulder_lift_joint, elbow_flex_joint, wrist_flex_joint]
+    [shoulder_pan_joint, shoulder_lift_joint, upperarm_roll_joint, elbow_flex_joint, forearm_roll_joint, wrist_flex_joint, wrist_roll_joint]
 
     format: .jpg
+
+    @param ranges: tuple of numpy arrays
+        joint ranges
     """
     global fetchreach_histogram_data
 
     histogram_data_directory = os.getcwd() + "/data/fetchreach/{}/{}".format(algorithm, env_name)
     fetchreach_histogram_data = np.load(histogram_data_directory + "/{}_{}_histogram_data_{}.npy".format(algorithm, env_name, args.num_seeds))
 
+    fetchreach_histogram_data_normalized = []
+
+    # normalize data
+    for i in range(len(ranges)):
+
+        min = ranges[i][0]
+        max = ranges[i][1]
+        data = fetchreach_histogram_data[i]
+
+        normalized = (data - min) / (max - min)
+
+        fetchreach_histogram_data_normalized.append(normalized)
+
     fetchreach_histogram_count_data = []
-    bins = [-2.3, -2.2, -2.1, -2.0, -1.9, -1.8, -1.7, -1.6, -1.5, -1.4, -1.3, -1.2, -1.1, -1.0, -0.9, -0.8, -0.7, -0.6,
-            -0.5, -0.4, -0.3, -0.2, -0.1, 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5,
-            1.6, 1.7, 1.8, 1.9, 2.0, 2.1, 2.2, 2.3, 2.4]
+    bins = np.round(np.arange(0.0, 1.025, 0.025), 3)
 
     for i in range(7):
-        counts, _ = np.histogram(fetchreach_histogram_data[i], bins=bins, range=[-2.4, 2.4])
+        counts, _ = np.histogram(fetchreach_histogram_data_normalized[i], bins=bins, range=[0.0, 1.0])
         counts = counts / np.sum(counts)  # probability
         fetchreach_histogram_count_data.append(counts)
 
-    df = pd.DataFrame(np.array(fetchreach_histogram_count_data).T, index=bins[:-1], columns=["torso_lift", "head_pan", "head_tilt", "shoulder_pan", "shoulder_lift", "elbow_flex", "wrist_flex"])
+    df = pd.DataFrame(np.array(fetchreach_histogram_count_data).T, index=bins[:-1], columns=["shoulder pan", "shoulder lift", "upperarm roll", "elbow flex", "forearm roll", "wrist flex", "wrist roll"])
 
     histogram_plot_directory = os.getcwd() + "/plots/fetchreach/{}/{}".format(algorithm, env_name)
     os.makedirs(histogram_plot_directory, exist_ok=True)
 
-    sns.heatmap(data=df, cmap="viridis").set_title("{}, {}: Visited Joint Angles".format(algorithm, env_name), fontweight="bold")
+    heatmap = sns.heatmap(data=df, cmap="viridis")
+    heatmap.set_title("{}, {}: Visited Joint Angles".format(algorithm, env_name), fontweight="bold")
+    plt.xlabel("joint")
+    plt.ylabel("normalized angle")
     plt.tight_layout()
     plt.savefig(histogram_plot_directory + "/{}_{}_heatmap_{}.jpg".format(algorithm, env_name, args.num_seeds))
 
@@ -386,7 +490,7 @@ def save_fetchreach_histogram_data():
 
     np.save(histogram_data_directory + "/{}_{}_histogram_data_{}.npy".format(algorithm, env_name, args.num_seeds), fetchreach_histogram_data)
 
-    df = pd.DataFrame(np.array(fetchreach_histogram_data).T, columns=["torso_lift_joint", "head_pan_joint", "head_tilt_joint", "shoulder_pan_joint", "shoulder_lift_joint", "elbow_flex_joint", "wrist_flex_joint"])
+    df = pd.DataFrame(np.array(fetchreach_histogram_data).T, columns=["shoulder_pan_joint", "shoulder_lift_joint", "upperarm_roll_joint", "elbow_flex_joint", "forearm_roll_joint", "wrist_flex_joint", "wrist_roll_joint"])
     df.to_pickle(histogram_data_directory + "/{}_{}_histogram_data_{}.pkl".format(algorithm, env_name, args.num_seeds))
 
 
@@ -394,17 +498,45 @@ def save_fetchreach_joint_angles(d):
     """
     Save FetchReach visited joint angles
 
+    histogram data:
+    [shoulder_pan_joint, shoulder_lift_joint, upperarm_roll_joint, elbow_flex_joint, forearm_roll_joint, wrist_flex_joint, wrist_roll_joint]
+
     @param d: PyMjData object (https://openai.github.io/mujoco-py/build/html/reference.html#pymjdata-time-dependent-data)
         mujoco-py simulation data
     """
 
-    fetchreach_histogram_data[0].append(d.get_joint_qpos("robot0:torso_lift_joint"))
-    fetchreach_histogram_data[1].append(d.get_joint_qpos("robot0:head_pan_joint"))
-    fetchreach_histogram_data[2].append(d.get_joint_qpos("robot0:head_tilt_joint"))
-    fetchreach_histogram_data[3].append(d.get_joint_qpos("robot0:shoulder_pan_joint"))
-    fetchreach_histogram_data[4].append(d.get_joint_qpos("robot0:shoulder_lift_joint"))
-    fetchreach_histogram_data[5].append(d.get_joint_qpos("robot0:elbow_flex_joint"))
-    fetchreach_histogram_data[6].append(d.get_joint_qpos("robot0:wrist_flex_joint"))
+    fetchreach_histogram_data[0].append(d.get_joint_qpos("robot0:shoulder_pan_joint"))
+    fetchreach_histogram_data[1].append(d.get_joint_qpos("robot0:shoulder_lift_joint"))
+    fetchreach_histogram_data[2].append(d.get_joint_qpos("robot0:upperarm_roll_joint"))
+    fetchreach_histogram_data[3].append(d.get_joint_qpos("robot0:elbow_flex_joint"))
+    fetchreach_histogram_data[4].append(d.get_joint_qpos("robot0:forearm_roll_joint"))
+    fetchreach_histogram_data[5].append(d.get_joint_qpos("robot0:wrist_flex_joint"))
+    fetchreach_histogram_data[6].append(d.get_joint_qpos("robot0:wrist_roll_joint"))
+
+
+def collect_fetchreach_data():
+
+    pbar = tqdm(total=args.num_seeds)
+
+    for seed in range(args.num_seeds):
+        pbar.set_description("Processing seed {}".format(seed))
+
+        sim = FetchReachHistogram(seed)
+        sim.run()
+        sim.cleanup()
+
+        pbar.update(1)
+
+    save_fetchreach_histogram_data()
+
+
+def plot_fetchreach_data():
+
+    ranges = get_fetchrach_xml_data()
+
+    plot_fetchreach_histograms(ranges)
+
+    plot_fetchreach_heatmap(ranges)
 
 
 class FetchReachHistogram:
@@ -537,29 +669,6 @@ class FetchReachHistogram:
                 save_fetchreach_joint_angles(self.env.env.sim.data)
 
 
-def collect_fetchreach_data():
-
-    pbar = tqdm(total=args.num_seeds)
-
-    for seed in range(args.num_seeds):
-        pbar.set_description("Processing seed {}".format(seed))
-
-        sim = FetchReachHistogram(seed)
-        sim.run()
-        sim.cleanup()
-
-        pbar.update(1)
-
-    save_fetchreach_histogram_data()
-
-
-def plot_fetchreach_data():
-
-    plot_fetchreach_histograms()
-
-    plot_fetchreach_heatmap()
-
-
 if __name__ == "__main__":
 
     env_name = args.file.split("_")[1].split(":")[0]
@@ -572,12 +681,12 @@ if __name__ == "__main__":
         # [hip_1, ankle_1,  hip_2, ankle_2, hip_3, ankle_3, hip_4 ,ankle_4]
         ant_histogram_data = [[], [], [], [], [], [], [], []]
 
-        # todo
+        # TODO
 
     elif "FetchReach" in env_name:
 
         # histogram data:
-        # [torso_lift_joint, head_pan_joint, head_tilt_joint, shoulder_pan_joint, shoulder_lift_joint, elbow_flex_joint, wrist_flex_joint]
+        # [shoulder_pan_joint, shoulder_lift_joint, upperarm_roll_joint, elbow_flex_joint, forearm_roll_joint, wrist_flex_joint, wrist_roll_joint]
         fetchreach_histogram_data = [[], [], [], [], [], [], []]
 
         if args.collect_data:

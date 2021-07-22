@@ -135,7 +135,7 @@ def draw():
         sub1 = fig.add_subplot(2, 3, 2)  # two rows, two columns, second cell
 
         # Create second axes, the top-left plot with orange plot
-        sub2 = fig.add_subplot(2, 3, (4, 5))  # two rows, two columns, second cell
+        sub2 = fig.add_subplot(2, 3, (4, 5, 6))  # two rows, two columns, second cell
 
         magnify_interval_length = 20
 
@@ -184,8 +184,8 @@ def draw():
             # if exp == 'normal':
             #     plt.axvline(x=x_values[-1], color='r')
 
-        plt.title(x)
-        plt.legend(loc="upper right")
+        # plt.title(x)
+        plt.legend(loc="lower right")
         plt.savefig(os.path.join(result_path, f'x_axis_{x}.jpg'), dpi=300)
         # plt.close()
 

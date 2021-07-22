@@ -147,13 +147,16 @@ def draw():
 
             # TODO: change ylim to be dynamic according to the results
             if exp != 'normal':
-                sub1.plot(x_values, average)
+                tmp = sub2.plot(x_values, average, label=label)
+                color = tmp.get_color()
+                sub1.plot(x_values, average, color=color)
                 sub1.fill_between(x_values, average - 2.26 * standard_error, average + 2.26 * standard_error, alpha=0.2)
                 sub1.set_xlim(x_values[0], x_values[magnify_interval_length])
                 sub1.set_ylim(-5, 0)
                 sub1.set_ylabel('y', labelpad=15)
+            else:
+                sub2.plot(x_values, average, label=label)
 
-            sub2.plot(x_values, average)
             # sub2.set_xlim(5, 6)
             # sub2.set_ylim(.4, 1)
 

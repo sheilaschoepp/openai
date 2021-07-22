@@ -34,6 +34,16 @@ def find_pss(exp_dir):
 def find_env_name(exp_dir):
     return exp_dir.split('_')[1].split(':')[0]
 
+def extract_params(exp_dir):
+    return dict([(t.split(':') if len(t.split(':')) == 2 else [t.split(':')[0], None]) for t in exp_dir.split('_')])
+
+def find_label(params):
+    rn = params['rn']
+    cm = params['cm']
+    label = ''
+    label += 'reinitialize_network_' if rn == "True" else ''
+    label += 'clear_memory' if cm == 'True' else ''
+    return label if label != '' else 'keep_both'
 
 X_AXIS = ['num_time_steps', 'num_updates', 'num_samples']
 
@@ -117,10 +127,11 @@ def draw():
         plt.figure(figsize=(12, 5))
 
         for exp in experiments_statistical_info:
+            label = 'normal' if exp == 'normal' else find_label(extract_params(exp))
             x_values = experiments_statistical_info[exp][x]
             average = experiments_statistical_info[exp]['avg']
             standard_error = experiments_statistical_info[exp]['std_error']
-            plt.plot(x_values, average)
+            plt.plot(x_values, average, label=label)
             plt.fill_between(x, average - 2.26 * standard_error, average + 2.26 * standard_error, alpha=0.2)
 
         plt.legend(loc="upper right")

@@ -182,7 +182,7 @@ def draw():
                 # Add right side to the figure
                 fig.add_artist(con2)
 
-                handles, labels = sub2.get_legend_handles_labels()
+                handles, labels = sub1.get_legend_handles_labels()
                 fig.legend(handles, labels, loc='upper right')
 
             # plt.plot(x_values, average, label=label)

@@ -120,6 +120,7 @@ def draw():
         for exp in experiments_statistical_info:
             x_values = experiments_statistical_info[exp][x]
             average = experiments_statistical_info[exp]['avg']
+            standard_error = experiments_statistical_info[exp]['std_error']
             plt.plot(x_values, average)
             plt.fill_between(x, average - 2.26 * standard_error, average + 2.26 * standard_error, alpha=0.2)
 

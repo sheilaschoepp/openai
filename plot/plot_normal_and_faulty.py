@@ -126,7 +126,7 @@ def draw():
                                              'num_samples': num_samples}
 
     for x in X_AXIS:
-        plt.figure(figsize=(12, 5))
+        plt.figure(figsize=(14, 7))
 
         for exp in experiments_statistical_info:
             label = 'normal' if exp == 'normal' else find_label(extract_params(exp))

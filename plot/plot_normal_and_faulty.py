@@ -66,8 +66,8 @@ def draw():
     experiment_seed = {}
     experiments_statistical_info = {}
     # set the theme for plots
-    sns.set_style("dark")
-    sns.set_theme()
+    # sns.set_style("dark")
+    # sns.set_theme()
 
     normal_seed_list = os.listdir(NORMAL_PATH)
     experiment_seed['normal'] = normal_seed_list

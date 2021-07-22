@@ -41,8 +41,8 @@ def find_label(params):
     rn = params['rn']
     cm = params['cm']
     label = ''
-    label += 'reinitialize_network_' if rn == "True" else ''
-    label += 'clear_memory' if cm == 'True' else ''
+    label += 'rn' if rn == "True" else ''
+    label += 'cm' if cm == 'True' else ''
     return label if label != '' else 'keep_both'
 
 X_AXIS = ['num_time_steps', 'num_updates', 'num_samples']

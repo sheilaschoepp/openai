@@ -153,14 +153,15 @@ def draw():
                 sub1.set_ylim(-5, 0)
                 sub1.set_ylabel('y', labelpad=15)
 
-
             sub2.plot(x_values, average)
             # sub2.set_xlim(5, 6)
             # sub2.set_ylim(.4, 1)
 
             if exp != 'normal':
                 # Create blocked area in third axes
-                sub2.fill_between((x_values[0], x_values[magnify_interval_length]), facecolor='green', alpha=0.2)  # blocked area for first axes
+                sub2.fill_between((x_values[0], x_values[magnify_interval_length]),
+                                  np.min(experiments_statistical_info['normal']['avg']),
+                                  0, facecolor='green', alpha=0.2)  # blocked area for first axes
 
             # TODO: xyB=(x, ylim) change the ylim here when you changed the ylim above
             # Create left side of Connection patch for first axes

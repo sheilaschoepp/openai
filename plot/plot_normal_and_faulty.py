@@ -85,7 +85,6 @@ def draw():
                 average_returns[index] = np.array(data_temp['average_return'])[:-1]
                 index += 1
 
-
             average = np.mean(average_returns, axis=0)
             standard_error = np.std(average_returns, axis=0) / np.sqrt(average_returns.shape[0])
 
@@ -94,11 +93,15 @@ def draw():
             else:
                 start_index = experiments_statistical_info['normal']['avg'].shape[0]
 
+            num_time_steps = np.array(data_temp['num_time_steps'])[:-1]
+            num_updates = np.array(data_temp['num_updates'])[:-1]
+            num_samples = np.array(data_temp['num_samples'])[:-1]
+
             experiments_statistical_info[exp] = {'avg': average[start_index: -1],
                                                  'std_error': standard_error[start_index: -1],
-                                                 'num_time_steps': np.array(data_temp['num_time_steps'])[start_index:-1],
-                                                 'num_updates': np.array(data_temp['num_updates'])[start_index:-1],
-                                                 'num_samples': np.array(data_temp['num_samples'])[start_index:-1]}
+                                                 'num_time_steps': num_time_steps[start_index:-1],
+                                                 'num_updates': num_updates[start_index:-1],
+                                                 'num_samples': num_samples[start_index:-1]}
 
             # plt.figure(figsize=(12, 5))
             # plt.plot(x, average, 'b')

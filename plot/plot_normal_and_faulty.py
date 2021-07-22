@@ -129,6 +129,9 @@ def draw():
         for exp in experiments_statistical_info:
             label = 'normal' if exp == 'normal' else find_label(extract_params(exp))
             x_values = experiments_statistical_info[exp][x]
+            print(exp)
+            print(x)
+            print(x_values)
             average = experiments_statistical_info[exp]['avg']
             standard_error = experiments_statistical_info[exp]['std_error']
             plt.plot(x_values, average, label=label)

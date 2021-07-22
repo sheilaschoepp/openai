@@ -190,8 +190,8 @@ def draw():
                 # Add right side to the figure
                 fig.add_artist(con2)
 
-        handles, labels = sub2.get_legend_handles_labels()
-        fig.legend(handles, labels, loc='upper right')
+            handles, labels = sub2.get_legend_handles_labels()
+            fig.legend(handles, labels, loc='upper right')
 
         # plt.title(x)
         plt.savefig(os.path.join(result_path, f'x_axis_{x}.jpg'), dpi=300)

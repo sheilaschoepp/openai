@@ -110,10 +110,10 @@ def draw():
         num_updates = np.array(data_temp['num_updates'])[start_index:-2]
         num_samples = np.array(data_temp['num_samples'])[start_index:-2]
 
-        if np.any(num_updates == 0):
+        if exp != 'normal' and np.any(num_updates == 0):
             index = np.where(num_updates == 0)[0][0]
             num_updates[index:] += num_updates[index - 1]
-        if np.any(num_samples == 0):
+        if exp != 'normal' and np.any(num_samples == 0):
             index = np.where(num_samples == 0)[0][0]
             num_samples[index:] += num_samples[index - 1]
 

@@ -132,7 +132,7 @@ def draw():
         plt.subplots_adjust(bottom=0.1, left=0.1, top=.9, right=.9)
 
         # Create first axes, the top-left plot with green plot
-        sub1 = fig.add_subplot(2, 3, 2)  # two rows, two columns, second cell
+        sub1 = fig.add_subplot(2, 4, (2, 3))  # two rows, two columns, second cell
 
         # Create second axes, the top-left plot with orange plot
         sub2 = fig.add_subplot(2, 1, 2)  # two rows, two columns, second cell

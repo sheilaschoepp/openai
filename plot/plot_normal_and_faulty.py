@@ -177,8 +177,8 @@ def draw():
                 fig.add_artist(con1)
 
                 # Create right side of Connection patch for first axes
-                con2 = ConnectionPatch(xyA=(x_values[magnify_interval_length], -2), coordsA=sub1.transData,
-                                       xyB=(x_values[magnify_interval_length], -5), coordsB=sub2.transData, color='green')
+                con2 = ConnectionPatch(xyA=(x_values[magnify_interval_length], -2), coordsA=sub2.transData,
+                                       xyB=(x_values[magnify_interval_length], -5), coordsB=sub1.transData, color='green')
                 # Add right side to the figure
                 fig.add_artist(con2)
 

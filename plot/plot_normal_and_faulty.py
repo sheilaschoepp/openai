@@ -87,6 +87,7 @@ def draw():
             print(exp)
             print(average_returns)
             print(average_returns.shape)
+            print(experiment_seed[exp])
             average = np.mean(average_returns, axis=0)
             standard_error = np.std(average_returns, axis=0) / np.sqrt(average_returns.shape[0])
 

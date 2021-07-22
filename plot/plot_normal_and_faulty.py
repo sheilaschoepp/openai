@@ -107,6 +107,13 @@ def draw():
         num_updates = np.array(data_temp['num_updates'])[:-1]
         num_samples = np.array(data_temp['num_samples'])[:-1]
 
+        if np.any(num_updates == 0):
+            print('update zero')
+            print(exp)
+        if np.any(num_samples == 0):
+            print('sample zero')
+            print(exp)
+
         experiments_statistical_info[exp] = {'avg': average[start_index: -1],
                                              'std_error': standard_error[start_index: -1],
                                              'num_time_steps': num_time_steps[start_index:-1],

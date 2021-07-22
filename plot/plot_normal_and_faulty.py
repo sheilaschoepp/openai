@@ -73,13 +73,13 @@ def draw():
 
             index = 0
             for seed in experiment_seed[exp]:
-                path = os.path.join(FAULTY_PATH, exp, seed, 'csv', 'eval_data.csv')
+                path = os.path.join(FAULTY_PATH, exp, seed, 'csv', 'eval_data.csv') if exp != 'normal' else \
+                    os.path.join(NORMAL_PATH, seed, 'csv', 'eval_data.csv')
                 try:
                     data_temp = pd.read_csv(path)
                 except FileNotFoundError:
                     continue
                 if average_returns is None:
-                    print('initializing')
                     average_returns = np.zeros([num_seeds, len(data_temp) - 1])
 
                 average_returns[index] = np.array(data_temp['average_return'])[:-1]

@@ -138,7 +138,11 @@ def draw():
         sub2 = fig.add_subplot(2, 1, 2)  # two rows, two columns, second cell
 
         magnify_interval_length = 20
+        # This parameter is for controlling the magnifying interval is  only plotted once
         already_filled_interval = False
+
+        labels = []
+        plots = []
 
         for exp in experiments_statistical_info:
             label = 'normal' if exp == 'normal' else find_label(extract_params(exp))
@@ -148,15 +152,19 @@ def draw():
 
             # TODO: change ylim to be dynamic according to the results
             if exp != 'normal':
-                tmp = sub2.plot(x_values, average, label=label)
-                color = tmp[0].get_color()
+                tmp = sub2.plot(x_values, average)[0]
+                plots.append(tmp)
+                labels.append(label)
+                color = tmp.get_color()
                 sub1.plot(x_values, average, color=color)
                 sub1.fill_between(x_values, average - 2.26 * standard_error, average + 2.26 * standard_error, alpha=0.2)
                 sub1.set_xlim(x_values[0], x_values[magnify_interval_length])
                 sub1.set_ylim(-5, 0)
                 sub1.set_ylabel('y', labelpad=15)
             else:
-                sub2.plot(x_values, average, label=label)
+                tmp = sub2.plot(x_values, average)[0]
+                plots.append(tmp)
+                labels.append(label)
 
             # sub2.set_xlim(5, 6)
             # sub2.set_ylim(.4, 1)
@@ -182,16 +190,10 @@ def draw():
                 # Add right side to the figure
                 fig.add_artist(con2)
 
-                handles, labels = sub1.get_legend_handles_labels()
-                fig.legend(handles, labels, loc='upper right')
-
-            # plt.plot(x_values, average, label=label)
-            # plt.fill_between(x_values, average - 2.26 * standard_error, average + 2.26 * standard_error, alpha=0.2)
-            # if exp == 'normal':
-            #     plt.axvline(x=x_values[-1], color='r')
+        handles, labels = sub2.get_legend_handles_labels()
+        fig.legend(handles, labels, loc='upper right')
 
         # plt.title(x)
-        # plt.legend(loc="lower right")
         plt.savefig(os.path.join(result_path, f'x_axis_{x}.jpg'), dpi=300)
         # plt.close()
 

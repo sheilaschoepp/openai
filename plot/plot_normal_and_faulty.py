@@ -128,8 +128,8 @@ def draw():
 
     for x in X_AXIS:
         # Create main container with size of 6x5
-        fig = plt.figure(figsize=(12, 5))
-        plt.subplots_adjust(bottom=0., left=0, top=1., right=1)
+        fig = plt.figure(figsize=(12, 7))
+        plt.subplots_adjust(bottom=0.1, left=0.1, top=.9, right=.9)
 
         # Create first axes, the top-left plot with green plot
         sub1 = fig.add_subplot(2, 3, 2)  # two rows, two columns, second cell

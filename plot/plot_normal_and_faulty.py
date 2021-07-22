@@ -13,7 +13,7 @@ parser = argparse.ArgumentParser(description="Draw results of the experiments in
 parser.add_argument("-nd", "--normaldir", default="",
                     help="absolute path of the folder containing the seeds of the normal environment")
 
-parser.add_argument("-nf", "--faultydir", default="",
+parser.add_argument("-fd", "--faultydir", default="",
                     help="absolute path of the folder containing the experiments (not seeds) of the faulty environment "
                          "whose normal environment was the path provided in --normaldir")
 

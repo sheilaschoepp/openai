@@ -110,6 +110,8 @@ def draw():
         num_updates = np.array(data_temp['num_updates'])[start_index:-2]
         num_samples = np.array(data_temp['num_samples'])[start_index:-2]
 
+        # In the faulty environments when we throw away the memory or network, number of updates and samples would
+        # become zero. These lines are for making the plots consistent for number of samples and updates
         if exp != 'normal' and np.any(num_updates == 0):
             index = np.where(num_updates == 0)[0][0]
             num_updates[index:] += num_updates[index - 1]
@@ -123,29 +125,18 @@ def draw():
                                              'num_updates': num_updates,
                                              'num_samples': num_samples}
 
-        # plt.figure(figsize=(12, 5))
-        # plt.plot(x, average, 'b')
-        # plt.fill_between(x, average - 2.26 * standard_error, average + 2.26 * standard_error, alpha=0.2)
-        # plt.savefig(os.path.join(result_path, f'{exp}.jpg'), dpi=300)
-        # plt.close()
-
-    # Finding the best HP settings based on the sum of average returns of different seeds
-    # sorted_experiments_score_sac = {k: v for k, v in sorted(experiments_score_sac.items(), key=lambda item: item[1])}
-    # sorted_experiments_score_ppo = {k: v for k, v in sorted(experiments_score_ppo.items(), key=lambda item: item[1])}
-
     for x in X_AXIS:
         plt.figure(figsize=(12, 5))
 
         for exp in experiments_statistical_info:
             label = 'normal' if exp == 'normal' else find_label(extract_params(exp))
             x_values = experiments_statistical_info[exp][x]
-            print(exp)
-            print(x)
-            print(x_values)
             average = experiments_statistical_info[exp]['avg']
             standard_error = experiments_statistical_info[exp]['std_error']
             plt.plot(x_values, average, label=label)
             plt.fill_between(x, average - 2.26 * standard_error, average + 2.26 * standard_error, alpha=0.2)
+            if exp == 'normal':
+                plt.axvline(x=x_values[-1], color='r')
 
         plt.legend(loc="lower right")
         plt.savefig(os.path.join(result_path, f'x_axis_{x}.jpg'), dpi=300)

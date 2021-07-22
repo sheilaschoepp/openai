@@ -160,7 +160,7 @@ def draw():
 
             if exp != 'normal':
                 # Create blocked area in third axes
-                sub2.fill_between((x_values[0], x_values[magnify_interval_length]), 0, 1, facecolor='green', alpha=0.2)  # blocked area for first axes
+                sub2.fill_between((x_values[0], x_values[magnify_interval_length]), facecolor='green', alpha=0.2)  # blocked area for first axes
 
             # TODO: xyB=(x, ylim) change the ylim here when you changed the ylim above
             # Create left side of Connection patch for first axes
@@ -180,8 +180,8 @@ def draw():
             # if exp == 'normal':
             #     plt.axvline(x=x_values[-1], color='r')
 
-        plt.title(x)
-        plt.legend(loc="lower right")
+        fig.title(x)
+        fig.legend(loc="upper right")
         plt.savefig(os.path.join(result_path, f'x_axis_{x}.jpg'), dpi=300)
         # plt.close()
 

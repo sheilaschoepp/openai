@@ -79,6 +79,7 @@ def draw():
                 except FileNotFoundError:
                     continue
                 if average_returns is None:
+                    print('initializing')
                     average_returns = np.zeros([num_seeds, len(data_temp) - 1])
 
                 average_returns[index] = np.array(data_temp['average_return'])[:-1]

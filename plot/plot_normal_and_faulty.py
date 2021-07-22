@@ -34,8 +34,10 @@ def find_pss(exp_dir):
 def find_env_name(exp_dir):
     return exp_dir.split('_')[1].split(':')[0]
 
+
 def extract_params(exp_dir):
     return dict([(t.split(':') if len(t.split(':')) == 2 else [t.split(':')[0], None]) for t in exp_dir.split('_')])
+
 
 def find_label(params):
     rn = params['rn']
@@ -44,6 +46,7 @@ def find_label(params):
     label += 'rn' if rn == "True" else ''
     label += 'cm' if cm == 'True' else ''
     return label if label != '' else 'keep_both'
+
 
 X_AXIS = ['num_time_steps', 'num_updates', 'num_samples']
 
@@ -107,15 +110,12 @@ def draw():
         num_updates = np.array(data_temp['num_updates'])[start_index:-2]
         num_samples = np.array(data_temp['num_samples'])[start_index:-2]
 
-
         if np.any(num_updates == 0):
-            print(np.where(num_updates == 0))
-            print('update zero')
-            print(exp)
+            index = np.where(num_updates == 0)[0]
+            num_updates[index:] += num_updates[index - 1]
         if np.any(num_samples == 0):
-            print(np.where(num_samples == 0))
-            print('sample zero')
-            print(exp)
+            index = np.where(num_samples == 0)[0]
+            num_samples[index:] += num_samples[index - 1]
 
         experiments_statistical_info[exp] = {'avg': average[start_index: -1],
                                              'std_error': standard_error[start_index: -1],
@@ -123,11 +123,11 @@ def draw():
                                              'num_updates': num_updates,
                                              'num_samples': num_samples}
 
-            # plt.figure(figsize=(12, 5))
-            # plt.plot(x, average, 'b')
-            # plt.fill_between(x, average - 2.26 * standard_error, average + 2.26 * standard_error, alpha=0.2)
-            # plt.savefig(os.path.join(result_path, f'{exp}.jpg'), dpi=300)
-            # plt.close()
+        # plt.figure(figsize=(12, 5))
+        # plt.plot(x, average, 'b')
+        # plt.fill_between(x, average - 2.26 * standard_error, average + 2.26 * standard_error, alpha=0.2)
+        # plt.savefig(os.path.join(result_path, f'{exp}.jpg'), dpi=300)
+        # plt.close()
 
     # Finding the best HP settings based on the sum of average returns of different seeds
     # sorted_experiments_score_sac = {k: v for k, v in sorted(experiments_score_sac.items(), key=lambda item: item[1])}

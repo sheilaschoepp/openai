@@ -181,8 +181,8 @@ def draw():
             # if exp == 'normal':
             #     plt.axvline(x=x_values[-1], color='r')
 
-        fig.title(x)
-        fig.legend(loc="upper right")
+        plt.title(x)
+        plt.legend(loc="upper right")
         plt.savefig(os.path.join(result_path, f'x_axis_{x}.jpg'), dpi=300)
         # plt.close()
 

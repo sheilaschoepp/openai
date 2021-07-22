@@ -135,7 +135,7 @@ def draw():
         sub1 = fig.add_subplot(2, 3, 2)  # two rows, two columns, second cell
 
         # Create second axes, the top-left plot with orange plot
-        sub2 = fig.add_subplot(2, 3, (4, 5, 6))  # two rows, two columns, second cell
+        sub2 = fig.add_subplot(2, 1, 1)  # two rows, two columns, second cell
 
         magnify_interval_length = 20
 

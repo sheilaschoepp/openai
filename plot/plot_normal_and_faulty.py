@@ -138,6 +138,7 @@ def draw():
         sub2 = fig.add_subplot(2, 1, 2)  # two rows, two columns, second cell
 
         magnify_interval_length = 20
+        already_filled_interval = False
 
         for exp in experiments_statistical_info:
             label = 'normal' if exp == 'normal' else find_label(extract_params(exp))
@@ -160,24 +161,26 @@ def draw():
             # sub2.set_xlim(5, 6)
             # sub2.set_ylim(.4, 1)
 
-            if exp != 'normal':
+            if exp != 'normal' and not already_filled_interval:
+                already_filled_interval = True
                 # Create blocked area in third axes
                 sub2.fill_between((x_values[0], x_values[magnify_interval_length]),
                                   np.min(experiments_statistical_info['normal']['avg']),
                                   0, facecolor='green', alpha=0.2)  # blocked area for first axes
 
-            # TODO: xyB=(x, ylim) change the ylim here when you changed the ylim above
-            # Create left side of Connection patch for first axes
-            con1 = ConnectionPatch(xyA=(x_values[0], -2), coordsA=sub1.transData,
-                                   xyB=(x_values[0], -5), coordsB=sub2.transData, color='green')
-            # Add left side to the figure
-            fig.add_artist(con1)
+                # TODO: xyB=(x, ylim) change the ylim here when you changed the ylim above
+                # Create left side of Connection patch for first axes
 
-            # Create right side of Connection patch for first axes
-            con2 = ConnectionPatch(xyA=(x_values[magnify_interval_length], -2), coordsA=sub1.transData,
-                                   xyB=(x_values[magnify_interval_length], -5), coordsB=sub2.transData, color='green')
-            # Add right side to the figure
-            fig.add_artist(con2)
+                con1 = ConnectionPatch(xyA=(x_values[0], -2), coordsA=sub2.transData,
+                                       xyB=(x_values[0], -5), coordsB=sub1.transData, color='green')
+                # Add left side to the figure
+                fig.add_artist(con1)
+
+                # Create right side of Connection patch for first axes
+                con2 = ConnectionPatch(xyA=(x_values[magnify_interval_length], -2), coordsA=sub1.transData,
+                                       xyB=(x_values[magnify_interval_length], -5), coordsB=sub2.transData, color='green')
+                # Add right side to the figure
+                fig.add_artist(con2)
 
             # plt.plot(x_values, average, label=label)
             # plt.fill_between(x_values, average - 2.26 * standard_error, average + 2.26 * standard_error, alpha=0.2)

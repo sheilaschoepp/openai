@@ -459,7 +459,7 @@ def plot_fetchreach_heatmap(ranges):
     bins = np.round(np.arange(0.0, 1.025, 0.025), 3)
 
     for i in range(7):
-        counts, _ = np.histogram(fetchreach_histogram_data_normalized[i], bins=bins, range=[0.0, 1.0])
+        counts, _ = np.histogram(fetchreach_histogram_data_normalized[i], bins=bins)
         counts = counts / np.sum(counts)  # probability
         fetchreach_histogram_count_data.append(counts)
 

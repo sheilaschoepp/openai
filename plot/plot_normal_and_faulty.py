@@ -152,7 +152,7 @@ def draw():
 
             # TODO: change ylim to be dynamic according to the results
             if exp != 'normal':
-                tmp = sub2.plot(x_values, average)[0]
+                tmp = sub2.plot(x_values, average, label=label)[0]
                 plots.append(tmp)
                 labels.append(label)
                 color = tmp.get_color()
@@ -162,7 +162,7 @@ def draw():
                 sub1.set_ylim(-5, 0)
                 sub1.set_ylabel('y', labelpad=15)
             else:
-                tmp = sub2.plot(x_values, average)[0]
+                tmp = sub2.plot(x_values, average, label=label)[0]
                 plots.append(tmp)
                 labels.append(label)
 

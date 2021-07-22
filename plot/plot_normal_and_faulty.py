@@ -66,49 +66,48 @@ def draw():
 
     # Calculate the average and standard error of each experiment and
     # draw results for each one
-    with tqdm(total=len(faulty_experiments_list) + 1) as pbar:
-        for exp in experiment_seed.keys():
-            num_seeds = len(experiment_seed[exp])
-            average_returns = None
+    for exp in experiment_seed.keys():
+        num_seeds = len(experiment_seed[exp])
+        average_returns = None
+        data_temp = None
 
-            index = 0
-            for seed in experiment_seed[exp]:
-                path = os.path.join(FAULTY_PATH, exp, seed, 'csv', 'eval_data.csv') if exp != 'normal' else \
-                    os.path.join(NORMAL_PATH, seed, 'csv', 'eval_data.csv')
-                try:
-                    data_temp = pd.read_csv(path)
-                except FileNotFoundError:
-                    continue
-                if average_returns is None:
-                    average_returns = np.zeros([num_seeds, len(data_temp) - 1])
+        index = 0
+        for seed in experiment_seed[exp]:
+            path = os.path.join(FAULTY_PATH, exp, seed, 'csv', 'eval_data.csv') if exp != 'normal' else \
+                os.path.join(NORMAL_PATH, seed, 'csv', 'eval_data.csv')
+            try:
+                data_temp = pd.read_csv(path)
+            except FileNotFoundError:
+                continue
+            if average_returns is None:
+                average_returns = np.zeros([num_seeds, len(data_temp) - 1])
 
-                average_returns[index] = np.array(data_temp['average_return'])[:-1]
-                index += 1
+            average_returns[index] = np.array(data_temp['average_return'])[:-1]
+            index += 1
 
-            average = np.mean(average_returns, axis=0)
-            standard_error = np.std(average_returns, axis=0) / np.sqrt(average_returns.shape[0])
+        average = np.mean(average_returns, axis=0)
+        standard_error = np.std(average_returns, axis=0) / np.sqrt(average_returns.shape[0])
 
-            if exp == 'normal':
-                start_index = 0
-            else:
-                start_index = experiments_statistical_info['normal']['avg'].shape[0]
+        if exp == 'normal':
+            start_index = 0
+        else:
+            start_index = experiments_statistical_info['normal']['avg'].shape[0]
 
-            num_time_steps = np.array(data_temp['num_time_steps'])[:-1]
-            num_updates = np.array(data_temp['num_updates'])[:-1]
-            num_samples = np.array(data_temp['num_samples'])[:-1]
+        num_time_steps = np.array(data_temp['num_time_steps'])[:-1]
+        num_updates = np.array(data_temp['num_updates'])[:-1]
+        num_samples = np.array(data_temp['num_samples'])[:-1]
 
-            experiments_statistical_info[exp] = {'avg': average[start_index: -1],
-                                                 'std_error': standard_error[start_index: -1],
-                                                 'num_time_steps': num_time_steps[start_index:-1],
-                                                 'num_updates': num_updates[start_index:-1],
-                                                 'num_samples': num_samples[start_index:-1]}
+        experiments_statistical_info[exp] = {'avg': average[start_index: -1],
+                                             'std_error': standard_error[start_index: -1],
+                                             'num_time_steps': num_time_steps[start_index:-1],
+                                             'num_updates': num_updates[start_index:-1],
+                                             'num_samples': num_samples[start_index:-1]}
 
             # plt.figure(figsize=(12, 5))
             # plt.plot(x, average, 'b')
             # plt.fill_between(x, average - 2.26 * standard_error, average + 2.26 * standard_error, alpha=0.2)
             # plt.savefig(os.path.join(result_path, f'{exp}.jpg'), dpi=300)
             # plt.close()
-            # pbar.update(1)
 
     # Finding the best HP settings based on the sum of average returns of different seeds
     # sorted_experiments_score_sac = {k: v for k, v in sorted(experiments_score_sac.items(), key=lambda item: item[1])}

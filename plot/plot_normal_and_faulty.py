@@ -48,7 +48,7 @@ def draw():
     result_path = os.path.join(current_path, 'normal_faulty_plots', env_name)
 
     if not os.path.exists(result_path):
-        os.mkdir(result_path)
+        os.makedirs(result_path)
 
     experiment_seed = {}
     experiments_statistical_info = {}

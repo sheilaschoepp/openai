@@ -3,11 +3,11 @@ echo 'RESUME_FILE="/local/melco2-1/shared/fetchreach/normal/SACv2_FetchReachEnv-
 
 for s in {0..4}
 do
-  echo 'tmux new-session -d -s sacv1rn-'$s' "CUDA_VISIBLE_DEVICES=0 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -e FetchReachEnv-v1 -t 2000000 -c -f $RESUME_FILE/seed'$s' -rn"' >> melco2.sh
+  echo 'tmux new-session -d -s sacv4-'$s' "CUDA_VISIBLE_DEVICES=0 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -e FetchReachEnv-v4 -t 2000000 -c -f $RESUME_FILE/seed'$s'"' >> melco2.sh
 done
 for s in {5..9}
 do
-  echo 'tmux new-session -d -s sacv1rn-'$s' "CUDA_VISIBLE_DEVICES=1 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -e FetchReachEnv-v1 -t 2000000 -c -f $RESUME_FILE/seed'$s' -rn"' >> melco2.sh
+  echo 'tmux new-session -d -s sacv4-'$s' "CUDA_VISIBLE_DEVICES=1 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -e FetchReachEnv-v4 -t 2000000 -c -f $RESUME_FILE/seed'$s'"' >> melco2.sh
 done
 
 

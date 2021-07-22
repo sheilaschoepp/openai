@@ -141,15 +141,15 @@ class FetchEnv(robot_env.RobotEnv):
         ])
 
         # modification here
-        old_value = self.sim.data.get_joint_qpos("robot0:torso_lift_joint")
-        self.sim.data.set_joint_qpos("robot0:torso_lift_joint", 1.5)
+        old_value = self.sim.data.get_joint_qpos("robot0:shoulder_lift_joint")
+        self.sim.data.set_joint_qpos("robot0:shoulder_lift_joint", 1.5)
         self.sim.forward()
         grip_pos = self.sim.data.get_site_xpos('robot0:grip')
         obs = np.concatenate([
             grip_pos, object_pos.ravel(), object_rel_pos.ravel(), gripper_state, object_rot.ravel(),
             object_velp.ravel(), object_velr.ravel(), grip_velp, gripper_vel
         ])
-        self.sim.data.set_joint_qpos("robot0:torso_lift_joint", old_value)
+        self.sim.data.set_joint_qpos("robot0:shoulder_lift_joint", old_value)
         self.sim.forward()
         # modification here
 

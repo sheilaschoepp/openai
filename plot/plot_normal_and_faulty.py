@@ -66,8 +66,8 @@ def draw():
     experiment_seed = {}
     experiments_statistical_info = {}
     # set the theme for plots
-    # sns.set_style("dark")
-    # sns.set_theme()
+    sns.set_style("dark")
+    sns.set_theme()
 
     normal_seed_list = os.listdir(NORMAL_PATH)
     experiment_seed['normal'] = normal_seed_list
@@ -134,11 +134,11 @@ def draw():
             average = experiments_statistical_info[exp]['avg']
             standard_error = experiments_statistical_info[exp]['std_error']
             plt.plot(x_values, average, label=label)
-            plt.fill_between(x, average - 2.26 * standard_error, average + 2.26 * standard_error, alpha=0.2)
+            plt.fill_between(x_values, average - 2.26 * standard_error, average + 2.26 * standard_error, alpha=0.2)
             if exp == 'normal':
                 plt.axvline(x=x_values[-1], color='r')
 
-        # plt.legend(loc="lower right")
+        plt.legend(loc="lower right")
         plt.savefig(os.path.join(result_path, f'x_axis_{x}.jpg'), dpi=300)
         plt.close()
 

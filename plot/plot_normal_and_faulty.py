@@ -130,16 +130,15 @@ def draw():
 
         for exp in experiments_statistical_info:
             label = 'normal' if exp == 'normal' else find_label(extract_params(exp))
+            x_values = experiments_statistical_info[exp][x]
+            average = experiments_statistical_info[exp]['avg']
+            standard_error = experiments_statistical_info[exp]['std_error']
+            plt.plot(x_values, average, label=label)
+            plt.fill_between(x, average - 2.26 * standard_error, average + 2.26 * standard_error, alpha=0.2)
             if exp == 'normal':
-                x_values = experiments_statistical_info[exp][x]
-                average = experiments_statistical_info[exp]['avg']
-                standard_error = experiments_statistical_info[exp]['std_error']
-                plt.plot(x_values, average, label=label)
-                plt.fill_between(x, average - 2.26 * standard_error, average + 2.26 * standard_error, alpha=0.2)
-                if exp == 'normal':
-                    plt.axvline(x=x_values[-1], color='r')
+                plt.axvline(x=x_values[-1], color='r')
 
-        plt.legend(loc="lower right")
+        # plt.legend(loc="lower right")
         plt.savefig(os.path.join(result_path, f'x_axis_{x}.jpg'), dpi=300)
         plt.close()
 

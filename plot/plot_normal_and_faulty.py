@@ -67,7 +67,7 @@ def draw():
     experiment_seed = {}
     experiments_statistical_info = {}
     # set the theme for plots
-    sns.set_style("dark")
+    sns.set_style("colorblind")
     sns.set_theme()
 
     normal_seed_list = os.listdir(NORMAL_PATH)
@@ -141,9 +141,6 @@ def draw():
         # This parameter is for controlling the magnifying interval is  only plotted once
         already_filled_interval = False
 
-        labels = []
-        plots = []
-
         for exp in experiments_statistical_info:
             label = 'normal' if exp == 'normal' else find_label(extract_params(exp))
             x_values = experiments_statistical_info[exp][x]
@@ -153,8 +150,6 @@ def draw():
             # TODO: change ylim to be dynamic according to the results
             if exp != 'normal':
                 tmp = sub2.plot(x_values, average, label=label)[0]
-                plots.append(tmp)
-                labels.append(label)
                 color = tmp.get_color()
                 sub1.plot(x_values, average, color=color)
                 sub1.fill_between(x_values, average - 2.26 * standard_error, average + 2.26 * standard_error, alpha=0.2)
@@ -162,12 +157,7 @@ def draw():
                 sub1.set_ylim(-5, 0)
                 sub1.set_ylabel('y', labelpad=15)
             else:
-                tmp = sub2.plot(x_values, average, label=label)[0]
-                plots.append(tmp)
-                labels.append(label)
-
-            # sub2.set_xlim(5, 6)
-            # sub2.set_ylim(.4, 1)
+                sub2.plot(x_values, average, label=label)
 
             if exp != 'normal' and not already_filled_interval:
                 already_filled_interval = True
@@ -186,7 +176,8 @@ def draw():
 
                 # Create right side of Connection patch for first axes
                 con2 = ConnectionPatch(xyA=(x_values[magnify_interval_length], -2), coordsA=sub2.transData,
-                                       xyB=(x_values[magnify_interval_length], -5), coordsB=sub1.transData, color='green')
+                                       xyB=(x_values[magnify_interval_length], -5), coordsB=sub1.transData,
+                                       color='green')
                 # Add right side to the figure
                 fig.add_artist(con2)
 

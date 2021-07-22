@@ -127,6 +127,7 @@ def test_qpos_from_grip_pose(target, inplace):
     physics.data.qpos[:] = result.qpos
     mjlib.mj_fwdPosition(physics.model.ptr, physics.data.ptr)
     pos = physics.named.data.site_xpos[_SITE_NAME]
+    # print(physics.named.data.qpos['robot0:torso_lift_joint'])
     return np.allclose(pos, target_pos, rtol=1e-6)
 
 

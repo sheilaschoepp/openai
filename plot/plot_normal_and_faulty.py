@@ -68,7 +68,8 @@ def draw():
     experiments_statistical_info = {}
     # set the theme for plots
     sns.set_style("dark")
-    sns.set_palette('colorblind')
+    # sns.set_palette('colorblind')
+    plt.style.use('tableau-colorblind10')
     sns.set_theme()
 
     normal_seed_list = os.listdir(NORMAL_PATH)

@@ -170,7 +170,6 @@ def draw():
                                       alpha=0.2, color=color)
                     sub1.set_xlim(x_values[0], x_values[magnify_interval_length])
                     sub1.set_ylim(min_ylim, max_ylim)
-                    sub1.set_ylabel('y', labelpad=15)
                     color_index += 1
                 else:
                     sub1.plot(x_values, average, marker=markers[marker_index], color=color, label=label)
@@ -178,7 +177,6 @@ def draw():
                                       alpha=0.2, color=color)
                     sub1.set_xlim(x_values[0], x_values[magnify_interval_length])
                     sub1.set_ylim(min_ylim, max_ylim)
-                    sub1.set_ylabel('y', labelpad=15)
                     marker_index += 1
 
             if exp != 'normal' and not already_filled_interval:

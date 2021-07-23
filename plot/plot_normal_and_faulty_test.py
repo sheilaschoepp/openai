@@ -185,7 +185,7 @@ def draw():
         plt.fill_between((min_xlim, max_xlim), min_ylim, max_ylim,
                          facecolor='black', alpha=0.2)  # blocked area for first axes
 
-        fig.add_axes([0.8, 0.8, 0.5, 0.2])  # the position of zoom-out plot compare to the ratio of zoom-in plot
+        fig.add_axes([0.8, 0.8, 0.1, 0.2])  # the position of zoom-out plot compare to the ratio of zoom-in plot
         for exp in experiments_statistical_info:
             if exp == 'normal':
                 continue

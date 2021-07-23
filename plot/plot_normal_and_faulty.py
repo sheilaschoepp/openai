@@ -55,10 +55,6 @@ def find_label(exp):
     return label if label != '' else 'keep_both'
 
 
-def find_ylim(exp_info):
-    for
-
-
 X_AXIS = ['num_time_steps', 'num_updates', 'num_samples']
 X_AXIS_TO_LABEL = {'num_time_steps': 'Time step',
                    'num_updates': 'Number of updates',

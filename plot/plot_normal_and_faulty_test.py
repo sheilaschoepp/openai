@@ -213,8 +213,8 @@ def draw():
         # Add right side to the figure
         fig.add_artist(con2)
 
-        ax2.xlim(min_xlim, max_xlim)
-        ax2.ylim(min_ylim, max_ylim)
+        ax2.set_xlim(min_xlim, max_xlim)
+        ax2.set_ylim(min_ylim, max_ylim)
 
         # handles, labels = plt.get_legend_handles_labels()
         # handles2, labels2 = plt.get_legend_handles_labels()

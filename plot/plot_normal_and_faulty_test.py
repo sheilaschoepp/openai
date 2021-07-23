@@ -145,11 +145,9 @@ def draw():
 
     for x in X_AXIS:
         # Create main container with size of 6x5
-        sub2 = plt.figure(figsize=(12, 7))
+        fig = plt.figure(figsize=(12, 7))
         # plt.subplots_adjust(bottom=0.1, left=0.1, top=.9, right=.9)
 
-        sub1 = sub2.add_axes(
-            [0.6, 0.6, 0.2, 0.2])  # the position of zoom-out plot compare to the ratio of zoom-in plot
         # Create first axes, the top-left plot with green plot
         # sub1 = fig.add_subplot(2, 4, (2, 3))  # two rows, two columns, second cell
 
@@ -171,54 +169,60 @@ def draw():
 
             # TODO: change ylim to be dynamic according to the results
 
-            tmp = sub2.plot(x_values, average, label=label)[0]
+            tmp = plt.plot(x_values, average, label=label)[0]
             color = tmp.get_color()
-            sub2.fill_between(x_values, average - 2.26 * standard_error, average + 2.26 * standard_error,
-                              alpha=0.2, color=color)
+            plt.fill_between(x_values, average - 2.26 * standard_error, average + 2.26 * standard_error,
+                             alpha=0.2, color=color)
 
-            if exp != 'normal':
+        fig.add_axes([0.6, 0.6, 0.2, 0.2])  # the position of zoom-out plot compare to the ratio of zoom-in plot
+        for exp in experiments_statistical_info:
+            if exp == 'normal':
+                continue
+            label = 'normal' if exp == 'normal' else find_label(exp)
+            x_values = experiments_statistical_info[exp][x]
+            average = experiments_statistical_info[exp]['avg']
+            standard_error = experiments_statistical_info[exp]['std_error']
+            min_xlim, max_xlim, max_ylim = x_values[0], x_values[magnify_interval_length], 0
+            min_y = np.min(average[0:magnify_interval_length])
+            min_ylim = min_y if min_y < min_ylim else min_ylim
 
-                min_xlim, max_xlim, max_ylim = x_values[0], x_values[magnify_interval_length], 0
-                min_y = np.min(average[0:magnify_interval_length])
-                min_ylim = min_y if min_y < min_ylim else min_ylim
-
-                if color_index < len(linestyles):
-                    sub1.plot(x_values, average, linestyle=linestyles[color_index], color=color, label=label)
-                    sub1.fill_between(x_values, average - 2.26 * standard_error, average + 2.26 * standard_error,
-                                      alpha=0.2, color=color)
-                    color_index += 1
-                else:
-                    sub1.plot(x_values, average, marker=markers[marker_index], color=color, label=label)
-                    sub1.fill_between(x_values, average - 2.26 * standard_error, average + 2.26 * standard_error,
-                                      alpha=0.2, color=color)
-                    marker_index += 1
+            if color_index < len(linestyles):
+                plt.plot(x_values, average, linestyle=linestyles[color_index], color=color, label=label)
+                plt.fill_between(x_values, average - 2.26 * standard_error, average + 2.26 * standard_error,
+                                 alpha=0.2, color=color)
+                color_index += 1
+            else:
+                plt.plot(x_values, average, marker=markers[marker_index], color=color, label=label)
+                plt.fill_between(x_values, average - 2.26 * standard_error, average + 2.26 * standard_error,
+                                 alpha=0.2, color=color)
+                marker_index += 1
 
         # Create blocked area in third axes
-        sub2.fill_between((min_xlim, max_xlim), min_ylim, max_ylim,
-                          facecolor='black', alpha=0.2)  # blocked area for first axes
+        plt.fill_between((min_xlim, max_xlim), min_ylim, max_ylim,
+                         facecolor='black', alpha=0.2)  # blocked area for first axes
 
         # Create left side of Connection patch for first axes
-        con1 = ConnectionPatch(xyA=(min_xlim, min_ylim / 2), coordsA=sub2.transData,
-                               xyB=(min_xlim, min_ylim), coordsB=sub1.transData, color='black')
-        # Add left side to the figure
-        fig.add_artist(con1)
-        # Create right side of Connection patch for first axes
-        con2 = ConnectionPatch(xyA=(max_xlim, min_ylim / 2), coordsA=sub2.transData,
-                               xyB=(max_xlim, min_ylim), coordsB=sub1.transData,
-                               color='black')
+        # con1 = ConnectionPatch(xyA=(min_xlim, min_ylim / 2), coordsA=sub2.transData,
+        #                        xyB=(min_xlim, min_ylim), coordsB=sub1.transData, color='black')
+        # # Add left side to the figure
+        # fig.add_artist(con1)
+        # # Create right side of Connection patch for first axes
+        # con2 = ConnectionPatch(xyA=(max_xlim, min_ylim / 2), coordsA=sub2.transData,
+        #                        xyB=(max_xlim, min_ylim), coordsB=sub1.transData,
+        #                        color='black')
         # Add right side to the figure
-        fig.add_artist(con2)
+        # fig.add_artist(con2)
 
-        sub1.set_xlim(min_xlim, max_xlim)
-        sub1.set_ylim(min_ylim, max_ylim)
+        plt.xlim(min_xlim, max_xlim)
+        plt.ylim(min_ylim, max_ylim)
 
-        handles, labels = sub1.get_legend_handles_labels()
-        handles2, labels2 = sub2.get_legend_handles_labels()
-        labels = ['normal'] + labels
-        handles = [handles2[labels2.index('normal')]] + handles
-        fig.legend(handles, labels, loc='upper right')
-        sub2.set_xlabel(X_AXIS_TO_LABEL[x])
-        sub2.set_ylabel('Episode Cumulative Reward')
+        # handles, labels = plt.get_legend_handles_labels()
+        # handles2, labels2 = plt.get_legend_handles_labels()
+        # labels = ['normal'] + labels
+        # handles = [handles2[labels2.index('normal')]] + handles
+        plt.legend(loc='upper right')
+        # sub2.set_xlabel(X_AXIS_TO_LABEL[x])
+        # sub2.set_ylabel('Episode Cumulative Reward')
 
         # plt.title(x)
         plt.savefig(os.path.join(result_path, f'x_axis_{x}.jpg'), dpi=300)

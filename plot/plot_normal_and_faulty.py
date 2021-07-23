@@ -200,6 +200,9 @@ def draw():
                 fig.add_artist(con2)
 
             handles, labels = sub1.get_legend_handles_labels()
+            handles2, labels2 = sub2.get_legend_handles_labels()
+            labels = ['normal'] + labels
+            handles = [handles2[labels2.index('normal')]] + handles
             print(labels)
             print(handles)
             fig.legend(handles, labels, loc='upper right')

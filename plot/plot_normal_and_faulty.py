@@ -145,6 +145,9 @@ def draw():
         already_filled_interval = False
         color_index = 0
         marker_index = 0
+
+        min_ylim, max_ylim = -5, 0
+
         for exp in experiments_statistical_info:
             label = 'normal' if exp == 'normal' else find_label(extract_params(exp))
             x_values = experiments_statistical_info[exp][x]
@@ -152,64 +155,50 @@ def draw():
             standard_error = experiments_statistical_info[exp]['std_error']
 
             # TODO: change ylim to be dynamic according to the results
+
+            tmp = sub2.plot(x_values, average, label=label)[0]
+            color = tmp.get_color()
+            sub2.fill_between(x_values, average - 2.26 * standard_error, average + 2.26 * standard_error,
+                              alpha=0.2, color=color)
             if exp != 'normal':
                 if color_index < len(linestyles):
-                    tmp = sub2.plot(x_values, average, linestyle=linestyles[color_index], label=label)[0]
-                    color = tmp.get_color()
-                    sub2.fill_between(x_values, average - 2.26 * standard_error, average + 2.26 * standard_error,
-                                      alpha=0.2, color=color)
                     sub1.plot(x_values, average, linestyle=linestyles[color_index], color=color)
                     sub1.fill_between(x_values, average - 2.26 * standard_error, average + 2.26 * standard_error,
                                       alpha=0.2, color=color)
                     sub1.set_xlim(x_values[0], x_values[magnify_interval_length])
-                    sub1.set_ylim(-5, 0)
+                    sub1.set_ylim(min_ylim, max_ylim)
                     sub1.set_ylabel('y', labelpad=15)
                     color_index += 1
                 else:
-                    tmp = sub2.plot(x_values, average, marker=markers[marker_index], label=label)[0]
-                    color = tmp.get_color()
-                    sub2.fill_between(x_values, average - 2.26 * standard_error, average + 2.26 * standard_error,
-                                      alpha=0.2, color=color)
                     sub1.plot(x_values, average, marker=markers[marker_index], color=color)
                     sub1.fill_between(x_values, average - 2.26 * standard_error, average + 2.26 * standard_error,
                                       alpha=0.2, color=color)
                     sub1.set_xlim(x_values[0], x_values[magnify_interval_length])
-                    sub1.set_ylim(-5, 0)
+                    sub1.set_ylim(min_ylim, max_ylim)
                     sub1.set_ylabel('y', labelpad=15)
                     marker_index += 1
-            else:
-                if color_index < len(linestyles):
-                    tmp = sub2.plot(x_values, average, linestyle=linestyles[color_index], label=label)[0]
-                    sub2.fill_between(x_values, average - 2.26 * standard_error, average + 2.26 * standard_error,
-                                      alpha=0.2, color=tmp.get_color())
-                else:
-                    tmp = sub2.plot(x_values, average, marker=markers[marker_index], label=label)
-                    sub2.fill_between(x_values, average - 2.26 * standard_error, average + 2.26 * standard_error,
-                                      alpha=0.2, color=tmp.get_color())
 
             if exp != 'normal' and not already_filled_interval:
                 already_filled_interval = True
                 # Create blocked area in third axes
-                sub2.fill_between((x_values[0], x_values[magnify_interval_length]),
-                                  np.min(experiments_statistical_info['normal']['avg']),
-                                  0, facecolor='green', alpha=0.2)  # blocked area for first axes
+                sub2.fill_between((x_values[0], x_values[magnify_interval_length]), min_ylim, max_ylim,
+                                  facecolor='black', alpha=0.2)  # blocked area for first axes
 
                 # TODO: xyB=(x, ylim) change the ylim here when you changed the ylim above
                 # Create left side of Connection patch for first axes
 
-                con1 = ConnectionPatch(xyA=(x_values[0], -2), coordsA=sub2.transData,
-                                       xyB=(x_values[0], -5), coordsB=sub1.transData, color='green')
+                con1 = ConnectionPatch(xyA=(x_values[0], min_ylim / 2), coordsA=sub2.transData,
+                                       xyB=(x_values[0], min_ylim), coordsB=sub1.transData, color='black')
                 # Add left side to the figure
                 fig.add_artist(con1)
 
                 # Create right side of Connection patch for first axes
-                con2 = ConnectionPatch(xyA=(x_values[magnify_interval_length], -2), coordsA=sub2.transData,
-                                       xyB=(x_values[magnify_interval_length], -5), coordsB=sub1.transData,
-                                       color='green')
+                con2 = ConnectionPatch(xyA=(x_values[magnify_interval_length], min_ylim / 2), coordsA=sub2.transData,
+                                       xyB=(x_values[magnify_interval_length], min_ylim), coordsB=sub1.transData,
+                                       color='black')
                 # Add right side to the figure
                 fig.add_artist(con2)
 
-            color_index += 1
             handles, labels = sub2.get_legend_handles_labels()
             fig.legend(handles, labels, loc='upper right')
 

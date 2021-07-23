@@ -126,7 +126,8 @@ def draw():
                                              'num_updates': num_updates,
                                              'num_samples': num_samples}
 
-    linestyles = ['-', '--', '-.', ':', '-..']
+    linestyles = ['-', '--', '-.', ':']
+    markers = ['*', 'h']
 
     for x in X_AXIS:
         # Create main container with size of 6x5
@@ -143,6 +144,7 @@ def draw():
         # This parameter is for controlling the magnifying interval is  only plotted once
         already_filled_interval = False
         color_index = 0
+        marker_index = 0
         for exp in experiments_statistical_info:
             label = 'normal' if exp == 'normal' else find_label(extract_params(exp))
             x_values = experiments_statistical_info[exp][x]
@@ -151,17 +153,39 @@ def draw():
 
             # TODO: change ylim to be dynamic according to the results
             if exp != 'normal':
-                tmp = sub2.plot(x_values, average, linestyle=linestyles[color_index], label=label)[0]
-                color = tmp.get_color()
-                sub2.fill_between(x_values, average - 2.26 * standard_error, average + 2.26 * standard_error, alpha=0.2)
-                sub1.plot(x_values, average, linestyle=linestyles[color_index], color=color)
-                sub1.fill_between(x_values, average - 2.26 * standard_error, average + 2.26 * standard_error, alpha=0.2)
-                sub1.set_xlim(x_values[0], x_values[magnify_interval_length])
-                sub1.set_ylim(-5, 0)
-                sub1.set_ylabel('y', labelpad=15)
+                if color_index < len(linestyles):
+                    tmp = sub2.plot(x_values, average, linestyle=linestyles[color_index], label=label)[0]
+                    color = tmp.get_color()
+                    sub2.fill_between(x_values, average - 2.26 * standard_error, average + 2.26 * standard_error,
+                                      alpha=0.2)
+                    sub1.plot(x_values, average, linestyle=linestyles[color_index], color=color)
+                    sub1.fill_between(x_values, average - 2.26 * standard_error, average + 2.26 * standard_error,
+                                      alpha=0.2)
+                    sub1.set_xlim(x_values[0], x_values[magnify_interval_length])
+                    sub1.set_ylim(-5, 0)
+                    sub1.set_ylabel('y', labelpad=15)
+                    color_index += 1
+                else:
+                    tmp = sub2.plot(x_values, average, marker=markers[marker_index], label=label)[0]
+                    color = tmp.get_color()
+                    sub2.fill_between(x_values, average - 2.26 * standard_error, average + 2.26 * standard_error,
+                                      alpha=0.2)
+                    sub1.plot(x_values, average, marker=markers[marker_index], color=color)
+                    sub1.fill_between(x_values, average - 2.26 * standard_error, average + 2.26 * standard_error,
+                                      alpha=0.2)
+                    sub1.set_xlim(x_values[0], x_values[magnify_interval_length])
+                    sub1.set_ylim(-5, 0)
+                    sub1.set_ylabel('y', labelpad=15)
+                    marker_index += 1
             else:
-                sub2.plot(x_values, average, linestyle=linestyles[color_index], label=label)
-                sub2.fill_between(x_values, average - 2.26 * standard_error, average + 2.26 * standard_error, alpha=0.2)
+                if color_index < len(linestyles):
+                    sub2.plot(x_values, average, linestyle=linestyles[color_index], label=label)
+                    sub2.fill_between(x_values, average - 2.26 * standard_error, average + 2.26 * standard_error,
+                                      alpha=0.2)
+                else:
+                    sub2.plot(x_values, average, marker=markers[marker_index], label=label)
+                    sub2.fill_between(x_values, average - 2.26 * standard_error, average + 2.26 * standard_error,
+                                      alpha=0.2)
 
             if exp != 'normal' and not already_filled_interval:
                 already_filled_interval = True

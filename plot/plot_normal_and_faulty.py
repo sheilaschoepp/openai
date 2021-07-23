@@ -69,8 +69,7 @@ def draw():
     # set the theme for plots
     sns.set_style("dark")
     colors = sns.color_palette("colorblind", 10).as_hex()
-    print(colors)
-    # sns.set_palette('colorblind')
+    sns.set_palette('colorblind')
     sns.set_theme()
 
     normal_seed_list = os.listdir(NORMAL_PATH)

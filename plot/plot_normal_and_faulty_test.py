@@ -185,9 +185,9 @@ def draw():
         # Create blocked area in third axes
         ax1.fill_between((min_xlim, max_xlim), min_ylim, max_ylim,
                          facecolor='black', alpha=0.2)  # blocked area for first axes
-        plt.legend(loc='upper right')
+        plt.legend(loc='lower right')
 
-        ax2 = fig.add_axes([0.65, 0.3, 0.25, 0.3])  # the position of zoom-out plot compare to the ratio of zoom-in plot
+        ax2 = fig.add_axes([0.65, 0.5, 0.25, 0.3])  # the position of zoom-out plot compare to the ratio of zoom-in plot
 
         for exp in experiments_statistical_info:
             if exp == 'normal':

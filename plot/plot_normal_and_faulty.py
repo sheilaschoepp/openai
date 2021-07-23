@@ -207,8 +207,8 @@ def draw():
         labels = ['normal'] + labels
         handles = [handles2[labels2.index('normal')]] + handles
         fig.legend(handles, labels, loc='upper right')
-        sub1.xlabel(X_AXIS_TO_LABEL[x])
-        sub1.ylabel('Episode Cumulative Reward')
+        sub2.set_xlabel(X_AXIS_TO_LABEL[x])
+        sub2.set_ylabel('Episode Cumulative Reward')
 
         # plt.title(x)
         plt.savefig(os.path.join(result_path, f'x_axis_{x}.jpg'), dpi=300)

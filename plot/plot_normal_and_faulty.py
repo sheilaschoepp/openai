@@ -199,7 +199,8 @@ def draw():
                 # Add right side to the figure
                 fig.add_artist(con2)
 
-            handles, labels = sub2.get_legend_handles_labels()
+            handles, labels = sub1.get_legend_handles_labels()
+            print(labels)
             fig.legend(handles, labels, loc='upper right')
 
         # plt.title(x)

@@ -186,7 +186,7 @@ def draw():
                          facecolor='black', alpha=0.2)  # blocked area for first axes
         plt.legend(loc='upper right')
 
-        fig.add_axes([0.6, 0.4, 0.25, 0.3])  # the position of zoom-out plot compare to the ratio of zoom-in plot
+        fig.add_axes([0.6, 0.3, 0.25, 0.3])  # the position of zoom-out plot compare to the ratio of zoom-in plot
         for exp in experiments_statistical_info:
             if exp == 'normal':
                 continue

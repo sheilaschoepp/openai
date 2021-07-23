@@ -147,7 +147,7 @@ def draw():
         # Create main container with size of 6x5
         fig = plt.figure(figsize=(12, 7))
         # plt.subplots_adjust(bottom=0.1, left=0.1, top=.9, right=.9)
-        ax1 = fig.add_axes([0.1, 0.1, 0.9, 0.9])
+        ax1 = fig.add_axes([0.05, 0.05, 0.8, 0.8])
         # Create first axes, the top-left plot with green plot
         # sub1 = fig.add_subplot(2, 4, (2, 3))  # two rows, two columns, second cell
 
@@ -186,7 +186,8 @@ def draw():
                          facecolor='black', alpha=0.2)  # blocked area for first axes
         plt.legend(loc='upper right')
 
-        ax2 = fig.add_axes([0.6, 0.3, 0.25, 0.3])  # the position of zoom-out plot compare to the ratio of zoom-in plot
+        ax2 = fig.add_axes([0.65, 0.3, 0.25, 0.3])  # the position of zoom-out plot compare to the ratio of zoom-in plot
+
         for exp in experiments_statistical_info:
             if exp == 'normal':
                 continue

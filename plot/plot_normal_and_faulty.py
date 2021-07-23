@@ -162,7 +162,7 @@ def draw():
                               alpha=0.2, color=color)
             if exp != 'normal':
                 if color_index < len(linestyles):
-                    sub1.plot(x_values, average, linestyle=linestyles[color_index], color=color)
+                    sub1.plot(x_values, average, linestyle=linestyles[color_index], color=color, label=label)
                     sub1.fill_between(x_values, average - 2.26 * standard_error, average + 2.26 * standard_error,
                                       alpha=0.2, color=color)
                     sub1.set_xlim(x_values[0], x_values[magnify_interval_length])
@@ -170,7 +170,7 @@ def draw():
                     sub1.set_ylabel('y', labelpad=15)
                     color_index += 1
                 else:
-                    sub1.plot(x_values, average, marker=markers[marker_index], color=color)
+                    sub1.plot(x_values, average, marker=markers[marker_index], color=color, label=label)
                     sub1.fill_between(x_values, average - 2.26 * standard_error, average + 2.26 * standard_error,
                                       alpha=0.2, color=color)
                     sub1.set_xlim(x_values[0], x_values[magnify_interval_length])

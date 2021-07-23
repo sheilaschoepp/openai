@@ -126,7 +126,7 @@ def draw():
                                              'num_updates': num_updates,
                                              'num_samples': num_samples}
 
-    linestyles = ['-', '--', '-.', ':', '*', '-*']
+    linestyles = ['-', '--', '-.', ':', 'dotted']
 
     for x in X_AXIS:
         # Create main container with size of 6x5

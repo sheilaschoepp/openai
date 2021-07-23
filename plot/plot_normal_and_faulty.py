@@ -153,6 +153,7 @@ def draw():
             if exp != 'normal':
                 tmp = sub2.plot(x_values, average, color=colors[color_index], label=label)[0]
                 color = tmp.get_color()
+                sub2.fill_between(x_values, average - 2.26 * standard_error, average + 2.26 * standard_error, alpha=0.2)
                 sub1.plot(x_values, average, color=color)
                 sub1.fill_between(x_values, average - 2.26 * standard_error, average + 2.26 * standard_error, alpha=0.2)
                 sub1.set_xlim(x_values[0], x_values[magnify_interval_length])
@@ -160,6 +161,7 @@ def draw():
                 sub1.set_ylabel('y', labelpad=15)
             else:
                 sub2.plot(x_values, average, color=colors[color_index], label=label)
+                sub2.fill_between(x_values, average - 2.26 * standard_error, average + 2.26 * standard_error, alpha=0.2)
 
             if exp != 'normal' and not already_filled_interval:
                 already_filled_interval = True
@@ -183,6 +185,7 @@ def draw():
                 # Add right side to the figure
                 fig.add_artist(con2)
 
+            color_index += 1
             handles, labels = sub2.get_legend_handles_labels()
             fig.legend(handles, labels, loc='upper right')
 

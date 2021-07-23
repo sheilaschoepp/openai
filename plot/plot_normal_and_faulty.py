@@ -40,14 +40,15 @@ def extract_params(exp_dir):
     return dict([(t.split(':') if len(t.split(':')) == 2 else [t.split(':')[0], None]) for t in exp_dir.split('_')])
 
 
-def find_label(params):
+def find_label(exp):
+    params = extract_params(exp)
     rn = params['rn']
     label = ''
     label += 'rn' if rn == "True" else ''
-    if 'PPO' in params.keys()[0]:
+    if 'PPO' in exp:
         cm = params['cm']
         label += 'cm' if cm == 'True' else ''
-    elif 'SAC' in params.keys()[0]:
+    elif 'SAC' in exp:
         crb = params['crb']
         label += 'crb' if crb == 'True' else ''
 
@@ -162,7 +163,7 @@ def draw():
         min_ylim, max_ylim = -5, 0
 
         for exp in experiments_statistical_info:
-            label = 'normal' if exp == 'normal' else find_label(extract_params(exp))
+            label = 'normal' if exp == 'normal' else find_label(exp)
             x_values = experiments_statistical_info[exp][x]
             average = experiments_statistical_info[exp]['avg']
             standard_error = experiments_statistical_info[exp]['std_error']

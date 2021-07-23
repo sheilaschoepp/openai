@@ -64,13 +64,6 @@ def draw():
     NORMAL_PATH = args.normaldir
     FAULTY_PATH = args.faultydir
     faulty_experiments_list = os.listdir(FAULTY_PATH)
-    env_name = find_env_name(faulty_experiments_list[0])
-
-    current_path = pathlib.Path(__file__).parent.absolute()
-    result_path = os.path.join(current_path, 'normal_faulty_plots', env_name)
-
-    if not os.path.exists(result_path):
-        os.makedirs(result_path)
 
     experiment_seed = {}
     experiments_statistical_info = {}
@@ -90,6 +83,13 @@ def draw():
             exp += 1
         else:
             del faulty_experiments_list[exp]
+
+    env_name = find_env_name(faulty_experiments_list[0])
+    current_path = pathlib.Path(__file__).parent.absolute()
+    result_path = os.path.join(current_path, 'normal_faulty_plots', env_name)
+
+    if not os.path.exists(result_path):
+        os.makedirs(result_path)
 
     # Calculate the average and standard error of each experiment and
     # draw results for each one

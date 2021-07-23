@@ -44,16 +44,16 @@ def find_label(exp):
     params = extract_params(exp)
     rn = params['rn']
     label = ''
-    label += 'reinitialize_network' if rn == "True" else ''
+    label += 'reinitialize network' if rn == "True" else ''
     if 'PPO' in exp:
         cm = params['cm']
-        tmp = 'clear_memory' if cm == 'True' else ''
-        label += ('_' + tmp) if label != '' and tmp != '' else tmp
+        tmp = 'clear memory' if cm == 'True' else ''
+        label += (' & ' + tmp) if label != '' and tmp != '' else tmp
     elif 'SAC' in exp:
         crb = params['crb']
-        tmp = 'clear_replay_buffer' if crb == 'True' else ''
-        label += ('_' + tmp) if label != '' and tmp != '' else tmp
-    return label if label != '' else 'keep_both'
+        tmp = 'clear replay memory' if crb == 'True' else ''
+        label += (' & ' + tmp) if label != '' and tmp != '' else tmp
+    return label if label != '' else 'retain memory and networks'
 
 
 X_AXIS = ['num_time_steps', 'num_updates', 'num_samples']

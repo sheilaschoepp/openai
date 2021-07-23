@@ -184,8 +184,9 @@ def draw():
         # Create blocked area in third axes
         plt.fill_between((min_xlim, max_xlim), min_ylim, max_ylim,
                          facecolor='black', alpha=0.2)  # blocked area for first axes
+        plt.legend(loc='upper right')
 
-        fig.add_axes([0.4, 0.8, 0.3, 0.2])  # the position of zoom-out plot compare to the ratio of zoom-in plot
+        fig.add_axes([0.8, 0.4, 0.25, 0.3])  # the position of zoom-out plot compare to the ratio of zoom-in plot
         for exp in experiments_statistical_info:
             if exp == 'normal':
                 continue
@@ -219,7 +220,7 @@ def draw():
         # handles2, labels2 = plt.get_legend_handles_labels()
         # labels = ['normal'] + labels
         # handles = [handles2[labels2.index('normal')]] + handles
-        plt.legend(loc='upper right')
+
         # sub2.set_xlabel(X_AXIS_TO_LABEL[x])
         # sub2.set_ylabel('Episode Cumulative Reward')
 

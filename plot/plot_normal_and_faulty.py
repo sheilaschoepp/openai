@@ -87,7 +87,7 @@ def draw():
 
     env_name = find_env_name(faulty_experiments_list[0])
     current_path = pathlib.Path(__file__).parent.absolute()
-    result_path = os.path.join(current_path, 'normal_faulty_plots', env_name)
+    result_path = os.path.join(current_path, 'normal_faulty_plots', env_name, 'sac' if 'SAC' in NORMAL_PATH else 'ppo')
 
     if not os.path.exists(result_path):
         os.makedirs(result_path)

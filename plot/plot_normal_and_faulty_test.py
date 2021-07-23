@@ -147,7 +147,7 @@ def draw():
         # Create main container with size of 6x5
         fig = plt.figure(figsize=(12, 7))
         # plt.subplots_adjust(bottom=0.1, left=0.1, top=.9, right=.9)
-        ax1 = fig.add_axes([0, 0, 1, 1])
+        ax1 = fig.add_axes([0.1, 0.1, 0.9, 0.9])
         # Create first axes, the top-left plot with green plot
         # sub1 = fig.add_subplot(2, 4, (2, 3))  # two rows, two columns, second cell
 
@@ -186,7 +186,7 @@ def draw():
                          facecolor='black', alpha=0.2)  # blocked area for first axes
         plt.legend(loc='upper right')
 
-        fig.add_axes([0.6, 0.3, 0.25, 0.3])  # the position of zoom-out plot compare to the ratio of zoom-in plot
+        ax2 = fig.add_axes([0.6, 0.3, 0.25, 0.3])  # the position of zoom-out plot compare to the ratio of zoom-in plot
         for exp in experiments_statistical_info:
             if exp == 'normal':
                 continue
@@ -196,25 +196,25 @@ def draw():
             standard_error = experiments_statistical_info[exp]['std_error']
 
             if color_index < len(linestyles):
-                plt.plot(x_values, average, color=color_list[color_index], label=label)
-                plt.fill_between(x_values, average - 2.26 * standard_error, average + 2.26 * standard_error,
+                ax2.plot(x_values, average, color=color_list[color_index], label=label)
+                ax2.fill_between(x_values, average - 2.26 * standard_error, average + 2.26 * standard_error,
                                  alpha=0.2, color=color_list[color_index])
                 color_index += 1
 
         # Create left side of Connection patch for first axes
-        # con1 = ConnectionPatch(xyA=(min_xlim, min_ylim / 2), coordsA=sub2.transData,
-        #                        xyB=(min_xlim, min_ylim), coordsB=sub1.transData, color='black')
-        # # Add left side to the figure
-        # fig.add_artist(con1)
-        # # Create right side of Connection patch for first axes
-        # con2 = ConnectionPatch(xyA=(max_xlim, min_ylim / 2), coordsA=sub2.transData,
-        #                        xyB=(max_xlim, min_ylim), coordsB=sub1.transData,
-        #                        color='black')
+        con1 = ConnectionPatch(xyA=(min_xlim, min_ylim), coordsA=ax1.transData,
+                               xyB=(min_xlim, min_ylim), coordsB=ax2.transData, color='black')
+        # Add left side to the figure
+        fig.add_artist(con1)
+        # Create right side of Connection patch for first axes
+        con2 = ConnectionPatch(xyA=(max_xlim, min_ylim), coordsA=ax1.transData,
+                               xyB=(max_xlim, min_ylim), coordsB=ax2.transData,
+                               color='black')
         # Add right side to the figure
-        # fig.add_artist(con2)
+        fig.add_artist(con2)
 
-        plt.xlim(min_xlim, max_xlim)
-        plt.ylim(min_ylim, max_ylim)
+        ax2.xlim(min_xlim, max_xlim)
+        ax2.ylim(min_ylim, max_ylim)
 
         # handles, labels = plt.get_legend_handles_labels()
         # handles2, labels2 = plt.get_legend_handles_labels()

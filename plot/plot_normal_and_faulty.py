@@ -126,7 +126,7 @@ def draw():
                                              'num_updates': num_updates,
                                              'num_samples': num_samples}
 
-    linestyles = ['-', '--', '-.', ':', 'dotted']
+    linestyles = ['-', '--', '-.', ':', '-..']
 
     for x in X_AXIS:
         # Create main container with size of 6x5
@@ -154,7 +154,7 @@ def draw():
                 tmp = sub2.plot(x_values, average, linestyle=linestyles[color_index], label=label)[0]
                 color = tmp.get_color()
                 sub2.fill_between(x_values, average - 2.26 * standard_error, average + 2.26 * standard_error, alpha=0.2)
-                sub1.plot(x_values, average, color=color)
+                sub1.plot(x_values, average, linestyle=linestyles[color_index], color=color)
                 sub1.fill_between(x_values, average - 2.26 * standard_error, average + 2.26 * standard_error, alpha=0.2)
                 sub1.set_xlim(x_values[0], x_values[magnify_interval_length])
                 sub1.set_ylim(-5, 0)

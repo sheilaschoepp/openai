@@ -143,7 +143,7 @@ def draw():
         magnify_interval_length = 20
         # This parameter is for controlling the magnifying interval is  only plotted once
         already_filled_interval = False
-
+        color_index = 0
         for exp in experiments_statistical_info:
             label = 'normal' if exp == 'normal' else find_label(extract_params(exp))
             x_values = experiments_statistical_info[exp][x]
@@ -152,7 +152,7 @@ def draw():
 
             # TODO: change ylim to be dynamic according to the results
             if exp != 'normal':
-                tmp = sub2.plot(x_values, average, label=label)[0]
+                tmp = sub2.plot(x_values, average, color=colors[color_index], label=label)[0]
                 color = tmp.get_color()
                 sub1.plot(x_values, average, color=color)
                 sub1.fill_between(x_values, average - 2.26 * standard_error, average + 2.26 * standard_error, alpha=0.2)
@@ -160,7 +160,7 @@ def draw():
                 sub1.set_ylim(-5, 0)
                 sub1.set_ylabel('y', labelpad=15)
             else:
-                sub2.plot(x_values, average, label=label)
+                sub2.plot(x_values, average, color=colors[color_index], label=label)
 
             if exp != 'normal' and not already_filled_interval:
                 already_filled_interval = True

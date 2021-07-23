@@ -158,7 +158,8 @@ def draw():
         # This parameter is for controlling the magnifying interval is  only plotted once
         already_filled_interval = False
         color_index = 0
-        marker_index = 0
+        color_list = []
+        # marker_index = 0
         min_xlim, max_xlim, min_ylim, max_ylim = 0, 0, 0, 0
 
         for exp in experiments_statistical_info:
@@ -171,35 +172,33 @@ def draw():
 
             tmp = plt.plot(x_values, average, label=label)[0]
             color = tmp.get_color()
+            if exp != 'normal':
+                color_list.append(color)
+                min_xlim, max_xlim, max_ylim = x_values[0], x_values[magnify_interval_length], 0
+                min_y = np.min(average[0:magnify_interval_length])
+                min_ylim = min_y if min_y < min_ylim else min_ylim
+
             plt.fill_between(x_values, average - 2.26 * standard_error, average + 2.26 * standard_error,
                              alpha=0.2, color=color)
-
-        fig.add_axes([0.6, 0.6, 0.2, 0.2])  # the position of zoom-out plot compare to the ratio of zoom-in plot
-        for exp in experiments_statistical_info:
-            if exp == 'normal':
-                continue
-            label = 'normal' if exp == 'normal' else find_label(exp)
-            x_values = experiments_statistical_info[exp][x]
-            average = experiments_statistical_info[exp]['avg']
-            standard_error = experiments_statistical_info[exp]['std_error']
-            min_xlim, max_xlim, max_ylim = x_values[0], x_values[magnify_interval_length], 0
-            min_y = np.min(average[0:magnify_interval_length])
-            min_ylim = min_y if min_y < min_ylim else min_ylim
-
-            if color_index < len(linestyles):
-                plt.plot(x_values, average, linestyle=linestyles[color_index], color=color, label=label)
-                plt.fill_between(x_values, average - 2.26 * standard_error, average + 2.26 * standard_error,
-                                 alpha=0.2, color=color)
-                color_index += 1
-            else:
-                plt.plot(x_values, average, marker=markers[marker_index], color=color, label=label)
-                plt.fill_between(x_values, average - 2.26 * standard_error, average + 2.26 * standard_error,
-                                 alpha=0.2, color=color)
-                marker_index += 1
 
         # Create blocked area in third axes
         plt.fill_between((min_xlim, max_xlim), min_ylim, max_ylim,
                          facecolor='black', alpha=0.2)  # blocked area for first axes
+
+        fig.add_axes([0.8, 0.8, 0.5, 0.2])  # the position of zoom-out plot compare to the ratio of zoom-in plot
+        for exp in experiments_statistical_info:
+            if exp == 'normal':
+                continue
+            label = find_label(exp)
+            x_values = experiments_statistical_info[exp][x]
+            average = experiments_statistical_info[exp]['avg']
+            standard_error = experiments_statistical_info[exp]['std_error']
+
+            if color_index < len(linestyles):
+                plt.plot(x_values, average, color=color_list[color_index], label=label)
+                plt.fill_between(x_values, average - 2.26 * standard_error, average + 2.26 * standard_error,
+                                 alpha=0.2, color=color_list[color_index])
+                color_index += 1
 
         # Create left side of Connection patch for first axes
         # con1 = ConnectionPatch(xyA=(min_xlim, min_ylim / 2), coordsA=sub2.transData,

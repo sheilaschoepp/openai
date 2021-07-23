@@ -47,11 +47,12 @@ def find_label(exp):
     label += 'reinitialize_network' if rn == "True" else ''
     if 'PPO' in exp:
         cm = params['cm']
-        label += 'clear_memory' if cm == 'True' else ''
+        tmp = 'clear_memory' if cm == 'True' else ''
+        label += ('_' + tmp) if label != '' and tmp != '' else tmp
     elif 'SAC' in exp:
         crb = params['crb']
         tmp = 'clear_replay_buffer' if crb == 'True' else ''
-        label += '_' + tmp if label != '' and tmp != '' else tmp
+        label += ('_' + tmp) if label != '' and tmp != '' else tmp
     return label if label != '' else 'keep_both'
 
 

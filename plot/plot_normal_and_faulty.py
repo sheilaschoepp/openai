@@ -157,10 +157,10 @@ def draw():
                     tmp = sub2.plot(x_values, average, linestyle=linestyles[color_index], label=label)[0]
                     color = tmp.get_color()
                     sub2.fill_between(x_values, average - 2.26 * standard_error, average + 2.26 * standard_error,
-                                      alpha=0.2)
+                                      alpha=0.2, color=color)
                     sub1.plot(x_values, average, linestyle=linestyles[color_index], color=color)
                     sub1.fill_between(x_values, average - 2.26 * standard_error, average + 2.26 * standard_error,
-                                      alpha=0.2)
+                                      alpha=0.2, color=color)
                     sub1.set_xlim(x_values[0], x_values[magnify_interval_length])
                     sub1.set_ylim(-5, 0)
                     sub1.set_ylabel('y', labelpad=15)
@@ -169,23 +169,23 @@ def draw():
                     tmp = sub2.plot(x_values, average, marker=markers[marker_index], label=label)[0]
                     color = tmp.get_color()
                     sub2.fill_between(x_values, average - 2.26 * standard_error, average + 2.26 * standard_error,
-                                      alpha=0.2)
+                                      alpha=0.2, color=color)
                     sub1.plot(x_values, average, marker=markers[marker_index], color=color)
                     sub1.fill_between(x_values, average - 2.26 * standard_error, average + 2.26 * standard_error,
-                                      alpha=0.2)
+                                      alpha=0.2, color=color)
                     sub1.set_xlim(x_values[0], x_values[magnify_interval_length])
                     sub1.set_ylim(-5, 0)
                     sub1.set_ylabel('y', labelpad=15)
                     marker_index += 1
             else:
                 if color_index < len(linestyles):
-                    sub2.plot(x_values, average, linestyle=linestyles[color_index], label=label)
+                    tmp = sub2.plot(x_values, average, linestyle=linestyles[color_index], label=label)[0]
                     sub2.fill_between(x_values, average - 2.26 * standard_error, average + 2.26 * standard_error,
-                                      alpha=0.2)
+                                      alpha=0.2, color=tmp.get_color())
                 else:
-                    sub2.plot(x_values, average, marker=markers[marker_index], label=label)
+                    tmp = sub2.plot(x_values, average, marker=markers[marker_index], label=label)
                     sub2.fill_between(x_values, average - 2.26 * standard_error, average + 2.26 * standard_error,
-                                      alpha=0.2)
+                                      alpha=0.2, color=tmp.get_color())
 
             if exp != 'normal' and not already_filled_interval:
                 already_filled_interval = True

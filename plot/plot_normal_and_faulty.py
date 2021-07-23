@@ -50,6 +50,9 @@ def find_label(params):
 
 
 X_AXIS = ['num_time_steps', 'num_updates', 'num_samples']
+X_AXIS_TO_LABEL = {'num_time_steps': 'Time step',
+                   'num_updates': 'Number of updates',
+                   'num_samples': 'Number of samples'}
 
 
 def draw():
@@ -199,13 +202,13 @@ def draw():
                 # Add right side to the figure
                 fig.add_artist(con2)
 
-            handles, labels = sub1.get_legend_handles_labels()
-            handles2, labels2 = sub2.get_legend_handles_labels()
-            labels = ['normal'] + labels
-            handles = [handles2[labels2.index('normal')]] + handles
-            print(labels)
-            print(handles)
-            fig.legend(handles, labels, loc='upper right')
+        handles, labels = sub1.get_legend_handles_labels()
+        handles2, labels2 = sub2.get_legend_handles_labels()
+        labels = ['normal'] + labels
+        handles = [handles2[labels2.index('normal')]] + handles
+        fig.legend(handles, labels, loc='upper right')
+        sub1.xlabel(X_AXIS_TO_LABEL[x])
+        sub1.ylabel('Episode Cumulative Reward')
 
         # plt.title(x)
         plt.savefig(os.path.join(result_path, f'x_axis_{x}.jpg'), dpi=300)

@@ -44,14 +44,14 @@ def find_label(exp):
     params = extract_params(exp)
     rn = params['rn']
     label = ''
-    label += 'rn' if rn == "True" else ''
+    label += 'reinitialize_network' if rn == "True" else ''
     if 'PPO' in exp:
         cm = params['cm']
-        label += 'cm' if cm == 'True' else ''
+        label += 'clear_memory' if cm == 'True' else ''
     elif 'SAC' in exp:
         crb = params['crb']
-        label += 'crb' if crb == 'True' else ''
-
+        tmp = 'clear_replay_buffer' if crb == 'True' else ''
+        label += '_' + tmp if label != '' and tmp != '' else tmp
     return label if label != '' else 'keep_both'
 
 

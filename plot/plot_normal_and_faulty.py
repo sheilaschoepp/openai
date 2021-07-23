@@ -42,10 +42,15 @@ def extract_params(exp_dir):
 
 def find_label(params):
     rn = params['rn']
-    cm = params['cm']
     label = ''
     label += 'rn' if rn == "True" else ''
-    label += 'cm' if cm == 'True' else ''
+    if 'PPO' in params.keys()[0]:
+        cm = params['cm']
+        label += 'cm' if cm == 'True' else ''
+    elif 'SAC' in params.keys()[0]:
+        crb = params['crb']
+        label += 'crb' if crb == 'True' else ''
+
     return label if label != '' else 'keep_both'
 
 
@@ -77,9 +82,14 @@ def draw():
     experiment_seed['normal'] = normal_seed_list
 
     # List the experiments in a directory
-    for exp in faulty_experiments_list:
-        seed_list = os.listdir(os.path.join(FAULTY_PATH, exp))
-        experiment_seed[exp] = seed_list
+    exp = 0
+    while exp < len(faulty_experiments_list):
+        if 'SAC' in faulty_experiments_list[exp] or 'PPO' in faulty_experiments_list[exp]:
+            seed_list = os.listdir(os.path.join(FAULTY_PATH, faulty_experiments_list[exp]))
+            experiment_seed[faulty_experiments_list[exp]] = seed_list
+            exp += 1
+        else:
+            del faulty_experiments_list[exp]
 
     # Calculate the average and standard error of each experiment and
     # draw results for each one

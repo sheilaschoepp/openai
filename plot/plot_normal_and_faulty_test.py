@@ -147,7 +147,7 @@ def draw():
         # Create main container with size of 6x5
         fig = plt.figure(figsize=(12, 7))
         # plt.subplots_adjust(bottom=0.1, left=0.1, top=.9, right=.9)
-        ax1 = fig.add_axes([0.05, 0.05, 0.8, 0.8])
+        ax1 = fig.add_axes([0.05, 0.05, 0.9, 0.9])
         # Create first axes, the top-left plot with green plot
         # sub1 = fig.add_subplot(2, 4, (2, 3))  # two rows, two columns, second cell
 
@@ -203,13 +203,13 @@ def draw():
                 color_index += 1
 
         # Create left side of Connection patch for first axes
-        con1 = ConnectionPatch(xyA=(min_xlim, min_ylim), coordsA=ax1.transData,
-                               xyB=(min_xlim, min_ylim), coordsB=ax2.transData, color='black')
+        con1 = ConnectionPatch(xyA=(min_xlim, max_ylim), coordsA=ax1.transData,
+                               xyB=(min_xlim, max_ylim), coordsB=ax2.transData, color='black')
         # Add left side to the figure
         fig.add_artist(con1)
         # Create right side of Connection patch for first axes
-        con2 = ConnectionPatch(xyA=(max_xlim, min_ylim), coordsA=ax1.transData,
-                               xyB=(max_xlim, min_ylim), coordsB=ax2.transData,
+        con2 = ConnectionPatch(xyA=(max_xlim, max_ylim), coordsA=ax1.transData,
+                               xyB=(max_xlim, max_ylim), coordsB=ax2.transData,
                                color='black')
         # Add right side to the figure
         fig.add_artist(con2)

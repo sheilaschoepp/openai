@@ -147,7 +147,7 @@ def draw():
         # Create main container with size of 6x5
         fig = plt.figure(figsize=(12, 7))
         # plt.subplots_adjust(bottom=0.1, left=0.1, top=.9, right=.9)
-
+        ax1 = fig.add_axes([0, 0, 1, 1])
         # Create first axes, the top-left plot with green plot
         # sub1 = fig.add_subplot(2, 4, (2, 3))  # two rows, two columns, second cell
 
@@ -170,7 +170,7 @@ def draw():
 
             # TODO: change ylim to be dynamic according to the results
 
-            tmp = plt.plot(x_values, average, label=label)[0]
+            tmp = ax1.plot(x_values, average, label=label)[0]
             color = tmp.get_color()
             if exp != 'normal':
                 color_list.append(color)
@@ -178,11 +178,11 @@ def draw():
                 min_y = np.min(average[0:magnify_interval_length])
                 min_ylim = min_y if min_y < min_ylim else min_ylim
 
-            plt.fill_between(x_values, average - 2.26 * standard_error, average + 2.26 * standard_error,
+            ax1.fill_between(x_values, average - 2.26 * standard_error, average + 2.26 * standard_error,
                              alpha=0.2, color=color)
 
         # Create blocked area in third axes
-        plt.fill_between((min_xlim, max_xlim), min_ylim, max_ylim,
+        ax1.fill_between((min_xlim, max_xlim), min_ylim, max_ylim,
                          facecolor='black', alpha=0.2)  # blocked area for first axes
         plt.legend(loc='upper right')
 

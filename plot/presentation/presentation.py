@@ -21,133 +21,119 @@ def plot_experiment(directory, plot_filename, plot_title=""):
         title for the plot
     """
 
-    first_setting = True
-
     algorithm = None
     ab_env = None
     n_env = None
 
-    settings = []
+    ordered_settings = []
 
-    for dir_ in os.listdir(directory):
+    def get_data():
+        nonlocal algorithm, ab_env, n_env, ordered_settings
 
-        # dir_ has format: SACv2_FetchReachEnvGE-v1:2000000_FetchReachEnvGE-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:False_rn:False_a:True_d:cuda
-        parameters = dir_.split("_")
+        first_setting = True
 
-        # obtain setting
+        unordered_settings = []
 
-        if first_setting:
-            algorithm = parameters[0][:-2]
-            ab_env = parameters[1].split(":")[0]
-            n_env = parameters[2].split(":")[0]
-            first_setting = False
-        else:
-            # check to make sure that the four setting folders contained within directory are for the same algorithm, normal environment, and abnormal environment
-            setting_algorithm = parameters[0][:-2]
-            setting_ab_env = parameters[1].split(":")[0]
-            setting_n_env = parameters[2].split(":")[0]
-            assert setting_algorithm == algorithm, "plot_experiment: folders in directory are for more than one algorithm"
-            assert setting_ab_env == ab_env, "plot_experiment: folders in directory are for more than one abnormal environment"
-            assert setting_n_env == n_env, "plot_experiment: folders in directory are for more than one normal environment"
+        for dir_ in os.listdir(directory):
 
-        if parameters[-1] == "r":
-            # skip over resumable experiments (final episode is not complete)
-            continue
+            # dir_ has format: SACv2_FetchReachEnvGE-v1:2000000_FetchReachEnvGE-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:False_rn:False_a:True_d:cuda
+            parameters = dir_.split("_")
 
-        crb = None
-        cm = None
-        rn = None
-        for p in parameters:
-            if "crb:" in p:
-                crb = eval(p.split(":")[1])
-            elif "cm:" in p:
-                cm = eval(p.split(":")[1])
-            elif "rn:" in p:
-                rn = eval(p.split(":")[1])
+            # obtain setting
 
-        # obtain data for setting: mean and standard error
+            if first_setting:
+                algorithm = parameters[0][:-2]
+                ab_env = parameters[1].split(":")[0]
+                n_env = parameters[2].split(":")[0]
+                first_setting = False
+            else:
+                # check to make sure that the four setting folders contained within directory are for the same algorithm, normal environment, and abnormal environment
+                setting_algorithm = parameters[0][:-2]
+                setting_ab_env = parameters[1].split(":")[0]
+                setting_n_env = parameters[2].split(":")[0]
+                assert setting_algorithm == algorithm, "plot_experiment: folders in directory are for more than one algorithm"
+                assert setting_ab_env == ab_env, "plot_experiment: folders in directory are for more than one abnormal environment"
+                assert setting_n_env == n_env, "plot_experiment: folders in directory are for more than one normal environment"
 
-        dfs = []
+            if parameters[-1] == "r":
+                # skip over resumable experiments (final episode is not complete)
+                continue
 
-        data_dir = os.path.join(directory, dir_)
-        print(algorithm, crb, rn)
-        for s in os.listdir(data_dir):
+            crb = None
+            cm = None
+            rn = None
+            for p in parameters:
+                if "crb:" in p:
+                    crb = eval(p.split(":")[1])
+                elif "cm:" in p:
+                    cm = eval(p.split(":")[1])
+                elif "rn:" in p:
+                    rn = eval(p.split(":")[1])
 
-            seed_foldername = os.path.join(data_dir, s)
-            csv_filename = os.path.join(seed_foldername, "csv", "eval_data.csv")
+            # obtain data for setting: mean and standard error
 
-            df = pd.read_csv(csv_filename)
+            dfs = []
 
-            if df.iloc[200, -1] < df.iloc[199, -1]:
-                # before fault application: add the runtime entry after resuming to the last runtime entry before resuming
-                # assumption: experiment was resumed to finish a single episode
-                df.iloc[200, -1] += df.iloc[199, -1]
+            data_dir = os.path.join(directory, dir_)
 
-            if df.iloc[-1, -1] < df.iloc[-2, -1]:
-                # after fault application: add the runtime entry after resuming to the last runtime entry before resuming
-                # assumption: experiment was resumed to finish a single episode
-                df.iloc[-1, -1] += df.iloc[-2, -1]
+            for s in os.listdir(data_dir):
 
-            # add the last runtime entry before application of fault to all entries after application of fault
-            df.iloc[201:, -1:] += df.iloc[200, -1]
+                seed_foldername = os.path.join(data_dir, s)
+                csv_filename = os.path.join(seed_foldername, "csv", "eval_data.csv")
 
-            df = df[["num_time_steps", "real_time", "average_return"]]
-            dfs.append(df)
+                df = pd.read_csv(csv_filename)
+                df = df[["num_time_steps", "average_return"]]
+                dfs.append(df)
 
-        if len(dfs) < num_seeds:
-            # warning to let user know that seeds are missing
-            print(colored(
-                "The number of seeds for this experiment setting is less than 10 and is equal to {}: {}".format(
-                    str(len(dfs)), dir_), "red"))
+            if len(dfs) < num_seeds:
+                # warning to let user know that seeds are missing
+                print(colored("The number of seeds for this experiment setting is less than 10 and is equal to {}: {}".format(str(len(dfs)), dir_), "red"))
 
-        df = pd.concat(dfs)
-        df = df.groupby(df.index)
+            df = pd.concat(dfs)
+            df = df.groupby(df.index)
 
-        df_mean = df.mean()
-        df_sem = df.sem()
+            df_mean = df.mean()
+            df_sem = df.sem()
 
-        # label
-        if algorithm == "SAC":
-            storage_type = "replay buffer"
-        else:
-            storage_type = "memory"
+            # label
+            if algorithm == "SAC":
+                storage_type = "replay buffer"
+            else:
+                storage_type = "memory"
 
-        if not rn and not crb:
-            label = "retain all data"
-        elif not rn and crb:
-            label = "retain network parameters"
-        elif rn and not crb:
-            label = "retain {}".format(storage_type)
-        else:  # rn and crb
-            label = "retain no data"
+            if not rn and not crb:
+                label = "retain all data"
+            elif not rn and crb:
+                label = "retain network parameters"
+            elif rn and not crb:
+                label = "retain {}".format(storage_type)
+            else:  # rn and crb
+                label = "retain no data"
 
-        if algorithm == "SAC":
-            settings.append((algorithm, rn, crb, df_mean, df_sem, label))
-        elif algorithm == "PPO":
-            settings.append((algorithm, rn, cm, df_mean, df_sem, label))
+            if algorithm == "SAC":
+                unordered_settings.append((algorithm, rn, crb, label, df_mean, df_sem))
+            elif algorithm == "PPO":
+                unordered_settings.append((algorithm, rn, cm, label, df_mean, df_sem))
 
-    assert len(settings) == 4, "plot_experiment: more than four settings"
+        assert len(unordered_settings) == 4, "plot_experiment: more than four settings"
 
-    # reorganize settings to obtain a plotting order
+        # reorganize settings to obtain a plotting order
 
-    ordered_settings = []  # [[0 algorithm, 1 rn, 2 crb, 3 df_mean, 4 df_sem]]
+        desired_ordering = [(False, False), (False, True), (True, False), (True, True)]  # (rn, crb/cm)
 
-    desired_ordering = [(False, False), (False, True), (True, False), (True, True)]  # (rn, crb/cm)
+        for do in desired_ordering:
+            for s in unordered_settings:
+                if do[0] == s[1] and do[1] == s[2]:
+                    ordered_settings.append(s)
 
-    for do in desired_ordering:
-        for s in settings:
-            if do[0] == s[1] and do[1] == s[2]:
-                ordered_settings.append(s)
-    ordered_settings = settings
+    get_data()
 
-    # labels
+    # plot settings
 
     if algorithm == "SAC":
         labels = ["retain all data", "retain network parameters", "retain replay buffer", "retain no data"]
     else:
         labels = ["retain all data", "retain network parameters", "retain memory", "retain no data"]
-
-    # plot settings
 
     plot_directory = os.getcwd() + "/plots"
     os.makedirs(plot_directory, exist_ok=True)
@@ -155,58 +141,204 @@ def plot_experiment(directory, plot_filename, plot_title=""):
     # 'b' as blue, 'g' as green, 'r' as red, 'c' as cyan, 'm' as magenta, 'y' as yellow, 'k' as black, 'w' as white
     colors = ["b", "g", "m", "k", "r"]
 
-    time_unit = "days"
-    time_divisor = 60 * 60 * 24  # convert seconds to days
+    x_divisor = 1000000
 
-    _, ax = plt.subplots()
+    # create a zoomed subplot
 
-    x_fault_onset = ordered_settings[0][3].iloc[200, 1] / time_divisor
+    def plot_zoom():
 
-    # plot normal performance
+        fig = plt.figure()
 
-    x = ordered_settings[0][3].iloc[:201, 1] / time_divisor
-    y = ordered_settings[0][3].iloc[:201, 2]
+        main = fig.add_subplot(2, 1, 2)
+        zoom = fig.add_subplot(2, 6, (2, 5))
 
-    if ci:
-        # 95 % confidence interval
-        lb = y - CI_Z * ordered_settings[0][4].iloc[:201, 2]  # ordered_settings[0][4]: df_sem
-        ub = y + CI_Z * ordered_settings[0][4].iloc[:201, 2]
-    else:
-        # standard error
-        lb = y - ordered_settings[0][4].iloc[:201, 2]  # ordered_settings[0][4]: df_sem
-        ub = y + ordered_settings[0][4].iloc[:201, 2]
+        zoom_interval_length = 50
 
-    ax.plot(x, y, color=colors[0], label="normal")
-    ax.fill_between(x, lb, ub, color=colors[0], alpha=0.3)
-    plt.axvline(x=x_fault_onset, color="red")
+        x_fault_onset = ordered_settings[0][4].iloc[200, 0] / x_divisor
 
-    # plot fault performance
+        # plot normal performance
 
-    for i in range(4):
+        fault_end_index = 201
 
-        x = ordered_settings[i][3].iloc[201:, 1] / time_divisor  # ordered_settings[0][3]: df_mean
-        y = ordered_settings[i][3].iloc[201:, 2]
+        x = ordered_settings[0][4].iloc[:fault_end_index, 0] / x_divisor
+        y = ordered_settings[0][4].iloc[:fault_end_index, 1]
 
-        # 95 % confidence interval
-        lb = y - CI_Z * ordered_settings[i][4].iloc[201:, 2]  # ordered_settings[0][4]: df_sem
-        ub = y + CI_Z * ordered_settings[i][4].iloc[201:, 2]
+        if ci:
+            # 95 % confidence interval
+            lb = y - CI_Z * ordered_settings[0][5].iloc[:fault_end_index, 1]
+            ub = y + CI_Z * ordered_settings[0][5].iloc[:fault_end_index, 1]
+        else:
+            # standard error
+            lb = y - ordered_settings[0][5].iloc[:fault_end_index, 1]
+            ub = y + ordered_settings[0][5].iloc[:fault_end_index, 1]
 
-        # standard error
-        lb = y - ordered_settings[i][4].iloc[201:, 2]  # ordered_settings[0][4]: df_sem
-        ub = y + ordered_settings[i][4].iloc[201:, 2]
+        main.plot(x, y, color=colors[0], label="normal")
+        main.fill_between(x, lb, ub, color=colors[0], alpha=0.3)
+        main.axvline(x=x_fault_onset, color="red")
 
-        ax.plot(x, y, color=colors[i + 1], label=labels[i])
-        ax.fill_between(x, lb, ub, color=colors[i + 1], alpha=0.3)
+        # plot fault performance
 
-    plt.ylim(-1500, 8000)
-    plt.xlabel("real time ({})".format(time_unit))
-    plt.ylabel("average return (10 seeds)")
-    plt.title(plot_title)
-    plt.legend()
-    plt.tight_layout()
-    plt.savefig(plot_directory + "/{}.jpg".format(plot_filename))
-    plt.show()
-    plt.close()
+        fault_start_index = 200
+
+        for i in range(4):
+
+            x = ordered_settings[i][4].iloc[fault_start_index:, 0] / x_divisor
+            y = ordered_settings[i][4].iloc[fault_start_index:, 1]
+
+            if ci:
+                # 95 % confidence interval
+                lb = y - CI_Z * ordered_settings[i][5].iloc[fault_start_index:, 1]
+                ub = y + CI_Z * ordered_settings[i][5].iloc[fault_start_index:, 1]
+            else:
+                # standard error
+                lb = y - ordered_settings[i][5].iloc[fault_start_index:, 1]
+                ub = y + ordered_settings[i][5].iloc[fault_start_index:, 1]
+
+            main.plot(x, y, color=colors[i + 1], label=labels[i])
+            main.fill_between(x, lb, ub, color=colors[i + 1], alpha=0.3)
+
+            zoom.plot(x[:zoom_interval_length], y[:zoom_interval_length])
+            zoom.fill_between(x[:zoom_interval_length], lb[:zoom_interval_length], ub[:zoom_interval_length], color=colors[i + 1], alpha=0.3)
+
+        main.set_xlim(0, 40)
+        zoom.set_xlim(20, 25)
+        main.set_ylim(-1000, 8000)
+        zoom.set_ylim(-1000, 8000)
+        main.set_xlabel("million steps")
+        # zoom.set_xlabel("million steps")
+        main.set_ylabel("average return (10 seeds)")
+        # zoom.set_ylabel("average return (10 seeds)")
+        zoom.set_title(plot_title)
+        plt.tight_layout()
+        plt.savefig(plot_directory + "/{}_sub.jpg".format(plot_filename))
+        plt.show()
+        plt.close()
+
+    # plot_zoom()
+
+    # plot standard figure
+
+    def plot_all_standard():
+
+        x_fault_onset = ordered_settings[0][4].iloc[200, 0] / x_divisor
+
+        # plot normal performance
+
+        fault_end_index = 201
+
+        x = ordered_settings[0][4].iloc[:fault_end_index, 0] / x_divisor
+        y = ordered_settings[0][4].iloc[:fault_end_index, 1]
+
+        if ci:
+            # 95 % confidence interval
+            lb = y - CI_Z * ordered_settings[0][5].iloc[:fault_end_index, 1]
+            ub = y + CI_Z * ordered_settings[0][5].iloc[:fault_end_index, 1]
+        else:
+            # standard error
+            lb = y - ordered_settings[0][5].iloc[:fault_end_index, 1]
+            ub = y + ordered_settings[0][5].iloc[:fault_end_index, 1]
+
+        plt.plot(x, y, color=colors[0], label="normal")
+        plt.fill_between(x, lb, ub, color=colors[0], alpha=0.3)
+        plt.axvline(x=x_fault_onset, color="red")
+
+        # plot fault performance
+
+        fault_start_index = 200
+
+        for i in range(4):
+
+            x = ordered_settings[i][4].iloc[fault_start_index:, 0] / x_divisor
+            y = ordered_settings[i][4].iloc[fault_start_index:, 1]
+
+            if ci:
+                # 95 % confidence interval
+                lb = y - CI_Z * ordered_settings[i][5].iloc[fault_start_index:, 1]
+                ub = y + CI_Z * ordered_settings[i][5].iloc[fault_start_index:, 1]
+            else:
+                # standard error
+                lb = y - ordered_settings[i][5].iloc[fault_start_index:, 1]
+                ub = y + ordered_settings[i][5].iloc[fault_start_index:, 1]
+
+            plt.plot(x, y, color=colors[i + 1], label=labels[i])
+            plt.fill_between(x, lb, ub, color=colors[i + 1], alpha=0.3)
+
+        plt.xlim(0, 40)
+        plt.ylim(-1000, 8000)
+        plt.xlabel("million steps")
+        plt.ylabel("average return (10 seeds)")
+        plt.legend(loc=0)
+        plt.tight_layout()
+        plt.savefig(plot_directory + "/{}_all.jpg".format(plot_filename))
+        plt.show()
+        plt.close()
+
+    plot_all_standard()
+
+    def plot_each_standard():
+
+        for i in range(4):
+
+            x_fault_onset = ordered_settings[0][4].iloc[200, 0] / x_divisor
+
+            # plot normal performance
+
+            fault_end_index = 201
+
+            x = ordered_settings[0][4].iloc[:fault_end_index, 0] / x_divisor
+            y = ordered_settings[0][4].iloc[:fault_end_index, 1]
+
+            if ci:
+                # 95 % confidence interval
+                lb = y - CI_Z * ordered_settings[0][5].iloc[:fault_end_index, 1]
+                ub = y + CI_Z * ordered_settings[0][5].iloc[:fault_end_index, 1]
+            else:
+                # standard error
+                lb = y - ordered_settings[0][5].iloc[:fault_end_index, 1]
+                ub = y + ordered_settings[0][5].iloc[:fault_end_index, 1]
+
+            plt.plot(x, y, color=colors[0], label="normal")
+            plt.fill_between(x, lb, ub, color=colors[0], alpha=0.3)
+            plt.axvline(x=x_fault_onset, color="red")
+
+            # plot fault performance
+
+            fault_start_index = 200
+
+            subscript = ""
+            rn = ordered_settings[i][1]
+            crb = ordered_settings[i][2]
+            if rn:
+                subscript = subscript + "_rn"
+            if crb:
+                subscript = subscript + "_crb"
+
+            x = ordered_settings[i][4].iloc[fault_start_index:, 0] / x_divisor
+            y = ordered_settings[i][4].iloc[fault_start_index:, 1]
+
+            if ci:
+                # 95 % confidence interval
+                lb = y - CI_Z * ordered_settings[i][5].iloc[fault_start_index:, 1]
+                ub = y + CI_Z * ordered_settings[i][5].iloc[fault_start_index:, 1]
+            else:
+                # standard error
+                lb = y - ordered_settings[i][5].iloc[fault_start_index:, 1]
+                ub = y + ordered_settings[i][5].iloc[fault_start_index:, 1]
+
+            plt.plot(x, y, color=colors[i + 1], label=labels[i])
+            plt.fill_between(x, lb, ub, color=colors[i + 1], alpha=0.3)
+
+            plt.xlim(0, 40)
+            plt.ylim(-1000, 8000)
+            plt.xlabel("million steps")
+            plt.ylabel("average return (10 seeds)")
+            plt.legend(loc=0)
+            plt.tight_layout()
+            plt.savefig(plot_directory + "/{}{}.jpg".format(plot_filename, subscript))
+            plt.show()
+            plt.close()
+
+    plot_each_standard()
 
 
 if __name__ == "__main__":

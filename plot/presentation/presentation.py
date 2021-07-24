@@ -6,7 +6,7 @@ import seaborn as sns
 from termcolor import colored
 
 sns.set_theme()
-sns.color_palette("colorblind")
+sns.color_palette("dark")
 
 
 def plot_experiment(directory):
@@ -45,6 +45,10 @@ def plot_experiment(directory):
             assert setting_algorithm == algorithm, "plot_experiment: folders in directory are for more than one algorithm"
             assert setting_ab_env == ab_env, "plot_experiment: folders in directory are for more than one abnormal environment"
             assert setting_n_env == n_env, "plot_experiment: folders in directory are for more than one normal environment"
+
+        if parameters[-1] == "r":
+            # skip over resumable experiments (final episode is not complete)
+            continue
 
         crb = None
         cm = None
@@ -102,24 +106,52 @@ def plot_experiment(directory):
         elif algorithm == "PPO":
             settings.append((algorithm, cm, rn, df_mean, df_sem))
 
+    assert len(settings) == 4, "plot_experiment: more than four settings"
+
     # plot settings
 
     plot_directory = os.getcwd() + "/plots"
     os.makedirs(plot_directory, exist_ok=True)
 
-    for s in settings:
+    colors = ["blue", "olive", "grey", "brown", "purple", "pink", "red", "cyan", "orange", "green"]
 
-        x = s[3]["real_time"] / (60 * 60)
-        y = s[3]["average_return"]
+    _, ax = plt.subplots()
 
-        z = s[4][["average_return"]]
-        lb = y - CI_Z * s[4]["average_return"]
-        ub = y + CI_Z * s[4]["average_return"]
+    for i in range(4):
 
-    plt.plot(x, y, color="blue")
-    plt.fill_between(x, lb, ub, color="tab:blue", alpha=0.3)
+        x = settings[i][3].iloc[201:, 1]
+        y = settings[i][3].iloc[201:, 2]
 
-    # plt.xlabel("time steps")
+        # 95 % confidence interval
+        lb = y - CI_Z * settings[i][4].iloc[201:, 2]
+        ub = y + CI_Z * settings[i][4].iloc[201:, 2]
+
+        # standard error
+        lb = y - settings[i][4].iloc[201:, 2]
+        ub = y + settings[i][4].iloc[201:, 2]
+
+        label = None
+        if algorithm == "SAC":
+            if not settings[i][1] and not settings[i][2]:
+                label = "normal"
+            elif not settings[i][1] and settings[i][2]:
+                label = "crb"
+            elif settings[i][1] and not settings[i][2]:
+                label = "rn"
+            elif settings[i][1] and settings[i][2]:
+                label = "crb and rn"
+        elif algorithm == "PPO":
+            pass  # todo
+
+        ax.plot(x, y, color=colors[i+1], label=label)
+        ax.fill_between(x, lb, ub, color=colors[i+1], alpha=0.3)
+
+    plt.legend()
+    plt.show()
+    plt.clf()
+    plt.close()
+
+    plt.xlabel("time steps")
     # plt.ylim(ymin, ymax)
     # plt.ylabel("average\nreturn\n({} seeds)".format(num_seeds), labelpad=35).set_rotation(0)
     # plt.title("{}".format(title), fontweight="bold")

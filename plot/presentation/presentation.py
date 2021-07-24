@@ -110,10 +110,11 @@ def plot_experiment(directory):
     for s in settings:
 
         x = s[3]["real_time"] / (60 * 60)
+        y = s[3]["average_return"]
 
-    y = df_mean.reset_index()["average_return"]
-    lb = y - CI_Z * df_sem.reset_index()["average_return"]
-    ub = y + CI_Z * df_sem.reset_index()["average_return"]
+        z = s[4][["average_return"]]
+        lb = y - CI_Z * s[4]["average_return"]
+        ub = y + CI_Z * s[4]["average_return"]
 
     plt.plot(x, y, color="blue")
     plt.fill_between(x, lb, ub, color="tab:blue", alpha=0.3)

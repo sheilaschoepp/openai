@@ -1,20 +1,24 @@
-import pandas as pd
 import os
-import sys
+
 import matplotlib.pyplot as plt
+import pandas as pd
 import seaborn as sns
 from termcolor import colored
 
 sns.set_theme()
-sns.color_palette("dark")
+sns.set_palette("colorblind", color_codes=True)
 
 
-def plot_experiment(directory):
+def plot_experiment(directory, plot_filename, plot_title=""):
     """
     Plot all four settings for a single fault.
 
     @param directory: string
         absolute path for directory containing all experiments for a single fault (e.g. .../shared/fetchreach/faulty/sac/v1/)
+    @param plot_filename: string
+        filename for the plot
+    @param plot_title: string
+        title for the plot
     """
 
     first_setting = True
@@ -90,10 +94,11 @@ def plot_experiment(directory):
             df = df[["num_time_steps", "real_time", "average_return"]]
             dfs.append(df)
 
-        # warning to let user know that seeds are missing
         if len(dfs) < num_seeds:
-
-            print(colored("The number of seeds for this experiment setting is less than 10", "red"))
+            # warning to let user know that seeds are missing
+            print(colored(
+                "The number of seeds for this experiment setting is less than 10 and is equal to {}: {}".format(
+                    str(len(dfs)), dir_), "red"))
 
         df = pd.concat(dfs)
         df = df.groupby(df.index)
@@ -101,98 +106,120 @@ def plot_experiment(directory):
         df_mean = df.mean()
         df_sem = df.sem()
 
+        # label
         if algorithm == "SAC":
-            settings.append((algorithm, crb, rn, df_mean, df_sem))
+            storage_type = "replay buffer"
+        else:
+            storage_type = "memory"
+
+        if not rn and not crb:
+            label = "retain all data"
+        elif not rn and crb:
+            label = "retain network parameters"
+        elif rn and not crb:
+            label = "retain {}".format(storage_type)
+        else:  # rn and crb
+            label = "retain no data"
+
+        if algorithm == "SAC":
+            settings.append((algorithm, rn, crb, df_mean, df_sem, label))
         elif algorithm == "PPO":
-            settings.append((algorithm, cm, rn, df_mean, df_sem))
+            settings.append((algorithm, rn, cm, df_mean, df_sem, label))
 
     assert len(settings) == 4, "plot_experiment: more than four settings"
+
+    # reorganize settings to obtain a plotting order
+
+    ordered_settings = []  # [[0 algorithm, 1 rn, 2 crb, 3 df_mean, 4 df_sem]]
+
+    desired_ordering = [(False, False), (False, True), (True, False), (True, True)]  # (rn, crb/cm)
+
+    for do in desired_ordering:
+        for s in settings:
+            if do[0] == s[1] and do[1] == s[2]:
+                ordered_settings.append(s)
+    ordered_settings = settings
+
+    # labels
+
+    if algorithm == "SAC":
+        labels = ["retain all data", "retain network parameters", "retain replay buffer", "retain no data"]
+    else:
+        labels = ["retain all data", "retain network parameters", "retain memory", "retain no data"]
 
     # plot settings
 
     plot_directory = os.getcwd() + "/plots"
     os.makedirs(plot_directory, exist_ok=True)
 
-    colors = ["blue", "olive", "grey", "brown", "purple", "pink", "red", "cyan", "orange", "green"]
+    # 'b' as blue, 'g' as green, 'r' as red, 'c' as cyan, 'm' as magenta, 'y' as yellow, 'k' as black, 'w' as white
+    colors = ["b", "g", "m", "k", "r"]
+
+    time_unit = "days"
+    time_divisor = 60 * 60 * 24  # convert seconds to days
 
     _, ax = plt.subplots()
 
-    # plot fault performance
-    for i in range(4):
-
-        x_fault_onset = settings[i][3].iloc[201, 1] / (60 * 60)
-
-        x = settings[i][3].iloc[201:, 1] / (60 * 60)
-        y = settings[i][3].iloc[201:, 2]
-
-        # 95 % confidence interval
-        lb = y - CI_Z * settings[i][4].iloc[201:, 2]
-        ub = y + CI_Z * settings[i][4].iloc[201:, 2]
-
-        # standard error
-        lb = y - settings[i][4].iloc[201:, 2]
-        ub = y + settings[i][4].iloc[201:, 2]
-
-        label = None  # todo: fix acronyms
-        if algorithm == "SAC":
-            if not settings[i][1] and not settings[i][2]:
-                label = "normal"
-            elif not settings[i][1] and settings[i][2]:
-                label = "crb"
-            elif settings[i][1] and not settings[i][2]:
-                label = "rn"
-            elif settings[i][1] and settings[i][2]:
-                label = "crb and rn"
-        elif algorithm == "PPO":
-            if not settings[i][1] and not settings[i][2]:
-                label = "normal"
-            elif not settings[i][1] and settings[i][2]:
-                label = "cm"
-            elif settings[i][1] and not settings[i][2]:
-                label = "rn"
-            elif settings[i][1] and settings[i][2]:
-                label = "cm and rn"
-
-        ax.plot(x, y, color=colors[i+1], label=label)
-        ax.fill_between(x, lb, ub, color=colors[i+1], alpha=0.3)
+    x_fault_onset = ordered_settings[0][3].iloc[200, 1] / time_divisor
 
     # plot normal performance
-    x = settings[i][3].iloc[:201, 1] / (60 * 60)
-    y = settings[i][3].iloc[:201, 2]
 
-    # 95 % confidence interval
-    lb = y - CI_Z * settings[i][4].iloc[:201, 2]
-    ub = y + CI_Z * settings[i][4].iloc[:201, 2]
+    x = ordered_settings[0][3].iloc[:201, 1] / time_divisor
+    y = ordered_settings[0][3].iloc[:201, 2]
 
-    # standard error
-    lb = y - settings[i][4].iloc[:201, 2]
-    ub = y + settings[i][4].iloc[:201, 2]
+    if ci:
+        # 95 % confidence interval
+        lb = y - CI_Z * ordered_settings[0][4].iloc[:201, 2]  # ordered_settings[0][4]: df_sem
+        ub = y + CI_Z * ordered_settings[0][4].iloc[:201, 2]
+    else:
+        # standard error
+        lb = y - ordered_settings[0][4].iloc[:201, 2]  # ordered_settings[0][4]: df_sem
+        ub = y + ordered_settings[0][4].iloc[:201, 2]
 
-    label = "normal"
-
-    ax.plot(x, y, color=colors[0], label=label)
+    ax.plot(x, y, color=colors[0], label="normal")
     ax.fill_between(x, lb, ub, color=colors[0], alpha=0.3)
+    plt.axvline(x=x_fault_onset, color="red")
 
-    plt.axvline(x=x_fault_onset, color="red", alpha=0.3)
-    plt.xlabel("time steps")
+    # plot fault performance
+
+    for i in range(4):
+
+        x = ordered_settings[i][3].iloc[201:, 1] / time_divisor  # ordered_settings[0][3]: df_mean
+        y = ordered_settings[i][3].iloc[201:, 2]
+
+        # 95 % confidence interval
+        lb = y - CI_Z * ordered_settings[i][4].iloc[201:, 2]  # ordered_settings[0][4]: df_sem
+        ub = y + CI_Z * ordered_settings[i][4].iloc[201:, 2]
+
+        # standard error
+        lb = y - ordered_settings[i][4].iloc[201:, 2]  # ordered_settings[0][4]: df_sem
+        ub = y + ordered_settings[i][4].iloc[201:, 2]
+
+        ax.plot(x, y, color=colors[i + 1], label=labels[i])
+        ax.fill_between(x, lb, ub, color=colors[i + 1], alpha=0.3)
+
     plt.ylim(-1500, 8000)
-    plt.xlabel("real time")
+    plt.xlabel("real time ({})".format(time_unit))
     plt.ylabel("average return (10 seeds)")
-    # plt.title("{}".format(title), fontweight="bold")
+    plt.title(plot_title)
     plt.legend()
     plt.tight_layout()
-    # plt.savefig(plot_directory + "/{}.jpg".format(title))
+    plt.savefig(plot_directory + "/{}.jpg".format(plot_filename))
     plt.show()
     plt.close()
 
 
 if __name__ == "__main__":
 
+    # number of seeds to plot
     num_seeds = 10
 
     # confidence interval z value for 9 degrees of freedom (10 seeds)
     if num_seeds == 10:
         CI_Z = 2.262
 
-    plot_experiment("/mnt/DATA/shared/fetchreach/faulty/sac/v1")
-    # plot_experiment("/mnt/DATA/shared/ant/faulty/sac/v3")
+    # if True, plot 95% confidence interval; if False, plot standard error
+    ci = False
+
+    # plot_experiment("/mnt/DATA/shared/fetchreach/faulty/sac/v1")
+    plot_experiment("/mnt/DATA/shared/ant/faulty/sac/v1", "ant_sac_v1", "Soft Actor-Critic (SAC)")

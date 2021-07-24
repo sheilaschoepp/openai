@@ -117,9 +117,12 @@ def plot_experiment(directory):
 
     _, ax = plt.subplots()
 
+    # plot fault performance
     for i in range(4):
 
-        x = settings[i][3].iloc[201:, 1]
+        x_fault_onset = settings[i][3].iloc[201, 1] / (60 * 60)
+
+        x = settings[i][3].iloc[201:, 1] / (60 * 60)
         y = settings[i][3].iloc[201:, 2]
 
         # 95 % confidence interval
@@ -130,7 +133,7 @@ def plot_experiment(directory):
         lb = y - settings[i][4].iloc[201:, 2]
         ub = y + settings[i][4].iloc[201:, 2]
 
-        label = None
+        label = None  # todo: fix acronyms
         if algorithm == "SAC":
             if not settings[i][1] and not settings[i][2]:
                 label = "normal"
@@ -141,24 +144,46 @@ def plot_experiment(directory):
             elif settings[i][1] and settings[i][2]:
                 label = "crb and rn"
         elif algorithm == "PPO":
-            pass  # todo
+            if not settings[i][1] and not settings[i][2]:
+                label = "normal"
+            elif not settings[i][1] and settings[i][2]:
+                label = "cm"
+            elif settings[i][1] and not settings[i][2]:
+                label = "rn"
+            elif settings[i][1] and settings[i][2]:
+                label = "cm and rn"
 
         ax.plot(x, y, color=colors[i+1], label=label)
         ax.fill_between(x, lb, ub, color=colors[i+1], alpha=0.3)
 
-    plt.legend()
-    plt.show()
-    plt.clf()
-    plt.close()
+    # plot normal performance
+    x = settings[i][3].iloc[:201, 1] / (60 * 60)
+    y = settings[i][3].iloc[:201, 2]
 
+    # 95 % confidence interval
+    lb = y - CI_Z * settings[i][4].iloc[:201, 2]
+    ub = y + CI_Z * settings[i][4].iloc[:201, 2]
+
+    # standard error
+    lb = y - settings[i][4].iloc[:201, 2]
+    ub = y + settings[i][4].iloc[:201, 2]
+
+    label = "normal"
+
+    ax.plot(x, y, color=colors[0], label=label)
+    ax.fill_between(x, lb, ub, color=colors[0], alpha=0.3)
+
+    plt.axvline(x=x_fault_onset, color="red", alpha=0.3)
     plt.xlabel("time steps")
-    # plt.ylim(ymin, ymax)
-    # plt.ylabel("average\nreturn\n({} seeds)".format(num_seeds), labelpad=35).set_rotation(0)
+    plt.ylim(-1500, 8000)
+    plt.xlabel("real time")
+    plt.ylabel("average return (10 seeds)")
     # plt.title("{}".format(title), fontweight="bold")
-    # plt.tight_layout()
+    plt.legend()
+    plt.tight_layout()
     # plt.savefig(plot_directory + "/{}.jpg".format(title))
-    # # plt.show()
-    # plt.close()
+    plt.show()
+    plt.close()
 
 
 if __name__ == "__main__":
@@ -169,5 +194,5 @@ if __name__ == "__main__":
     if num_seeds == 10:
         CI_Z = 2.262
 
-    # plot_experiment("/mnt/DATA/shared/fetchreach/faulty/sac/v1")
-    plot_experiment("/mnt/DATA/shared/ant/faulty/sac/v1")
+    plot_experiment("/mnt/DATA/shared/fetchreach/faulty/sac/v1")
+    # plot_experiment("/mnt/DATA/shared/ant/faulty/sac/v3")

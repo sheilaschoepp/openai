@@ -22,9 +22,9 @@ def plot_experiment(directory, plot_filename, plot_title=""):
         title for the plot
     """
 
-    algorithm = None
-    ab_env = None
-    n_env = None
+    algorithm = ""
+    ab_env = ""
+    n_env = ""
 
     ordered_settings = []
 
@@ -136,7 +136,7 @@ def plot_experiment(directory, plot_filename, plot_title=""):
     else:
         labels = ["retain all data", "retain network parameters", "retain memory", "retain no data"]
 
-    plot_directory = os.getcwd() + "/plots"
+    plot_directory = os.path.join(os.getcwd(), "plots", algorithm, ab_env)
     os.makedirs(plot_directory, exist_ok=True)
 
     # 'b' as blue, 'g' as green, 'r' as red, 'c' as cyan, 'm' as magenta, 'y' as yellow, 'k' as black, 'w' as white
@@ -151,9 +151,7 @@ def plot_experiment(directory, plot_filename, plot_title=""):
         fig = plt.figure()
 
         main = fig.add_subplot(2, 1, 2)
-        zoom = fig.add_subplot(2, 6, (2, 5))
-
-        zoom_x_interval_length = 100
+        zoom = fig.add_subplot(2, 6, (3, 6))
 
         zoom_min_y = -1000
         zoom_max_y = 8000
@@ -202,16 +200,27 @@ def plot_experiment(directory, plot_filename, plot_title=""):
             main.plot(x, y, color=colors[i + 1], label=labels[i])
             main.fill_between(x, lb, ub, color=colors[i + 1], alpha=0.3)
 
-            zoom.plot(x, y, color=colors[i + 1], label=labels[i])
+            zoom.plot(x, y, color=colors[i + 1])
             zoom.fill_between(x, lb, ub, color=colors[i + 1], alpha=0.3)
 
-        main.axvline(x=x_fault_onset, color="red")
+        main.axvline(x=x_fault_onset, color="red", ymax=0.98)
         main.fill_between((zoom_min_x, zoom_max_x), zoom_min_y, zoom_max_y, facecolor='black', alpha=0.2)
 
-        zoom.axvline(x=20, color="red", lw=4)
+        zoom.axvline(x=20, color="red", lw=4, ymax=0.98)
 
-        con1 = ConnectionPatch(xyA=(zoom_min_x, zoom_max_y), coordsA=main.transData,
-                               xyB=(zoom_min_x, zoom_max_y), coordsB=zoom.transData, color='black')
+        connector1 = ConnectionPatch(xyA=(zoom_min_x, zoom_max_y), coordsA=main.transData,
+                                     xyB=(zoom_min_x, zoom_min_y), coordsB=zoom.transData,
+                                     color='black',
+                                     alpha=0.3)
+        fig.add_artist(connector1)
+
+        connector2 = ConnectionPatch(xyA=(zoom_max_x, zoom_max_y), coordsA=main.transData,
+                                     xyB=(zoom_max_x, zoom_min_y), coordsB=zoom.transData,
+                                     color='black',
+                                     alpha=0.3)
+        fig.add_artist(connector2)
+
+        fig.legend(loc="upper left")
 
         main.set_xlim(0, 40)
         zoom.set_xlim(zoom_min_x, zoom_max_x)
@@ -221,7 +230,7 @@ def plot_experiment(directory, plot_filename, plot_title=""):
         main.set_ylabel("average return\n(10 seeds)")
         zoom.set_title(plot_title)
         plt.tight_layout()
-        plt.savefig(plot_directory + "/{}_sub.jpg".format(plot_filename))
+        plt.savefig(plot_directory + "/{}_{}_sub.jpg".format(algorithm, ab_env))
         plt.show()
         plt.close()
 
@@ -279,8 +288,9 @@ def plot_experiment(directory, plot_filename, plot_title=""):
         plt.xlabel("million steps")
         plt.ylabel("average return (10 seeds)")
         plt.legend(loc=0)
+        plt.title(plot_title)
         plt.tight_layout()
-        plt.savefig(plot_directory + "/{}_all.jpg".format(plot_filename))
+        plt.savefig(plot_directory + "/{}_{}_all.jpg".format(algorithm, ab_env))
         # plt.show()
         plt.close()
 
@@ -346,8 +356,9 @@ def plot_experiment(directory, plot_filename, plot_title=""):
             plt.xlabel("million steps")
             plt.ylabel("average return (10 seeds)")
             plt.legend(loc=0)
+            plt.title(plot_title)
             plt.tight_layout()
-            plt.savefig(plot_directory + "/{}{}.jpg".format(plot_filename, subscript))
+            plt.savefig(plot_directory + "/{}_{}{}.jpg".format(algorithm, ab_env, subscript))
             # plt.show()
             plt.close()
 
@@ -369,5 +380,4 @@ if __name__ == "__main__":
     # if True, plot 95% confidence interval; if False, plot standard error
     ci = False
 
-    # plot_experiment("/mnt/DATA/shared/fetchreach/faulty/sac/v1")
-    plot_experiment("/Users/sheilaschoepp/Documents/DATA/shared/ant/faulty/sac/v1", "ant_sac_v1", "Soft Actor-Critic (SAC)")
+    plot_experiment("/mnt/DATA/shared/ant/faulty/sac/v1", "ant_sac_v1", "Soft Actor-Critic (SAC)")

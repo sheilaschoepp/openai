@@ -858,71 +858,98 @@ if __name__ == "__main__":
     # file = "/mnt/DATA/shared/fetchreach/normal/SACv2_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_a:True_d:cuda_ps:True_pss:21"
     # start()
 
-    # fetchreach normal
-    # PPO v0
+    # # fetchreach normal
+    # # PPO v0
     # file = "/media/sschoepp/easystore/shared/fetchreach/normal/PPOv2_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_d:cpu_ps:True_pss:43"
     # start()
-
-    # PPO v0GE
+    #
+    # # PPO v0GE
     # file = "/media/sschoepp/easystore/shared/fetchreach/normal/PPOv2_FetchReachEnvGE-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_d:cpu_ps:True_pss:43"
     # start()
-
-    # SAC v0
+    #
+    # # SAC v0
     # file = "/media/sschoepp/easystore/shared/fetchreach/normal/SACv2_FetchReachEnvGE-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_a:True_d:cuda_ps:True_pss:21"
     # start()
     #
-    # SAC v0GE
+    # # SAC v0GE
     # file = "/media/sschoepp/easystore/shared/fetchreach/normal/SACv2_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_a:True_d:cuda_ps:True_pss:21"
     # start()
 
-    # fetchreach faulty
-    # PPO v1
-    file = "/media/sschoepp/easystore/shared/fetchreach/faulty/ppo/v1/PPOv2_FetchReachEnv-v1:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:False_rn:False_d:cpu"
-    start()
-
-    file = "/media/sschoepp/easystore/shared/fetchreach/faulty/ppo/v1/PPOv2_FetchReachEnv-v1:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:False_rn:True_d:cpu"
-    start()
-
-    file = "/media/sschoepp/easystore/shared/fetchreach/faulty/ppo/v1/PPOv2_FetchReachEnv-v1:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:True_rn:False_d:cpu"
-    start()
-
-    file = "/media/sschoepp/easystore/shared/fetchreach/faulty/ppo/v1/PPOv2_FetchReachEnv-v1:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:True_rn:True_d:cpu"
-    start()
-
-    # PPO v1GE
-    file = "/media/sschoepp/easystore/shared/fetchreach/faulty/ppo/v1GE/PPOv2_FetchReachEnvGE-v1:6000000_FetchReachEnvGE-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:False_rn:False_d:cpu"
-    start()
-
-    file = "/media/sschoepp/easystore/shared/fetchreach/faulty/ppo/v1GE/PPOv2_FetchReachEnvGE-v1:6000000_FetchReachEnvGE-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:False_rn:True_d:cpu"
-    start()
-
-    file = "/media/sschoepp/easystore/shared/fetchreach/faulty/ppo/v1GE/PPOv2_FetchReachEnvGE-v1:6000000_FetchReachEnvGE-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:True_rn:False_d:cpu"
-    start()
-
-    file = "/media/sschoepp/easystore/shared/fetchreach/faulty/ppo/v1GE/PPOv2_FetchReachEnvGE-v1:6000000_FetchReachEnvGE-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:True_rn:True_d:cpu"
-    start()
-
-    # PPO v4
-    file = "/media/sschoepp/easystore/shared/fetchreach/faulty/ppo/v4/PPOv2_FetchReachEnv-v4:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:False_rn:False_d:cpu"
-    start()
-
-    file = "/media/sschoepp/easystore/shared/fetchreach/faulty/ppo/v4/PPOv2_FetchReachEnv-v4:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:False_rn:True_d:cpu"
-    start()
-
-    file = "/media/sschoepp/easystore/shared/fetchreach/faulty/ppo/v4/PPOv2_FetchReachEnv-v4:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:True_rn:False_d:cpu"
-    start()
-
-    file = "/media/sschoepp/easystore/shared/fetchreach/faulty/ppo/v4/PPOv2_FetchReachEnv-v4:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:True_rn:True_d:cpu"
-    start()
-
-    # # SAC v1
-    # file = ""
+    # # fetchreach faulty
+    # # PPO v1
+    # file = "/media/sschoepp/easystore/shared/fetchreach/faulty/ppo/v1/PPOv2_FetchReachEnv-v1:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:False_rn:False_d:cpu"
     # start()
     #
-    # # SAC v1GE
-    # file = ""
+    # file = "/media/sschoepp/easystore/shared/fetchreach/faulty/ppo/v1/PPOv2_FetchReachEnv-v1:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:False_rn:True_d:cpu"
     # start()
     #
-    # # SAC v4
-    # file = ""
+    # file = "/media/sschoepp/easystore/shared/fetchreach/faulty/ppo/v1/PPOv2_FetchReachEnv-v1:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:True_rn:False_d:cpu"
     # start()
+    #
+    # file = "/media/sschoepp/easystore/shared/fetchreach/faulty/ppo/v1/PPOv2_FetchReachEnv-v1:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:True_rn:True_d:cpu"
+    # start()
+    #
+    # # PPO v1GE
+    # file = "/media/sschoepp/easystore/shared/fetchreach/faulty/ppo/v1GE/PPOv2_FetchReachEnvGE-v1:6000000_FetchReachEnvGE-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:False_rn:False_d:cpu"
+    # start()
+    #
+    # file = "/media/sschoepp/easystore/shared/fetchreach/faulty/ppo/v1GE/PPOv2_FetchReachEnvGE-v1:6000000_FetchReachEnvGE-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:False_rn:True_d:cpu"
+    # start()
+    #
+    # file = "/media/sschoepp/easystore/shared/fetchreach/faulty/ppo/v1GE/PPOv2_FetchReachEnvGE-v1:6000000_FetchReachEnvGE-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:True_rn:False_d:cpu"
+    # start()
+    #
+    # file = "/media/sschoepp/easystore/shared/fetchreach/faulty/ppo/v1GE/PPOv2_FetchReachEnvGE-v1:6000000_FetchReachEnvGE-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:True_rn:True_d:cpu"
+    # start()
+    #
+    # # PPO v4
+    # file = "/media/sschoepp/easystore/shared/fetchreach/faulty/ppo/v4/PPOv2_FetchReachEnv-v4:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:False_rn:False_d:cpu"
+    # start()
+    #
+    # file = "/media/sschoepp/easystore/shared/fetchreach/faulty/ppo/v4/PPOv2_FetchReachEnv-v4:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:False_rn:True_d:cpu"
+    # start()
+    #
+    # file = "/media/sschoepp/easystore/shared/fetchreach/faulty/ppo/v4/PPOv2_FetchReachEnv-v4:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:True_rn:False_d:cpu"
+    # start()
+    #
+    # file = "/media/sschoepp/easystore/shared/fetchreach/faulty/ppo/v4/PPOv2_FetchReachEnv-v4:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:True_rn:True_d:cpu"
+    # start()
+
+    # SAC v1
+    file = "/media/sschoepp/easystore/shared/fetchreach/faulty/sac/v1/SACv2_FetchReachEnv-v1:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:False_rn:False_a:True_d:cuda"
+    start()
+
+    file = "/media/sschoepp/easystore/shared/fetchreach/faulty/sac/v1/SACv2_FetchReachEnv-v1:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:False_rn:True_a:True_d:cuda"
+    start()
+
+    file = "/media/sschoepp/easystore/shared/fetchreach/faulty/sac/v1/SACv2_FetchReachEnv-v1:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:True_rn:False_a:True_d:cuda"
+    start()
+
+    file = "/media/sschoepp/easystore/shared/fetchreach/faulty/sac/v1/SACv2_FetchReachEnv-v1:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:True_rn:True_a:True_d:cuda"
+    start()
+
+    # SAC v1GE
+    file = "/media/sschoepp/easystore/shared/fetchreach/faulty/sac/v1GE/SACv2_FetchReachEnvGE-v1:2000000_FetchReachEnvGE-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:False_rn:False_a:True_d:cuda"
+    start()
+
+    file = "/media/sschoepp/easystore/shared/fetchreach/faulty/sac/v1GE/SACv2_FetchReachEnvGE-v1:2000000_FetchReachEnvGE-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:False_rn:True_a:True_d:cuda"
+    start()
+
+    file = "/media/sschoepp/easystore/shared/fetchreach/faulty/sac/v1GE/SACv2_FetchReachEnvGE-v1:2000000_FetchReachEnvGE-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:True_rn:False_a:True_d:cuda"
+    start()
+
+    file = "/media/sschoepp/easystore/shared/fetchreach/faulty/sac/v1GE/SACv2_FetchReachEnvGE-v1:2000000_FetchReachEnvGE-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:True_rn:True_a:True_d:cuda"
+    start()
+
+    # SAC v4
+    file = "/media/sschoepp/easystore/shared/fetchreach/faulty/sac/v4/SACv2_FetchReachEnv-v4:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:False_rn:False_a:True_d:cuda"
+    start()
+
+    file = "/media/sschoepp/easystore/shared/fetchreach/faulty/sac/v4/SACv2_FetchReachEnv-v4:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:False_rn:True_a:True_d:cuda"
+    start()
+
+    file = "/media/sschoepp/easystore/shared/fetchreach/faulty/sac/v4/SACv2_FetchReachEnv-v4:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:True_rn:False_a:True_d:cuda"
+    start()
+
+    file = "/media/sschoepp/easystore/shared/fetchreach/faulty/sac/v4/SACv2_FetchReachEnv-v4:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:True_rn:True_a:True_d:cuda"
+    start()

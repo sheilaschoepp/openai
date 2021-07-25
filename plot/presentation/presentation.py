@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
 from termcolor import colored
+from matplotlib.patches import ConnectionPatch
 
 sns.set_theme()
 sns.set_palette("colorblind", color_codes=True)
@@ -85,9 +86,9 @@ def plot_experiment(directory, plot_filename, plot_title=""):
                 df = df[["num_time_steps", "average_return"]]
                 dfs.append(df)
 
-            if len(dfs) < num_seeds:
+            if len(dfs) != num_seeds:
                 # warning to let user know that seeds are missing
-                print(colored("The number of seeds for this experiment setting is less than 10 and is equal to {}: {}".format(str(len(dfs)), dir_), "red"))
+                print(colored("The number of seeds for this experiment is 10 but this setting only has {} seeds: {}".format(str(len(dfs)), dir_), "red"))
 
             df = pd.concat(dfs)
             df = df.groupby(df.index)
@@ -152,7 +153,12 @@ def plot_experiment(directory, plot_filename, plot_title=""):
         main = fig.add_subplot(2, 1, 2)
         zoom = fig.add_subplot(2, 6, (2, 5))
 
-        zoom_interval_length = 50
+        zoom_x_interval_length = 100
+
+        zoom_min_y = -1000
+        zoom_max_y = 8000
+        zoom_min_x = 20
+        zoom_max_x = 25
 
         x_fault_onset = ordered_settings[0][4].iloc[200, 0] / x_divisor
 
@@ -174,7 +180,6 @@ def plot_experiment(directory, plot_filename, plot_title=""):
 
         main.plot(x, y, color=colors[0], label="normal")
         main.fill_between(x, lb, ub, color=colors[0], alpha=0.3)
-        main.axvline(x=x_fault_onset, color="red")
 
         # plot fault performance
 
@@ -197,24 +202,30 @@ def plot_experiment(directory, plot_filename, plot_title=""):
             main.plot(x, y, color=colors[i + 1], label=labels[i])
             main.fill_between(x, lb, ub, color=colors[i + 1], alpha=0.3)
 
-            zoom.plot(x[:zoom_interval_length], y[:zoom_interval_length])
-            zoom.fill_between(x[:zoom_interval_length], lb[:zoom_interval_length], ub[:zoom_interval_length], color=colors[i + 1], alpha=0.3)
+            zoom.plot(x, y, color=colors[i + 1], label=labels[i])
+            zoom.fill_between(x, lb, ub, color=colors[i + 1], alpha=0.3)
+
+        main.axvline(x=x_fault_onset, color="red")
+        main.fill_between((zoom_min_x, zoom_max_x), zoom_min_y, zoom_max_y, facecolor='black', alpha=0.2)
+
+        zoom.axvline(x=20, color="red", lw=4)
+
+        con1 = ConnectionPatch(xyA=(zoom_min_x, zoom_max_y), coordsA=main.transData,
+                               xyB=(zoom_min_x, zoom_max_y), coordsB=zoom.transData, color='black')
 
         main.set_xlim(0, 40)
-        zoom.set_xlim(20, 25)
+        zoom.set_xlim(zoom_min_x, zoom_max_x)
         main.set_ylim(-1000, 8000)
         zoom.set_ylim(-1000, 8000)
         main.set_xlabel("million steps")
-        # zoom.set_xlabel("million steps")
-        main.set_ylabel("average return (10 seeds)")
-        # zoom.set_ylabel("average return (10 seeds)")
+        main.set_ylabel("average return\n(10 seeds)")
         zoom.set_title(plot_title)
         plt.tight_layout()
         plt.savefig(plot_directory + "/{}_sub.jpg".format(plot_filename))
         plt.show()
         plt.close()
 
-    # plot_zoom()
+    plot_zoom()
 
     # plot standard figure
 
@@ -270,12 +281,14 @@ def plot_experiment(directory, plot_filename, plot_title=""):
         plt.legend(loc=0)
         plt.tight_layout()
         plt.savefig(plot_directory + "/{}_all.jpg".format(plot_filename))
-        plt.show()
+        # plt.show()
         plt.close()
 
     plot_all_standard()
 
-    def plot_each_standard():
+    # plot one standard
+
+    def plot_one_standard():
 
         for i in range(4):
 
@@ -335,10 +348,10 @@ def plot_experiment(directory, plot_filename, plot_title=""):
             plt.legend(loc=0)
             plt.tight_layout()
             plt.savefig(plot_directory + "/{}{}.jpg".format(plot_filename, subscript))
-            plt.show()
+            # plt.show()
             plt.close()
 
-    plot_each_standard()
+    plot_one_standard()
 
 
 if __name__ == "__main__":
@@ -349,9 +362,12 @@ if __name__ == "__main__":
     # confidence interval z value for 9 degrees of freedom (10 seeds)
     if num_seeds == 10:
         CI_Z = 2.262
+    else:
+        print(colored("__main__: you have specified {} seeds; you must set a new value for CI_Z".format(num_seeds), "red"))
+        exit()
 
     # if True, plot 95% confidence interval; if False, plot standard error
     ci = False
 
     # plot_experiment("/mnt/DATA/shared/fetchreach/faulty/sac/v1")
-    plot_experiment("/mnt/DATA/shared/ant/faulty/sac/v1", "ant_sac_v1", "Soft Actor-Critic (SAC)")
+    plot_experiment("/Users/sheilaschoepp/Documents/DATA/shared/ant/faulty/sac/v1", "ant_sac_v1", "Soft Actor-Critic (SAC)")

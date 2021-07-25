@@ -10,16 +10,12 @@ sns.set_theme()
 sns.set_palette("colorblind", color_codes=True)
 
 
-def plot_experiment(directory, plot_filename, plot_title=""):
+def plot_experiment(directory):
     """
     Plot all four settings for a single fault.
 
     @param directory: string
         absolute path for directory containing all experiments for a single fault (e.g. .../shared/fetchreach/faulty/sac/v1/)
-    @param plot_filename: string
-        filename for the plot
-    @param plot_title: string
-        title for the plot
     """
 
     algorithm = ""
@@ -132,14 +128,16 @@ def plot_experiment(directory, plot_filename, plot_title=""):
     # plot settings
 
     if algorithm == "SAC":
-        labels = ["retain all data", "retain network parameters", "retain replay buffer", "retain no data"]
+        title = "Soft Actor-Critic (SAC)"
+        labels = ["retain all data", "retain network params", "retain replay buffer", "retain no data"]
     else:
-        labels = ["retain all data", "retain network parameters", "retain memory", "retain no data"]
+        title = "Proximal Policy Optimization (PPO)"
+        labels = ["retain all data", "retain network params", "retain memory", "retain no data"]
 
     plot_directory = os.path.join(os.getcwd(), "plots", algorithm, ab_env)
     os.makedirs(plot_directory, exist_ok=True)
 
-    # 'b' as blue, 'g' as green, 'r' as red, 'c' as cyan, 'm' as magenta, 'y' as yellow, 'k' as black, 'w' as white
+    # "b" as blue, "g" as green, "r" as red, "c" as cyan, "m" as magenta, "y" as yellow, "k" as black, "w" as white
     colors = ["b", "g", "m", "k", "r"]
 
     x_divisor = 1000000
@@ -204,23 +202,23 @@ def plot_experiment(directory, plot_filename, plot_title=""):
             zoom.fill_between(x, lb, ub, color=colors[i + 1], alpha=0.3)
 
         main.axvline(x=x_fault_onset, color="red", ymax=0.98)
-        main.fill_between((zoom_min_x, zoom_max_x), zoom_min_y, zoom_max_y, facecolor='black', alpha=0.2)
+        main.fill_between((zoom_min_x, zoom_max_x), zoom_min_y, zoom_max_y, facecolor="black", alpha=0.2)
 
         zoom.axvline(x=20, color="red", lw=4, ymax=0.98)
 
         connector1 = ConnectionPatch(xyA=(zoom_min_x, zoom_max_y), coordsA=main.transData,
                                      xyB=(zoom_min_x, zoom_min_y), coordsB=zoom.transData,
-                                     color='black',
+                                     color="black",
                                      alpha=0.3)
         fig.add_artist(connector1)
 
         connector2 = ConnectionPatch(xyA=(zoom_max_x, zoom_max_y), coordsA=main.transData,
                                      xyB=(zoom_max_x, zoom_min_y), coordsB=zoom.transData,
-                                     color='black',
+                                     color="black",
                                      alpha=0.3)
         fig.add_artist(connector2)
 
-        fig.legend(loc="upper left")
+        fig.legend(bbox_to_anchor=[0.2, 0.78], loc="center")
 
         main.set_xlim(0, 40)
         zoom.set_xlim(zoom_min_x, zoom_max_x)
@@ -228,7 +226,8 @@ def plot_experiment(directory, plot_filename, plot_title=""):
         zoom.set_ylim(-1000, 8000)
         main.set_xlabel("million steps")
         main.set_ylabel("average return\n(10 seeds)")
-        zoom.set_title(plot_title)
+        main.set_title(title)
+        # zoom.set_title(title, loc="left", pad=20, position=position)
         plt.tight_layout()
         plt.savefig(plot_directory + "/{}_{}_sub.jpg".format(algorithm, ab_env))
         plt.show()
@@ -380,4 +379,6 @@ if __name__ == "__main__":
     # if True, plot 95% confidence interval; if False, plot standard error
     ci = False
 
-    plot_experiment("/mnt/DATA/shared/ant/faulty/sac/v1", "ant_sac_v1", "Soft Actor-Critic (SAC)")
+    sac_data_dir = "/mnt/DATA/shared/ant/faulty/sac"
+
+    plot_experiment(os.path.join(sac_data_dir, "v1"))

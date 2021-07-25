@@ -34,8 +34,8 @@ OR
 `conda activate openai`
 5. [Install](https://pytorch.org/get-started/) pytorch.\
 If using CUDA 11.1: `pip3 install torch==1.9.0+cu111 torchvision==0.10.0+cu111 torchaudio==0.9.0 -f https://download.pytorch.org/whl/torch_stable.html`
-6. Install [OpenAI gym](https://gym.openai.com/docs/), [pandas](https://pandas.pydata.org/), [termcolor](https://pypi.org/project/termcolor/), [matplotlib](https://matplotlib.org/), [tqdm](https://pypi.org/project/tqdm/), and [seaborn](https://seaborn.pydata.org/installing.html). \
-`pip install gym[all] pandas termcolor matplotlib tqdm seaborn`
+6. Install [OpenAI gym](https://gym.openai.com/docs/), [pandas](https://pandas.pydata.org/), [termcolor](https://pypi.org/project/termcolor/), [matplotlib](https://matplotlib.org/), [tqdm](https://pypi.org/project/tqdm/), [seaborn](https://seaborn.pydata.org/installing.html), and [dm_control](https://github.com/deepmind/dm_control). \
+`pip install gym[all] pandas termcolor matplotlib tqdm seaborn dm_control`
 7. [(Re)install](https://github.com/openai/mujoco-py#install-and-use-mujoco-py) mujoco-py 2.0. \
 `pip install -U 'mujoco-py<2.1,>=2.0'`
 

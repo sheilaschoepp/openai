@@ -837,12 +837,28 @@ class FetchReachHistogram:
 
 
 def draw_histogram():
-    global algorithm, env_name, time_steps, ant_histogram_data, fetchreach_histogram_data
+    global algorithm, env_name, time_steps, abnormal, crb, cm, rn, ant_histogram_data, fetchreach_histogram_data
 
-    algorithm = file.split("/")[-1][0:3]
-    info = file.split("_")[1].split(":")
-    env_name = info[0]
-    time_steps = int(info[1])
+    params = file.split("/")[-1].split("_")
+    algorithm = params[0][0:3]
+    env_info = params[1].split(":")
+    env_name = env_info[0]
+    time_steps = int(env_info[1])
+
+    if "v0" not in env_name:
+        abnormal = True
+        if algorithm == "SAC":
+            for p in params[2:]:
+                if p.startswith("crb:"):
+                    crb = eval(p.split(":")[1])
+                elif p.startswith("rn:"):
+                    rn = eval(p.split(":")[1])
+        elif algorithm == "PPO":
+            for p in params[2:]:
+                if p.startswith("cm:"):
+                    cm = eval(p.split(":")[1])
+                elif p.startswith("rn:"):
+                    rn = eval(p.split(":")[1])
 
     if "Ant" in env_name:
 
@@ -877,6 +893,11 @@ if __name__ == "__main__":
     env_name = None
     time_steps = None
 
+    abnormal = False
+    crb = None
+    cm = None
+    rn = None
+
     ant_histogram_data = None
     fetchreach_histogram_data = None
 
@@ -890,8 +911,8 @@ if __name__ == "__main__":
 
     # fetchreach normal
     # PPO v0
-    # file = "/media/sschoepp/easystore/shared/fetchreach/normal/PPOv2_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_d:cpu_ps:True_pss:43"
-    # draw_histogram()
+    file = "/media/sschoepp/easystore/shared/fetchreach/normal/PPOv2_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_d:cpu_ps:True_pss:43"
+    draw_histogram()
     #
     # # PPO v0GE
     # file = "/media/sschoepp/easystore/shared/fetchreach/normal/PPOv2_FetchReachEnvGE-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_d:cpu_ps:True_pss:43"
@@ -920,8 +941,8 @@ if __name__ == "__main__":
     # draw_histogram()
 
     # # PPO v1GE
-    file = "/media/sschoepp/easystore/shared/fetchreach/faulty/ppo/v1GE/PPOv2_FetchReachEnvGE-v1:6000000_FetchReachEnvGE-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:False_rn:False_d:cpu"
-    draw_histogram()
+    # file = "/media/sschoepp/easystore/shared/fetchreach/faulty/ppo/v1GE/PPOv2_FetchReachEnvGE-v1:6000000_FetchReachEnvGE-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:False_rn:False_d:cpu"
+    # draw_histogram()
     #
     # file = "/media/sschoepp/easystore/shared/fetchreach/faulty/ppo/v1GE/PPOv2_FetchReachEnvGE-v1:6000000_FetchReachEnvGE-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:False_rn:True_d:cpu"
     # draw_histogram()
@@ -933,8 +954,8 @@ if __name__ == "__main__":
     # draw_histogram()
     #
     # # PPO v4
-    file = "/media/sschoepp/easystore/shared/fetchreach/faulty/ppo/v4/PPOv2_FetchReachEnv-v4:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:False_rn:False_d:cpu"
-    draw_histogram()
+    # file = "/media/sschoepp/easystore/shared/fetchreach/faulty/ppo/v4/PPOv2_FetchReachEnv-v4:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:False_rn:False_d:cpu"
+    # draw_histogram()
     #
     # file = "/media/sschoepp/easystore/shared/fetchreach/faulty/ppo/v4/PPOv2_FetchReachEnv-v4:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:False_rn:True_d:cpu"
     # draw_histogram()

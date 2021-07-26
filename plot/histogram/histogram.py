@@ -21,6 +21,13 @@ import custom_gym_envs  # DO NOT DELETE
 
 sns.set_theme()
 
+parser = argparse.ArgumentParser(description="Histogram")
+
+parser.add_argument("-cd", "--collect_data", default=False, action="store_true",
+                    help="if true, collect data by running 100 episodes for each seed (default: False)")
+
+args = parser.parse_args()
+
 
 def get_ant_xml_data():
 
@@ -852,11 +859,11 @@ if __name__ == "__main__":
 
     num_seeds = 10
 
-    collect_data = True
+    collect_data = args.collect_data
 
     # test file for fetchreach
-    # file = "/mnt/DATA/shared/fetchreach/normal/SACv2_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_a:True_d:cuda_ps:True_pss:21"
-    # draw_histogram()
+    file = "/mnt/DATA/shared/fetchreach/normal/SACv2_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_a:True_d:cuda_ps:True_pss:21"
+    draw_histogram()
 
     # # fetchreach normal
     # # PPO v0
@@ -955,8 +962,8 @@ if __name__ == "__main__":
     # draw_histogram()
 
     # test file for Ant
-    file = "/mnt/DATA/shared/ant/normal/SACv2_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_a:True_d:cuda_ps:True_pss:61_resumed"
-    draw_histogram()
+    # file = "/mnt/DATA/shared/ant/normal/SACv2_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_a:True_d:cuda_ps:True_pss:61_resumed"
+    # draw_histogram()
 
     # # ant normal
     # # PPO

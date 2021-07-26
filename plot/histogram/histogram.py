@@ -526,14 +526,14 @@ def plot_fetchreach_histograms(ranges):
 
     index = 0  # shoulder_pan_joint
     df = pd.DataFrame(fetchreach_histogram_data[index], columns=["radians"])
-    sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.1)).set_title("{} {} robot0:shoulder_pan_joint".format(algorithm, env_name))
+    sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.05)).set_title("{} {} robot0:shoulder_pan_joint".format(algorithm, env_name))
     plt.ylabel("probability")
     plt.savefig(histogram_plot_directory + "/{}_{}_shoulder_pan_joint_{}.jpg".format(algorithm, env_name, num_seeds))
     plt.close()
 
     index = 1  # shoulder_lift_joint
     df = pd.DataFrame(fetchreach_histogram_data[index], columns=["radians"])
-    sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.1)).set_title("{} {} robot0:shoulder_lift_joint".format(algorithm, env_name))
+    sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.05)).set_title("{} {} robot0:shoulder_lift_joint".format(algorithm, env_name))
     plt.ylabel("probability")
     plt.savefig(histogram_plot_directory + "/{}_{}_shoulder_lift_joint_{}.jpg".format(algorithm, env_name, num_seeds))
     plt.close()
@@ -561,7 +561,7 @@ def plot_fetchreach_histograms(ranges):
 
     index = 5  # wrist_flex_joint
     df = pd.DataFrame(fetchreach_histogram_data[index], columns=["radians"])
-    sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.1)).set_title("{} {} robot0:wrist_flex_joint".format(algorithm, env_name))
+    sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.05)).set_title("{} {} robot0:wrist_flex_joint".format(algorithm, env_name))
     plt.ylabel("probability")
     plt.savefig(histogram_plot_directory + "/{}_{}_wrist_flex_joint_{}.jpg".format(algorithm, env_name, num_seeds))
     plt.close()
@@ -639,7 +639,7 @@ def plot_fetchreach_heatmap(ranges):
     plt.ylabel("normalized angle")
     plt.tight_layout()
     plt.savefig(histogram_plot_directory + "/{}_{}_heatmap_{}.jpg".format(algorithm, env_name, num_seeds))
-    plt.show()
+    # plt.show()
     plt.close()
 
 
@@ -885,8 +885,8 @@ if __name__ == "__main__":
     collect_data = args.collect_data
 
     # test file for fetchreach
-    # file = "/mnt/DATA/shared/fetchreach/normal/SACv2_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_a:True_d:cuda_ps:True_pss:21"
-    # draw_histogram()
+    file = "/mnt/DATA/shared/fetchreach/normal/SACv2_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_a:True_d:cuda_ps:True_pss:21"
+    draw_histogram()
 
     # # fetchreach normal
     # # PPO v0
@@ -985,8 +985,8 @@ if __name__ == "__main__":
     # draw_histogram()
 
     # test file for Ant
-    file = "/mnt/DATA/shared/ant/normal/SACv2_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_a:True_d:cuda_ps:True_pss:61_resumed"
-    draw_histogram()
+    # file = "/mnt/DATA/shared/ant/normal/SACv2_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_a:True_d:cuda_ps:True_pss:61_resumed"
+    # draw_histogram()
 
     # # ant normal
     # # PPO

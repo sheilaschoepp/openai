@@ -408,8 +408,8 @@ if __name__ == "__main__":
     ymin = -40
     ymax = 5
 
-    zoom_ymin = ymin
-    zoom_ymax = ymax
+    zoom_ymin = -12
+    zoom_ymax = 2
     zoom_xmin = 2
     zoom_xmax = 2.5
 

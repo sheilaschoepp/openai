@@ -151,11 +151,6 @@ def plot_experiment(directory):
         main = fig.add_subplot(2, 1, 2)
         zoom = fig.add_subplot(2, 6, (3, 6))
 
-        zoom_min_y = -1000
-        zoom_max_y = 8000
-        zoom_min_x = 20
-        zoom_max_x = 25
-
         x_fault_onset = ordered_settings[0][4].iloc[200, 0] / x_divisor
 
         # plot normal performance
@@ -202,28 +197,28 @@ def plot_experiment(directory):
             zoom.fill_between(x, lb, ub, color=colors[i + 1], alpha=0.3)
 
         main.axvline(x=x_fault_onset, color="red", ymax=0.98)
-        main.fill_between((zoom_min_x, zoom_max_x), zoom_min_y, zoom_max_y, facecolor="black", alpha=0.2)
+        main.fill_between((zoom_xmin, zoom_xmax), zoom_ymin, zoom_ymax, facecolor="black", alpha=0.2)
 
-        zoom.axvline(x=20, color="red", lw=4, ymax=0.98)
+        zoom.axvline(x=zoom_xmin, color="red", lw=4, ymax=0.98)
 
-        connector1 = ConnectionPatch(xyA=(zoom_min_x, zoom_max_y), coordsA=main.transData,
-                                     xyB=(zoom_min_x, zoom_min_y), coordsB=zoom.transData,
+        connector1 = ConnectionPatch(xyA=(zoom_xmin, zoom_ymax), coordsA=main.transData,
+                                     xyB=(zoom_xmin, zoom_ymin), coordsB=zoom.transData,
                                      color="black",
                                      alpha=0.3)
         fig.add_artist(connector1)
 
-        connector2 = ConnectionPatch(xyA=(zoom_max_x, zoom_max_y), coordsA=main.transData,
-                                     xyB=(zoom_max_x, zoom_min_y), coordsB=zoom.transData,
+        connector2 = ConnectionPatch(xyA=(zoom_xmax, zoom_ymax), coordsA=main.transData,
+                                     xyB=(zoom_xmax, zoom_ymin), coordsB=zoom.transData,
                                      color="black",
                                      alpha=0.3)
         fig.add_artist(connector2)
 
         fig.legend(bbox_to_anchor=[0.2, 0.78], loc="center")
 
-        main.set_xlim(0, 40)
-        zoom.set_xlim(zoom_min_x, zoom_max_x)
-        main.set_ylim(-1000, 8000)
-        zoom.set_ylim(zoom_min_y, zoom_max_y)
+        main.set_xlim(xmin, xmax)
+        zoom.set_xlim(zoom_xmin, zoom_xmax)
+        main.set_ylim(ymin, ymax)
+        zoom.set_ylim(zoom_ymin, zoom_ymax)
         main.set_xlabel("million steps")
         main.set_ylabel("average return\n(10 seeds)")
         main.set_title(title)
@@ -281,8 +276,8 @@ def plot_experiment(directory):
             plt.plot(x, y, color=colors[i + 1], label=labels[i])
             plt.fill_between(x, lb, ub, color=colors[i + 1], alpha=0.3)
 
-        plt.xlim(0, 40)
-        plt.ylim(-1000, 8000)
+        plt.xlim(xmin, xmax)
+        plt.ylim(ymin, ymax)
         plt.xlabel("million steps")
         plt.ylabel("average return (10 seeds)")
         plt.legend(bbox_to_anchor=[0.465, 0.35], loc=0)
@@ -349,8 +344,8 @@ def plot_experiment(directory):
             plt.plot(x, y, color=colors[i + 1], label=labels[i])
             plt.fill_between(x, lb, ub, color=colors[i + 1], alpha=0.3)
 
-            plt.xlim(0, 40)
-            plt.ylim(-1000, 8000)
+            plt.xlim(xmin, xmax)
+            plt.ylim(ymin, ymax)
             plt.xlabel("million steps")
             plt.ylabel("average return (10 seeds)")
             plt.legend(loc=0)
@@ -377,8 +372,83 @@ if __name__ == "__main__":
 
     # if True, plot 95% confidence interval; if False, plot standard error
     ci = False
+    
+    # ant
 
-    sac_data_dir = "/mnt/DATA/shared/ant/faulty/sac"
+    xmin = 0
+    xmax = 40
+    
+    ymin = -1000
+    ymax = 8000
+
+    zoom_ymin = ymin
+    zoom_ymax = ymax
+    zoom_xmin = 20
+    zoom_xmax = 25
+
+    sac_data_dir = "/media/sschoepp/easystore/shared/ant/faulty/sac"
+
+    # plot_experiment(os.path.join(sac_data_dir, "v1"))
+    # plot_experiment(os.path.join(sac_data_dir, "v2"))
+    # plot_experiment(os.path.join(sac_data_dir, "v3"))
+    # plot_experiment(os.path.join(sac_data_dir, "v4"))
+
+    ppo_data_dir = "/media/sschoepp/easystore/shared/ant/faulty/ppo"
+
+    # plot_experiment(os.path.join(ppo_data_dir, "v1"))
+    # plot_experiment(os.path.join(ppo_data_dir, "v2"))
+    # plot_experiment(os.path.join(ppo_data_dir, "v3"))
+    # plot_experiment(os.path.join(ppo_data_dir, "v4"))
+
+    # fetchreach
+
+    xmin = 0
+    xmax = 4
+
+    ymin = -40
+    ymax = 5
+
+    zoom_ymin = -12
+    zoom_ymax = 1
+    zoom_xmin = 2
+    zoom_xmax = 2.05
+
+    sac_data_dir = "/media/sschoepp/easystore/shared/fetchreach/faulty/sac"
 
     plot_experiment(os.path.join(sac_data_dir, "v1"))
-    plot_experiment(os.path.join(sac_data_dir, "v3"))
+
+    xmin = 0
+    xmax = 4
+
+    ymin = -40
+    ymax = 5
+
+    zoom_ymin = -15
+    zoom_ymax = 1
+    zoom_xmin = 2
+    zoom_xmax = 2.05
+
+    sac_data_dir = "/media/sschoepp/easystore/shared/fetchreach/faulty/sac"
+
+    plot_experiment(os.path.join(sac_data_dir, "v1GE"))
+
+    xmin = 0
+    xmax = 4
+
+    ymin = -40
+    ymax = 5
+
+    zoom_ymin = -15
+    zoom_ymax = 1
+    zoom_xmin = 2
+    zoom_xmax = 2.05
+
+    sac_data_dir = "/media/sschoepp/easystore/shared/fetchreach/faulty/sac"
+
+    plot_experiment(os.path.join(sac_data_dir, "v4"))
+    #
+    # ppo_data_dir = "/media/sschoepp/easystore/shared/fetchreach/faulty/ppo"
+    #
+    # plot_experiment(os.path.join(ppo_data_dir, "v1"))
+    # plot_experiment(os.path.join(ppo_data_dir, "v1GE"))
+    # plot_experiment(os.path.join(ppo_data_dir, "v4"))

@@ -411,7 +411,7 @@ if __name__ == "__main__":
     zoom_ymin = -12
     zoom_ymax = 2
     zoom_xmin = 2
-    zoom_xmax = 2.5
+    zoom_xmax = 2.2
 
     sac_data_dir = "/media/sschoepp/easystore/shared/fetchreach/faulty/sac"
 

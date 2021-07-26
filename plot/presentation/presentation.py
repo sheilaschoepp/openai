@@ -199,7 +199,7 @@ def plot_experiment(directory):
         main.axvline(x=x_fault_onset, color="red", ymax=0.98)
         main.fill_between((zoom_xmin, zoom_xmax), zoom_ymin, zoom_ymax, facecolor="black", alpha=0.2)
 
-        zoom.axvline(x=20, color="red", lw=4, ymax=0.98)
+        zoom.axvline(x=zoom_xmin, color="red", lw=4, ymax=0.98)
 
         connector1 = ConnectionPatch(xyA=(zoom_xmin, zoom_ymax), coordsA=main.transData,
                                      xyB=(zoom_xmin, zoom_ymin), coordsB=zoom.transData,

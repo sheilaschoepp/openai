@@ -7,7 +7,7 @@ http://www.mujoco.org/book/XMLreference.html#geom
 modifications:
 added limited="true" to all leg joints \\
 name="ankle_4", fromto="0.0 0.0 0.0 0.4 -0.4 0.0" changed to fromto="0.0 0.0 0.0 0.2 -0.2 0.0" \\
-added rgba to color the rightback_leg_geom and fourth_ankle_geom joint capsules \\
+added rgba to color the fourth_ankle_geom joint capsules \\
 -->
 
 <mujoco model="ant">

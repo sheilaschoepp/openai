@@ -157,8 +157,6 @@ class Simulate:
             while not terminal and ((max_steps_this_episode <= 0) or (self.rlg.num_ep_steps() < max_steps_this_episode)):
                 _, _, terminal, _ = self.rlg.rl_step()
 
-                # print(self.env.env.sim.data.get_joint_qpos("robot0:shoulder_lift_joint"))
-
                 time.sleep(0.1)
 
 
@@ -175,5 +173,14 @@ if __name__ == "__main__":
         print("keyboard interrupt")
         sim.cleanup()
 
-# -f /mnt/DATA/shared/fetchreach/normal/PPOv2_FetchReach-v1:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:100000_d:cpu_ps:True_pss:43/seed0 -t 6000000
-# -f /mnt/DATA/shared/ant/normal/SACv2_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_a:True_d:cuda_ps:True_pss:61_resumed/seed0 -t 20000000
+# normal ant
+# -f "/media/sschoepp/easystore/shared/ant/normal/SACv2_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_a:True_d:cuda_ps:True_pss:61_resumed/seed2" -t 20000000
+
+# fetchreach normal
+# -f "/media/sschoepp/easystore/shared/fetchreach/normal/SACv2_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_a:True_d:cuda_ps:True_pss:21/seed0" -t 2000000
+
+# faulty ant before learning (retaining all data)
+# -f "/media/sschoepp/easystore/shared/ant/faulty/sac/v1/SACv2_AntEnv-v1:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:False_rn:False_a:True_d:cuda_r/seed2" -t 20000000
+
+# faulty ant after learning (best setting)
+# -f "/media/sschoepp/easystore/shared/ant/faulty/sac/v1/SACv2_AntEnv-v1:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:True_rn:True_a:True_d:cuda_resumed/seed0" -t 40000000

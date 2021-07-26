@@ -416,7 +416,35 @@ if __name__ == "__main__":
     sac_data_dir = "/media/sschoepp/easystore/shared/fetchreach/faulty/sac"
 
     plot_experiment(os.path.join(sac_data_dir, "v1"))
+
+    xmin = 0
+    xmax = 4
+
+    ymin = -40
+    ymax = 5
+
+    zoom_ymin = -15
+    zoom_ymax = 1
+    zoom_xmin = 2
+    zoom_xmax = 2.05
+
+    sac_data_dir = "/media/sschoepp/easystore/shared/fetchreach/faulty/sac"
+
     plot_experiment(os.path.join(sac_data_dir, "v1GE"))
+
+    xmin = 0
+    xmax = 4
+
+    ymin = -40
+    ymax = 5
+
+    zoom_ymin = -12
+    zoom_ymax = 1
+    zoom_xmin = 2
+    zoom_xmax = 2.05
+
+    sac_data_dir = "/media/sschoepp/easystore/shared/fetchreach/faulty/sac"
+
     plot_experiment(os.path.join(sac_data_dir, "v4"))
     #
     # ppo_data_dir = "/media/sschoepp/easystore/shared/fetchreach/faulty/ppo"

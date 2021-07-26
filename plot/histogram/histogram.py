@@ -116,7 +116,7 @@ def plot_ant_histograms(ranges):
     plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.02))
     plot.set_title(title())
     plt.ylabel("probability")
-    plt.savefig(experiment_plot_directory + "/{}_hip_1_joint_{}.jpg".format(experiment_plot_directory, num_seeds))
+    plt.savefig(experiment_plot_directory + "/{}_hip_1_joint_{}.jpg".format(experiment_name, num_seeds))
     plt.close()
 
     index = 1  # ankle_1
@@ -125,7 +125,7 @@ def plot_ant_histograms(ranges):
     plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.015))
     plot.set_title(title())
     plt.ylabel("probability")
-    plt.savefig(experiment_plot_directory + "/{}_ankle_1_joint_{}.jpg".format(experiment_plot_directory, num_seeds))
+    plt.savefig(experiment_plot_directory + "/{}_ankle_1_joint_{}.jpg".format(experiment_name, num_seeds))
     plt.close()
 
     index = 2  # hip_2
@@ -134,7 +134,7 @@ def plot_ant_histograms(ranges):
     plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.02))
     plot.set_title(title())
     plt.ylabel("probability")
-    plt.savefig(experiment_plot_directory + "/{}_hip_2_joint_{}.jpg".format(experiment_plot_directory, num_seeds))
+    plt.savefig(experiment_plot_directory + "/{}_hip_2_joint_{}.jpg".format(experiment_name, num_seeds))
     plt.close()
 
     index = 3  # ankle_2
@@ -143,7 +143,7 @@ def plot_ant_histograms(ranges):
     plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.015))
     plot.set_title(title())
     plt.ylabel("probability")
-    plt.savefig(experiment_plot_directory + "/{}_ankle_2_joint_{}.jpg".format(experiment_plot_directory, num_seeds))
+    plt.savefig(experiment_plot_directory + "/{}_ankle_2_joint_{}.jpg".format(experiment_name, num_seeds))
     plt.close()
 
     index = 4  # hip_3
@@ -152,7 +152,7 @@ def plot_ant_histograms(ranges):
     plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.02))
     plot.set_title(title())
     plt.ylabel("probability")
-    plt.savefig(experiment_plot_directory + "/{}_hip_3_joint_{}.jpg".format(experiment_plot_directory, num_seeds))
+    plt.savefig(experiment_plot_directory + "/{}_hip_3_joint_{}.jpg".format(experiment_name, num_seeds))
     plt.close()
 
     index = 5  # ankle_3
@@ -161,7 +161,7 @@ def plot_ant_histograms(ranges):
     plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.015))
     plot.set_title(title())
     plt.ylabel("probability")
-    plt.savefig(experiment_plot_directory + "/{}_ankle_3_joint_{}.jpg".format(experiment_plot_directory, num_seeds))
+    plt.savefig(experiment_plot_directory + "/{}_ankle_3_joint_{}.jpg".format(experiment_name, num_seeds))
     plt.close()
 
     index = 6  # hip_4
@@ -170,7 +170,7 @@ def plot_ant_histograms(ranges):
     plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.02))
     plot.set_title(title())
     plt.ylabel("probability")
-    plt.savefig(experiment_plot_directory + "/{}_hip_4_joint_{}.jpg".format(experiment_plot_directory, num_seeds))
+    plt.savefig(experiment_plot_directory + "/{}_hip_4_joint_{}.jpg".format(experiment_name, num_seeds))
     plt.close()
 
     index = 7  # ankle_4
@@ -179,7 +179,7 @@ def plot_ant_histograms(ranges):
     plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.015))
     plot.set_title(title())
     plt.ylabel("probability")
-    plt.savefig(experiment_plot_directory + "/{}_ankle_4_joint_{}.jpg".format(experiment_plot_directory, num_seeds))
+    plt.savefig(experiment_plot_directory + "/{}_ankle_4_joint_{}.jpg".format(experiment_name, num_seeds))
     plt.close()
 
 
@@ -222,9 +222,6 @@ def plot_ant_heatmap(ranges):
 
     df = pd.DataFrame(np.array(ant_histogram_count_data).T, index=bins[:-1], columns=["hip 1", "ankle 1", "hip 2", "ankle 2", "hip 3", "ankle 3", "hip 4", "ankle 4"])
 
-    histogram_plot_directory = os.getcwd() + "/plots/ant/{}/{}".format(algorithm, env_name)
-    os.makedirs(histogram_plot_directory, exist_ok=True)
-
     y_labels = ["1.0", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "0.5", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "0.0"]
     heatmap = sns.heatmap(data=df[::-1], cmap="viridis", yticklabels=y_labels)
 
@@ -246,6 +243,9 @@ def save_ant_histogram_data():
     """
     Save Ant histogram data.
 
+    histogram data:
+    [hip_1, ankle_1,  hip_2, ankle_2, hip_3, ankle_3, hip_4 ,ankle_4]
+
     format: .npy and .pkl
 
     Note: pkl file has joint labels.
@@ -253,7 +253,7 @@ def save_ant_histogram_data():
 
     np.save(experiment_data_directory + "/{}_histogram_data_{}.npy".format(experiment_name, num_seeds), ant_histogram_data)
 
-    df = pd.DataFrame(np.array(ant_histogram_data).T, columns=["shoulder_pan_joint", "shoulder_lift_joint", "upperarm_roll_joint", "elbow_flex_joint", "forearm_roll_joint", "wrist_flex_joint", "wrist_roll_joint"])
+    df = pd.DataFrame(np.array(ant_histogram_data).T, columns=["hip_1", "ankle_1",  "hip_2", "ankle_2", "hip_3", "ankle_3", "hip_4" ,"ankle_4"])
     df.to_pickle(experiment_data_directory + "/{}_histogram_data_{}.pkl".format(experiment_name, num_seeds))
 
 
@@ -657,6 +657,9 @@ def save_fetchreach_histogram_data():
     """
     Save FetchReach histogram data.
 
+    histogram data:
+    [shoulder_pan_joint, shoulder_lift_joint, upperarm_roll_joint, elbow_flex_joint, forearm_roll_joint, wrist_flex_joint, wrist_roll_joint]
+
     format: .npy and .pkl
 
     Note: pkl file has joint labels.
@@ -830,7 +833,7 @@ class FetchReachHistogram:
                          num_steps=self.rlg_statistics["num_steps"],
                          num_episodes=self.rlg_statistics["num_episodes"])
 
-        for _ in range(1):  # todo make 100
+        for _ in range(100):
 
             state, _ = self.rlg.rl_start()
             save_fetchreach_joint_angles(self.env.env.sim.data)
@@ -854,6 +857,7 @@ def draw_histogram():
 
     if "v0" not in env_name and "Ant-v2" != env_name and "FetchReach-v1" != env_name:
         abnormal = True
+        time_steps *= 2
         if algorithm == "PPO":
             for p in params[2:]:
                 if p.startswith("cm:"):

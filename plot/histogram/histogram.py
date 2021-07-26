@@ -518,10 +518,10 @@ def plot_fetchreach_histograms(ranges):
     """
     global fetchreach_histogram_data
 
-    histogram_data_directory = os.getcwd() + "/data/fetchreach/{}/{}".format(algorithm, env_name)
-    fetchreach_histogram_data = np.load(histogram_data_directory + "/{}_{}_histogram_data_{}.npy".format(algorithm, env_name, num_seeds))
+    histogram_data_directory = os.path.join(os.getcwd(), experiment_data_directory)
+    fetchreach_histogram_data = np.load(histogram_data_directory + "/{}_histogram_data_{}.npy".format(experiment_name, num_seeds))
 
-    histogram_plot_directory = os.getcwd() + "/plots/fetchreach/{}/{}".format(algorithm, env_name)
+    histogram_plot_directory = os.getcwd() + experiment_plot_directory
     os.makedirs(histogram_plot_directory, exist_ok=True)
 
     index = 0  # shoulder_pan_joint
@@ -701,9 +701,9 @@ def plot_fetchreach_data():
 
     ranges = get_fetchrach_xml_data()
 
-    plot_fetchreach_histograms(ranges)
+    # plot_fetchreach_histograms(ranges)
 
-    plot_fetchreach_heatmap(ranges)
+    # plot_fetchreach_heatmap(ranges)
 
 
 class FetchReachHistogram:
@@ -823,7 +823,7 @@ class FetchReachHistogram:
                          num_steps=self.rlg_statistics["num_steps"],
                          num_episodes=self.rlg_statistics["num_episodes"])
 
-        for _ in range(100):
+        for _ in range(1):  # todo make 100
 
             state, _ = self.rlg.rl_start()
             save_fetchreach_joint_angles(self.env.env.sim.data)
@@ -847,18 +847,35 @@ def draw_histogram():
 
     if "v0" not in env_name:
         abnormal = True
+        if algorithm == "PPO":
+            for p in params[2:]:
+                if p.startswith("cm:"):
+                    cm = eval(p.split(":")[1])
+                elif p.startswith("rn:"):
+                    rn = eval(p.split(":")[1])
         if algorithm == "SAC":
             for p in params[2:]:
                 if p.startswith("crb:"):
                     crb = eval(p.split(":")[1])
                 elif p.startswith("rn:"):
                     rn = eval(p.split(":")[1])
-        elif algorithm == "PPO":
-            for p in params[2:]:
-                if p.startswith("cm:"):
-                    cm = eval(p.split(":")[1])
-                elif p.startswith("rn:"):
-                    rn = eval(p.split(":")[1])
+
+    if "Ant" in env_name:
+        name = "ant"
+    else:
+        name = "fetchreach"
+        assert "FetchReach" in env_name, "draw_histogram: env_name does not contain Ant or FetchReach"
+
+    if not abnormal:
+        suffix = ""
+    else:
+        if algorithm == "PPO":
+            suffix = "cm:{}_rn:{}".format(cm, rn)
+        else:
+            suffix = "crb:{}_rn:{}".format(crb, rn)
+    experiment_data_directory = os.path.join("data", name, env_name, algorithm, suffix)
+    experiment_plot_directory = os.path.join("plot", name, env_name, algorithm, suffix)
+    experiment_name = env_name + "_" + algorithm + (("_" + suffix) if suffix != "" else suffix)
 
     if "Ant" in env_name:
 
@@ -908,11 +925,13 @@ if __name__ == "__main__":
     # test file for fetchreach
     # file = "/mnt/DATA/shared/fetchreach/normal/SACv2_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_a:True_d:cuda_ps:True_pss:21"
     # draw_histogram()
+    file = "/Users/sheilaschoepp/Documents/DATA/shared/fetchreach/faulty/ppo/v1/PPOv2_FetchReachEnv-v1:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:False_rn:False_d:cpu"
+    draw_histogram()
 
     # fetchreach normal
     # PPO v0
-    file = "/media/sschoepp/easystore/shared/fetchreach/normal/PPOv2_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_d:cpu_ps:True_pss:43"
-    draw_histogram()
+    # file = "/media/sschoepp/easystore/shared/fetchreach/normal/PPOv2_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_d:cpu_ps:True_pss:43"
+    # draw_histogram()
     #
     # # PPO v0GE
     # file = "/media/sschoepp/easystore/shared/fetchreach/normal/PPOv2_FetchReachEnvGE-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_d:cpu_ps:True_pss:43"
@@ -928,8 +947,8 @@ if __name__ == "__main__":
 
     # fetchreach faulty
     # PPO v1
-    file = "/media/sschoepp/easystore/shared/fetchreach/faulty/ppo/v1/PPOv2_FetchReachEnv-v1:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:False_rn:False_d:cpu"
-    draw_histogram()
+    # file = "/media/sschoepp/easystore/shared/fetchreach/faulty/ppo/v1/PPOv2_FetchReachEnv-v1:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:False_rn:False_d:cpu"
+    # draw_histogram()
     #
     # file = "/media/sschoepp/easystore/shared/fetchreach/faulty/ppo/v1/PPOv2_FetchReachEnv-v1:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:False_rn:True_d:cpu"
     # draw_histogram()

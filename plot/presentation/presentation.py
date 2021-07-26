@@ -282,7 +282,7 @@ def plot_experiment(directory):
             plt.fill_between(x, lb, ub, color=colors[i + 1], alpha=0.3)
 
         plt.xlim(0, 40)
-        plt.ylim(-1000, 8000)
+        plt.ylim(ymin, ymax)
         plt.xlabel("million steps")
         plt.ylabel("average return (10 seeds)")
         plt.legend(bbox_to_anchor=[0.465, 0.35], loc=0)
@@ -350,7 +350,7 @@ def plot_experiment(directory):
             plt.fill_between(x, lb, ub, color=colors[i + 1], alpha=0.3)
 
             plt.xlim(0, 40)
-            plt.ylim(-1000, 8000)
+            plt.ylim(ymin, ymax)
             plt.xlabel("million steps")
             plt.ylabel("average return (10 seeds)")
             plt.legend(loc=0)
@@ -377,8 +377,41 @@ if __name__ == "__main__":
 
     # if True, plot 95% confidence interval; if False, plot standard error
     ci = False
+    
+    # ant
+    
+    ymin = -1000
+    ymax = 8000
 
-    sac_data_dir = "/mnt/DATA/shared/ant/faulty/sac"
+    sac_data_dir = "/media/sschoepp/easystore/shared/ant/faulty/sac"
 
     plot_experiment(os.path.join(sac_data_dir, "v1"))
+    # plot_experiment(os.path.join(sac_data_dir, "v2"))
     plot_experiment(os.path.join(sac_data_dir, "v3"))
+    plot_experiment(os.path.join(sac_data_dir, "v4"))
+
+    ppo_data_dir = "/media/sschoepp/easystore/shared/ant/faulty/ppo"
+
+    # plot_experiment(os.path.join(ppo_data_dir, "v1"))
+    # plot_experiment(os.path.join(ppo_data_dir, "v2"))
+    # plot_experiment(os.path.join(ppo_data_dir, "v3"))
+    # plot_experiment(os.path.join(ppo_data_dir, "v4"))
+
+    # fetchreach
+
+    ymin = -40
+    ymax = 5
+
+    # sac_data_dir = "/media/sschoepp/easystore/shared/fetchreach/faulty/sac"
+    #
+    # plot_experiment(os.path.join(sac_data_dir, "v1"))
+    # plot_experiment(os.path.join(sac_data_dir, "v2"))
+    # plot_experiment(os.path.join(sac_data_dir, "v3"))
+    # plot_experiment(os.path.join(sac_data_dir, "v4"))
+    #
+    # ppo_data_dir = "/media/sschoepp/easystore/shared/fetchreach/faulty/ppo"
+    #
+    # plot_experiment(os.path.join(ppo_data_dir, "v1"))
+    # plot_experiment(os.path.join(ppo_data_dir, "v2"))
+    # plot_experiment(os.path.join(ppo_data_dir, "v3"))
+    # plot_experiment(os.path.join(ppo_data_dir, "v4"))

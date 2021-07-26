@@ -385,9 +385,9 @@ if __name__ == "__main__":
 
     sac_data_dir = "/media/sschoepp/easystore/shared/ant/faulty/sac"
 
-    plot_experiment(os.path.join(sac_data_dir, "v1"))
+    # plot_experiment(os.path.join(sac_data_dir, "v1"))
     # plot_experiment(os.path.join(sac_data_dir, "v2"))
-    # plot_experiment(os.path.join(sac_data_dir, "v3"))
+    plot_experiment(os.path.join(sac_data_dir, "v3"))
     # plot_experiment(os.path.join(sac_data_dir, "v4"))
 
     ppo_data_dir = "/media/sschoepp/easystore/shared/ant/faulty/ppo"

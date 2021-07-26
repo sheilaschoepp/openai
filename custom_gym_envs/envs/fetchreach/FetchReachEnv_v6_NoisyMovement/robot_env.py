@@ -9,9 +9,12 @@ from gym.utils import seeding
 try:
     import mujoco_py
 except ImportError as e:
-    raise error.DependencyNotInstalled("{}. (HINT: you need to install mujoco_py, and also perform the setup instructions here: https://github.com/openai/mujoco-py/.)".format(e))
+    raise error.DependencyNotInstalled(
+        "{}. (HINT: you need to install mujoco_py, and also perform the setup instructions here: https://github.com/openai/mujoco-py/.)".format(
+            e))
 
 DEFAULT_SIZE = 500
+
 
 class RobotEnv(gym.GoalEnv):
     def __init__(self, model_path, initial_qpos, n_actions, n_substeps):
@@ -58,9 +61,23 @@ class RobotEnv(gym.GoalEnv):
 
     def step(self, action):
         action = np.clip(action, self.action_space.low, self.action_space.high)
+
+        # modification here
+        old_value = self.sim.data.get_joint_qpos("robot0:elbow_flex_joint").copy()
+        # end of modification
+
         self._set_action(action)
         self.sim.step()
         self._step_callback()
+
+        # modification here
+        new_value = self.sim.data.get_joint_qpos("robot0:elbow_flex_joint").copy()
+        delta = new_value - old_value
+        slippery_value = old_value + delta * self.np_random.normal(0, 0.1)
+        self.sim.data.set_joint_qpos("robot0:elbow_flex_joint", slippery_value)
+        self.sim.forward()
+        # end of modification
+
         obs = self._get_obs()
 
         done = False

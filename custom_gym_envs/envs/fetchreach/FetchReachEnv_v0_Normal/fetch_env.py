@@ -187,7 +187,7 @@ class FetchEnv(robot_env.RobotEnv):
             # modification here: start
             goal = None
             if self.goal_elimination:
-                print('goal sampled and eliminated')
+                # print('goal sampled and eliminated')
                 reachable = False
                 count = 0
                 while not reachable:

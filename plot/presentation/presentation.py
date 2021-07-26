@@ -151,11 +151,6 @@ def plot_experiment(directory):
         main = fig.add_subplot(2, 1, 2)
         zoom = fig.add_subplot(2, 6, (3, 6))
 
-        zoom_ymin = ymin
-        zoom_ymax = ymax
-        zoom_xmin = 20
-        zoom_xmax = 25
-
         x_fault_onset = ordered_settings[0][4].iloc[200, 0] / x_divisor
 
         # plot normal performance
@@ -386,6 +381,11 @@ if __name__ == "__main__":
     ymin = -1000
     ymax = 8000
 
+    zoom_ymin = ymin
+    zoom_ymax = ymax
+    zoom_xmin = 20
+    zoom_xmax = 25
+
     sac_data_dir = "/media/sschoepp/easystore/shared/ant/faulty/sac"
 
     # plot_experiment(os.path.join(sac_data_dir, "v1"))
@@ -407,6 +407,11 @@ if __name__ == "__main__":
 
     ymin = -40
     ymax = 5
+
+    zoom_ymin = ymin
+    zoom_ymax = ymax
+    zoom_xmin = 2
+    zoom_xmax = 2.5
 
     sac_data_dir = "/media/sschoepp/easystore/shared/fetchreach/faulty/sac"
 

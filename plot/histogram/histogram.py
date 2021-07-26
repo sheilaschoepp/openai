@@ -271,7 +271,7 @@ def collect_ant_data():
 
 def plot_ant_data():
 
-    ranges = get_fetchrach_xml_data()
+    ranges = get_ant_xml_data()
 
     plot_ant_histograms(ranges)
 
@@ -397,7 +397,7 @@ class AntHistogram:
 
         for _ in range(100):
 
-            state, _ = self.rlg.rl_draw_histogram()
+            state, _ = self.rlg.rl_start()
             save_ant_joint_angles(self.env.env.sim.data)
 
             terminal = False
@@ -795,7 +795,7 @@ class FetchReachHistogram:
 
         for _ in range(100):
 
-            state, _ = self.rlg.rl_draw_histogram()
+            state, _ = self.rlg.rl_start()
             save_fetchreach_joint_angles(self.env.env.sim.data)
 
             terminal = False

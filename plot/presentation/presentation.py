@@ -403,7 +403,7 @@ if __name__ == "__main__":
     # fetchreach
 
     xmin = 0
-    xmax = 40
+    xmax = 4
 
     ymin = -40
     ymax = 5

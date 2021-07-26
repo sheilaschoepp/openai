@@ -198,3 +198,9 @@ if __name__ == "__main__":
     # df_mean, df_sem, num_seeds = get_data(data_dir)
     #
     # plot(title="SAC FetchReachEnv-v0", df_mean=df_mean, df_sem=df_sem, num_seeds=num_seeds, ymin=-30, ymax=2)
+
+    data_dir = "/mnt/DATA/shared/ant/faulty/sac/v1/SACv2_AntEnv-v1:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:False_rn:False_a:True_d:cuda_resumed"
+
+    df_mean, df_sem, num_seeds = get_data(data_dir)
+
+    plot(title="test", df_mean=df_mean, df_sem=df_sem, num_seeds=num_seeds, ymin=-1000, ymax=8000)

@@ -39,9 +39,9 @@ def get_ant_xml_data():
         anaconda_path = os.getenv("HOME") + "/anaconda3"
 
     model_xml = None
-    if env_name == "Anv-v2":
+    if env_name == "Ant-v2":
         model_xml = anaconda_path + "/envs/openai3.7/lib/python3.7/site-packages/gym/envs/mujoco/assets/ant.xml"
-    if "v0" in env_name:
+    elif "v0" in env_name:
         model_xml = str(Path.home()) + "/Documents/openai/custom_gym_envs/envs/ant/xml/AntEnv_v0_normal.xml"
     elif "v1" in env_name:
         model_xml = str(Path.home()) + "/Documents/openai/custom_gym_envs/envs/ant/xml/AntEnv_v1_brokenleg.xml"
@@ -68,21 +68,21 @@ def get_ant_xml_data():
         attrib = child.attrib
         name = attrib.get("name")
         if name == "hip_1":
-            hip_1_range = np.array(attrib.get("range").split(" "), dtype=float)
+            hip_1_range = np.radians(np.array(attrib.get("range").split(" "), dtype=float))
         elif name == "ankle_1":
-            ankle_1_range = np.array(attrib.get("range").split(" "), dtype=float)
+            ankle_1_range = np.radians(np.array(attrib.get("range").split(" "), dtype=float))
         elif name == "hip_2":
-            hip_2_range = np.array(attrib.get("range").split(" "), dtype=float)
+            hip_2_range = np.radians(np.array(attrib.get("range").split(" "), dtype=float))
         elif name == "ankle_2":
-            ankle_2_range = np.array(attrib.get("range").split(" "), dtype=float)
+            ankle_2_range = np.radians(np.array(attrib.get("range").split(" "), dtype=float))
         elif name == "hip_3":
-            hip_3_range = np.array(attrib.get("range").split(" "), dtype=float)
+            hip_3_range = np.radians(np.array(attrib.get("range").split(" "), dtype=float))
         elif name == "ankle_3":
-            ankle_3_range = np.array(attrib.get("range").split(" "), dtype=float)
+            ankle_3_range = np.radians(np.array(attrib.get("range").split(" "), dtype=float))
         elif name == "hip_4":
-            hip_4_range = np.array(attrib.get("range").split(" "), dtype=float)
+            hip_4_range = np.radians(np.array(attrib.get("range").split(" "), dtype=float))
         elif name == "ankle_4":
-            ankle_4_range = np.array(attrib.get("range").split(" "), dtype=float)
+            ankle_4_range = np.radians(np.array(attrib.get("range").split(" "), dtype=float))
 
     return hip_1_range, ankle_1_range, hip_2_range, ankle_2_range, hip_3_range, ankle_3_range, hip_4_range, ankle_4_range
 
@@ -109,49 +109,57 @@ def plot_ant_histograms(ranges):
 
     index = 0  # hip_1
     df = pd.DataFrame(ant_histogram_data[index], columns=["radians"])
-    sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.1)).set_title("{}, {}: hip_1".format(algorithm, env_name))
+    sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.02)).set_title("{} {} hip_1".format(algorithm, env_name))
+    plt.ylabel("probability")
     plt.savefig(histogram_plot_directory + "/{}_{}_hip_1_joint_{}.jpg".format(algorithm, env_name, num_seeds))
     plt.close()
 
     index = 1  # ankle_1
     df = pd.DataFrame(ant_histogram_data[index], columns=["radians"])
-    sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.1)).set_title("{}, {}: ankle_1".format(algorithm, env_name))
+    sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.015)).set_title("{} {} ankle_1".format(algorithm, env_name))
+    plt.ylabel("probability")
     plt.savefig(histogram_plot_directory + "/{}_{}_ankle_1_joint_{}.jpg".format(algorithm, env_name, num_seeds))
     plt.close()
 
     index = 2  # hip_2
     df = pd.DataFrame(ant_histogram_data[index], columns=["radians"])
-    sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.1)).set_title("{}, {}: hip_2".format(algorithm, env_name))
+    sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.02)).set_title("{} {} hip_2".format(algorithm, env_name))
+    plt.ylabel("probability")
     plt.savefig(histogram_plot_directory + "/{}_{}_hip_2_joint_{}.jpg".format(algorithm, env_name, num_seeds))
     plt.close()
 
     index = 3  # ankle_2
     df = pd.DataFrame(ant_histogram_data[index], columns=["radians"])
-    sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.1)).set_title("{}, {}: ankle_2".format(algorithm, env_name))
+    sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.015)).set_title("{} {} ankle_2".format(algorithm, env_name))
+    plt.ylabel("probability")
     plt.savefig(histogram_plot_directory + "/{}_{}_ankle_2_joint_{}.jpg".format(algorithm, env_name, num_seeds))
     plt.close()
 
     index = 4  # hip_3
     df = pd.DataFrame(ant_histogram_data[index], columns=["radians"])
-    sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.1)).set_title("{}, {}: hip_3".format(algorithm, env_name))
+    sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.02)).set_title("{} {} hip_3".format(algorithm, env_name))
+    plt.ylabel("probability")
     plt.savefig(histogram_plot_directory + "/{}_{}_hip_3_joint_{}.jpg".format(algorithm, env_name, num_seeds))
     plt.close()
 
     index = 5  # ankle_3
     df = pd.DataFrame(ant_histogram_data[index], columns=["radians"])
-    sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.1)).set_title("{}, {}: ankle_3".format(algorithm, env_name))
+    sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.015)).set_title("{} {} ankle_3".format(algorithm, env_name))
+    plt.ylabel("probability")
     plt.savefig(histogram_plot_directory + "/{}_{}_ankle_3_joint_{}.jpg".format(algorithm, env_name, num_seeds))
     plt.close()
 
     index = 6  # hip_4
     df = pd.DataFrame(ant_histogram_data[index], columns=["radians"])
-    sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.1)).set_title("{}, {}: hip_4".format(algorithm, env_name))
+    sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.02)).set_title("{} {} hip_4".format(algorithm, env_name))
+    plt.ylabel("probability")
     plt.savefig(histogram_plot_directory + "/{}_{}_hip_4_joint_{}.jpg".format(algorithm, env_name, num_seeds))
     plt.close()
 
     index = 7  # ankle_4
     df = pd.DataFrame(ant_histogram_data[index], columns=["radians"])
-    sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.1)).set_title("{}, {}: hip_4".format(algorithm, env_name))
+    sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.015)).set_title("{} {} ankle_4".format(algorithm, env_name))
+    plt.ylabel("probability")
     plt.savefig(histogram_plot_directory + "/{}_{}_ankle_4_joint_{}.jpg".format(algorithm, env_name, num_seeds))
     plt.close()
 
@@ -189,7 +197,7 @@ def plot_ant_heatmap(ranges):
     ant_histogram_count_data = []
     bins = np.round(np.arange(0.0, 1.025, 0.025), 3)
 
-    for i in range(7):
+    for i in range(8):
         counts, _ = np.histogram(ant_histogram_data_normalized[i], bins=bins)
         counts = counts / np.sum(counts)  # probability
         ant_histogram_count_data.append(counts)
@@ -203,7 +211,7 @@ def plot_ant_heatmap(ranges):
     heatmap = sns.heatmap(data=df[::-1], cmap="viridis", yticklabels=y_labels)
 
     name = ""
-    if env_name == "Anv-v2":
+    if env_name == "Ant-v2":
         name = "No Fault"
     elif env_name == "AntEnv-v1":
         name = "Broken, Severed Leg Fault"
@@ -215,10 +223,14 @@ def plot_ant_heatmap(ranges):
         name = "Broken, Unsevered Leg Fault"
 
     heatmap.set_title("{}: {}".format(algorithm, name))
+    plt.xticks(rotation=45)
+    plt.yticks(rotation=0)
     plt.xlabel("joint")
     plt.ylabel("normalized angle")
     plt.tight_layout()
     plt.savefig(histogram_plot_directory + "/{}_{}_heatmap_{}.jpg".format(algorithm, env_name, num_seeds))
+    # plt.show()
+    plt.close()
 
 
 def save_ant_histogram_data():
@@ -514,43 +526,50 @@ def plot_fetchreach_histograms(ranges):
 
     index = 0  # shoulder_pan_joint
     df = pd.DataFrame(fetchreach_histogram_data[index], columns=["radians"])
-    sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.1)).set_title("{}, {}: robot0:shoulder_pan_joint".format(algorithm, env_name))
+    sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.1)).set_title("{} {} robot0:shoulder_pan_joint".format(algorithm, env_name))
+    plt.ylabel("probability")
     plt.savefig(histogram_plot_directory + "/{}_{}_shoulder_pan_joint_{}.jpg".format(algorithm, env_name, num_seeds))
     plt.close()
 
     index = 1  # shoulder_lift_joint
     df = pd.DataFrame(fetchreach_histogram_data[index], columns=["radians"])
-    sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.1)).set_title("{}, {}: robot0:shoulder_lift_joint".format(algorithm, env_name))
+    sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.1)).set_title("{} {} robot0:shoulder_lift_joint".format(algorithm, env_name))
+    plt.ylabel("probability")
     plt.savefig(histogram_plot_directory + "/{}_{}_shoulder_lift_joint_{}.jpg".format(algorithm, env_name, num_seeds))
     plt.close()
 
     index = 2  # upperarm_roll_joint
     df = pd.DataFrame(fetchreach_histogram_data[index], columns=["radians"])
-    sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.1)).set_title("{}, {}: robot0:upperarm_roll_joint".format(algorithm, env_name))
+    sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.1)).set_title("{} {} robot0:upperarm_roll_joint".format(algorithm, env_name))
+    plt.ylabel("probability")
     plt.savefig(histogram_plot_directory + "/{}_{}_upperarm_roll_joint_{}.jpg".format(algorithm, env_name, num_seeds))
     plt.close()
 
     index = 3  # elbow_flex_joint
     df = pd.DataFrame(fetchreach_histogram_data[index], columns=["radians"])
-    sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.1)).set_title("{}, {}: robot0:elbow_flex_joint".format(algorithm, env_name))
+    sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.1)).set_title("{} {} robot0:elbow_flex_joint".format(algorithm, env_name))
+    plt.ylabel("probability")
     plt.savefig(histogram_plot_directory + "/{}_{}_elbow_flex_joint_{}.jpg".format(algorithm, env_name, num_seeds))
     plt.close()
 
     index = 4  # forearm_roll_joint
     df = pd.DataFrame(fetchreach_histogram_data[index], columns=["radians"])
-    sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.1)).set_title("{}, {}: robot0:forearm_roll_joint".format(algorithm, env_name))
+    sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.1)).set_title("{} {} robot0:forearm_roll_joint".format(algorithm, env_name))
+    plt.ylabel("probability")
     plt.savefig(histogram_plot_directory + "/{}_{}_forearm_roll_joint_{}.jpg".format(algorithm, env_name, num_seeds))
     plt.close()
 
     index = 5  # wrist_flex_joint
     df = pd.DataFrame(fetchreach_histogram_data[index], columns=["radians"])
-    sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.1)).set_title("{}, {}: robot0:wrist_flex_joint".format(algorithm, env_name))
+    sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.1)).set_title("{} {} robot0:wrist_flex_joint".format(algorithm, env_name))
+    plt.ylabel("probability")
     plt.savefig(histogram_plot_directory + "/{}_{}_wrist_flex_joint_{}.jpg".format(algorithm, env_name, num_seeds))
     plt.close()
 
     index = 6  # wrist_roll_joint
     df = pd.DataFrame(fetchreach_histogram_data[index], columns=["radians"])
-    sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.1)).set_title("{}, {}: robot0:wrist_roll_joint".format(algorithm, env_name))
+    sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.1)).set_title("{} {} robot0:wrist_roll_joint".format(algorithm, env_name))
+    plt.ylabel("probability")
     plt.savefig(histogram_plot_directory + "/{}_{}_wrist_roll_joint_{}.jpg".format(algorithm, env_name, num_seeds))
     plt.close()
 
@@ -614,10 +633,14 @@ def plot_fetchreach_heatmap(ranges):
         name = "Shoulder Lift Sensor Fault"
 
     heatmap.set_title("{}: {}".format(algorithm, name))
+    plt.xticks(rotation=45)
+    plt.yticks(rotation=0)
     plt.xlabel("joint")
     plt.ylabel("normalized angle")
     plt.tight_layout()
     plt.savefig(histogram_plot_directory + "/{}_{}_heatmap_{}.jpg".format(algorithm, env_name, num_seeds))
+    plt.show()
+    plt.close()
 
 
 def save_fetchreach_histogram_data():
@@ -862,8 +885,8 @@ if __name__ == "__main__":
     collect_data = args.collect_data
 
     # test file for fetchreach
-    file = "/mnt/DATA/shared/fetchreach/normal/SACv2_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_a:True_d:cuda_ps:True_pss:21"
-    draw_histogram()
+    # file = "/mnt/DATA/shared/fetchreach/normal/SACv2_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_a:True_d:cuda_ps:True_pss:21"
+    # draw_histogram()
 
     # # fetchreach normal
     # # PPO v0
@@ -962,8 +985,8 @@ if __name__ == "__main__":
     # draw_histogram()
 
     # test file for Ant
-    # file = "/mnt/DATA/shared/ant/normal/SACv2_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_a:True_d:cuda_ps:True_pss:61_resumed"
-    # draw_histogram()
+    file = "/mnt/DATA/shared/ant/normal/SACv2_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_a:True_d:cuda_ps:True_pss:61_resumed"
+    draw_histogram()
 
     # # ant normal
     # # PPO

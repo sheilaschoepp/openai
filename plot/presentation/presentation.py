@@ -446,9 +446,9 @@ if __name__ == "__main__":
     sac_data_dir = "/media/sschoepp/easystore/shared/fetchreach/faulty/sac"
 
     plot_experiment(os.path.join(sac_data_dir, "v4"))
-    #
-    # ppo_data_dir = "/media/sschoepp/easystore/shared/fetchreach/faulty/ppo"
-    #
-    # plot_experiment(os.path.join(ppo_data_dir, "v1"))
-    # plot_experiment(os.path.join(ppo_data_dir, "v1GE"))
-    # plot_experiment(os.path.join(ppo_data_dir, "v4"))
+
+    ppo_data_dir = "/media/sschoepp/easystore/shared/fetchreach/faulty/ppo"
+
+    plot_experiment(os.path.join(ppo_data_dir, "v1"))
+    plot_experiment(os.path.join(ppo_data_dir, "v1GE"))
+    plot_experiment(os.path.join(ppo_data_dir, "v4"))

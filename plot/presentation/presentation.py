@@ -73,6 +73,7 @@ def plot_experiment(directory):
 
             data_dir = os.path.join(directory, dir_)
 
+            x = os.listdir(data_dir)
             for s in os.listdir(data_dir):
 
                 seed_foldername = os.path.join(data_dir, s)
@@ -224,7 +225,7 @@ def plot_experiment(directory):
         main.set_title(title)
         plt.tight_layout()
         plt.savefig(plot_directory + "/{}_{}_sub.jpg".format(algorithm, ab_env))
-        plt.show()
+        # plt.show()
         plt.close()
 
     plot_zoom()
@@ -373,7 +374,7 @@ if __name__ == "__main__":
     # if True, plot 95% confidence interval; if False, plot standard error
     ci = False
     
-    # ant
+    """ant"""
 
     # global for Ant
     env_name = "ant"
@@ -386,19 +387,19 @@ if __name__ == "__main__":
 
     # local for Ant PPO
     xmin = 0
-    xmax = 40
+    xmax = 1200
 
     # local for Ant PPO
     ppo_data_dir = "/media/sschoepp/easystore/shared/ant/faulty/ppo"
 
     # v1
 
-    zoom_xmin = 20
-    zoom_xmax = 25
+    zoom_xmin = 600
+    zoom_xmax = 660
     zoom_ymin = ymin
     zoom_ymax = ymax
 
-    # plot_experiment(os.path.join(ppo_data_dir, "v1"))
+    plot_experiment(os.path.join(ppo_data_dir, "v1"))
 
     # v2
 
@@ -472,7 +473,7 @@ if __name__ == "__main__":
 
     plot_experiment(os.path.join(sac_data_dir, "v4"))
 
-    # fetchreach
+    """fetchreach"""
 
     # global for FetchReach
     env_name = "fetchreach"

@@ -284,6 +284,9 @@ def collect_ant_data():
     pbar = tqdm(total=num_seeds)
 
     for seed in range(num_seeds):
+        if seed == 0:  # todo
+            continue
+
         pbar.set_description("Processing seed {}".format(seed))
 
         sim = AntHistogram(seed)

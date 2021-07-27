@@ -11,7 +11,8 @@ IMPORTANT: you must set env_name in __init__
 import numpy as np
 from termcolor import colored  # modification here
 
-from custom_gym_envs.envs.fetchreach.FetchReachEnv_v6_NoisyMovement import robot_env, rotations, utils  # modification here
+from custom_gym_envs.envs.fetchreach.FetchReachEnv_v6_NoisyMovement import robot_env, rotations, \
+    utils  # modification here
 from kinematics.kinematics import Kinematics  # modification here
 
 
@@ -25,9 +26,9 @@ class FetchEnv(robot_env.RobotEnv):
     """
 
     def __init__(
-        self, model_path, n_substeps, gripper_extra_height, block_gripper,
-        has_object, target_in_the_air, target_offset, obj_range, target_range,
-        distance_threshold, initial_qpos, reward_type, goal_elimination,  # modification here
+            self, model_path, n_substeps, gripper_extra_height, block_gripper,
+            has_object, target_in_the_air, target_offset, obj_range, target_range,
+            distance_threshold, initial_qpos, reward_type, goal_elimination,  # modification here
     ):
         """Initializes a new Fetch environment.
 
@@ -94,9 +95,9 @@ class FetchEnv(robot_env.RobotEnv):
         action = action.copy()  # ensure that we don't change the action outside of this scope
         pos_ctrl, gripper_ctrl = action[:3], action[3]
 
-        # Modification here: maximum change in position given by a random number generator
-        pos_ctrl *= self.np_random.uniform(-0.05, 0.05)  # limit maximum change in position
-        # pos_ctrl *= 0.05  # limit maximum change in position
+        # Modification here: maximum cchange in position given by a random number generator
+        # pos_ctrl *= self.np_random.uniform(-0.05, 0.05)  # limit maximum change in position
+        pos_ctrl *= 0.05  # limit maximum change in position
 
         rot_ctrl = [1., 0., 1., 0.]  # fixed rotation of the end effector, expressed as a quaternion
         gripper_ctrl = np.array([gripper_ctrl, gripper_ctrl])
@@ -168,7 +169,8 @@ class FetchEnv(robot_env.RobotEnv):
         if self.has_object:
             object_xpos = self.initial_gripper_xpos[:2]
             while np.linalg.norm(object_xpos - self.initial_gripper_xpos[:2]) < 0.1:
-                object_xpos = self.initial_gripper_xpos[:2] + self.np_random.uniform(-self.obj_range, self.obj_range, size=2)
+                object_xpos = self.initial_gripper_xpos[:2] + self.np_random.uniform(-self.obj_range, self.obj_range,
+                                                                                     size=2)
             object_qpos = self.sim.data.get_joint_qpos('object0:joint')
             assert object_qpos.shape == (7,)
             object_qpos[:2] = object_xpos
@@ -194,7 +196,8 @@ class FetchEnv(robot_env.RobotEnv):
                 reachable = False
                 count = 0
                 while not reachable:
-                    goal = self.initial_gripper_xpos[:3] + self.np_random.uniform(-self.target_range, self.target_range, size=3)
+                    goal = self.initial_gripper_xpos[:3] + self.np_random.uniform(-self.target_range, self.target_range,
+                                                                                  size=3)
                     self.total_sampled_goals += 1
                     state = self.sim.get_state()
                     flattened_state = np.append(state.qpos.copy(), state.qvel.copy())
@@ -209,11 +212,14 @@ class FetchEnv(robot_env.RobotEnv):
                         if count == 0:
                             pass
                         else:
-                            print(colored("fetch_env._sample_goal: {} consecutive unreachable goals sampled".format(count), "red"))
+                            print(colored(
+                                "fetch_env._sample_goal: {} consecutive unreachable goals sampled".format(count),
+                                "red"))
             else:
                 reachable = False
                 while not reachable:
-                    goal = self.initial_gripper_xpos[:3] + self.np_random.uniform(-self.target_range, self.target_range, size=3)
+                    goal = self.initial_gripper_xpos[:3] + self.np_random.uniform(-self.target_range, self.target_range,
+                                                                                  size=3)
                     if goal[2] >= 0.42:
                         reachable = True
 
@@ -232,7 +238,8 @@ class FetchEnv(robot_env.RobotEnv):
         self.sim.forward()
 
         # Move end effector into position.
-        gripper_target = np.array([-0.498, 0.005, -0.431 + self.gripper_extra_height]) + self.sim.data.get_site_xpos('robot0:grip')
+        gripper_target = np.array([-0.498, 0.005, -0.431 + self.gripper_extra_height]) + self.sim.data.get_site_xpos(
+            'robot0:grip')
         gripper_rotation = np.array([1., 0., 1., 0.])
         self.sim.data.set_mocap_pos('robot0:mocap', gripper_target)
         self.sim.data.set_mocap_quat('robot0:mocap', gripper_rotation)

@@ -375,107 +375,180 @@ if __name__ == "__main__":
     
     # ant
 
+    # global for Ant
     env_name = "ant"
 
-    xmin = 0
-    xmax = 40
-    
+    # global ymin/ymax for Ant
     ymin = -1000
     ymax = 8000
 
-    zoom_ymin = ymin
-    zoom_ymax = ymax
-    zoom_xmin = 20
-    zoom_xmax = 25
+    # PPO
 
-    sac_data_dir = "/media/sschoepp/easystore/shared/ant/faulty/sac"
+    # local for Ant PPO
+    xmin = 0
+    xmax = 40
 
-    # plot_experiment(os.path.join(sac_data_dir, "v1"))
-    # plot_experiment(os.path.join(sac_data_dir, "v2"))
-    # plot_experiment(os.path.join(sac_data_dir, "v3"))
-    # plot_experiment(os.path.join(sac_data_dir, "v4"))
-
+    # local for Ant PPO
     ppo_data_dir = "/media/sschoepp/easystore/shared/ant/faulty/ppo"
 
+    # v1
+
+    zoom_xmin = 20
+    zoom_xmax = 25
+    zoom_ymin = ymin
+    zoom_ymax = ymax
+
     # plot_experiment(os.path.join(ppo_data_dir, "v1"))
+
+    # v2
+
+    zoom_xmin = 20
+    zoom_xmax = 25
+    zoom_ymin = ymin
+    zoom_ymax = ymax
+
     # plot_experiment(os.path.join(ppo_data_dir, "v2"))
+
+    # v3
+
+    zoom_xmin = 20
+    zoom_xmax = 25
+    zoom_ymin = ymin
+    zoom_ymax = ymax
+
     # plot_experiment(os.path.join(ppo_data_dir, "v3"))
+
+    # v4
+
+    zoom_xmin = 20
+    zoom_xmax = 25
+    zoom_ymin = ymin
+    zoom_ymax = ymax
+
     # plot_experiment(os.path.join(ppo_data_dir, "v4"))
 
-    env_name = "fetchreach"
+    # SAC
+
+    # local for Ant SAC
+    xmin = 0
+    xmax = 40
+
+    # local for Ant SAC
+    sac_data_dir = "/media/sschoepp/easystore/shared/ant/faulty/sac"
+
+    # v1
+
+    zoom_xmin = 20
+    zoom_xmax = 25
+    zoom_ymin = ymin
+    zoom_ymax = ymax
+
+    plot_experiment(os.path.join(sac_data_dir, "v1"))
+
+    # v2
+
+    zoom_xmin = 20
+    zoom_xmax = 25
+    zoom_ymin = ymin
+    zoom_ymax = ymax
+
+    # plot_experiment(os.path.join(sac_data_dir, "v2"))
+
+    # v3
+
+    zoom_xmin = 20
+    zoom_xmax = 25
+    zoom_ymin = ymin
+    zoom_ymax = ymax
+
+    plot_experiment(os.path.join(sac_data_dir, "v3"))
+
+    # v4
+
+    zoom_xmin = 20
+    zoom_xmax = 25
+    zoom_ymin = ymin
+    zoom_ymax = ymax
+
+    plot_experiment(os.path.join(sac_data_dir, "v4"))
 
     # fetchreach
 
-    # PPO
+    # global for FetchReach
+    env_name = "fetchreach"
 
-    xmin = 0
-    xmax = 12
-
+    # global ymin/ymax for FetchReach
     ymin = -40
     ymax = 5
 
+    # PPO
+
+    # local for FetchReach PPO
+    xmin = 0
+    xmax = 12
+
+    # local for FetchReach PPO
     ppo_data_dir = "/media/sschoepp/easystore/shared/fetchreach/faulty/ppo"
 
     # v1
 
-    zoom_ymin = -12
-    zoom_ymax = 1
     zoom_xmin = 6
     zoom_xmax = 6.5
+    zoom_ymin = -12
+    zoom_ymax = 1
 
     plot_experiment(os.path.join(ppo_data_dir, "v1"))
 
     # v1GE
 
-    zoom_ymin = -12
-    zoom_ymax = 1
     zoom_xmin = 6
     zoom_xmax = 6.5
+    zoom_ymin = -12
+    zoom_ymax = 1
 
     plot_experiment(os.path.join(ppo_data_dir, "v1GE"))
 
     # v4
 
-    zoom_ymin = -25
-    zoom_ymax = 1
     zoom_xmin = 6
     zoom_xmax = 6.6
+    zoom_ymin = -25
+    zoom_ymax = 1
 
     plot_experiment(os.path.join(ppo_data_dir, "v4"))
 
     # SAC
 
+    # local for FetchReach SAC
     xmin = 0
     xmax = 4
 
-    ymin = -40
-    ymax = 5
-
+    # local for FetchReach SAC
     sac_data_dir = "/media/sschoepp/easystore/shared/fetchreach/faulty/sac"
 
     # v1
 
-    zoom_ymin = -12
-    zoom_ymax = 1
     zoom_xmin = 2
     zoom_xmax = 2.05
+    zoom_ymin = -12
+    zoom_ymax = 1
 
     plot_experiment(os.path.join(sac_data_dir, "v1"))
 
     # v1GE
 
-    zoom_ymin = -15
-    zoom_ymax = 1
     zoom_xmin = 2
     zoom_xmax = 2.05
+    zoom_ymin = -15
+    zoom_ymax = 1
 
     plot_experiment(os.path.join(sac_data_dir, "v1GE"))
 
     # v4
 
-    zoom_ymin = -25
-    zoom_ymax = 1
     zoom_xmin = 2
     zoom_xmax = 2.2
+    zoom_ymin = -25
+    zoom_ymax = 1
 
     plot_experiment(os.path.join(sac_data_dir, "v4"))

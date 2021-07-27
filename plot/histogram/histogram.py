@@ -276,6 +276,7 @@ def save_ant_joint_angles(d):
     ant_histogram_data[5].append(d.get_joint_qpos("ankle_3"))
     ant_histogram_data[6].append(d.get_joint_qpos("hip_4"))
     ant_histogram_data[7].append(d.get_joint_qpos("ankle_4"))
+    print(np.degrees(d.get_joint_qpos("ankle_4")))
 
 
 def collect_ant_data():
@@ -1182,7 +1183,7 @@ if __name__ == "__main__":
     #
     # file = "/media/sschoepp/easystore/shared/ant/faulty/sac/v3/SACv2_AntEnv-v3:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:True_rn:False_a:True_d:cuda_resumed"
     # draw_histogram()
-    # todo
+    #
     file = "/media/sschoepp/easystore/shared/ant/faulty/sac/v3/SACv2_AntEnv-v3:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:True_rn:True_a:True_d:cuda_resumed"
     draw_histogram()
     #

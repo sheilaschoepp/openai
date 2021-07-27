@@ -134,7 +134,7 @@ def plot_experiment(directory):
         title = "Proximal Policy Optimization (PPO)"
         labels = ["retain all data", "retain network params", "retain memory", "retain no data"]
 
-    plot_directory = os.path.join(os.getcwd(), "plots", algorithm, ab_env)
+    plot_directory = os.path.join(os.getcwd(), "plots", env_name, algorithm, ab_env)
     os.makedirs(plot_directory, exist_ok=True)
 
     # "b" as blue, "g" as green, "r" as red, "c" as cyan, "m" as magenta, "y" as yellow, "k" as black, "w" as white
@@ -148,8 +148,8 @@ def plot_experiment(directory):
 
         fig = plt.figure()
 
-        main = fig.add_subplot(2, 1, 2)
-        zoom = fig.add_subplot(2, 6, (3, 6))
+        main = fig.add_subplot(2, 1, 1)
+        zoom = fig.add_subplot(2, 6, (9, 12))
 
         x_fault_onset = ordered_settings[0][4].iloc[200, 0] / x_divisor
 
@@ -201,19 +201,19 @@ def plot_experiment(directory):
 
         zoom.axvline(x=zoom_xmin, color="red", lw=4, ymax=0.98)
 
-        connector1 = ConnectionPatch(xyA=(zoom_xmin, zoom_ymax), coordsA=main.transData,
-                                     xyB=(zoom_xmin, zoom_ymin), coordsB=zoom.transData,
+        connector1 = ConnectionPatch(xyA=(zoom_xmin, zoom_ymin), coordsA=main.transData,
+                                     xyB=(zoom_xmin, zoom_ymax), coordsB=zoom.transData,
                                      color="black",
                                      alpha=0.3)
         fig.add_artist(connector1)
 
-        connector2 = ConnectionPatch(xyA=(zoom_xmax, zoom_ymax), coordsA=main.transData,
-                                     xyB=(zoom_xmax, zoom_ymin), coordsB=zoom.transData,
+        connector2 = ConnectionPatch(xyA=(zoom_xmax, zoom_ymin), coordsA=main.transData,
+                                     xyB=(zoom_xmax, zoom_ymax), coordsB=zoom.transData,
                                      color="black",
                                      alpha=0.3)
         fig.add_artist(connector2)
 
-        fig.legend(bbox_to_anchor=[0.2, 0.78], loc="center")
+        fig.legend(bbox_to_anchor=[0.2, 0.28], loc="center")
 
         main.set_xlim(xmin, xmax)
         zoom.set_xlim(zoom_xmin, zoom_xmax)
@@ -284,7 +284,7 @@ def plot_experiment(directory):
         plt.title(title)
         plt.tight_layout()
         plt.savefig(plot_directory + "/{}_{}_all.jpg".format(algorithm, ab_env))
-        plt.show()
+        # plt.show()
         plt.close()
 
     plot_all_standard()
@@ -375,6 +375,8 @@ if __name__ == "__main__":
     
     # ant
 
+    env_name = "ant"
+
     xmin = 0
     xmax = 40
     
@@ -399,6 +401,8 @@ if __name__ == "__main__":
     # plot_experiment(os.path.join(ppo_data_dir, "v2"))
     # plot_experiment(os.path.join(ppo_data_dir, "v3"))
     # plot_experiment(os.path.join(ppo_data_dir, "v4"))
+
+    env_name = "fetchreach"
 
     # fetchreach
 
@@ -432,10 +436,10 @@ if __name__ == "__main__":
 
     # v4
 
-    zoom_ymin = -12
+    zoom_ymin = -25
     zoom_ymax = 1
     zoom_xmin = 6
-    zoom_xmax = 6.5
+    zoom_xmax = 6.6
 
     plot_experiment(os.path.join(ppo_data_dir, "v4"))
 
@@ -469,9 +473,9 @@ if __name__ == "__main__":
 
     # v4
 
-    zoom_ymin = -15
+    zoom_ymin = -25
     zoom_ymax = 1
     zoom_xmin = 2
-    zoom_xmax = 2.05
+    zoom_xmax = 2.2
 
     plot_experiment(os.path.join(sac_data_dir, "v4"))

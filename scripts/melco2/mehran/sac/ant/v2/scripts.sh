@@ -8,8 +8,8 @@ tmux new-session -d -s sacv2-4 "CUDA_VISIBLE_DEVICES=0 python $SAC_AB_CONTROLLER
 tmux new-session -d -s sacv2-5 "CUDA_VISIBLE_DEVICES=0 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -c -e AntEnv-v2 -t 20000000 --resumable -f $RESUME_FILE/seed5 -crb"
 tmux new-session -d -s sacv2-6 "CUDA_VISIBLE_DEVICES=0 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -c -e AntEnv-v2 -t 20000000 --resumable -f $RESUME_FILE/seed6 -crb"
 tmux new-session -d -s sacv2-7 "CUDA_VISIBLE_DEVICES=0 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -c -e AntEnv-v2 -t 20000000 --resumable -f $RESUME_FILE/seed7 -crb"
-tmux new-session -d -s sacv2-8 "CUDA_VISIBLE_DEVICES=0 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -c -e AntEnv-v2 -t 20000000 --resumable -f $RESUME_FILE/seed8 -crb"
-tmux new-session -d -s sacv2-9 "CUDA_VISIBLE_DEVICES=0 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -c -e AntEnv-v2 -t 20000000 --resumable -f $RESUME_FILE/seed9 -crb"
+tmux new-session -d -s sacv2-8 "CUDA_VISIBLE_DEVICES=1 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -c -e AntEnv-v2 -t 20000000 --resumable -f $RESUME_FILE/seed8 -crb"
+tmux new-session -d -s sacv2-9 "CUDA_VISIBLE_DEVICES=1 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -c -e AntEnv-v2 -t 20000000 --resumable -f $RESUME_FILE/seed9 -crb"
 
 #tmux new-session -d -s sacv2-0 "CUDA_VISIBLE_DEVICES=0 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -c -e AntEnv-v2 -t 20000000 --resumable -f $RESUME_FILE/seed0"
 #tmux new-session -d -s sacv2-1 "CUDA_VISIBLE_DEVICES=0 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -c -e AntEnv-v2 -t 20000000 --resumable -f $RESUME_FILE/seed1"

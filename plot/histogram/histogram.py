@@ -105,7 +105,7 @@ def plot_ant_histograms(ranges):
 
     def title():
         if suffix == "":
-            title = "{}\n{}".format(algorithm, name, joint_name)
+            title = "{}\n{}\n{}".format(algorithm, name, joint_name)  # todo
         else:
             title = "{} ({})\n{}\n{}".format(algorithm, suffix_eval, name, joint_name)
         return title
@@ -276,17 +276,16 @@ def save_ant_joint_angles(d):
     ant_histogram_data[5].append(d.get_joint_qpos("ankle_3"))
     ant_histogram_data[6].append(d.get_joint_qpos("hip_4"))
     ant_histogram_data[7].append(d.get_joint_qpos("ankle_4"))
-    print(np.degrees(d.get_joint_qpos("ankle_4")))  # todo
 
 
 def collect_ant_data():
 
     pbar = tqdm(total=num_seeds)
 
-    for seed in range(num_seeds):
-        if seed == 0:  # todo
-            continue
+    seeds = os.listdir(file)  # todo
+    seeds = [int(s[4:]) for s in seeds]
 
+    for seed in seeds:
         pbar.set_description("Processing seed {}".format(seed))
 
         sim = AntHistogram(seed)
@@ -448,7 +447,7 @@ def get_fetchrach_xml_data():
 
     model_xml = None
     if env_name == "FetchReach-v1":
-        model_xml = anaconda_path + "/envs/openai3.7/lib/python3.7/site-packages/gym/envs/robotics/assets/fetch/reach.xml"  # todo
+        model_xml = anaconda_path + "/envs/openai3.7/lib/python3.7/site-packages/gym/envs/robotics/assets/fetch/reach.xml"
     if "v0" in env_name:
         model_xml = str(Path.home()) + "/Documents/openai/custom_gym_envs/envs/fetchreach/FetchReachEnv_v0_Normal/assets/fetch/reach.xml"
     elif "v1" in env_name:
@@ -532,7 +531,7 @@ def plot_fetchreach_histograms(ranges):
 
     def title():
         if suffix == "":
-            title = "{}\n{}".format(algorithm, name, joint_name)
+            title = "{}\n{}\n{}".format(algorithm, name, joint_name)  # todo
         else:
             title = "{} ({})\n{}\n{}".format(algorithm, suffix_eval, name, joint_name)
         return title
@@ -699,7 +698,10 @@ def collect_fetchreach_data():
 
     pbar = tqdm(total=num_seeds)
 
-    for seed in range(num_seeds):
+    seeds = os.listdir(file)  # todo
+    seeds = [int(s[4:]) for s in seeds]
+
+    for seed in seeds:
         pbar.set_description("Processing seed {}".format(seed))
 
         sim = FetchReachHistogram(seed)
@@ -1081,7 +1083,7 @@ if __name__ == "__main__":
     #
     # file = "/media/sschoepp/easystore/shared/fetchreach/faulty/sac/v4/SACv2_FetchReachEnv-v4:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:True_rn:False_a:True_d:cuda"
     # draw_histogram()
-    # todo
+    #
     # file = "/media/sschoepp/easystore/shared/fetchreach/faulty/sac/v4/SACv2_FetchReachEnv-v4:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:True_rn:True_a:True_d:cuda"
     # draw_histogram()
 
@@ -1094,7 +1096,7 @@ if __name__ == "__main__":
     # file = "/media/sschoepp/easystore/shared/ant/normal/PPOv2_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_d:cpu_ps:True_pss:33_resumed"
     # draw_histogram()
     #
-    # # SAC todo
+    # # SAC
     # file = "/media/sschoepp/easystore/shared/ant/normal/SACv2_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_a:True_d:cuda_ps:True_pss:61_resumed"
     # draw_histogram()
 
@@ -1160,7 +1162,7 @@ if __name__ == "__main__":
     #
     # file = "/media/sschoepp/easystore/shared/ant/faulty/sac/v1/SACv2_AntEnv-v1:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:True_rn:False_a:True_d:cuda_resumed"
     # draw_histogram()
-    # todo
+    #
     # file = "/media/sschoepp/easystore/shared/ant/faulty/sac/v1/SACv2_AntEnv-v1:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:True_rn:True_a:True_d:cuda_resumed"
     # draw_histogram()
     #
@@ -1187,8 +1189,8 @@ if __name__ == "__main__":
     # file = "/media/sschoepp/easystore/shared/ant/faulty/sac/v3/SACv2_AntEnv-v3:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:True_rn:False_a:True_d:cuda_resumed"
     # draw_histogram()
     #
-    file = "/media/sschoepp/easystore/shared/ant/faulty/sac/v3/SACv2_AntEnv-v3:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:True_rn:True_a:True_d:cuda_resumed"
-    draw_histogram()
+    # file = "/media/sschoepp/easystore/shared/ant/faulty/sac/v3/SACv2_AntEnv-v3:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:True_rn:True_a:True_d:cuda_resumed"
+    # draw_histogram()
     #
     # # SAC v4
     # file = "/media/sschoepp/easystore/shared/ant/faulty/sac/v1/SACv2_AntEnv-v4:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:False_rn:False_a:True_d:cuda_resumed"

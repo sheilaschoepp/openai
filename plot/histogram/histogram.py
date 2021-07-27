@@ -276,7 +276,7 @@ def save_ant_joint_angles(d):
     ant_histogram_data[5].append(d.get_joint_qpos("ankle_3"))
     ant_histogram_data[6].append(d.get_joint_qpos("hip_4"))
     ant_histogram_data[7].append(d.get_joint_qpos("ankle_4"))
-    print(np.degrees(d.get_joint_qpos("ankle_4")))
+    print(np.degrees(d.get_joint_qpos("ankle_4")))  # todo
 
 
 def collect_ant_data():

@@ -283,7 +283,7 @@ def collect_ant_data():
     pbar = tqdm(total=num_seeds)
 
     seeds = os.listdir(file)  # todo
-    seeds = [int(s[4:]) for s in seeds]
+    seeds = sorted([int(s[4:]) for s in seeds])
 
     for seed in seeds:
         pbar.set_description("Processing seed {}".format(seed))
@@ -699,7 +699,7 @@ def collect_fetchreach_data():
     pbar = tqdm(total=num_seeds)
 
     seeds = os.listdir(file)  # todo
-    seeds = [int(s[4:]) for s in seeds]
+    seeds = sorted([int(s[4:]) for s in seeds])
 
     for seed in seeds:
         pbar.set_description("Processing seed {}".format(seed))

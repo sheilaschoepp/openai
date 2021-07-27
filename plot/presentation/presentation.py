@@ -196,10 +196,10 @@ def plot_experiment(directory):
             zoom.plot(x, y, color=colors[i + 1])
             zoom.fill_between(x, lb, ub, color=colors[i + 1], alpha=0.3)
 
-        main.axvline(x=x_fault_onset, color="red", ymax=0.98)
+        main.axvline(x=x_fault_onset, color="red")
         main.fill_between((zoom_xmin, zoom_xmax), zoom_ymin, zoom_ymax, facecolor="black", alpha=0.2)
 
-        zoom.axvline(x=zoom_xmin, color="red", lw=4, ymax=0.98)
+        zoom.axvline(x=zoom_xmin, color="red", lw=4)
 
         connector1 = ConnectionPatch(xyA=(zoom_xmin, zoom_ymin), coordsA=main.transData,
                                      xyB=(zoom_xmin, zoom_ymax), coordsB=zoom.transData,
@@ -213,7 +213,7 @@ def plot_experiment(directory):
                                      alpha=0.3)
         fig.add_artist(connector2)
 
-        fig.legend(bbox_to_anchor=[0.2, 0.28], loc="center")
+        fig.legend(bbox_to_anchor=[0.2, 0.25], loc="center")
 
         main.set_xlim(xmin, xmax)
         zoom.set_xlim(zoom_xmin, zoom_xmax)

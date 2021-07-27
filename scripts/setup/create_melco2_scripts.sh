@@ -8,7 +8,7 @@ echo 'PPO_AB_CONTROLLER_ABSOLUTE_PATH="/home/sschoepp/Documents/openai/controlle
 
 echo 'RESUME_FILE="/local/melco2-1/shared/ant/faulty/ppo/v4/PPOv2_AntEnv-v4:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:True_rn:False_d:cpu_r"' >> melco2.sh
 
-for s in 6  # todo 7 - 9
+for s in {7..9}
 do
   echo 'tmux new-session -d -s ppov4cm-'$s' "python $PPO_AB_CONTROLLER_ABSOLUTE_PATH --resume -rf $RESUME_FILE/seed'$s'"' >> melco2.sh
 done

@@ -363,7 +363,7 @@ if __name__ == "__main__":
 
     # number of seeds to plot
     num_seeds = 10
-    print(colored("you have set the number of seeds to 10", "purple"))
+    print(colored("you have set the number of seeds to 10", "blue"))
 
     # confidence interval z value for 9 degrees of freedom (10 seeds)
     if num_seeds == 10:

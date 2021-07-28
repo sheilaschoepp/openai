@@ -83,6 +83,7 @@ def plot_experiment(directory):
             if len(dfs) != num_seeds:
                 # warning to let user know that seeds are missing
                 print(colored("The number of seeds for this experiment is 10 but this setting only has {} seeds: {}".format(str(len(dfs)), dir_), "red"))
+                print(colored(x, "red"))
 
             df = pd.concat(dfs)
             df = df.groupby(df.index)

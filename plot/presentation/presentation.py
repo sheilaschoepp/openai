@@ -56,14 +56,11 @@ def plot_experiment(directory):
                 # skip over resumable experiments (final episode is not complete)
                 continue
 
-            crb = None
-            cm = None
+            mem = None
             rn = None
             for p in parameters:
-                if "crb:" in p:
-                    crb = eval(p.split(":")[1])
-                elif "cm:" in p:
-                    cm = eval(p.split(":")[1])
+                if "crb:" in p or "cm:" in p:
+                    mem = eval(p.split(":")[1])
                 elif "rn:" in p:
                     rn = eval(p.split(":")[1])
 
@@ -99,30 +96,34 @@ def plot_experiment(directory):
             else:
                 storage_type = "memory"
 
-            if not rn and not crb:
+            if not rn and not mem:
                 label = "retain all data"
-            elif not rn and crb:
+            elif not rn and mem:
                 label = "retain network parameters"
-            elif rn and not crb:
+            elif rn and not mem:
                 label = "retain {}".format(storage_type)
-            else:  # rn and crb
+            else:  # rn and mem
                 label = "retain no data"
 
             if algorithm == "SAC":
-                unordered_settings.append((algorithm, rn, crb, label, df_mean, df_sem))
+                unordered_settings.append((algorithm, rn, mem, label, df_mean, df_sem))
             elif algorithm == "PPO":
-                unordered_settings.append((algorithm, rn, cm, label, df_mean, df_sem))
+                unordered_settings.append((algorithm, rn, mem, label, df_mean, df_sem))
 
         assert len(unordered_settings) == 4, "plot_experiment: more than four settings"
 
         # reorganize settings to obtain a plotting order
 
-        desired_ordering = [(False, False), (False, True), (True, False), (True, True)]  # (rn, crb/cm)
+        desired_ordering = [(False, False), (False, True), (True, False), (True, True)]  # (rn, mem)
 
         for do in desired_ordering:
             for s in unordered_settings:
                 if do[0] == s[1] and do[1] == s[2]:
                     ordered_settings.append(s)
+
+        print(desired_ordering)
+        for i in ordered_settings:
+            print(i[0:4])
 
     get_data()
 
@@ -324,10 +325,12 @@ def plot_experiment(directory):
 
             subscript = ""
             rn = ordered_settings[i][1]
-            crb = ordered_settings[i][2]
+            mem = ordered_settings[i][2]
             if rn:
                 subscript = subscript + "_rn"
-            if crb:
+            if algorithm == "PPO" and mem:
+                subscript = subscript + "_cm"
+            elif algorithm == "SAC" and mem:
                 subscript = subscript + "_crb"
 
             x = ordered_settings[i][4].iloc[fault_start_index:, 0] / x_divisor

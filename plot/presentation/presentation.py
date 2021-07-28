@@ -83,6 +83,7 @@ def plot_experiment(directory):
             if len(dfs) != num_seeds:
                 # warning to let user know that seeds are missing
                 print(colored("The number of seeds for this experiment is 10 but this setting only has {} seeds: {}".format(str(len(dfs)), dir_), "red"))
+                print(colored(sorted(x), "red"))
 
             df = pd.concat(dfs)
             df = df.groupby(df.index)
@@ -362,6 +363,7 @@ if __name__ == "__main__":
 
     # number of seeds to plot
     num_seeds = 10
+    print(colored("you have set the number of seeds to 10", "blue"))
 
     # confidence interval z value for 9 degrees of freedom (10 seeds)
     if num_seeds == 10:
@@ -394,7 +396,7 @@ if __name__ == "__main__":
     # v1
 
     zoom_xmin = 600
-    zoom_xmax = 660
+    zoom_xmax = 800
     zoom_ymin = ymin
     zoom_ymax = ymax
 
@@ -402,26 +404,26 @@ if __name__ == "__main__":
 
     # v2
 
-    zoom_xmin = 20
-    zoom_xmax = 25
+    zoom_xmin = 600
+    zoom_xmax = 800
     zoom_ymin = ymin
     zoom_ymax = ymax
 
-    # plot_experiment(os.path.join(ppo_data_dir, "v2"))
+    plot_experiment(os.path.join(ppo_data_dir, "v2"))
 
     # v3
 
-    zoom_xmin = 20
-    zoom_xmax = 25
+    zoom_xmin = 600
+    zoom_xmax = 800
     zoom_ymin = ymin
     zoom_ymax = ymax
 
-    # plot_experiment(os.path.join(ppo_data_dir, "v3"))
+    plot_experiment(os.path.join(ppo_data_dir, "v3"))
 
     # v4
 
-    zoom_xmin = 20
-    zoom_xmax = 25
+    zoom_xmin = 600
+    zoom_xmax = 800
     zoom_ymin = ymin
     zoom_ymax = ymax
 
@@ -439,7 +441,7 @@ if __name__ == "__main__":
     # v1
 
     zoom_xmin = 20
-    zoom_xmax = 25
+    zoom_xmax = 27
     zoom_ymin = ymin
     zoom_ymax = ymax
 
@@ -448,7 +450,7 @@ if __name__ == "__main__":
     # v2
 
     zoom_xmin = 20
-    zoom_xmax = 25
+    zoom_xmax = 27
     zoom_ymin = ymin
     zoom_ymax = ymax
 
@@ -457,7 +459,7 @@ if __name__ == "__main__":
     # v3
 
     zoom_xmin = 20
-    zoom_xmax = 25
+    zoom_xmax = 27
     zoom_ymin = ymin
     zoom_ymax = ymax
 
@@ -466,7 +468,7 @@ if __name__ == "__main__":
     # v4
 
     zoom_xmin = 20
-    zoom_xmax = 25
+    zoom_xmax = 27
     zoom_ymin = ymin
     zoom_ymax = ymax
 

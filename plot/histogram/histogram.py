@@ -635,7 +635,7 @@ def plot_fetchreach_heatmap(ranges):
         fetchreach_histogram_data_normalized.append(normalized)
 
     fetchreach_histogram_count_data = []
-    bins = np.round(np.arange(0.0, 1.025, 0.025), 3)
+    bins = np.arange(0.0, 1.05, 0.025)
 
     for i in range(7):
         counts, _ = np.histogram(fetchreach_histogram_data_normalized[i], bins=bins)
@@ -644,7 +644,7 @@ def plot_fetchreach_heatmap(ranges):
 
     df = pd.DataFrame(np.array(fetchreach_histogram_count_data).T, index=np.flip(bins[:-1]), columns=["shoulder pan", "shoulder lift", "upperarm roll", "elbow flex", "forearm roll", "wrist flex", "wrist roll"])
 
-    y_labels = ["1.0", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "0.5", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "0.0"]
+    y_labels = ["1.0", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "0.5", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "0.0"]
     heatmap = sns.heatmap(data=df[::-1], cmap=cmap, yticklabels=y_labels)
 
     if suffix == "":

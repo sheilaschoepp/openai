@@ -39,7 +39,6 @@ def get_ant_xml_data():
         anaconda_path = "/local/melco2/sschoepp/anaconda3"
     else:
         anaconda_path = os.getenv("HOME") + "/anaconda3"
-    anaconda_path = "/opt/anaconda3"
 
     # model_xml = None
     # if env_name == "Ant-v2":
@@ -56,7 +55,7 @@ def get_ant_xml_data():
     #     model_xml = str(Path.home()) + "/Documents/openai/custom_gym_envs/envs/ant/xml/AntEnv_v4_ab_addedlink.xml"
 
     # use normal xml to define the ranges for plotting
-    model_xml = anaconda_path + "/envs/openai3.9/lib/python3.9/site-packages/gym/envs/mujoco/assets/ant.xml"
+    model_xml = anaconda_path + "/envs/openai3.7/lib/python3.7/site-packages/gym/envs/mujoco/assets/ant.xml"
 
     tree = ET.parse(model_xml)
     root = tree.getroot()
@@ -119,8 +118,9 @@ def plot_ant_histograms(ranges):
     index = 0  # hip_1
     joint_name = "hip_1"
     df = pd.DataFrame(ant_histogram_data[index], columns=["radians"])
-    plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.02))
+    plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.02), element="step")
     plot.set_title(title())
+    plt.ylim(0, 1)
     plt.ylabel("probability")
     plt.savefig(experiment_plot_directory + "/{}_hip_1_joint_{}.jpg".format(experiment_name, num_seeds))
     plt.close()
@@ -128,8 +128,9 @@ def plot_ant_histograms(ranges):
     index = 1  # ankle_1
     joint_name = "ankle_1"
     df = pd.DataFrame(ant_histogram_data[index], columns=["radians"])
-    plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.015))
+    plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.015), element="step")
     plot.set_title(title())
+    plt.ylim(0, 1)
     plt.ylabel("probability")
     plt.savefig(experiment_plot_directory + "/{}_ankle_1_joint_{}.jpg".format(experiment_name, num_seeds))
     plt.close()
@@ -137,8 +138,9 @@ def plot_ant_histograms(ranges):
     index = 2  # hip_2
     joint_name = "hip_2"
     df = pd.DataFrame(ant_histogram_data[index], columns=["radians"])
-    plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.02))
+    plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.02), element="step")
     plot.set_title(title())
+    plt.ylim(0, 1)
     plt.ylabel("probability")
     plt.savefig(experiment_plot_directory + "/{}_hip_2_joint_{}.jpg".format(experiment_name, num_seeds))
     plt.close()
@@ -146,8 +148,9 @@ def plot_ant_histograms(ranges):
     index = 3  # ankle_2
     joint_name = "ankle_2"
     df = pd.DataFrame(ant_histogram_data[index], columns=["radians"])
-    plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.015))
+    plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.015), element="step")
     plot.set_title(title())
+    plt.ylim(0, 1)
     plt.ylabel("probability")
     plt.savefig(experiment_plot_directory + "/{}_ankle_2_joint_{}.jpg".format(experiment_name, num_seeds))
     plt.close()
@@ -155,8 +158,9 @@ def plot_ant_histograms(ranges):
     index = 4  # hip_3
     joint_name = "hip_3"
     df = pd.DataFrame(ant_histogram_data[index], columns=["radians"])
-    plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.02))
+    plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.02), element="step")
     plot.set_title(title())
+    plt.ylim(0, 1)
     plt.ylabel("probability")
     plt.savefig(experiment_plot_directory + "/{}_hip_3_joint_{}.jpg".format(experiment_name, num_seeds))
     plt.close()
@@ -164,8 +168,9 @@ def plot_ant_histograms(ranges):
     index = 5  # ankle_3
     joint_name = "ankle_3"
     df = pd.DataFrame(ant_histogram_data[index], columns=["radians"])
-    plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.015))
+    plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.015), element="step")
     plot.set_title(title())
+    plt.ylim(0, 1)
     plt.ylabel("probability")
     plt.savefig(experiment_plot_directory + "/{}_ankle_3_joint_{}.jpg".format(experiment_name, num_seeds))
     plt.close()
@@ -173,8 +178,9 @@ def plot_ant_histograms(ranges):
     index = 6  # hip_4
     joint_name = "hip_4"
     df = pd.DataFrame(ant_histogram_data[index], columns=["radians"])
-    plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.02))
+    plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.02), element="step")
     plot.set_title(title())
+    plt.ylim(0, 1)
     plt.ylabel("probability")
     plt.savefig(experiment_plot_directory + "/{}_hip_4_joint_{}.jpg".format(experiment_name, num_seeds))
     plt.close()
@@ -182,8 +188,9 @@ def plot_ant_histograms(ranges):
     index = 7  # ankle_4
     joint_name = "ankle_4"
     df = pd.DataFrame(ant_histogram_data[index], columns=["radians"])
-    plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.015))
+    plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.015), element="step")
     plot.set_title(title())
+    plt.ylim(0, 1)
     plt.ylabel("probability")
     plt.savefig(experiment_plot_directory + "/{}_ankle_4_joint_{}.jpg".format(experiment_name, num_seeds))
     plt.close()
@@ -453,21 +460,22 @@ def get_fetchrach_xml_data():
     else:
         anaconda_path = os.getenv("HOME") + "/anaconda3"
 
-    model_xml = None
-    if env_name == "FetchReach-v1":
-        model_xml = anaconda_path + "/envs/openai3.7/lib/python3.7/site-packages/gym/envs/robotics/assets/fetch/reach.xml"
-    if "v0" in env_name:
-        model_xml = str(Path.home()) + "/Documents/openai/custom_gym_envs/envs/fetchreach/FetchReachEnv_v0_Normal/assets/fetch/reach.xml"
-    elif "v1" in env_name:
-        model_xml = str(Path.home()) + "/Documents/openai/custom_gym_envs/envs/fetchreach/FetchReachEnv_v1_BrokenShoulderLiftJoint/assets/fetch/reach.xml"
-    elif "v2" in env_name:
-        model_xml = str(Path.home()) + "/Documents/openai/custom_gym_envs/envs/fetchreach/FetchReachEnv_v2_BrokenElbowFlexJoint/assets/fetch/reach.xml"
-    elif "v3" in env_name:
-        model_xml = str(Path.home()) + "/Documents/openai/custom_gym_envs/envs/fetchreach/FetchReachEnv_v3_BrokenWristFlexJoint/assets/fetch/reach.xml"
-    elif "v4" in env_name:
-        model_xml = str(Path.home()) + "/Documents/openai/custom_gym_envs/envs/fetchreach/FetchReachEnv_v4_BrokenShoulderLiftSensor/assets/fetch/reach.xml"
-    elif "v5" in env_name:
-        model_xml = str(Path.home()) + "/Documents/openai/custom_gym_envs/envs/fetchreach/FetchReachEnv_v5_BrokenJointsTBD/assets/fetch/reach.xml"
+    # model_xml = None
+    # if env_name == "FetchReach-v1":
+    #     model_xml = anaconda_path + "/envs/openai3.7/lib/python3.7/site-packages/gym/envs/robotics/assets/fetch/reach.xml"
+    # if "v0" in env_name:
+    #     model_xml = str(Path.home()) + "/Documents/openai/custom_gym_envs/envs/fetchreach/FetchReachEnv_v0_Normal/assets/fetch/reach.xml"
+    # elif "v1" in env_name:
+    #     model_xml = str(Path.home()) + "/Documents/openai/custom_gym_envs/envs/fetchreach/FetchReachEnv_v1_BrokenShoulderLiftJoint/assets/fetch/reach.xml"
+    # elif "v2" in env_name:
+    #     model_xml = str(Path.home()) + "/Documents/openai/custom_gym_envs/envs/fetchreach/FetchReachEnv_v2_BrokenElbowFlexJoint/assets/fetch/reach.xml"
+    # elif "v3" in env_name:
+    #     model_xml = str(Path.home()) + "/Documents/openai/custom_gym_envs/envs/fetchreach/FetchReachEnv_v3_BrokenWristFlexJoint/assets/fetch/reach.xml"
+    # elif "v4" in env_name:
+    #     model_xml = str(Path.home()) + "/Documents/openai/custom_gym_envs/envs/fetchreach/FetchReachEnv_v4_BrokenShoulderLiftSensor/assets/fetch/reach.xml"
+    # elif "v5" in env_name:
+    #     model_xml = str(Path.home()) + "/Documents/openai/custom_gym_envs/envs/fetchreach/FetchReachEnv_v5_BrokenJointsTBD/assets/fetch/reach.xml"4
+    model_xml = anaconda_path + "/envs/openai3.7/lib/python3.7/site-packages/gym/envs/robotics/assets/fetch/reach.xml"
 
     robot_xml = model_xml[:-9] + "robot.xml"
     tree = ET.parse(robot_xml)
@@ -547,8 +555,9 @@ def plot_fetchreach_histograms(ranges):
     index = 0  # shoulder_pan_joint
     joint_name = "shoulder pan joint"
     df = pd.DataFrame(fetchreach_histogram_data[index], columns=["radians"])
-    plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.05))
+    plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.05), element="step")
     plot.set_title(title())
+    plt.ylim(0, 1)
     plt.ylabel("probability")
     plt.savefig(experiment_plot_directory + "/{}_shoulder_pan_joint_{}.jpg".format(experiment_name, num_seeds))
     plt.close()
@@ -556,8 +565,9 @@ def plot_fetchreach_histograms(ranges):
     index = 1  # shoulder_lift_joint
     joint_name = "shoulder lift joint"
     df = pd.DataFrame(fetchreach_histogram_data[index], columns=["radians"])
-    plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.05))
+    plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.05), element="step")
     plot.set_title(title())
+    plt.ylim(0, 1)
     plt.ylabel("probability")
     plt.savefig(experiment_plot_directory + "/{}_shoulder_lift_joint_{}.jpg".format(experiment_name, num_seeds))
     plt.close()
@@ -565,8 +575,9 @@ def plot_fetchreach_histograms(ranges):
     index = 2  # upperarm_roll_joint
     joint_name = "upperarm roll joint"
     df = pd.DataFrame(fetchreach_histogram_data[index], columns=["radians"])
-    plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.1))
+    plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.1), element="step")
     plot.set_title(title())
+    plt.ylim(0, 1)
     plt.ylabel("probability")
     plt.savefig(experiment_plot_directory + "/{}_upperarm_roll_joint_{}.jpg".format(experiment_name, num_seeds))
     plt.close()
@@ -574,8 +585,9 @@ def plot_fetchreach_histograms(ranges):
     index = 3  # elbow_flex_joint
     joint_name = "elbow flex joint"
     df = pd.DataFrame(fetchreach_histogram_data[index], columns=["radians"])
-    plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.1))
+    plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.1), element="step")
     plot.set_title(title())
+    plt.ylim(0, 1)
     plt.ylabel("probability")
     plt.savefig(experiment_plot_directory + "/{}_elbow_flex_joint_{}.jpg".format(experiment_name, num_seeds))
     plt.close()
@@ -583,8 +595,9 @@ def plot_fetchreach_histograms(ranges):
     index = 4  # forearm_roll_joint
     joint_name = "forearm roll joint"
     df = pd.DataFrame(fetchreach_histogram_data[index], columns=["radians"])
-    plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.1))
+    plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.1), element="step")
     plot.set_title(title())
+    plt.ylim(0, 1)
     plt.ylabel("probability")
     plt.savefig(experiment_plot_directory + "/{}_forearm_roll_joint_{}.jpg".format(experiment_name, num_seeds))
     plt.close()
@@ -592,8 +605,9 @@ def plot_fetchreach_histograms(ranges):
     index = 5  # wrist_flex_joint
     joint_name = "wrist flex joint"
     df = pd.DataFrame(fetchreach_histogram_data[index], columns=["radians"])
-    plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.05))
+    plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.05), element="step")
     plot.set_title(title())
+    plt.ylim(0, 1)
     plt.ylabel("probability")
     plt.savefig(experiment_plot_directory + "/{}_wrist_flex_joint_{}.jpg".format(experiment_name, num_seeds))
     plt.close()
@@ -601,8 +615,9 @@ def plot_fetchreach_histograms(ranges):
     index = 6  # wrist_roll_joint
     joint_name = "wrist roll joint"
     df = pd.DataFrame(fetchreach_histogram_data[index], columns=["radians"])
-    plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.1))
+    plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.1), element="step")
     plot.set_title(title())
+    plt.ylim(0, 1)
     plt.ylabel("probability")
     plt.savefig(experiment_plot_directory + "/{}_wrist_roll_joint_{}.jpg".format(experiment_name, num_seeds))
     plt.close()
@@ -662,7 +677,7 @@ def plot_fetchreach_heatmap(ranges):
     plt.ylabel("normalized angle")
     plt.tight_layout()
     plt.savefig(experiment_plot_directory + "/{}_heatmap_{}.jpg".format(experiment_name, num_seeds))
-    plt.show()
+    # plt.show()
     plt.close()
 
 
@@ -865,6 +880,26 @@ class FetchReachHistogram:
 def draw_histogram():
     global algorithm, env_name, time_steps, abnormal, crb, cm, rn, ant_histogram_data, fetchreach_histogram_data, suffix, suffix_eval, experiment_data_directory, experiment_plot_directory, experiment_name, name
 
+    algorithm = None
+    env_name = None
+    time_steps = None
+
+    abnormal = False
+    crb = None
+    cm = None
+    rn = None
+
+    ant_histogram_data = None
+    fetchreach_histogram_data = None
+
+    suffix = None
+    suffix_eval = None
+    experiment_data_directory = None
+    experiment_plot_directory = None
+    experiment_name = None
+
+    name = None
+
     params = file.split("/")[-1].split("_")
     algorithm = params[0][0:3]
     env_info = params[1].split(":")
@@ -1003,8 +1038,8 @@ if __name__ == "__main__":
 
     collect_data = args.collect_data
 
-    repeat_ant = False
-    repeat_fetchreach = False
+    repeat_ant = True
+    repeat_fetchreach = True
 
     """ant normal"""
 

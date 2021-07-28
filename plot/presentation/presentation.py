@@ -362,6 +362,7 @@ if __name__ == "__main__":
 
     # number of seeds to plot
     num_seeds = 10
+    print(colored("you have set the number of seeds to 10", "red"))
 
     # confidence interval z value for 9 degrees of freedom (10 seeds)
     if num_seeds == 10:
@@ -407,7 +408,7 @@ if __name__ == "__main__":
     zoom_ymin = ymin
     zoom_ymax = ymax
 
-    # plot_experiment(os.path.join(ppo_data_dir, "v2"))
+    plot_experiment(os.path.join(ppo_data_dir, "v2"))
 
     # v3
 
@@ -416,7 +417,7 @@ if __name__ == "__main__":
     zoom_ymin = ymin
     zoom_ymax = ymax
 
-    # plot_experiment(os.path.join(ppo_data_dir, "v3"))
+    plot_experiment(os.path.join(ppo_data_dir, "v3"))
 
     # v4
 

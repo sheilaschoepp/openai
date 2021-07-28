@@ -404,8 +404,8 @@ if __name__ == "__main__":
 
     # v2
 
-    zoom_xmin = 20
-    zoom_xmax = 25
+    zoom_xmin = 600
+    zoom_xmax = 660
     zoom_ymin = ymin
     zoom_ymax = ymax
 
@@ -413,8 +413,8 @@ if __name__ == "__main__":
 
     # v3
 
-    zoom_xmin = 20
-    zoom_xmax = 25
+    zoom_xmin = 600
+    zoom_xmax = 660
     zoom_ymin = ymin
     zoom_ymax = ymax
 
@@ -422,8 +422,8 @@ if __name__ == "__main__":
 
     # v4
 
-    zoom_xmin = 20
-    zoom_xmax = 25
+    zoom_xmin = 600
+    zoom_xmax = 660
     zoom_ymin = ymin
     zoom_ymax = ymax
 

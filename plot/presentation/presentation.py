@@ -121,10 +121,6 @@ def plot_experiment(directory):
                 if do[0] == s[1] and do[1] == s[2]:
                     ordered_settings.append(s)
 
-        print(desired_ordering)
-        for i in ordered_settings:
-            print(i[0:4])
-
     get_data()
 
     # plot settings

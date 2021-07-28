@@ -56,14 +56,11 @@ def plot_experiment(directory):
                 # skip over resumable experiments (final episode is not complete)
                 continue
 
-            crb = None
-            cm = None
+            mem = None
             rn = None
             for p in parameters:
-                if "crb:" in p:
-                    crb = eval(p.split(":")[1])
-                elif "cm:" in p:
-                    cm = eval(p.split(":")[1])
+                if "crb:" in p or "cm:" in p:
+                    mem = eval(p.split(":")[1])
                 elif "rn:" in p:
                     rn = eval(p.split(":")[1])
 
@@ -73,6 +70,7 @@ def plot_experiment(directory):
 
             data_dir = os.path.join(directory, dir_)
 
+            x = os.listdir(data_dir)
             for s in os.listdir(data_dir):
 
                 seed_foldername = os.path.join(data_dir, s)
@@ -98,25 +96,25 @@ def plot_experiment(directory):
             else:
                 storage_type = "memory"
 
-            if not rn and not crb:
+            if not rn and not mem:
                 label = "retain all data"
-            elif not rn and crb:
+            elif not rn and mem:
                 label = "retain network parameters"
-            elif rn and not crb:
+            elif rn and not mem:
                 label = "retain {}".format(storage_type)
-            else:  # rn and crb
+            else:  # rn and mem
                 label = "retain no data"
 
             if algorithm == "SAC":
-                unordered_settings.append((algorithm, rn, crb, label, df_mean, df_sem))
+                unordered_settings.append((algorithm, rn, mem, label, df_mean, df_sem))
             elif algorithm == "PPO":
-                unordered_settings.append((algorithm, rn, cm, label, df_mean, df_sem))
+                unordered_settings.append((algorithm, rn, mem, label, df_mean, df_sem))
 
         assert len(unordered_settings) == 4, "plot_experiment: more than four settings"
 
         # reorganize settings to obtain a plotting order
 
-        desired_ordering = [(False, False), (False, True), (True, False), (True, True)]  # (rn, crb/cm)
+        desired_ordering = [(False, False), (False, True), (True, False), (True, True)]  # (rn, mem)
 
         for do in desired_ordering:
             for s in unordered_settings:
@@ -134,7 +132,7 @@ def plot_experiment(directory):
         title = "Proximal Policy Optimization (PPO)"
         labels = ["retain all data", "retain network params", "retain memory", "retain no data"]
 
-    plot_directory = os.path.join(os.getcwd(), "plots", algorithm, ab_env)
+    plot_directory = os.path.join(os.getcwd(), "plots", env_name, algorithm, ab_env)
     os.makedirs(plot_directory, exist_ok=True)
 
     # "b" as blue, "g" as green, "r" as red, "c" as cyan, "m" as magenta, "y" as yellow, "k" as black, "w" as white
@@ -148,8 +146,8 @@ def plot_experiment(directory):
 
         fig = plt.figure()
 
-        main = fig.add_subplot(2, 1, 2)
-        zoom = fig.add_subplot(2, 6, (3, 6))
+        main = fig.add_subplot(2, 1, 1)
+        zoom = fig.add_subplot(2, 6, (9, 12))
 
         x_fault_onset = ordered_settings[0][4].iloc[200, 0] / x_divisor
 
@@ -196,24 +194,24 @@ def plot_experiment(directory):
             zoom.plot(x, y, color=colors[i + 1])
             zoom.fill_between(x, lb, ub, color=colors[i + 1], alpha=0.3)
 
-        main.axvline(x=x_fault_onset, color="red", ymax=0.98)
+        main.axvline(x=x_fault_onset, color="red")
         main.fill_between((zoom_xmin, zoom_xmax), zoom_ymin, zoom_ymax, facecolor="black", alpha=0.2)
 
-        zoom.axvline(x=zoom_xmin, color="red", lw=4, ymax=0.98)
+        zoom.axvline(x=zoom_xmin, color="red", lw=4)
 
-        connector1 = ConnectionPatch(xyA=(zoom_xmin, zoom_ymax), coordsA=main.transData,
-                                     xyB=(zoom_xmin, zoom_ymin), coordsB=zoom.transData,
+        connector1 = ConnectionPatch(xyA=(zoom_xmin, zoom_ymin), coordsA=main.transData,
+                                     xyB=(zoom_xmin, zoom_ymax), coordsB=zoom.transData,
                                      color="black",
                                      alpha=0.3)
         fig.add_artist(connector1)
 
-        connector2 = ConnectionPatch(xyA=(zoom_xmax, zoom_ymax), coordsA=main.transData,
-                                     xyB=(zoom_xmax, zoom_ymin), coordsB=zoom.transData,
+        connector2 = ConnectionPatch(xyA=(zoom_xmax, zoom_ymin), coordsA=main.transData,
+                                     xyB=(zoom_xmax, zoom_ymax), coordsB=zoom.transData,
                                      color="black",
                                      alpha=0.3)
         fig.add_artist(connector2)
 
-        fig.legend(bbox_to_anchor=[0.2, 0.78], loc="center")
+        fig.legend(bbox_to_anchor=[0.2, 0.25], loc="center")
 
         main.set_xlim(xmin, xmax)
         zoom.set_xlim(zoom_xmin, zoom_xmax)
@@ -284,7 +282,7 @@ def plot_experiment(directory):
         plt.title(title)
         plt.tight_layout()
         plt.savefig(plot_directory + "/{}_{}_all.jpg".format(algorithm, ab_env))
-        plt.show()
+        # plt.show()
         plt.close()
 
     plot_all_standard()
@@ -323,10 +321,12 @@ def plot_experiment(directory):
 
             subscript = ""
             rn = ordered_settings[i][1]
-            crb = ordered_settings[i][2]
+            mem = ordered_settings[i][2]
             if rn:
                 subscript = subscript + "_rn"
-            if crb:
+            if algorithm == "PPO" and mem:
+                subscript = subscript + "_cm"
+            elif algorithm == "SAC" and mem:
                 subscript = subscript + "_crb"
 
             x = ordered_settings[i][4].iloc[fault_start_index:, 0] / x_divisor
@@ -373,82 +373,182 @@ if __name__ == "__main__":
     # if True, plot 95% confidence interval; if False, plot standard error
     ci = False
     
-    # ant
+    """ant"""
 
-    xmin = 0
-    xmax = 40
-    
+    # global for Ant
+    env_name = "ant"
+
+    # global ymin/ymax for Ant
     ymin = -1000
     ymax = 8000
 
-    zoom_ymin = ymin
-    zoom_ymax = ymax
-    zoom_xmin = 20
-    zoom_xmax = 25
+    # PPO
 
-    sac_data_dir = "/media/sschoepp/easystore/shared/ant/faulty/sac"
+    # local for Ant PPO
+    xmin = 0
+    xmax = 1200
 
-    # plot_experiment(os.path.join(sac_data_dir, "v1"))
-    # plot_experiment(os.path.join(sac_data_dir, "v2"))
-    # plot_experiment(os.path.join(sac_data_dir, "v3"))
-    # plot_experiment(os.path.join(sac_data_dir, "v4"))
-
+    # local for Ant PPO
     ppo_data_dir = "/media/sschoepp/easystore/shared/ant/faulty/ppo"
 
-    # plot_experiment(os.path.join(ppo_data_dir, "v1"))
+    # v1
+
+    zoom_xmin = 600
+    zoom_xmax = 660
+    zoom_ymin = ymin
+    zoom_ymax = ymax
+
+    plot_experiment(os.path.join(ppo_data_dir, "v1"))
+
+    # v2
+
+    zoom_xmin = 20
+    zoom_xmax = 25
+    zoom_ymin = ymin
+    zoom_ymax = ymax
+
     # plot_experiment(os.path.join(ppo_data_dir, "v2"))
+
+    # v3
+
+    zoom_xmin = 20
+    zoom_xmax = 25
+    zoom_ymin = ymin
+    zoom_ymax = ymax
+
     # plot_experiment(os.path.join(ppo_data_dir, "v3"))
+
+    # v4
+
+    zoom_xmin = 20
+    zoom_xmax = 25
+    zoom_ymin = ymin
+    zoom_ymax = ymax
+
     # plot_experiment(os.path.join(ppo_data_dir, "v4"))
 
-    # fetchreach
+    # SAC
 
+    # local for Ant SAC
     xmin = 0
-    xmax = 4
+    xmax = 40
 
-    ymin = -40
-    ymax = 5
+    # local for Ant SAC
+    sac_data_dir = "/media/sschoepp/easystore/shared/ant/faulty/sac"
 
-    zoom_ymin = -12
-    zoom_ymax = 1
-    zoom_xmin = 2
-    zoom_xmax = 2.05
+    # v1
 
-    sac_data_dir = "/media/sschoepp/easystore/shared/fetchreach/faulty/sac"
+    zoom_xmin = 20
+    zoom_xmax = 25
+    zoom_ymin = ymin
+    zoom_ymax = ymax
 
     plot_experiment(os.path.join(sac_data_dir, "v1"))
 
-    xmin = 0
-    xmax = 4
+    # v2
 
-    ymin = -40
-    ymax = 5
+    zoom_xmin = 20
+    zoom_xmax = 25
+    zoom_ymin = ymin
+    zoom_ymax = ymax
 
-    zoom_ymin = -15
-    zoom_ymax = 1
-    zoom_xmin = 2
-    zoom_xmax = 2.05
+    # plot_experiment(os.path.join(sac_data_dir, "v2"))
 
-    sac_data_dir = "/media/sschoepp/easystore/shared/fetchreach/faulty/sac"
+    # v3
 
-    plot_experiment(os.path.join(sac_data_dir, "v1GE"))
+    zoom_xmin = 20
+    zoom_xmax = 25
+    zoom_ymin = ymin
+    zoom_ymax = ymax
 
-    xmin = 0
-    xmax = 4
+    plot_experiment(os.path.join(sac_data_dir, "v3"))
 
-    ymin = -40
-    ymax = 5
+    # v4
 
-    zoom_ymin = -15
-    zoom_ymax = 1
-    zoom_xmin = 2
-    zoom_xmax = 2.05
-
-    sac_data_dir = "/media/sschoepp/easystore/shared/fetchreach/faulty/sac"
+    zoom_xmin = 20
+    zoom_xmax = 25
+    zoom_ymin = ymin
+    zoom_ymax = ymax
 
     plot_experiment(os.path.join(sac_data_dir, "v4"))
 
+    """fetchreach"""
+
+    # global for FetchReach
+    env_name = "fetchreach"
+
+    # global ymin/ymax for FetchReach
+    ymin = -40
+    ymax = 5
+
+    # PPO
+
+    # local for FetchReach PPO
+    xmin = 0
+    xmax = 12
+
+    # local for FetchReach PPO
     ppo_data_dir = "/media/sschoepp/easystore/shared/fetchreach/faulty/ppo"
 
+    # v1
+
+    zoom_xmin = 6
+    zoom_xmax = 6.5
+    zoom_ymin = -12
+    zoom_ymax = 1
+
     plot_experiment(os.path.join(ppo_data_dir, "v1"))
+
+    # v1GE
+
+    zoom_xmin = 6
+    zoom_xmax = 6.5
+    zoom_ymin = -12
+    zoom_ymax = 1
+
     plot_experiment(os.path.join(ppo_data_dir, "v1GE"))
+
+    # v4
+
+    zoom_xmin = 6
+    zoom_xmax = 6.6
+    zoom_ymin = -25
+    zoom_ymax = 1
+
     plot_experiment(os.path.join(ppo_data_dir, "v4"))
+
+    # SAC
+
+    # local for FetchReach SAC
+    xmin = 0
+    xmax = 4
+
+    # local for FetchReach SAC
+    sac_data_dir = "/media/sschoepp/easystore/shared/fetchreach/faulty/sac"
+
+    # v1
+
+    zoom_xmin = 2
+    zoom_xmax = 2.05
+    zoom_ymin = -12
+    zoom_ymax = 1
+
+    plot_experiment(os.path.join(sac_data_dir, "v1"))
+
+    # v1GE
+
+    zoom_xmin = 2
+    zoom_xmax = 2.05
+    zoom_ymin = -15
+    zoom_ymax = 1
+
+    plot_experiment(os.path.join(sac_data_dir, "v1GE"))
+
+    # v4
+
+    zoom_xmin = 2
+    zoom_xmax = 2.2
+    zoom_ymin = -25
+    zoom_ymax = 1
+
+    plot_experiment(os.path.join(sac_data_dir, "v4"))

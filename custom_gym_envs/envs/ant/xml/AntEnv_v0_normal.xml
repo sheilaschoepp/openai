@@ -6,6 +6,7 @@ http://www.mujoco.org/book/XMLreference.html#geom
 
 modifications:
 added limited="true" to all leg joints \\
+added rgba to color the rightback_leg_geom and fourth_ankle_geom joint capsules \\
 -->
 
 <mujoco model="ant">
@@ -87,11 +88,11 @@ added limited="true" to all leg joints \\
         <body name="aux_4" pos="0.2 -0.2 0">
 <!--          <joint axis="0 0 1" name="hip_4" pos="0.0 0.0 0.0" range="-30 30" type="hinge"/>-->
           <joint axis="0 0 1" name="hip_4" pos="0.0 0.0 0.0" range="-30 30" type="hinge" limited="true"/> <!-- modification here -->
-          <geom fromto="0.0 0.0 0.0 0.2 -0.2 0.0" name="rightback_leg_geom" size="0.08" type="capsule"/>
+          <geom fromto="0.0 0.0 0.0 0.2 -0.2 0.0" name="rightback_leg_geom" size="0.08" type="capsule" rgba="0.4 0 0 1"/> <!-- modification here -->
           <body pos="0.2 -0.2 0">
 <!--            <joint axis="1 1 0" name="ankle_4" pos="0.0 0.0 0.0" range="30 70" type="hinge"/>-->
             <joint axis="1 1 0" name="ankle_4" pos="0.0 0.0 0.0" range="30 70" type="hinge" limited="true"/> <!-- modification here -->
-            <geom fromto="0.0 0.0 0.0 0.4 -0.4 0.0" name="fourth_ankle_geom" size="0.08" type="capsule"/>
+            <geom fromto="0.0 0.0 0.0 0.4 -0.4 0.0" name="fourth_ankle_geom" size="0.08" type="capsule" rgba="0.4 0 0 1"/> <!-- modification here -->
           </body>
         </body>
       </body>

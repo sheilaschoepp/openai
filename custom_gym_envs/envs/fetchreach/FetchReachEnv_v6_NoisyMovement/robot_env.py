@@ -63,7 +63,7 @@ class RobotEnv(gym.GoalEnv):
         action = np.clip(action, self.action_space.low, self.action_space.high)
 
         # modification here
-        old_value = self.sim.data.get_joint_qpos("robot0:elbow_flex_joint").copy()
+        # old_value = self.sim.data.get_joint_qpos("robot0:elbow_flex_joint").copy()
         # end of modification
 
         self._set_action(action)
@@ -72,8 +72,9 @@ class RobotEnv(gym.GoalEnv):
 
         # modification here
         new_value = self.sim.data.get_joint_qpos("robot0:elbow_flex_joint").copy()
-        delta = new_value - old_value
-        slippery_value = old_value + delta * self.np_random.normal(0, 0.1)
+        # delta = new_value - old_value
+        # slippery_value = old_value + delta * self.np_random.normal(0, 0.1)
+        slippery_value = new_value + 0.05
         self.sim.data.set_joint_qpos("robot0:elbow_flex_joint", slippery_value)
         self.sim.forward()
         # end of modification

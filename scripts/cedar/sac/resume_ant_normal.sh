@@ -14,4 +14,4 @@
 #SBATCH --mail-type=REQUEUE
 #SBATCH --mail-type=ALL
 
-parallel < s50.txt
+parallel < resume_ant_normal.txt

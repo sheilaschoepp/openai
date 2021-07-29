@@ -1,10 +1,11 @@
 #!/bin/bash
 
 #SBATCH --nodes=1
+#SBATCH --gres=gpu:v100l:4
 #SBATCH --ntasks-per-node=20
 #SBATCH --mem=90G
-#SBATCH --time=14-00:00
-#SBATCH --job-name=ppo_resume_ant_normal
+#SBATCH --time=0-00:20
+#SBATCH --job-name=sac_resume_ant_normal
 #SBATCH --output=%x-%j.out
 #SBATCH --mail-user=taghianj@ualberta.ca
 #SBATCH --mail-type=BEGIN
@@ -13,4 +14,4 @@
 #SBATCH --mail-type=REQUEUE
 #SBATCH --mail-type=ALL
 
-parallel < resume_ant_normal.txt
+parallel < resume_test.txt

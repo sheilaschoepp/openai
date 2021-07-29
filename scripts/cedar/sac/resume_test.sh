@@ -2,7 +2,7 @@
 
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=20
-#SBATCH --mem=30G
+#SBATCH --mem=90G
 #SBATCH --time=14-00:00
 #SBATCH --job-name=ppo_resume_ant_normal
 #SBATCH --output=%x-%j.out

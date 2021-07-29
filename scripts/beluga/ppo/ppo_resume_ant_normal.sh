@@ -13,4 +13,4 @@
 #SBATCH --mail-type=REQUEUE
 #SBATCH --mail-type=ALL
 
-parallel < resume_ant_normal.txt
+parallel < ppo_resume_ant_normal.txt

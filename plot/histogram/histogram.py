@@ -3,14 +3,14 @@ import os
 import pickle
 import random
 import xml.etree.ElementTree as ET
-from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-# import pickle5 as pickle
+import pickle5 as pickle
 import seaborn as sns
 import torch
+from termcolor import colored
 from tqdm import tqdm
 
 from controllers.ppov2.ppov2_agent import PPOv2
@@ -108,6 +108,18 @@ def plot_ant_histograms(ranges):
 
     ant_histogram_data = np.load(experiment_data_directory + "/{}_histogram_data_{}.npy".format(experiment_name, num_seeds))
 
+    ant_histogram_data_clipped = []
+
+    # clip data
+    for i in range(len(ranges)):
+        min = ranges[i][0]
+        max = ranges[i][1]
+        data = ant_histogram_data[i]
+
+        clipped = np.clip(data, min, max)
+
+        ant_histogram_data_clipped.append(clipped)
+
     def title():
         if suffix == "":
             title = "{}\n{}\n{}".format(algorithm, name, joint_name)  # todo
@@ -117,8 +129,8 @@ def plot_ant_histograms(ranges):
 
     index = 0  # hip_1
     joint_name = "hip_1"
-    df = pd.DataFrame(ant_histogram_data[index], columns=["radians"])
-    plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.02), element="step")
+    df = pd.DataFrame(ant_histogram_data_clipped[index], columns=["radians"])
+    plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1] + 0.02, 0.02), element="step")
     plot.set_title(title())
     plt.ylim(0, 1)
     plt.ylabel("probability")
@@ -127,8 +139,8 @@ def plot_ant_histograms(ranges):
 
     index = 1  # ankle_1
     joint_name = "ankle_1"
-    df = pd.DataFrame(ant_histogram_data[index], columns=["radians"])
-    plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.015), element="step")
+    df = pd.DataFrame(ant_histogram_data_clipped[index], columns=["radians"])
+    plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1] + 0.015, 0.015), element="step")
     plot.set_title(title())
     plt.ylim(0, 1)
     plt.ylabel("probability")
@@ -137,8 +149,8 @@ def plot_ant_histograms(ranges):
 
     index = 2  # hip_2
     joint_name = "hip_2"
-    df = pd.DataFrame(ant_histogram_data[index], columns=["radians"])
-    plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.02), element="step")
+    df = pd.DataFrame(ant_histogram_data_clipped[index], columns=["radians"])
+    plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1] + 0.02, 0.02), element="step")
     plot.set_title(title())
     plt.ylim(0, 1)
     plt.ylabel("probability")
@@ -147,8 +159,8 @@ def plot_ant_histograms(ranges):
 
     index = 3  # ankle_2
     joint_name = "ankle_2"
-    df = pd.DataFrame(ant_histogram_data[index], columns=["radians"])
-    plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.015), element="step")
+    df = pd.DataFrame(ant_histogram_data_clipped[index], columns=["radians"])
+    plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1] + 0.015, 0.015), element="step")
     plot.set_title(title())
     plt.ylim(0, 1)
     plt.ylabel("probability")
@@ -157,8 +169,8 @@ def plot_ant_histograms(ranges):
 
     index = 4  # hip_3
     joint_name = "hip_3"
-    df = pd.DataFrame(ant_histogram_data[index], columns=["radians"])
-    plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.02), element="step")
+    df = pd.DataFrame(ant_histogram_data_clipped[index], columns=["radians"])
+    plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1] + 0.02, 0.02), element="step")
     plot.set_title(title())
     plt.ylim(0, 1)
     plt.ylabel("probability")
@@ -167,8 +179,8 @@ def plot_ant_histograms(ranges):
 
     index = 5  # ankle_3
     joint_name = "ankle_3"
-    df = pd.DataFrame(ant_histogram_data[index], columns=["radians"])
-    plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.015), element="step")
+    df = pd.DataFrame(ant_histogram_data_clipped[index], columns=["radians"])
+    plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1] + 0.015, 0.015), element="step")
     plot.set_title(title())
     plt.ylim(0, 1)
     plt.ylabel("probability")
@@ -177,8 +189,8 @@ def plot_ant_histograms(ranges):
 
     index = 6  # hip_4
     joint_name = "hip_4"
-    df = pd.DataFrame(ant_histogram_data[index], columns=["radians"])
-    plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.02), element="step")
+    df = pd.DataFrame(ant_histogram_data_clipped[index], columns=["radians"])
+    plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1] + 0.02, 0.02), element="step")
     plot.set_title(title())
     plt.ylim(0, 1)
     plt.ylabel("probability")
@@ -187,7 +199,7 @@ def plot_ant_histograms(ranges):
 
     index = 7  # ankle_4
     joint_name = "ankle_4"
-    df = pd.DataFrame(ant_histogram_data[index], columns=["radians"])
+    df = pd.DataFrame(ant_histogram_data_clipped[index], columns=["radians"])
     plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.015), element="step")
     plot.set_title(title())
     plt.ylim(0, 1)
@@ -214,7 +226,7 @@ def plot_ant_heatmap(ranges):
 
     ant_histogram_data_normalized = []
 
-    # normalize data
+    # normalize and clip data
     for i in range(len(ranges)):
 
         min = ranges[i][0]
@@ -545,17 +557,29 @@ def plot_fetchreach_histograms(ranges):
 
     fetchreach_histogram_data = np.load(experiment_data_directory + "/{}_histogram_data_{}.npy".format(experiment_name, num_seeds))
 
+    fetchreach_histogram_data_clipped = []
+
+    # clip data
+    for i in range(len(ranges)):
+        min = ranges[i][0]
+        max = ranges[i][1]
+        data = fetchreach_histogram_data[i]
+
+        clipped = np.clip(data, min, max)
+
+        fetchreach_histogram_data_clipped.append(clipped)
+
     def title():
         if suffix == "":
-            title = "{}\n{}\n{}".format(algorithm, name, joint_name)  # todo
+            title = "{}\n{}\n{}".format(algorithm, name, joint_name)
         else:
             title = "{} ({})\n{}\n{}".format(algorithm, suffix_eval, name, joint_name)
         return title
 
     index = 0  # shoulder_pan_joint
     joint_name = "shoulder pan joint"
-    df = pd.DataFrame(fetchreach_histogram_data[index], columns=["radians"])
-    plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.05), element="step")
+    df = pd.DataFrame(fetchreach_histogram_data_clipped[index], columns=["radians"])
+    plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1] + 0.05, 0.05), element="step")
     plot.set_title(title())
     plt.ylim(0, 1)
     plt.ylabel("probability")
@@ -564,8 +588,8 @@ def plot_fetchreach_histograms(ranges):
 
     index = 1  # shoulder_lift_joint
     joint_name = "shoulder lift joint"
-    df = pd.DataFrame(fetchreach_histogram_data[index], columns=["radians"])
-    plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.05), element="step")
+    df = pd.DataFrame(fetchreach_histogram_data_clipped[index], columns=["radians"])
+    plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1] + 0.05, 0.05), element="step")
     plot.set_title(title())
     plt.ylim(0, 1)
     plt.ylabel("probability")
@@ -574,8 +598,8 @@ def plot_fetchreach_histograms(ranges):
 
     index = 2  # upperarm_roll_joint
     joint_name = "upperarm roll joint"
-    df = pd.DataFrame(fetchreach_histogram_data[index], columns=["radians"])
-    plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.1), element="step")
+    df = pd.DataFrame(fetchreach_histogram_data_clipped[index], columns=["radians"])
+    plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1] + 0.1, 0.1), element="step")
     plot.set_title(title())
     plt.ylim(0, 1)
     plt.ylabel("probability")
@@ -584,8 +608,8 @@ def plot_fetchreach_histograms(ranges):
 
     index = 3  # elbow_flex_joint
     joint_name = "elbow flex joint"
-    df = pd.DataFrame(fetchreach_histogram_data[index], columns=["radians"])
-    plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.1), element="step")
+    df = pd.DataFrame(fetchreach_histogram_data_clipped[index], columns=["radians"])
+    plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1] + 0.1, 0.1), element="step")
     plot.set_title(title())
     plt.ylim(0, 1)
     plt.ylabel("probability")
@@ -594,8 +618,8 @@ def plot_fetchreach_histograms(ranges):
 
     index = 4  # forearm_roll_joint
     joint_name = "forearm roll joint"
-    df = pd.DataFrame(fetchreach_histogram_data[index], columns=["radians"])
-    plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.1), element="step")
+    df = pd.DataFrame(fetchreach_histogram_data_clipped[index], columns=["radians"])
+    plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1] + 0.1, 0.1), element="step")
     plot.set_title(title())
     plt.ylim(0, 1)
     plt.ylabel("probability")
@@ -604,8 +628,8 @@ def plot_fetchreach_histograms(ranges):
 
     index = 5  # wrist_flex_joint
     joint_name = "wrist flex joint"
-    df = pd.DataFrame(fetchreach_histogram_data[index], columns=["radians"])
-    plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.05), element="step")
+    df = pd.DataFrame(fetchreach_histogram_data_clipped[index], columns=["radians"])
+    plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1] + 0.05, 0.05), element="step")
     plot.set_title(title())
     plt.ylim(0, 1)
     plt.ylabel("probability")
@@ -614,8 +638,8 @@ def plot_fetchreach_histograms(ranges):
 
     index = 6  # wrist_roll_joint
     joint_name = "wrist roll joint"
-    df = pd.DataFrame(fetchreach_histogram_data[index], columns=["radians"])
-    plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.1), element="step")
+    df = pd.DataFrame(fetchreach_histogram_data_clipped[index], columns=["radians"])
+    plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1] + 0.1, 0.1), element="step")
     plot.set_title(title())
     plt.ylim(0, 1)
     plt.ylabel("probability")
@@ -641,7 +665,7 @@ def plot_fetchreach_heatmap(ranges):
 
     fetchreach_histogram_data_normalized = []
 
-    # normalize data
+    # normalize and clip data
     for i in range(len(ranges)):
 
         min = ranges[i][0]
@@ -1035,10 +1059,11 @@ if __name__ == "__main__":
     name = None
 
     num_seeds = 10
+    print(colored("the number of seeds is set to {}".format(num_seeds), "blue"))
 
     collect_data = args.collect_data
 
-    repeat = False
+    repeat = True
 
     if repeat:
 
@@ -1070,33 +1095,33 @@ if __name__ == "__main__":
         file = "/media/sschoepp/easystore/shared/ant/faulty/ppo/v1/PPOv2_AntEnv-v1:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:True_rn:True_d:cpu_resumed"
         draw_histogram()
 
-    # PPO v2
+        # PPO v2
 
-    file = "/media/sschoepp/easystore/shared/ant/faulty/ppo/v2/PPOv2_AntEnv-v2:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:False_rn:False_d:cpu_resumed"
-    draw_histogram()
+        file = "/media/sschoepp/easystore/shared/ant/faulty/ppo/v2/PPOv2_AntEnv-v2:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:False_rn:False_d:cpu_resumed"
+        draw_histogram()
 
-    file = "/media/sschoepp/easystore/shared/ant/faulty/ppo/v2/PPOv2_AntEnv-v2:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:False_rn:True_d:cpu_resumed"
-    draw_histogram()
+        file = "/media/sschoepp/easystore/shared/ant/faulty/ppo/v2/PPOv2_AntEnv-v2:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:False_rn:True_d:cpu_resumed"
+        draw_histogram()
 
-    file = "/media/sschoepp/easystore/shared/ant/faulty/ppo/v2/PPOv2_AntEnv-v2:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:True_rn:False_d:cpu_resumed"
-    draw_histogram()
+        file = "/media/sschoepp/easystore/shared/ant/faulty/ppo/v2/PPOv2_AntEnv-v2:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:True_rn:False_d:cpu_resumed"
+        draw_histogram()
 
-    file = "/media/sschoepp/easystore/shared/ant/faulty/ppo/v2/PPOv2_AntEnv-v2:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:True_rn:True_d:cpu_resumed"
-    draw_histogram()
+        file = "/media/sschoepp/easystore/shared/ant/faulty/ppo/v2/PPOv2_AntEnv-v2:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:True_rn:True_d:cpu_resumed"
+        draw_histogram()
 
-    # PPO v3
+        # PPO v3
 
-    file = "/media/sschoepp/easystore/shared/ant/faulty/ppo/v3/PPOv2_AntEnv-v3:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:False_rn:False_d:cpu_resumed"
-    draw_histogram()
+        file = "/media/sschoepp/easystore/shared/ant/faulty/ppo/v3/PPOv2_AntEnv-v3:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:False_rn:False_d:cpu_resumed"
+        draw_histogram()
 
-    file = "/media/sschoepp/easystore/shared/ant/faulty/ppo/v3/PPOv2_AntEnv-v3:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:False_rn:True_d:cpu_resumed"
-    draw_histogram()
+        file = "/media/sschoepp/easystore/shared/ant/faulty/ppo/v3/PPOv2_AntEnv-v3:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:False_rn:True_d:cpu_resumed"
+        draw_histogram()
 
-    file = "/media/sschoepp/easystore/shared/ant/faulty/ppo/v3/PPOv2_AntEnv-v3:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:True_rn:False_d:cpu_resumed"
-    draw_histogram()
+        file = "/media/sschoepp/easystore/shared/ant/faulty/ppo/v3/PPOv2_AntEnv-v3:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:True_rn:False_d:cpu_resumed"
+        draw_histogram()
 
-    file = "/media/sschoepp/easystore/shared/ant/faulty/ppo/v3/PPOv2_AntEnv-v3:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:True_rn:True_d:cpu_resumed"
-    draw_histogram()
+        file = "/media/sschoepp/easystore/shared/ant/faulty/ppo/v3/PPOv2_AntEnv-v3:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:True_rn:True_d:cpu_resumed"
+        draw_histogram()
 
     # PPO v4  # todo
 
@@ -1172,63 +1197,57 @@ if __name__ == "__main__":
         file = "/media/sschoepp/easystore/shared/ant/faulty/sac/v4/SACv2_AntEnv-v4:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:True_rn:True_a:True_d:cuda_resumed"
         draw_histogram()
 
-    """fetchreach normal"""
-
-    if repeat:
+        """fetchreach normal"""
 
         # PPO v0
 
         file = "/media/sschoepp/easystore/shared/fetchreach/normal/PPOv2_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_d:cpu_ps:True_pss:43"
         draw_histogram()
 
-    # PPO v0GE  # todo
+        # PPO v0GE
 
-    # file = "/media/sschoepp/easystore/shared/fetchreach/normal/PPOv2_FetchReachEnvGE-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_d:cpu_ps:True_pss:43"
-    # draw_histogram()
-
-    if repeat:
+        file = "/media/sschoepp/easystore/shared/fetchreach/normal/PPOv2_FetchReachEnvGE-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_d:cpu_ps:True_pss:43"
+        draw_histogram()
 
         # SAC v0
 
         file = "/media/sschoepp/easystore/shared/fetchreach/normal/SACv2_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_a:True_d:cuda_ps:True_pss:21"
         draw_histogram()
 
-    # SAC v0GE  # todo
+        # SAC v0GE
 
-    # file = "/media/sschoepp/easystore/shared/fetchreach/normal/SACv2_FetchReachEnvGE-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_a:True_d:cuda_ps:True_pss:21"
-    # draw_histogram()
+        file = "/media/sschoepp/easystore/shared/fetchreach/normal/SACv2_FetchReachEnvGE-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_a:True_d:cuda_ps:True_pss:21"
+        draw_histogram()
 
-    """fetchreach faulty"""
+        """fetchreach faulty"""
 
-    # PPO v1
+        # PPO v1
 
-    file = "/media/sschoepp/easystore/shared/fetchreach/faulty/ppo/v1/PPOv2_FetchReachEnv-v1:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:False_rn:False_d:cpu"
-    draw_histogram()
+        file = "/media/sschoepp/easystore/shared/fetchreach/faulty/ppo/v1/PPOv2_FetchReachEnv-v1:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:False_rn:False_d:cpu"
+        draw_histogram()
 
-    file = "/media/sschoepp/easystore/shared/fetchreach/faulty/ppo/v1/PPOv2_FetchReachEnv-v1:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:False_rn:True_d:cpu"
-    draw_histogram()
+        file = "/media/sschoepp/easystore/shared/fetchreach/faulty/ppo/v1/PPOv2_FetchReachEnv-v1:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:False_rn:True_d:cpu"
+        draw_histogram()
 
-    file = "/media/sschoepp/easystore/shared/fetchreach/faulty/ppo/v1/PPOv2_FetchReachEnv-v1:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:True_rn:False_d:cpu"
-    draw_histogram()
+        file = "/media/sschoepp/easystore/shared/fetchreach/faulty/ppo/v1/PPOv2_FetchReachEnv-v1:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:True_rn:False_d:cpu"
+        draw_histogram()
 
-    file = "/media/sschoepp/easystore/shared/fetchreach/faulty/ppo/v1/PPOv2_FetchReachEnv-v1:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:True_rn:True_d:cpu"
-    draw_histogram()
+        file = "/media/sschoepp/easystore/shared/fetchreach/faulty/ppo/v1/PPOv2_FetchReachEnv-v1:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:True_rn:True_d:cpu"
+        draw_histogram()
 
-    # PPO v1GE  # todo
+        # PPO v1GE
 
-    # file = "/media/sschoepp/easystore/shared/fetchreach/faulty/ppo/v1GE/PPOv2_FetchReachEnvGE-v1:6000000_FetchReachEnvGE-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:False_rn:False_d:cpu"
-    # draw_histogram()
+        file = "/media/sschoepp/easystore/shared/fetchreach/faulty/ppo/v1GE/PPOv2_FetchReachEnvGE-v1:6000000_FetchReachEnvGE-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:False_rn:False_d:cpu"
+        draw_histogram()
 
-    # file = "/media/sschoepp/easystore/shared/fetchreach/faulty/ppo/v1GE/PPOv2_FetchReachEnvGE-v1:6000000_FetchReachEnvGE-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:False_rn:True_d:cpu"
-    # draw_histogram()
+        file = "/media/sschoepp/easystore/shared/fetchreach/faulty/ppo/v1GE/PPOv2_FetchReachEnvGE-v1:6000000_FetchReachEnvGE-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:False_rn:True_d:cpu"
+        draw_histogram()
 
-    # file = "/media/sschoepp/easystore/shared/fetchreach/faulty/ppo/v1GE/PPOv2_FetchReachEnvGE-v1:6000000_FetchReachEnvGE-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:True_rn:False_d:cpu"
-    # draw_histogram()
+        file = "/media/sschoepp/easystore/shared/fetchreach/faulty/ppo/v1GE/PPOv2_FetchReachEnvGE-v1:6000000_FetchReachEnvGE-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:True_rn:False_d:cpu"
+        draw_histogram()
 
-    # file = "/media/sschoepp/easystore/shared/fetchreach/faulty/ppo/v1GE/PPOv2_FetchReachEnvGE-v1:6000000_FetchReachEnvGE-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:True_rn:True_d:cpu"
-    # draw_histogram()
-
-    if repeat:
+        file = "/media/sschoepp/easystore/shared/fetchreach/faulty/ppo/v1GE/PPOv2_FetchReachEnvGE-v1:6000000_FetchReachEnvGE-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:True_rn:True_d:cpu"
+        draw_histogram()
 
         # PPO v4
 
@@ -1244,33 +1263,33 @@ if __name__ == "__main__":
         file = "/media/sschoepp/easystore/shared/fetchreach/faulty/ppo/v4/PPOv2_FetchReachEnv-v4:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:True_rn:True_d:cpu"
         draw_histogram()
 
-    # SAC v1
+        # SAC v1
 
-    file = "/media/sschoepp/easystore/shared/fetchreach/faulty/sac/v1/SACv2_FetchReachEnv-v1:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:False_rn:False_a:True_d:cuda"
-    draw_histogram()
+        file = "/media/sschoepp/easystore/shared/fetchreach/faulty/sac/v1/SACv2_FetchReachEnv-v1:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:False_rn:False_a:True_d:cuda"
+        draw_histogram()
 
-    file = "/media/sschoepp/easystore/shared/fetchreach/faulty/sac/v1/SACv2_FetchReachEnv-v1:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:False_rn:True_a:True_d:cuda"
-    draw_histogram()
+        file = "/media/sschoepp/easystore/shared/fetchreach/faulty/sac/v1/SACv2_FetchReachEnv-v1:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:False_rn:True_a:True_d:cuda"
+        draw_histogram()
 
-    file = "/media/sschoepp/easystore/shared/fetchreach/faulty/sac/v1/SACv2_FetchReachEnv-v1:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:True_rn:False_a:True_d:cuda"
-    draw_histogram()
+        file = "/media/sschoepp/easystore/shared/fetchreach/faulty/sac/v1/SACv2_FetchReachEnv-v1:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:True_rn:False_a:True_d:cuda"
+        draw_histogram()
 
-    file = "/media/sschoepp/easystore/shared/fetchreach/faulty/sac/v1/SACv2_FetchReachEnv-v1:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:True_rn:True_a:True_d:cuda"
-    draw_histogram()
+        file = "/media/sschoepp/easystore/shared/fetchreach/faulty/sac/v1/SACv2_FetchReachEnv-v1:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:True_rn:True_a:True_d:cuda"
+        draw_histogram()
 
-    # SAC v1GE  # todo
+        # SAC v1GE
 
-    # file = "/media/sschoepp/easystore/shared/fetchreach/faulty/sac/v1GE/SACv2_FetchReachEnvGE-v1:2000000_FetchReachEnvGE-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:False_rn:False_a:True_d:cuda"
-    # draw_histogram()
+        file = "/media/sschoepp/easystore/shared/fetchreach/faulty/sac/v1GE/SACv2_FetchReachEnvGE-v1:2000000_FetchReachEnvGE-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:False_rn:False_a:True_d:cuda"
+        draw_histogram()
 
-    # file = "/media/sschoepp/easystore/shared/fetchreach/faulty/sac/v1GE/SACv2_FetchReachEnvGE-v1:2000000_FetchReachEnvGE-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:False_rn:True_a:True_d:cuda"
-    # draw_histogram()
+        file = "/media/sschoepp/easystore/shared/fetchreach/faulty/sac/v1GE/SACv2_FetchReachEnvGE-v1:2000000_FetchReachEnvGE-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:False_rn:True_a:True_d:cuda"
+        draw_histogram()
 
-    # file = "/media/sschoepp/easystore/shared/fetchreach/faulty/sac/v1GE/SACv2_FetchReachEnvGE-v1:2000000_FetchReachEnvGE-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:True_rn:False_a:True_d:cuda"
-    # draw_histogram()
+        file = "/media/sschoepp/easystore/shared/fetchreach/faulty/sac/v1GE/SACv2_FetchReachEnvGE-v1:2000000_FetchReachEnvGE-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:True_rn:False_a:True_d:cuda"
+        draw_histogram()
 
-    # file = "/media/sschoepp/easystore/shared/fetchreach/faulty/sac/v1GE/SACv2_FetchReachEnvGE-v1:2000000_FetchReachEnvGE-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:True_rn:True_a:True_d:cuda"
-    # draw_histogram()
+        file = "/media/sschoepp/easystore/shared/fetchreach/faulty/sac/v1GE/SACv2_FetchReachEnvGE-v1:2000000_FetchReachEnvGE-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:True_rn:True_a:True_d:cuda"
+        draw_histogram()
 
     if repeat:
 

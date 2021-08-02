@@ -193,10 +193,10 @@ class NormalController:
 
         if self.computecanada:
             # path for compute canada
-            self.data_dir = os.getenv("HOME") + "/scratch/openai/data/" + self.experiment + "/seed" + str(self.parameters["seed"])
+            self.data_dir = os.getenv("HOME") + "/scratch/openai/data/" + self.experiment + "/seed" + str(self.parameters["seed"]) + "_mod"
         else:
             # path for servers and local machines
-            self.data_dir = os.getenv("HOME") + "/Documents/openai/data/" + self.experiment + "/seed" + str(self.parameters["seed"])
+            self.data_dir = os.getenv("HOME") + "/Documents/openai/data/" + self.experiment + "/seed" + str(self.parameters["seed"]) + "_mod"
 
         # old data
 

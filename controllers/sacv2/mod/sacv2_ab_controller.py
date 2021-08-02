@@ -703,6 +703,16 @@ class AbnormalController:
         plt.savefig(jpg_foldername + "/alpha_value.jpg")
         plt.close()
 
+        # training: entropy vs num_updates
+        df.plot(x="num_updates", y="entropy", color="blue", legend=False)
+        plt.axvline(x=(self.parameters["n_time_steps"] - self.parameters["batch_size"]) * self.parameters["model_updates_per_step"], ymin=0, ymax=1, color="red", linewidth=2, alpha=0.3)  # malfunction marker
+        plt.xlabel("updates")
+        plt.ylabel("entropy", rotation="horizontal", labelpad=30)
+        plt.title("Entropy")
+        pss.plot_settings()
+        plt.savefig(jpg_foldername + "/entropy_updates.jpg")
+        plt.close()
+
         print("plotting complete")
 
         print(self.LINE)

@@ -3,9 +3,9 @@ RESUME_FILE="/home/sschoepp/Documents/openai/data/SACv2_AntEnv-v2:20000000_Ant-v
 
 for s in {0..4}
 do
-  tmux new-session -d -s sac-$s "CUDA_VISIBLE_DEVICES=6 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH --resume -rf $RESUME_FILE/seed$s"
+  tmux new-session -d -s sac-$s "CUDA_VISIBLE_DEVICES=6 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -c --resume -rf $RESUME_FILE/seed$s"
 done
 for s in {5..9}
 do
-  tmux new-session -d -s sac-$s "CUDA_VISIBLE_DEVICES=7 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH --resume -rf $RESUME_FILE/seed$s"
+  tmux new-session -d -s sac-$s "CUDA_VISIBLE_DEVICES=7 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -c --resume -rf $RESUME_FILE/seed$s"
 done

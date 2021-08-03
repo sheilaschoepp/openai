@@ -1,10 +1,11 @@
-PPO_AB_CONTROLLER_ABSOLUTE_PATH="/home/sschoepp/Documents/openai/controllers/ppov2/mod2/ppov2_ab_controller.py"
-RESUME_FILE="/local/melco2/shared/PPOv2_AntEnv-v4:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:True_rn:False_d:cpu_r"
-tmux new-session -d -s ppov4cm-7 "python $PPO_AB_CONTROLLER_ABSOLUTE_PATH --resume -rf $RESUME_FILE/seed7"
-tmux new-session -d -s ppov4cm-8 "python $PPO_AB_CONTROLLER_ABSOLUTE_PATH --resume -rf $RESUME_FILE/seed8"
-tmux new-session -d -s ppov4cm-9 "python $PPO_AB_CONTROLLER_ABSOLUTE_PATH --resume -rf $RESUME_FILE/seed9"
-RESUME_FILE="/local/melco2/shared/PPOv2_AntEnv-v4:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:False_rn:True_d:cpu_r"
-tmux new-session -d -s ppov4rn-0 "python $PPO_AB_CONTROLLER_ABSOLUTE_PATH --resume -rf $RESUME_FILE/seed0"
-tmux new-session -d -s ppov4rn-1 "python $PPO_AB_CONTROLLER_ABSOLUTE_PATH --resume -rf $RESUME_FILE/seed1"
-tmux new-session -d -s ppov4rn-2 "python $PPO_AB_CONTROLLER_ABSOLUTE_PATH --resume -rf $RESUME_FILE/seed2"
-tmux new-session -d -s ppov4rn-3 "python $PPO_AB_CONTROLLER_ABSOLUTE_PATH --resume -rf $RESUME_FILE/seed3"
+SAC_AB_CONTROLLER_ABSOLUTE_PATH="/home/sschoepp/Documents/openai/controllers/sacv2/sacv2_ab_controller.py"
+RESUME_FILE="/home/sschoepp/Documents/openai/data/SACv2_AntEnv-v2:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:True_rn:False_a:True_d:cuda_r"
+
+for s in {0..4}
+do
+  tmux new-session -d -s sac-$s "CUDA_VISIBLE_DEVICES=6 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH --resume -rf $RESUME_FILE/seed$s"
+done
+for s in {5..9}
+do
+  tmux new-session -d -s sac-$s "CUDA_VISIBLE_DEVICES=7 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH --resume -rf $RESUME_FILE/seed$s"
+done

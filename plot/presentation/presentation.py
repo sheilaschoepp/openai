@@ -398,7 +398,7 @@ if __name__ == "__main__":
     # v1
 
     zoom_xmin = 600
-    zoom_xmax = 800
+    zoom_xmax = 660
     zoom_ymin = ymin
     zoom_ymax = ymax
 
@@ -407,7 +407,7 @@ if __name__ == "__main__":
     # v2
 
     zoom_xmin = 600
-    zoom_xmax = 800
+    zoom_xmax = 660
     zoom_ymin = ymin
     zoom_ymax = ymax
 
@@ -416,7 +416,7 @@ if __name__ == "__main__":
     # v3
 
     zoom_xmin = 600
-    zoom_xmax = 800
+    zoom_xmax = 660
     zoom_ymin = ymin
     zoom_ymax = ymax
 
@@ -425,7 +425,7 @@ if __name__ == "__main__":
     # v4
 
     zoom_xmin = 600
-    zoom_xmax = 800
+    zoom_xmax = 660
     zoom_ymin = ymin
     zoom_ymax = ymax
 
@@ -443,7 +443,7 @@ if __name__ == "__main__":
     # v1
 
     zoom_xmin = 20
-    zoom_xmax = 27
+    zoom_xmax = 22
     zoom_ymin = ymin
     zoom_ymax = ymax
 
@@ -452,7 +452,7 @@ if __name__ == "__main__":
     # v2
 
     zoom_xmin = 20
-    zoom_xmax = 27
+    zoom_xmax = 22
     zoom_ymin = ymin
     zoom_ymax = ymax
 
@@ -461,7 +461,7 @@ if __name__ == "__main__":
     # v3
 
     zoom_xmin = 20
-    zoom_xmax = 27
+    zoom_xmax = 22
     zoom_ymin = ymin
     zoom_ymax = ymax
 
@@ -470,7 +470,7 @@ if __name__ == "__main__":
     # v4
 
     zoom_xmin = 20
-    zoom_xmax = 27
+    zoom_xmax = 22
     zoom_ymin = ymin
     zoom_ymax = ymax
 
@@ -497,7 +497,7 @@ if __name__ == "__main__":
     # v1
 
     zoom_xmin = 6
-    zoom_xmax = 6.5
+    zoom_xmax = 6.6
     zoom_ymin = -12
     zoom_ymax = 1
 
@@ -506,7 +506,7 @@ if __name__ == "__main__":
     # v1GE
 
     zoom_xmin = 6
-    zoom_xmax = 6.5
+    zoom_xmax = 6.6
     zoom_ymin = -15
     zoom_ymax = 1
 
@@ -542,7 +542,7 @@ if __name__ == "__main__":
     # v1
 
     zoom_xmin = 2
-    zoom_xmax = 2.05
+    zoom_xmax = 2.2
     zoom_ymin = -12
     zoom_ymax = 1
 
@@ -551,7 +551,7 @@ if __name__ == "__main__":
     # v1GE
 
     zoom_xmin = 2
-    zoom_xmax = 2.05
+    zoom_xmax = 2.2
     zoom_ymin = -15
     zoom_ymax = 1
 

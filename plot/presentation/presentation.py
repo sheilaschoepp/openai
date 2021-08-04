@@ -368,6 +368,8 @@ if __name__ == "__main__":
     # confidence interval z value for 9 degrees of freedom (10 seeds)
     if num_seeds == 10:
         CI_Z = 2.262
+    elif num_seeds == 30:
+        CI_Z = 2.045  # todo double check value
     else:
         print(colored("__main__: you have specified {} seeds; you must set a new value for CI_Z".format(num_seeds), "red"))
         exit()
@@ -505,7 +507,7 @@ if __name__ == "__main__":
 
     zoom_xmin = 6
     zoom_xmax = 6.5
-    zoom_ymin = -12
+    zoom_ymin = -15
     zoom_ymax = 1
 
     plot_experiment(os.path.join(ppo_data_dir, "v1GE"))
@@ -518,6 +520,15 @@ if __name__ == "__main__":
     zoom_ymax = 1
 
     plot_experiment(os.path.join(ppo_data_dir, "v4"))
+
+    # v6
+
+    zoom_xmin = 6
+    zoom_xmax = 6.6
+    zoom_ymin = -25
+    zoom_ymax = 1
+
+    plot_experiment(os.path.join(ppo_data_dir, "v6"))
 
     # SAC
 
@@ -554,3 +565,12 @@ if __name__ == "__main__":
     zoom_ymax = 1
 
     plot_experiment(os.path.join(sac_data_dir, "v4"))
+
+    # v6
+
+    zoom_xmin = 2
+    zoom_xmax = 2.2
+    zoom_ymin = -25
+    zoom_ymax = 1
+
+    plot_experiment(os.path.join(sac_data_dir, "v6"))

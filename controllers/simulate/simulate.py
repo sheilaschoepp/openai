@@ -1,9 +1,9 @@
 import argparse
-import pickle
 import random
 import time
 
 import numpy as np
+import pickle5 as pickle
 import torch
 
 from controllers.ppov2.ppov2_agent import PPOv2
@@ -155,7 +155,7 @@ class Simulate:
 
             max_steps_this_episode = 1000
             while not terminal and ((max_steps_this_episode <= 0) or (self.rlg.num_ep_steps() < max_steps_this_episode)):
-                _, _, terminal, _ = self.rlg.rl_step()
+                reward, _, terminal, _ = self.rlg.rl_step()
 
                 time.sleep(0.1)
 

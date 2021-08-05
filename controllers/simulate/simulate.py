@@ -159,6 +159,8 @@ class Simulate:
 
                 time.sleep(0.1)
 
+            # print(self.rlg.episode_reward())
+
 
 if __name__ == "__main__":
 

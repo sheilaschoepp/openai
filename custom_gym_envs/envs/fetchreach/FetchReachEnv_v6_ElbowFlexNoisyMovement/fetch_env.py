@@ -11,7 +11,7 @@ IMPORTANT: you must set env_name in __init__
 import numpy as np
 from termcolor import colored  # modification here
 
-from custom_gym_envs.envs.fetchreach.FetchReachEnv_v6_NoisyMovement import robot_env, rotations, \
+from custom_gym_envs.envs.fetchreach.FetchReachEnv_v6_ElbowFlexNoisyMovement import robot_env, rotations, \
     utils  # modification here
 from kinematics.kinematics import Kinematics  # modification here
 
@@ -59,7 +59,7 @@ class FetchEnv(robot_env.RobotEnv):
 
         # modification here: start
         self.goal_elimination = goal_elimination
-        env_name = "FetchReachEnv{}-v0".format("GE" if self.goal_elimination else "")
+        env_name = "FetchReachEnv{}-v6".format("GE" if self.goal_elimination else "")
         self.kinematics = Kinematics(env_name)
         self.total_sampled_goals = 0
         self.reachable_sampled_goals = 0
@@ -95,10 +95,7 @@ class FetchEnv(robot_env.RobotEnv):
         action = action.copy()  # ensure that we don't change the action outside of this scope
         pos_ctrl, gripper_ctrl = action[:3], action[3]
 
-        # Modification here: maximum cchange in position given by a random number generator
-        # pos_ctrl *= self.np_random.uniform(-0.05, 0.05)  # limit maximum change in position
         pos_ctrl *= 0.05  # limit maximum change in position
-
         rot_ctrl = [1., 0., 1., 0.]  # fixed rotation of the end effector, expressed as a quaternion
         gripper_ctrl = np.array([gripper_ctrl, gripper_ctrl])
         assert gripper_ctrl.shape == (2,)
@@ -111,6 +108,7 @@ class FetchEnv(robot_env.RobotEnv):
         utils.mocap_set_action(self.sim, action)
 
     def _get_obs(self):
+
         # positions
         grip_pos = self.sim.data.get_site_xpos('robot0:grip')
         dt = self.sim.nsubsteps * self.sim.model.opt.timestep
@@ -189,10 +187,10 @@ class FetchEnv(robot_env.RobotEnv):
         else:
 
             # goal = self.initial_gripper_xpos[:3] + self.np_random.uniform(-self.target_range, self.target_range, size=3)
+
             # modification here: start
             goal = None
             if self.goal_elimination:
-                print('goal sampled and eliminated')
                 reachable = False
                 count = 0
                 while not reachable:

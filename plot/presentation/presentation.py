@@ -70,7 +70,6 @@ def plot_experiment(directory):
 
             data_dir = os.path.join(directory, dir_)
 
-            x = os.listdir(data_dir)
             for s in os.listdir(data_dir):
 
                 seed_foldername = os.path.join(data_dir, s)

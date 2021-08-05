@@ -97,7 +97,7 @@ added rgba to the ankle_4 and ankle_4_2 joint capsules \\
             <geom fromto="0.0 0.0 0.0 0.2 -0.2 0.0" name="fourth_ankle_geom" size="0.08" type="capsule" rgba="0.4 0 0 1"/> <!-- modification here -->
             <!-- modification here: start -->
             <body pos="0.2 -0.2 0">
-              <joint axis="1 1 0" name="ankle_4_2" pos="0.0 0.0 0.0" range="-180 180" type="hinge" limited="true"/>
+              <joint axis="1 1 0" name="ankle_4_2" pos="0.0 0.0 0.0" range="-180 180" type="hinge" limited="true"/> <!-- modification here -->
               <geom fromto="0.0 0.0 0.0 0.2 -0.2 0.0" name="fourth_ankle_geom_2" size="0.08" type="capsule" rgba="0.4 0 0 1"/>
               <!-- modification here: end -->
             </body>

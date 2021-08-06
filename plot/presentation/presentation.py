@@ -367,7 +367,7 @@ if __name__ == "__main__":
     if num_seeds == 10:
         CI_Z = 2.262
     elif num_seeds == 30:
-        CI_Z = 2.045  # todo double check value
+        CI_Z = 2.045
     else:
         print(colored("__main__: you have specified {} seeds; you must set a new value for CI_Z".format(num_seeds), "red"))
         exit()

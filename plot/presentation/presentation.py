@@ -70,7 +70,6 @@ def plot_experiment(directory):
 
             data_dir = os.path.join(directory, dir_)
 
-            x = os.listdir(data_dir)
             for s in os.listdir(data_dir):
 
                 seed_foldername = os.path.join(data_dir, s)
@@ -83,7 +82,6 @@ def plot_experiment(directory):
             if len(dfs) != num_seeds:
                 # warning to let user know that seeds are missing
                 print(colored("The number of seeds for this experiment is 10 but this setting only has {} seeds: {}".format(str(len(dfs)), dir_), "red"))
-                print(colored(sorted(x), "red"))
 
             df = pd.concat(dfs)
             df = df.groupby(df.index)
@@ -398,7 +396,7 @@ if __name__ == "__main__":
     # v1
 
     zoom_xmin = 600
-    zoom_xmax = 800
+    zoom_xmax = 660
     zoom_ymin = ymin
     zoom_ymax = ymax
 
@@ -407,7 +405,7 @@ if __name__ == "__main__":
     # v2
 
     zoom_xmin = 600
-    zoom_xmax = 800
+    zoom_xmax = 660
     zoom_ymin = ymin
     zoom_ymax = ymax
 
@@ -416,7 +414,7 @@ if __name__ == "__main__":
     # v3
 
     zoom_xmin = 600
-    zoom_xmax = 800
+    zoom_xmax = 660
     zoom_ymin = ymin
     zoom_ymax = ymax
 
@@ -425,11 +423,11 @@ if __name__ == "__main__":
     # v4
 
     zoom_xmin = 600
-    zoom_xmax = 800
+    zoom_xmax = 660
     zoom_ymin = ymin
     zoom_ymax = ymax
 
-    # plot_experiment(os.path.join(ppo_data_dir, "v4"))
+    plot_experiment(os.path.join(ppo_data_dir, "v4"))
 
     # SAC
 
@@ -443,7 +441,7 @@ if __name__ == "__main__":
     # v1
 
     zoom_xmin = 20
-    zoom_xmax = 27
+    zoom_xmax = 22
     zoom_ymin = ymin
     zoom_ymax = ymax
 
@@ -452,7 +450,7 @@ if __name__ == "__main__":
     # v2
 
     zoom_xmin = 20
-    zoom_xmax = 27
+    zoom_xmax = 22
     zoom_ymin = ymin
     zoom_ymax = ymax
 
@@ -461,7 +459,7 @@ if __name__ == "__main__":
     # v3
 
     zoom_xmin = 20
-    zoom_xmax = 27
+    zoom_xmax = 22
     zoom_ymin = ymin
     zoom_ymax = ymax
 
@@ -470,7 +468,7 @@ if __name__ == "__main__":
     # v4
 
     zoom_xmin = 20
-    zoom_xmax = 27
+    zoom_xmax = 22
     zoom_ymin = ymin
     zoom_ymax = ymax
 
@@ -497,7 +495,7 @@ if __name__ == "__main__":
     # v1
 
     zoom_xmin = 6
-    zoom_xmax = 6.5
+    zoom_xmax = 6.6
     zoom_ymin = -12
     zoom_ymax = 1
 
@@ -506,7 +504,7 @@ if __name__ == "__main__":
     # v1GE
 
     zoom_xmin = 6
-    zoom_xmax = 6.5
+    zoom_xmax = 6.6
     zoom_ymin = -15
     zoom_ymax = 1
 
@@ -542,7 +540,7 @@ if __name__ == "__main__":
     # v1
 
     zoom_xmin = 2
-    zoom_xmax = 2.05
+    zoom_xmax = 2.2
     zoom_ymin = -12
     zoom_ymax = 1
 
@@ -551,7 +549,7 @@ if __name__ == "__main__":
     # v1GE
 
     zoom_xmin = 2
-    zoom_xmax = 2.05
+    zoom_xmax = 2.2
     zoom_ymin = -15
     zoom_ymax = 1
 

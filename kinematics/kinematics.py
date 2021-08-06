@@ -47,6 +47,8 @@ class Kinematics:
             self.model_xml = str(Path.home()) + "/Documents/openai/custom_gym_envs/envs/fetchreach/FetchReachEnv_v4_BrokenShoulderLiftSensor/assets/fetch/reach.xml"
         elif "v5" in self.env_name:
             self.model_xml = str(Path.home()) + "/Documents/openai/custom_gym_envs/envs/fetchreach/FetchReachEnv_v5_BrokenJointsTBD/assets/fetch/reach.xml"
+        elif "v6" in self.env_name:
+            self.model_xml = str(Path.home()) + "/Documents/openai/custom_gym_envs/envs/fetchreach/FetchReachEnv_v6_ElbowFlexNoisyMovement/assets/fetch/reach.xml"
 
         robot_xml = self.model_xml[:-9] + "robot.xml"
         tree = ET.parse(robot_xml)

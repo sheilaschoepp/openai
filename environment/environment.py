@@ -2,10 +2,9 @@ import os
 import pickle
 
 import gym
-import numpy as np
 
-from utils.rl_glue import BaseEnvironment
 from environment.fetchreach_observation_wrapper import FetchReachObservationWrapper
+from utils.rl_glue import BaseEnvironment
 
 
 class Environment(BaseEnvironment):

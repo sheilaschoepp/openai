@@ -9,12 +9,9 @@ from gym.utils import seeding
 try:
     import mujoco_py
 except ImportError as e:
-    raise error.DependencyNotInstalled(
-        "{}. (HINT: you need to install mujoco_py, and also perform the setup instructions here: https://github.com/openai/mujoco-py/.)".format(
-            e))
+    raise error.DependencyNotInstalled("{}. (HINT: you need to install mujoco_py, and also perform the setup instructions here: https://github.com/openai/mujoco-py/.)".format(e))
 
 DEFAULT_SIZE = 500
-
 
 class RobotEnv(gym.GoalEnv):
     def __init__(self, model_path, initial_qpos, n_actions, n_substeps):

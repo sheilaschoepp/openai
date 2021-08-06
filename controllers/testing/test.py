@@ -30,4 +30,4 @@ for e in range(100):
         action = env.action_space.sample()
         observation, reward, done, info = env.step(action)
         env.render()
-        time.sleep(2)
+        time.sleep(0.1)

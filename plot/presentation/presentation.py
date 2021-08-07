@@ -148,7 +148,7 @@ def plot_experiment(directory):
         main = fig.add_subplot(2, 1, 1)
         zoom = fig.add_subplot(2, 6, (9, 12))
 
-        x_fault_onset = ordered_settings[0][4].iloc[200, 0] / x_divisor
+        x_fault_onset = ordered_settings[0][4].iloc[201, 0] / x_divisor
 
         # plot normal performance
 
@@ -171,7 +171,7 @@ def plot_experiment(directory):
 
         # plot fault performance
 
-        fault_start_index = 200
+        fault_start_index = 201
 
         for i in range(4):
 
@@ -230,7 +230,7 @@ def plot_experiment(directory):
 
     def plot_all_standard():
 
-        x_fault_onset = ordered_settings[0][4].iloc[200, 0] / x_divisor
+        x_fault_onset = ordered_settings[0][4].iloc[201, 0] / x_divisor
 
         # plot normal performance
 
@@ -254,7 +254,7 @@ def plot_experiment(directory):
 
         # plot fault performance
 
-        fault_start_index = 200
+        fault_start_index = 201
 
         for i in range(4):
 
@@ -292,7 +292,7 @@ def plot_experiment(directory):
 
         for i in range(4):
 
-            x_fault_onset = ordered_settings[0][4].iloc[200, 0] / x_divisor
+            x_fault_onset = ordered_settings[0][4].iloc[201, 0] / x_divisor
 
             # plot normal performance
 
@@ -316,7 +316,7 @@ def plot_experiment(directory):
 
             # plot fault performance
 
-            fault_start_index = 200
+            fault_start_index = 201
 
             subscript = ""
             rn = ordered_settings[i][1]
@@ -367,7 +367,7 @@ if __name__ == "__main__":
     if num_seeds == 10:
         CI_Z = 2.262
     elif num_seeds == 30:
-        CI_Z = 2.045  # todo double check value
+        CI_Z = 2.045
     else:
         print(colored("__main__: you have specified {} seeds; you must set a new value for CI_Z".format(num_seeds), "red"))
         exit()

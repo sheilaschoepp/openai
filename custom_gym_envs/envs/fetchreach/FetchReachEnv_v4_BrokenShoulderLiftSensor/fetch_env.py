@@ -13,8 +13,7 @@ IMPORTANT: you must set env_name in __init__
 import numpy as np
 from termcolor import colored  # modification here
 
-from custom_gym_envs.envs.fetchreach.FetchReachEnv_v4_BrokenShoulderLiftSensor import robot_env, rotations, \
-    utils  # modification here
+from custom_gym_envs.envs.fetchreach.FetchReachEnv_v4_BrokenShoulderLiftSensor import robot_env, rotations, utils  # modification here
 from kinematics.kinematics import Kinematics  # modification here
 
 

@@ -187,16 +187,17 @@ class NormalController:
                  + (("_ps:" + str(self.parameters["param_search"])) if self.parameters["param_search"] else "") \
                  + (("_pss:" + str(self.parameters["param_search_seed"])) if self.parameters["param_search"] else "") \
                  + ("_r" if self.parameters["resumable"] else "") \
-                 + ("_resumed" if self.parameters["resume"] else "")
+                 + ("_resumed" if self.parameters["resume"] else "") \
+                 + "_mod"
 
         self.experiment = "SACv2_" + suffix
 
         if self.computecanada:
             # path for compute canada
-            self.data_dir = os.getenv("HOME") + "/scratch/openai/data/" + self.experiment + "/seed" + str(self.parameters["seed"]) + "_mod"
+            self.data_dir = os.getenv("HOME") + "/scratch/openai/data/" + self.experiment + "/seed" + str(self.parameters["seed"])
         else:
             # path for servers and local machines
-            self.data_dir = os.getenv("HOME") + "/Documents/openai/data/" + self.experiment + "/seed" + str(self.parameters["seed"]) + "_mod"
+            self.data_dir = os.getenv("HOME") + "/Documents/openai/data/" + self.experiment + "/seed" + str(self.parameters["seed"])
 
         # old data
 

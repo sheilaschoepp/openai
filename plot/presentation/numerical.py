@@ -63,3 +63,23 @@ if __name__ == "__main__":
 
     directory = os.path.join(ppo_data_dir, "v1")
     check_recovery(directory)
+
+    x = [[927, 333, 110889],
+         [1234, 250, 62500],
+         [1032, 301, 90601],
+         [876, 204, 41616],
+         [865, 165, 27225],
+         [750, 263, 69169],
+         [780, 280, 78400],
+         [690, 98, 9604],
+         [730, 76, 5776],
+         [821, 240, 57600],
+         [803, 178, 31684],
+         [850, 250, 62500]]
+    df = pd.DataFrame(x, columns=["Mwh", "StdDev", "Variance"])
+
+    mean = df["Mwh"].mean()
+
+    df_var = df["Variance"]
+
+    print(1)

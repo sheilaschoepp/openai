@@ -2,10 +2,10 @@ echo "#!/bin/bash
 
 #SBATCH --nodes=1
 #SBATCH --gres=gpu:v100l:4
-#SBATCH --ntasks-per-node=20
+#SBATCH --ntasks-per-node=30
 #SBATCH --mem=192000M
-#SBATCH --time=10-00:00
-#SBATCH --job-name=sac_v4a
+#SBATCH --time=1-00:00
+#SBATCH --job-name=sac_v1a
 #SBATCH --output=%x-%j.out
 #SBATCH --mail-user=sschoepp@ualberta.ca
 #SBATCH --mail-type=BEGIN
@@ -14,28 +14,48 @@ echo "#!/bin/bash
 #SBATCH --mail-type=REQUEUE
 #SBATCH --mail-type=ALL
 
-parallel < sac_v4a.txt" > sac_v4a.sh
+parallel < sac_v1a.txt" > sac_v1a.sh
 
-echo "" > sac_v4a.txt
+echo "" > sac_v1a.txt
 
-for s in {0..4}
+for s in {10..14}
 do
-  echo "CUDA_VISIBLE_DEVICES=0 python /home/sschoepp/scratch/openai/controllers/sacv2/sacv2_ab_controller.py -c -e AntEnv-v4 -f /home/sschoepp/scratch/openai/data/SACv2_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_a:True_d:cuda_ps:True_pss:61_resumed/seed$s --resumable -t 20000000 -tl 10" >> sac_v4a.txt
+  echo "CUDA_VISIBLE_DEVICES=0 python /home/sschoepp/scratch/openai/controllers/sacv2/mod/sacv2_ab_controller.py -c -e FetchReachEnv-v1 -f /home/sschoepp/scratch/openai/data/SACv2_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_a:True_d:cuda_ps:True_pss:21_mod/seed$s -t 2000000" >> sac_v1a.txt
 done
 
-for s in {5..9}
+for s in {15..16}
 do
-  echo "CUDA_VISIBLE_DEVICES=1 python /home/sschoepp/scratch/openai/controllers/sacv2/sacv2_ab_controller.py -c -e AntEnv-v4 -f /home/sschoepp/scratch/openai/data/SACv2_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_a:True_d:cuda_ps:True_pss:61_resumed/seed$s --resumable -t 20000000 -tl 10" >> sac_v4a.txt
+  echo "CUDA_VISIBLE_DEVICES=0 python /home/sschoepp/scratch/openai/controllers/sacv2/mod/sacv2_ab_controller.py -c -e FetchReachEnv-v1 -f /home/sschoepp/scratch/openai/data/SACv2_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_a:True_d:cuda_ps:True_pss:21_mod/seed$s -t 2000000" >> sac_v1a.txt
 done
 
-for s in {0..4}
+for s in {17..18}
 do
-  echo "CUDA_VISIBLE_DEVICES=2 python /home/sschoepp/scratch/openai/controllers/sacv2/sacv2_ab_controller.py -c -crb -e AntEnv-v4 -f /home/sschoepp/scratch/openai/data/SACv2_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_a:True_d:cuda_ps:True_pss:61_resumed/seed$s --resumable -t 20000000 -tl 10" >> sac_v4a.txt
+  echo "CUDA_VISIBLE_DEVICES=1 python /home/sschoepp/scratch/openai/controllers/sacv2/mod/sacv2_ab_controller.py -c -e FetchReachEnv-v1 -f /home/sschoepp/scratch/openai/data/SACv2_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_a:True_d:cuda_ps:True_pss:21_mod/seed$s -t 2000000" >> sac_v1a.txt
 done
 
-for s in {5..9}
+for s in {20..24}
 do
-  echo "CUDA_VISIBLE_DEVICES=3 python /home/sschoepp/scratch/openai/controllers/sacv2/sacv2_ab_controller.py -c -crb -e AntEnv-v4 -f /home/sschoepp/scratch/openai/data/SACv2_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_a:True_d:cuda_ps:True_pss:61_resumed/seed$s --resumable -t 20000000 -tl 10" >> sac_v4a.txt
+  echo "CUDA_VISIBLE_DEVICES=1 python /home/sschoepp/scratch/openai/controllers/sacv2/mod/sacv2_ab_controller.py -c -e FetchReachEnv-v1 -f /home/sschoepp/scratch/openai/data/SACv2_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_a:True_d:cuda_ps:True_pss:21_mod/seed$s -t 2000000" >> sac_v1a.txt
+done
+
+for s in {25..29}
+do
+  echo "CUDA_VISIBLE_DEVICES=2 python /home/sschoepp/scratch/openai/controllers/sacv2/mod/sacv2_ab_controller.py -c -e FetchReachEnv-v1 -f /home/sschoepp/scratch/openai/data/SACv2_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_a:True_d:cuda_ps:True_pss:21_mod/seed$s -t 2000000" >> sac_v1a.txt
+done
+
+for s in {10..11}
+do
+  echo "CUDA_VISIBLE_DEVICES=2 python /home/sschoepp/scratch/openai/controllers/sacv2/mod/sacv2_ab_controller.py -c -crb -e FetchReachEnv-v1 -f /home/sschoepp/scratch/openai/data/SACv2_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_a:True_d:cuda_ps:True_pss:21_mod/seed$s -t 2000000" >> sac_v1a.txt
+done
+
+for s in {13..14}
+do
+  echo "CUDA_VISIBLE_DEVICES=3 python /home/sschoepp/scratch/openai/controllers/sacv2/mod/sacv2_ab_controller.py -c -crb -e FetchReachEnv-v1 -f /home/sschoepp/scratch/openai/data/SACv2_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_a:True_d:cuda_ps:True_pss:21_mod/seed$s -t 2000000" >> sac_v1a.txt
+done
+
+for s in {15..19}
+do
+  echo "CUDA_VISIBLE_DEVICES=3 python /home/sschoepp/scratch/openai/controllers/sacv2/mod/sacv2_ab_controller.py -c -crb -e FetchReachEnv-v1 -f /home/sschoepp/scratch/openai/data/SACv2_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_a:True_d:cuda_ps:True_pss:21_mod/seed$s -t 2000000" >> sac_v1a.txt
 done
 
 
@@ -44,10 +64,10 @@ echo "#!/bin/bash
 
 #SBATCH --nodes=1
 #SBATCH --gres=gpu:v100l:4
-#SBATCH --ntasks-per-node=20
+#SBATCH --ntasks-per-node=30
 #SBATCH --mem=192000M
-#SBATCH --time=10-00:00
-#SBATCH --job-name=sac_v4b
+#SBATCH --time=1-00:00
+#SBATCH --job-name=sac_v1b
 #SBATCH --output=%x-%j.out
 #SBATCH --mail-user=sschoepp@ualberta.ca
 #SBATCH --mail-type=BEGIN
@@ -56,26 +76,106 @@ echo "#!/bin/bash
 #SBATCH --mail-type=REQUEUE
 #SBATCH --mail-type=ALL
 
-parallel < sac_v4b.txt" > sac_v4b.sh
+parallel < sac_v1b.txt" > sac_v1b.sh
 
-echo "" > sac_v4b.txt
+echo "" > sac_v1b.txt
 
-for s in {0..4}
+for s in {20..24}
 do
-  echo "CUDA_VISIBLE_DEVICES=0 python /home/sschoepp/scratch/openai/controllers/sacv2/sacv2_ab_controller.py -c -rn -e AntEnv-v4 -f /home/sschoepp/scratch/openai/data/SACv2_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_a:True_d:cuda_ps:True_pss:61_resumed/seed$s --resumable -t 20000000 -tl 10" >> sac_v4b.txt
+  echo "CUDA_VISIBLE_DEVICES=0 python /home/sschoepp/scratch/openai/controllers/sacv2/mod/sacv2_ab_controller.py -c -crb -e FetchReachEnv-v1 -f /home/sschoepp/scratch/openai/data/SACv2_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_a:True_d:cuda_ps:True_pss:21_mod/seed$s -t 2000000" >> sac_v1b.txt
 done
 
-for s in {5..9}
+for s in {25..26}
 do
-  echo "CUDA_VISIBLE_DEVICES=1 python /home/sschoepp/scratch/openai/controllers/sacv2/sacv2_ab_controller.py -c -rn -e AntEnv-v4 -f /home/sschoepp/scratch/openai/data/SACv2_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_a:True_d:cuda_ps:True_pss:61_resumed/seed$s --resumable -t 20000000 -tl 10" >> sac_v4b.txt
+  echo "CUDA_VISIBLE_DEVICES=0 python /home/sschoepp/scratch/openai/controllers/sacv2/mod/sacv2_ab_controller.py -c -crb -e FetchReachEnv-v1 -f /home/sschoepp/scratch/openai/data/SACv2_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_a:True_d:cuda_ps:True_pss:21_mod/seed$s -t 2000000" >> sac_v1b.txt
 done
 
-for s in {0..4}
+for s in {28..29}
 do
-  echo "CUDA_VISIBLE_DEVICES=2 python /home/sschoepp/scratch/openai/controllers/sacv2/sacv2_ab_controller.py -c -crb -rn -e AntEnv-v4 -f /home/sschoepp/scratch/openai/data/SACv2_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_a:True_d:cuda_ps:True_pss:61_resumed/seed$s --resumable -t 20000000 -tl 10" >> sac_v4b.txt
+  echo "CUDA_VISIBLE_DEVICES=1 python /home/sschoepp/scratch/openai/controllers/sacv2/mod/sacv2_ab_controller.py -c -crb -e FetchReachEnv-v1 -f /home/sschoepp/scratch/openai/data/SACv2_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_a:True_d:cuda_ps:True_pss:21_mod/seed$s -t 2000000" >> sac_v1b.txt
 done
 
-for s in {5..9}
+for s in {10..14}
 do
-  echo "CUDA_VISIBLE_DEVICES=3 python /home/sschoepp/scratch/openai/controllers/sacv2/sacv2_ab_controller.py -c -crb -rn -e AntEnv-v4 -f /home/sschoepp/scratch/openai/data/SACv2_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_a:True_d:cuda_ps:True_pss:61_resumed/seed$s --resumable -t 20000000 -tl 10" >> sac_v4b.txt
+  echo "CUDA_VISIBLE_DEVICES=1 python /home/sschoepp/scratch/openai/controllers/sacv2/mod/sacv2_ab_controller.py -c -rn -e FetchReachEnv-v1 -f /home/sschoepp/scratch/openai/data/SACv2_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_a:True_d:cuda_ps:True_pss:21_mod/seed$s -t 2000000" >> sac_v1b.txt
+done
+
+for s in {15..18}
+do
+  echo "CUDA_VISIBLE_DEVICES=2 python /home/sschoepp/scratch/openai/controllers/sacv2/mod/sacv2_ab_controller.py -c -rn -e FetchReachEnv-v1 -f /home/sschoepp/scratch/openai/data/SACv2_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_a:True_d:cuda_ps:True_pss:21_mod/seed$s -t 2000000" >> sac_v1b.txt
+done
+
+for s in {20..22}
+do
+  echo "CUDA_VISIBLE_DEVICES=2 python /home/sschoepp/scratch/openai/controllers/sacv2/mod/sacv2_ab_controller.py -c -rn -e FetchReachEnv-v1 -f /home/sschoepp/scratch/openai/data/SACv2_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_a:True_d:cuda_ps:True_pss:21_mod/seed$s -t 2000000" >> sac_v1b.txt
+done
+
+for s in {23..24}
+do
+  echo "CUDA_VISIBLE_DEVICES=3 python /home/sschoepp/scratch/openai/controllers/sacv2/mod/sacv2_ab_controller.py -c -rn -e FetchReachEnv-v1 -f /home/sschoepp/scratch/openai/data/SACv2_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_a:True_d:cuda_ps:True_pss:21_mod/seed$s -t 2000000" >> sac_v1b.txt
+done
+
+for s in {25..29}
+do
+  echo "CUDA_VISIBLE_DEVICES=3 python /home/sschoepp/scratch/openai/controllers/sacv2/mod/sacv2_ab_controller.py -c -rn -e FetchReachEnv-v1 -f /home/sschoepp/scratch/openai/data/SACv2_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_a:True_d:cuda_ps:True_pss:21_mod/seed$s -t 2000000" >> sac_v1b.txt
+done
+
+echo "#!/bin/bash
+
+#SBATCH --nodes=1
+#SBATCH --gres=gpu:v100l:4
+#SBATCH --ntasks-per-node=20
+#SBATCH --mem=192000M
+#SBATCH --time=1-00:00
+#SBATCH --job-name=sac_v1c
+#SBATCH --output=%x-%j.out
+#SBATCH --mail-user=sschoepp@ualberta.ca
+#SBATCH --mail-type=BEGIN
+#SBATCH --mail-type=END
+#SBATCH --mail-type=FAIL
+#SBATCH --mail-type=REQUEUE
+#SBATCH --mail-type=ALL
+
+parallel < sac_v1c.txt" > sac_v1c.sh
+
+echo "" > sac_v1c.txt
+
+for s in {10..14}
+do
+  echo "CUDA_VISIBLE_DEVICES=0 python /home/sschoepp/scratch/openai/controllers/sacv2/mod/sacv2_ab_controller.py -c -crb -rn -e FetchReachEnv-v1 -f /home/sschoepp/scratch/openai/data/SACv2_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_a:True_d:cuda_ps:True_pss:21_mod/seed$s -t 2000000" >> sac_v1c.txt
+done
+
+for s in {15..19}
+do
+  echo "CUDA_VISIBLE_DEVICES=1 python /home/sschoepp/scratch/openai/controllers/sacv2/mod/sacv2_ab_controller.py -c -crb -rn -e FetchReachEnv-v1 -f /home/sschoepp/scratch/openai/data/SACv2_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_a:True_d:cuda_ps:True_pss:21_mod/seed$s -t 2000000" >> sac_v1c.txt
+done
+
+for s in {20..24}
+do
+  echo "CUDA_VISIBLE_DEVICES=2 python /home/sschoepp/scratch/openai/controllers/sacv2/mod/sacv2_ab_controller.py -c -crb -rn -e FetchReachEnv-v1 -f /home/sschoepp/scratch/openai/data/SACv2_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_a:True_d:cuda_ps:True_pss:21_mod/seed$s -t 2000000" >> sac_v1c.txt
+done
+
+for s in {25..29}
+do
+  echo "CUDA_VISIBLE_DEVICES=3 python /home/sschoepp/scratch/openai/controllers/sacv2/mod/sacv2_ab_controller.py -c -crb -rn -e FetchReachEnv-v1 -f /home/sschoepp/scratch/openai/data/SACv2_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_a:True_d:cuda_ps:True_pss:21_mod/seed$s -t 2000000" >> sac_v1c.txt
+done
+
+for s in 19
+do
+  echo "CUDA_VISIBLE_DEVICES=0 python /home/sschoepp/scratch/openai/controllers/sacv2/mod/sacv2_ab_controller.py -c -e FetchReachEnv-v1 -f /home/sschoepp/scratch/openai/data/SACv2_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_a:True_d:cuda_ps:True_pss:21_mod/seed$s -t 2000000" >> sac_v1c.txt
+done
+
+for s in 12
+do
+  echo "CUDA_VISIBLE_DEVICES=1 python /home/sschoepp/scratch/openai/controllers/sacv2/mod/sacv2_ab_controller.py -c -crb -e FetchReachEnv-v1 -f /home/sschoepp/scratch/openai/data/SACv2_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_a:True_d:cuda_ps:True_pss:21_mod/seed$s -t 2000000" >> sac_v1c.txt
+done
+
+for s in 27
+do
+  echo "CUDA_VISIBLE_DEVICES=2 python /home/sschoepp/scratch/openai/controllers/sacv2/mod/sacv2_ab_controller.py -c -crb -e FetchReachEnv-v1 -f /home/sschoepp/scratch/openai/data/SACv2_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_a:True_d:cuda_ps:True_pss:21_mod/seed$s -t 2000000" >> sac_v1c.txt
+done
+
+for s in 19
+do
+  echo "CUDA_VISIBLE_DEVICES=3 python /home/sschoepp/scratch/openai/controllers/sacv2/mod/sacv2_ab_controller.py -c -rn -e FetchReachEnv-v1 -f /home/sschoepp/scratch/openai/data/SACv2_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_a:True_d:cuda_ps:True_pss:21_mod/seed$s -t 2000000" >> sac_v1c.txt
 done

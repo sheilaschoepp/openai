@@ -7,7 +7,6 @@ modified _sample_goal method to eliminate unreachable goals in table
 import numpy as np
 
 from custom_gym_envs.envs.fetchreach.FetchReachEnv_v3_BrokenWristFlexJoint import robot_env, rotations, utils  # modification here
-from kinematics.kinematics import Kinematics  # modification here
 
 
 def goal_distance(goal_a, goal_b):

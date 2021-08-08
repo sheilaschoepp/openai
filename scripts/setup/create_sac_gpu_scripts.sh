@@ -1,10 +1,10 @@
 echo "#!/bin/bash
 
 #SBATCH --nodes=1
-#SBATCH --gres=gpu:v100l:4
+#SBATCH --gres=gpu:v100:4
 #SBATCH --ntasks-per-node=30
-#SBATCH --mem=192000M
-#SBATCH --time=1-12:00
+#SBATCH --mem=191000M
+#SBATCH --time=1-00:00
 #SBATCH --job-name=sac_v6a
 #SBATCH --output=%x-%j.out
 #SBATCH --mail-user=sschoepp@ualberta.ca
@@ -63,10 +63,10 @@ done
 echo "#!/bin/bash
 
 #SBATCH --nodes=1
-#SBATCH --gres=gpu:v100l:4
+#SBATCH --gres=gpu:v100:4
 #SBATCH --ntasks-per-node=30
-#SBATCH --mem=192000M
-#SBATCH --time=1-12:00
+#SBATCH --mem=191000M
+#SBATCH --time=1-00:00
 #SBATCH --job-name=sac_v6b
 #SBATCH --output=%x-%j.out
 #SBATCH --mail-user=sschoepp@ualberta.ca
@@ -123,10 +123,10 @@ done
 echo "#!/bin/bash
 
 #SBATCH --nodes=1
-#SBATCH --gres=gpu:v100l:4
+#SBATCH --gres=gpu:v100:4
 #SBATCH --ntasks-per-node=20
-#SBATCH --mem=192000M
-#SBATCH --time=1-12:00
+#SBATCH --mem=191000M
+#SBATCH --time=1-00:00
 #SBATCH --job-name=sac_v6c
 #SBATCH --output=%x-%j.out
 #SBATCH --mail-user=sschoepp@ualberta.ca

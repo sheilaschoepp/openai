@@ -4,7 +4,7 @@
 #SBATCH --gres=gpu:v100l:4
 #SBATCH --ntasks-per-node=20
 #SBATCH --mem=192000M
-#SBATCH --time=1-12:00
+#SBATCH --time=1-00:00
 #SBATCH --job-name=sac_v6c
 #SBATCH --output=%x-%j.out
 #SBATCH --mail-user=sschoepp@ualberta.ca

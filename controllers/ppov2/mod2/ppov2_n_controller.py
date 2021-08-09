@@ -37,8 +37,8 @@ parser.add_argument("--lr", type=float, default=0.00025, metavar="G",
                     help="learning rate (default: 0.0003)")
 parser.add_argument("-lrd", "--linear_lr_decay", default=False, action="store_true",
                     help="if true, decrease learning rate linearly (default: False)")
-parser.add_argument("-slrd", "--slow_lrd", type=float, default=0.5, metavar="G",
-                    help="slow learning rate decay by this percentage (default: 0.5)")
+parser.add_argument("-slrd", "--slow_lrd", type=float, default=0.25, metavar="G",
+                    help="slow learning rate decay by this percentage (default: 0.25)")
 parser.add_argument("--gamma", type=float, default=0.98, metavar="G",
                     help="discount factor (default: 0.99)")
 

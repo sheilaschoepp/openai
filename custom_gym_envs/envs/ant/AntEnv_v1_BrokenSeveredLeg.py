@@ -18,7 +18,7 @@ class AntEnvV1(mujoco_env.MujocoEnv, utils.EzPickle):  # modification here
 
         # modification here: start
         self.hostname = os.uname()[1]
-        self.localhosts = ["melco", "Legion", "amii", "mehran"]
+        self.localhosts = ["melco", "Legion", "amii", "remaining20seeds"]
         self.computecanada = not any(host in self.hostname for host in self.localhosts)
         home = str(Path.home())
         if self.computecanada:

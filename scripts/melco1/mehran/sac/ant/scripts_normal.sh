@@ -1,0 +1,25 @@
+SAC_N_CONTROLLER_ABSOLUTE_PATH="/home/taghianj/Documents/openai/controllers/sacv2/mod/sacv2_n_controller.py"
+
+tmux new-session -d -s sacv2-0 "CUDA_VISIBLE_DEVICES=2 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -t 20000000 -a -c --resumable -tmsf 100000 -s 10 -ps -pss 61 -d"
+tmux new-session -d -s sacv2-0 "CUDA_VISIBLE_DEVICES=2 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -t 20000000 -a -c --resumable -tmsf 100000 -s 11 -ps -pss 61 -d"
+tmux new-session -d -s sacv2-0 "CUDA_VISIBLE_DEVICES=2 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -t 20000000 -a -c --resumable -tmsf 100000 -s 12 -ps -pss 61 -d"
+tmux new-session -d -s sacv2-0 "CUDA_VISIBLE_DEVICES=2 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -t 20000000 -a -c --resumable -tmsf 100000 -s 13 -ps -pss 61 -d"
+tmux new-session -d -s sacv2-0 "CUDA_VISIBLE_DEVICES=2 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -t 20000000 -a -c --resumable -tmsf 100000 -s 14 -ps -pss 61 -d"
+tmux new-session -d -s sacv2-0 "CUDA_VISIBLE_DEVICES=2 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -t 20000000 -a -c --resumable -tmsf 100000 -s 15 -ps -pss 61 -d"
+tmux new-session -d -s sacv2-0 "CUDA_VISIBLE_DEVICES=2 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -t 20000000 -a -c --resumable -tmsf 100000 -s 16 -ps -pss 61 -d"
+tmux new-session -d -s sacv2-0 "CUDA_VISIBLE_DEVICES=3 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -t 20000000 -a -c --resumable -tmsf 100000 -s 17 -ps -pss 61 -d"
+tmux new-session -d -s sacv2-0 "CUDA_VISIBLE_DEVICES=3 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -t 20000000 -a -c --resumable -tmsf 100000 -s 18 -ps -pss 61 -d"
+tmux new-session -d -s sacv2-0 "CUDA_VISIBLE_DEVICES=3 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -t 20000000 -a -c --resumable -tmsf 100000 -s 19 -ps -pss 61 -d"
+tmux new-session -d -s sacv2-0 "CUDA_VISIBLE_DEVICES=3 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -t 20000000 -a -c --resumable -tmsf 100000 -s 20 -ps -pss 61 -d"
+tmux new-session -d -s sacv2-0 "CUDA_VISIBLE_DEVICES=3 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -t 20000000 -a -c --resumable -tmsf 100000 -s 21 -ps -pss 61 -d"
+tmux new-session -d -s sacv2-0 "CUDA_VISIBLE_DEVICES=3 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -t 20000000 -a -c --resumable -tmsf 100000 -s 22 -ps -pss 61 -d"
+tmux new-session -d -s sacv2-0 "CUDA_VISIBLE_DEVICES=3 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -t 20000000 -a -c --resumable -tmsf 100000 -s 23 -ps -pss 61 -d"
+
+#tmux new-session -d -s sacv2-0 "CUDA_VISIBLE_DEVICES=3 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -t 20000000 -a -c --resumable -tmsf 100000 -s 24 -ps -pss 61 -d"
+#tmux new-session -d -s sacv2-0 "CUDA_VISIBLE_DEVICES=3 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -t 20000000 -a -c --resumable -tmsf 100000 -s 25 -ps -pss 61 -d"
+#tmux new-session -d -s sacv2-0 "CUDA_VISIBLE_DEVICES=3 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -t 20000000 -a -c --resumable -tmsf 100000 -s 26 -ps -pss 61 -d"
+#tmux new-session -d -s sacv2-0 "CUDA_VISIBLE_DEVICES=3 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -t 20000000 -a -c --resumable -tmsf 100000 -s 27 -ps -pss 61 -d"
+#tmux new-session -d -s sacv2-0 "CUDA_VISIBLE_DEVICES=3 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -t 20000000 -a -c --resumable -tmsf 100000 -s 28 -ps -pss 61 -d"
+#tmux new-session -d -s sacv2-0 "CUDA_VISIBLE_DEVICES=3 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -t 20000000 -a -c --resumable -tmsf 100000 -s 29 -ps -pss 61 -d"
+
+

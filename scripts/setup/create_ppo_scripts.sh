@@ -1,63 +1,10 @@
-#for i in 33
-#do
-#  echo "#!/bin/bash
-#
-##SBATCH --nodes=1
-##SBATCH --ntasks-per-node=30
-##SBATCH --mem=125G
-##SBATCH --time=14-00:00
-##SBATCH --job-name=ppo_$i
-##SBATCH --output=%x-%j.out
-##SBATCH --mail-user=sschoepp@ualberta.ca
-##SBATCH --mail-type=BEGIN
-##SBATCH --mail-type=END
-##SBATCH --mail-type=FAIL
-##SBATCH --mail-type=REQUEUE
-##SBATCH --mail-type=ALL
-#
-#parallel < s$i.txt" > s"$i".sh
-#
-#  echo "python /home/sschoepp/scratch/openai/controllers/ppov2/ppov2_n_controller.py -lrd -s 0 -tl 14 -ps -pss $i
-#python /home/sschoepp/scratch/openai/controllers/ppov2/ppov2_n_controller.py -lrd -s 1 -tl 14 -ps -pss $i
-#python /home/sschoepp/scratch/openai/controllers/ppov2/ppov2_n_controller.py -lrd -s 2 -tl 14 -ps -pss $i
-#python /home/sschoepp/scratch/openai/controllers/ppov2/ppov2_n_controller.py -lrd -s 3 -tl 14 -ps -pss $i
-#python /home/sschoepp/scratch/openai/controllers/ppov2/ppov2_n_controller.py -lrd -s 4 -tl 14 -ps -pss $i
-#python /home/sschoepp/scratch/openai/controllers/ppov2/ppov2_n_controller.py -lrd -s 5 -tl 14 -ps -pss $i
-#python /home/sschoepp/scratch/openai/controllers/ppov2/ppov2_n_controller.py -lrd -s 6 -tl 14 -ps -pss $i
-#python /home/sschoepp/scratch/openai/controllers/ppov2/ppov2_n_controller.py -lrd -s 7 -tl 14 -ps -pss $i
-#python /home/sschoepp/scratch/openai/controllers/ppov2/ppov2_n_controller.py -lrd -s 8 -tl 14 -ps -pss $i
-#python /home/sschoepp/scratch/openai/controllers/ppov2/ppov2_n_controller.py -lrd -s 9 -tl 14 -ps -pss $i
-#python /home/sschoepp/scratch/openai/controllers/ppov2/ppov2_n_controller.py -lrd -s 10 -tl 14 -ps -pss $i
-#python /home/sschoepp/scratch/openai/controllers/ppov2/ppov2_n_controller.py -lrd -s 11 -tl 14 -ps -pss $i
-#python /home/sschoepp/scratch/openai/controllers/ppov2/ppov2_n_controller.py -lrd -s 12 -tl 14 -ps -pss $i
-#python /home/sschoepp/scratch/openai/controllers/ppov2/ppov2_n_controller.py -lrd -s 13 -tl 14 -ps -pss $i
-#python /home/sschoepp/scratch/openai/controllers/ppov2/ppov2_n_controller.py -lrd -s 14 -tl 14 -ps -pss $i
-#python /home/sschoepp/scratch/openai/controllers/ppov2/ppov2_n_controller.py -lrd -s 15 -tl 14 -ps -pss $i
-#python /home/sschoepp/scratch/openai/controllers/ppov2/ppov2_n_controller.py -lrd -s 16 -tl 14 -ps -pss $i
-#python /home/sschoepp/scratch/openai/controllers/ppov2/ppov2_n_controller.py -lrd -s 17 -tl 14 -ps -pss $i
-#python /home/sschoepp/scratch/openai/controllers/ppov2/ppov2_n_controller.py -lrd -s 18 -tl 14 -ps -pss $i
-#python /home/sschoepp/scratch/openai/controllers/ppov2/ppov2_n_controller.py -lrd -s 19 -tl 14 -ps -pss $i
-#python /home/sschoepp/scratch/openai/controllers/ppov2/ppov2_n_controller.py -lrd -s 20 -tl 14 -ps -pss $i
-#python /home/sschoepp/scratch/openai/controllers/ppov2/ppov2_n_controller.py -lrd -s 21 -tl 14 -ps -pss $i
-#python /home/sschoepp/scratch/openai/controllers/ppov2/ppov2_n_controller.py -lrd -s 22 -tl 14 -ps -pss $i
-#python /home/sschoepp/scratch/openai/controllers/ppov2/ppov2_n_controller.py -lrd -s 23 -tl 14 -ps -pss $i
-#python /home/sschoepp/scratch/openai/controllers/ppov2/ppov2_n_controller.py -lrd -s 24 -tl 14 -ps -pss $i
-#python /home/sschoepp/scratch/openai/controllers/ppov2/ppov2_n_controller.py -lrd -s 25 -tl 14 -ps -pss $i
-#python /home/sschoepp/scratch/openai/controllers/ppov2/ppov2_n_controller.py -lrd -s 26 -tl 14 -ps -pss $i
-#python /home/sschoepp/scratch/openai/controllers/ppov2/ppov2_n_controller.py -lrd -s 27 -tl 14 -ps -pss $i
-#python /home/sschoepp/scratch/openai/controllers/ppov2/ppov2_n_controller.py -lrd -s 28 -tl 14 -ps -pss $i
-#python /home/sschoepp/scratch/openai/controllers/ppov2/ppov2_n_controller.py -lrd -s 29 -tl 14 -ps -pss $i" > s"$i".txt
-#done
-
-for i in 33
-do
-  echo "#!/bin/bash
+echo "#!/bin/bash
 
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=30
-#SBATCH --mem=125G
-#SBATCH --time=14-00:00
-#SBATCH --job-name=ppo_$i
+#SBATCH --mem=191000M
+#SBATCH --time=1-00:00
+#SBATCH --job-name=ppo_v4a
 #SBATCH --output=%x-%j.out
 #SBATCH --mail-user=sschoepp@ualberta.ca
 #SBATCH --mail-type=BEGIN
@@ -66,36 +13,63 @@ do
 #SBATCH --mail-type=REQUEUE
 #SBATCH --mail-type=ALL
 
-parallel < s$i.txt" > s"$i".sh
+parallel < ppo_v4a.txt" > ppo_v4a.sh
 
-  echo "python /home/sschoepp/scratch/openai/controllers/ppov2/ppov2_n_controller.py -lrd -s 0 -tl 14 -ps -pss $i
-python /home/sschoepp/scratch/openai/controllers/ppov2/ppov2_n_controller.py -lrd -s 1 -tl 14 -ps -pss $i
-python /home/sschoepp/scratch/openai/controllers/ppov2/ppov2_n_controller.py -lrd -s 2 -tl 14 -ps -pss $i
-python /home/sschoepp/scratch/openai/controllers/ppov2/ppov2_n_controller.py -lrd -s 3 -tl 14 -ps -pss $i
-python /home/sschoepp/scratch/openai/controllers/ppov2/ppov2_n_controller.py -lrd -s 4 -tl 14 -ps -pss $i
-python /home/sschoepp/scratch/openai/controllers/ppov2/ppov2_n_controller.py -lrd -s 5 -tl 14 -ps -pss $i
-python /home/sschoepp/scratch/openai/controllers/ppov2/ppov2_n_controller.py -lrd -s 6 -tl 14 -ps -pss $i
-python /home/sschoepp/scratch/openai/controllers/ppov2/ppov2_n_controller.py -lrd -s 7 -tl 14 -ps -pss $i
-python /home/sschoepp/scratch/openai/controllers/ppov2/ppov2_n_controller.py -lrd -s 8 -tl 14 -ps -pss $i
-python /home/sschoepp/scratch/openai/controllers/ppov2/ppov2_n_controller.py -lrd -s 9 -tl 14 -ps -pss $i
-python /home/sschoepp/scratch/openai/controllers/ppov2/ppov2_n_controller.py -lrd -s 10 -tl 14 -ps -pss $i
-python /home/sschoepp/scratch/openai/controllers/ppov2/ppov2_n_controller.py -lrd -s 11 -tl 14 -ps -pss $i
-python /home/sschoepp/scratch/openai/controllers/ppov2/ppov2_n_controller.py -lrd -s 12 -tl 14 -ps -pss $i
-python /home/sschoepp/scratch/openai/controllers/ppov2/ppov2_n_controller.py -lrd -s 13 -tl 14 -ps -pss $i
-python /home/sschoepp/scratch/openai/controllers/ppov2/ppov2_n_controller.py -lrd -s 14 -tl 14 -ps -pss $i
-python /home/sschoepp/scratch/openai/controllers/ppov2/ppov2_n_controller.py -lrd -s 15 -tl 14 -ps -pss $i
-python /home/sschoepp/scratch/openai/controllers/ppov2/ppov2_n_controller.py -lrd -s 16 -tl 14 -ps -pss $i
-python /home/sschoepp/scratch/openai/controllers/ppov2/ppov2_n_controller.py -lrd -s 17 -tl 14 -ps -pss $i
-python /home/sschoepp/scratch/openai/controllers/ppov2/ppov2_n_controller.py -lrd -s 18 -tl 14 -ps -pss $i
-python /home/sschoepp/scratch/openai/controllers/ppov2/ppov2_n_controller.py -lrd -s 19 -tl 14 -ps -pss $i
-python /home/sschoepp/scratch/openai/controllers/ppov2/ppov2_n_controller.py -lrd -s 20 -tl 14 -ps -pss $i
-python /home/sschoepp/scratch/openai/controllers/ppov2/ppov2_n_controller.py -lrd -s 21 -tl 14 -ps -pss $i
-python /home/sschoepp/scratch/openai/controllers/ppov2/ppov2_n_controller.py -lrd -s 22 -tl 14 -ps -pss $i
-python /home/sschoepp/scratch/openai/controllers/ppov2/ppov2_n_controller.py -lrd -s 23 -tl 14 -ps -pss $i
-python /home/sschoepp/scratch/openai/controllers/ppov2/ppov2_n_controller.py -lrd -s 24 -tl 14 -ps -pss $i
-python /home/sschoepp/scratch/openai/controllers/ppov2/ppov2_n_controller.py -lrd -s 25 -tl 14 -ps -pss $i
-python /home/sschoepp/scratch/openai/controllers/ppov2/ppov2_n_controller.py -lrd -s 26 -tl 14 -ps -pss $i
-python /home/sschoepp/scratch/openai/controllers/ppov2/ppov2_n_controller.py -lrd -s 27 -tl 14 -ps -pss $i
-python /home/sschoepp/scratch/openai/controllers/ppov2/ppov2_n_controller.py -lrd -s 28 -tl 14 -ps -pss $i
-python /home/sschoepp/scratch/openai/controllers/ppov2/ppov2_n_controller.py -lrd -s 29 -tl 14 -ps -pss $i" > s"$i".txt
+for s in {10..29}
+do
+  echo "python /home/sschoepp/scratch/openai/controllers/ppov2/ppov2_ab_controller.py -e FetchReachEnv-v4 -t 6000000 -f /home/sschoepp/scratch/openai/data/PPOv2_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_d:cpu_ps:True_pss:43/seed$s" >> ppo_v4a.txt
+done
+
+for s in {10..19}
+do
+  echo "python /home/sschoepp/scratch/openai/controllers/ppov2/ppov2_ab_controller.py -e FetchReachEnv-v4 -t 6000000 -f /home/sschoepp/scratch/openai/data/PPOv2_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_d:cpu_ps:True_pss:43/seed$s -cm" >> ppo_v4a.txt
+done
+
+echo "#!/bin/bash
+
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=30
+#SBATCH --mem=191000M
+#SBATCH --time=1-00:00
+#SBATCH --job-name=ppo_v4b
+#SBATCH --output=%x-%j.out
+#SBATCH --mail-user=sschoepp@ualberta.ca
+#SBATCH --mail-type=BEGIN
+#SBATCH --mail-type=END
+#SBATCH --mail-type=FAIL
+#SBATCH --mail-type=REQUEUE
+#SBATCH --mail-type=ALL
+
+parallel < ppo_v4b.txt" > ppo_v4b.sh
+
+for s in {20..29}
+do
+  echo "python /home/sschoepp/scratch/openai/controllers/ppov2/ppov2_ab_controller.py -e FetchReachEnv-v4 -t 6000000 -f /home/sschoepp/scratch/openai/data/PPOv2_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_d:cpu_ps:True_pss:43/seed$s -cm" >> ppo_v4b.txt
+done
+
+for s in {10..29}
+do
+  echo "python /home/sschoepp/scratch/openai/controllers/ppov2/ppov2_ab_controller.py -e FetchReachEnv-v4 -t 6000000 -f /home/sschoepp/scratch/openai/data/PPOv2_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_d:cpu_ps:True_pss:43/seed$s -rn" >> ppo_v4b.txt
+done
+
+echo "#!/bin/bash
+
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=20
+#SBATCH --mem=191000M
+#SBATCH --time=1-00:00
+#SBATCH --job-name=ppo_v4c
+#SBATCH --output=%x-%j.out
+#SBATCH --mail-user=sschoepp@ualberta.ca
+#SBATCH --mail-type=BEGIN
+#SBATCH --mail-type=END
+#SBATCH --mail-type=FAIL
+#SBATCH --mail-type=REQUEUE
+#SBATCH --mail-type=ALL
+
+parallel < ppo_v4c.txt" > ppo_v4c.sh
+
+for s in {10..29}
+do
+  echo "python /home/sschoepp/scratch/openai/controllers/ppov2/ppov2_ab_controller.py -e FetchReachEnv-v4 -t 6000000 -f /home/sschoepp/scratch/openai/data/PPOv2_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_d:cpu_ps:True_pss:43/seed$s -cm -rn" >> ppo_v4c.txt
 done

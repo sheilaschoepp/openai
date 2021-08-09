@@ -22,6 +22,8 @@ def check_recovery(directory):
         # obtain data for setting: mean and standard error
 
         dfs = []
+        dfs_prefault = []
+        dfs_postfault = []
 
         data_dir = os.path.join(directory, dir_)
 
@@ -33,24 +35,23 @@ def check_recovery(directory):
             df = df[["num_time_steps", "average_return"]]
             dfs.append(df)
 
+            prefault = df[0:201]
+            prefault = prefault.iloc[-10:, 1:]
+            dfs_prefault.append(prefault)
+
+            postfault = df[201:]
+            dfs_postfault.append(postfault)
+
         df = pd.concat(dfs)
         df = df.groupby(df.index)
 
         df_mean = df.mean()
+        df_var = df.var()
         df_sem = df.sem()
 
         # check difference between pre-fault and post-recovery performance
 
-        prefault = df_mean[0:201]
-        prefault_performance_mean = prefault.iloc[-10:, 1:].mean()
-        prefault_performance_sem = prefault.iloc[-10:, 1:].sem()
-        postfault = df_mean[201:]
-        postfault_performance_mean = postfault.iloc[-10:, 1:].mean()
-        postfault_performance_sem = postfault.iloc[-10:, 1:].sem()
-
-        t = (postfault_performance_mean - prefault_performance_mean) / (np.sqrt(1))
-
-        print(1)
+        
 
 
 if __name__ == "__main__":

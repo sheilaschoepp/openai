@@ -23,3 +23,4 @@ tmux new-session -d -s sacv2-28 "CUDA_VISIBLE_DEVICES=7 python $SAC_N_CONTROLLER
 tmux new-session -d -s sacv2-29 "CUDA_VISIBLE_DEVICES=7 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -t 20000000 -a -c --resumable -tmsf 100000 -s 29 -ps -pss 61 -d"
 
 
+

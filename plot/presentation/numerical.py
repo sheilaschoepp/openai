@@ -37,18 +37,14 @@ def check_recovery(directory):
         df = df.groupby(df.index)
 
         df_mean = df.mean()
-        df_sem = df.sem()
+        df_var = df.var()
 
         # check difference between pre-fault and post-recovery performance
 
-        prefault = df_mean[0:201]
-        prefault_performance_mean = prefault.iloc[-10:, 1:].mean()
-        prefault_performance_sem = prefault.iloc[-10:, 1:].sem()
-        postfault = df_mean[201:]
-        postfault_performance_mean = postfault.iloc[-10:, 1:].mean()
-        postfault_performance_sem = postfault.iloc[-10:, 1:].sem()
+        prefault = df[0:201]
+        prefault = prefault.iloc[-1:, 1:]
 
-        t = (postfault_performance_mean - prefault_performance_mean) / (np.sqrt(1))
+        postfault = df[201:]
 
         print(1)
 
@@ -63,23 +59,5 @@ if __name__ == "__main__":
 
     directory = os.path.join(ppo_data_dir, "v1")
     check_recovery(directory)
-
-    x = [[927, 333, 110889],
-         [1234, 250, 62500],
-         [1032, 301, 90601],
-         [876, 204, 41616],
-         [865, 165, 27225],
-         [750, 263, 69169],
-         [780, 280, 78400],
-         [690, 98, 9604],
-         [730, 76, 5776],
-         [821, 240, 57600],
-         [803, 178, 31684],
-         [850, 250, 62500]]
-    df = pd.DataFrame(x, columns=["Mwh", "StdDev", "Variance"])
-
-    mean = df["Mwh"].mean()
-
-    df_var = df["Variance"]
 
     print(1)

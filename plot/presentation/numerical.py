@@ -22,8 +22,6 @@ def check_recovery(directory):
         # obtain data for setting: mean and standard error
 
         dfs = []
-        dfs_prefault = []
-        dfs_postfault = []
 
         data_dir = os.path.join(directory, dir_)
 
@@ -35,23 +33,20 @@ def check_recovery(directory):
             df = df[["num_time_steps", "average_return"]]
             dfs.append(df)
 
-            prefault = df[0:201]
-            prefault = prefault.iloc[-10:, 1:]
-            dfs_prefault.append(prefault)
-
-            postfault = df[201:]
-            dfs_postfault.append(postfault)
-
         df = pd.concat(dfs)
         df = df.groupby(df.index)
 
         df_mean = df.mean()
         df_var = df.var()
-        df_sem = df.sem()
 
         # check difference between pre-fault and post-recovery performance
 
-        
+        prefault = df[0:201]
+        prefault = prefault.iloc[-1:, 1:]
+
+        postfault = df[201:]
+
+        print(1)
 
 
 if __name__ == "__main__":
@@ -64,23 +59,5 @@ if __name__ == "__main__":
 
     directory = os.path.join(ppo_data_dir, "v1")
     check_recovery(directory)
-
-    x = [[927, 333, 110889],
-         [1234, 250, 62500],
-         [1032, 301, 90601],
-         [876, 204, 41616],
-         [865, 165, 27225],
-         [750, 263, 69169],
-         [780, 280, 78400],
-         [690, 98, 9604],
-         [730, 76, 5776],
-         [821, 240, 57600],
-         [803, 178, 31684],
-         [850, 250, 62500]]
-    df = pd.DataFrame(x, columns=["Mwh", "StdDev", "Variance"])
-
-    mean = df["Mwh"].mean()
-
-    df_var = df["Variance"]
 
     print(1)

@@ -1,6 +1,7 @@
 import os
+import sys
+
 import pandas as pd
-import numpy as np
 from scipy import stats
 
 
@@ -25,7 +26,7 @@ def check_recovery(directory):
             elif "rn:" in p:
                 rn = eval(p.split(":")[1])
 
-        print(env_name, algorithm, "mem={}".format(mem), "rn:{}".format(rn))
+        print(algorithm, env_name, "mem={}".format(mem), "rn:{}".format(rn))
 
         # obtain data for setting: mean and standard error
 
@@ -87,7 +88,7 @@ def check_recovery(directory):
 
             x = postfault_interval.reset_index().iloc[:, 1:].values.squeeze()
             y = prefault_interval.reset_index().iloc[:, 1:].values.squeeze()
-            w, p2 = stats.wilcoxon(x, y)
+            w, p = stats.wilcoxon(x, y)
 
             if w <= 8:
                 # reject null hypothesis
@@ -109,13 +110,26 @@ def check_recovery(directory):
 
 if __name__ == "__main__":
 
-    # local for Ant PPO
-    # ppo_data_dir = "/media/sschoepp/easystore/shared/ant/faulty/ppo"
-    ppo_data_dir = "/mnt/DATA/shared/fetchreach/faulty/ppo"
+    os.makedirs(os.path.join(os.getcwd(), "data"))
 
-    # v1
+    with open("data/numerical.txt", "w") as f:
+        sys.stdout = f
 
-    directory = os.path.join(ppo_data_dir, "v1")
-    check_recovery(directory)
+        # local for Ant PPO
+        # ppo_data_dir = "/media/sschoepp/easystore/shared/ant/faulty/ppo"
+        ppo_data_dir = "/mnt/DATA/shared/fetchreach/faulty/ppo"
 
-    print(1)
+        # v1
+
+        directory = os.path.join(ppo_data_dir, "v1")
+        check_recovery(directory)
+
+        # v4
+
+        directory = os.path.join(ppo_data_dir, "v4")
+        check_recovery(directory)
+
+        # v6
+
+        directory = os.path.join(ppo_data_dir, "v6")
+        check_recovery(directory)

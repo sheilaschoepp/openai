@@ -30,7 +30,11 @@ def check_recovery(directory):
 
         # obtain data for setting: mean and standard error
 
+        interval_size = 10
+
         dfs = []
+        prefault_dfs = []
+        postfault_dfs = []
 
         data_dir = os.path.join(directory, dir_)
 
@@ -39,35 +43,39 @@ def check_recovery(directory):
             csv_filename = os.path.join(seed_foldername, "csv", "eval_data.csv")
 
             df = pd.read_csv(csv_filename)
-            df = df[["num_time_steps", "average_return"]]
+            df = df[["average_return"]]
+            df.rename(columns={"average_return":s}, inplace=True)
             dfs.append(df)
 
-        df = pd.concat(dfs)
-        df = df.groupby(df.index)
+            prefault = df[0:201]
+            prefault_dfs.append(prefault)
 
-        df_mean = df.mean()
+            postfault = df[201:]
+            postfault_dfs.append(postfault)
 
-        # check difference between pre-fault and post-recovery performance
-
-        interval_size = 10
-
-        prefault = df_mean[0:201]
-        prefault_interval = prefault.iloc[-interval_size:, 1:]
-
-        min = prefault.min()
-        max = prefault_interval.mean()
-
-        postfault = df_mean[201:]
         start = 0
-        end = postfault.count()[1]
+
+        prefault = pd.concat(prefault_dfs, axis=1)
+        prefault = prefault.reindex(sorted(prefault.columns), axis=1)
+        postfault = pd.concat(postfault_dfs, axis=1)
+        postfault = postfault.reindex(sorted(postfault.columns), axis=1)
+
+        prefault_interval = prefault.iloc[-interval_size:, :]
+
+        prefault_interval = prefault_interval.stack().values
+
+        start = 0
+        end = postfault.shape[0]
 
         finished = False
         while not finished:
             if start + interval_size > end:
                 finished = True
-                postfault_interval = postfault.iloc[-interval_size:, 1:]
+                postfault_interval = postfault.iloc[-interval_size:, :]
             else:
-                postfault_interval = postfault.iloc[start:start+interval_size, 1:]
+                postfault_interval = postfault.iloc[start:start+interval_size, :]
+
+            postfault_interval = postfault_interval.stack().values
 
             # welch's t-test
             # assume unequal variances
@@ -80,15 +88,13 @@ def check_recovery(directory):
             # significance level
             alpha = 0.05
 
-            t, p = stats.ttest_ind(postfault_interval.values, prefault_interval.values, equal_var=False)
+            t, p = stats.ttest_ind(postfault_interval, prefault_interval, equal_var=False)
 
             # Wilcoxon Signed Rank Test
             # https://en.wikipedia.org/wiki/Wilcoxon_signed-rank_test
             # https://sphweb.bumc.bu.edu/otlt/mph-modules/bs/bs704_nonparametric/BS704_Nonparametric6.html
 
-            x = postfault_interval.reset_index().iloc[:, 1:].values.squeeze()
-            y = prefault_interval.reset_index().iloc[:, 1:].values.squeeze()
-            w, p = stats.wilcoxon(x, y)
+            w, p = stats.wilcoxon(postfault_interval, prefault_interval)
 
             if w <= 8:
                 # reject null hypothesis
@@ -110,14 +116,31 @@ def check_recovery(directory):
 
 if __name__ == "__main__":
 
-    os.makedirs(os.path.join(os.getcwd(), "data"))
+    os.makedirs(os.path.join(os.getcwd(), "data"), exist_ok=True)
 
     with open("data/numerical.txt", "w") as f:
-        sys.stdout = f
+        sys.stdout = f  # todo
 
         # local for Ant PPO
-        # ppo_data_dir = "/media/sschoepp/easystore/shared/ant/faulty/ppo"
-        ppo_data_dir = "/mnt/DATA/shared/fetchreach/faulty/ppo"
+        ppo_data_dir = "/media/sschoepp/easystore/shared/fetchreach/faulty/ppo"
+
+        # v1
+
+        directory = os.path.join(ppo_data_dir, "v1")
+        check_recovery(directory)
+
+        # v4
+
+        directory = os.path.join(ppo_data_dir, "v4")
+        check_recovery(directory)
+
+        # v6
+
+        directory = os.path.join(ppo_data_dir, "v6")
+        check_recovery(directory)
+
+        # local for Ant SAC
+        ppo_data_dir = "/media/sschoepp/easystore/shared/fetchreach/faulty/sac"
 
         # v1
 

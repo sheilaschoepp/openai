@@ -8,8 +8,8 @@ def check_recovery(directory):
 
     for dir_ in os.listdir(directory):
 
-        if dir_[-2:] == "_r":
-            continue
+        # if dir_[-2:] == "_r":
+        #     continue
 
         # dir_ has format: SACv2_FetchReachEnvGE-v1:2000000_FetchReachEnvGE-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:False_rn:False_a:True_d:cuda
         parameters = dir_.split("_")
@@ -52,6 +52,9 @@ def check_recovery(directory):
 
         prefault = df_mean[0:201]
         prefault_interval = prefault.iloc[-interval_size:, 1:]
+
+        min = prefault.min()
+        max = prefault_interval.mean()
 
         postfault = df_mean[201:]
         start = 0
@@ -98,7 +101,7 @@ def check_recovery(directory):
                 pass
             else:
                 # accept null hypothesis; performance has not changed
-                print(start, start + interval_size)
+                print("accept null", start, start + interval_size)
                 break
 
             start += 1
@@ -112,7 +115,7 @@ if __name__ == "__main__":
 
     # v1
 
-    directory = os.path.join(ppo_data_dir, "v4")
+    directory = os.path.join(ppo_data_dir, "v1")
     check_recovery(directory)
 
     print(1)

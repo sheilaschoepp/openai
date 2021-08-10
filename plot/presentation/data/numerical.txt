@@ -1,7 +1,11 @@
 PPOv2 FetchReachEnv-v1 mem=False rn:False
+accept null hypothesis, interval [11550000, 11850000]
 PPOv2 FetchReachEnv-v1 mem=True rn:True
+accept null hypothesis, interval [11670000, 11970000]
 PPOv2 FetchReachEnv-v1 mem=True rn:False
+accept null hypothesis, interval [11580000, 11880000]
 PPOv2 FetchReachEnv-v1 mem=False rn:True
+accept null hypothesis, interval [11670000, 11970000]
 PPOv2 FetchReachEnv-v4 mem=False rn:True
 PPOv2 FetchReachEnv-v4 mem=True rn:True
 PPOv2 FetchReachEnv-v4 mem=True rn:False
@@ -11,12 +15,12 @@ PPOv2 FetchReachEnv-v6 mem=True rn:False
 PPOv2 FetchReachEnv-v6 mem=True rn:True
 PPOv2 FetchReachEnv-v6 mem=False rn:True
 SACv2 FetchReachEnv-v1 mem=True rn:True
-accept null 115 125
+accept null hypothesis, interval [3140000, 3240000]
 SACv2 FetchReachEnv-v1 mem=False rn:True
 SACv2 FetchReachEnv-v1 mem=False rn:False
-accept null 16 26
+accept null hypothesis, interval [2140000, 2240000]
 SACv2 FetchReachEnv-v1 mem=True rn:False
-accept null 28 38
+accept null hypothesis, interval [2260000, 2360000]
 SACv2 FetchReachEnv-v4 mem=False rn:True
 SACv2 FetchReachEnv-v4 mem=False rn:False
 SACv2 FetchReachEnv-v4 mem=True rn:True

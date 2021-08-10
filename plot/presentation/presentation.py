@@ -98,11 +98,11 @@ def plot_experiment(directory):
             if not rn and not mem:
                 label = "retain all data"
             elif not rn and mem:
-                label = "retain network parameters"
+                label = "discard storage"
             elif rn and not mem:
-                label = "retain {}".format(storage_type)
+                label = "discard network parameters"
             else:  # rn and mem
-                label = "retain no data"
+                label = "discard all data"
 
             if algorithm == "SAC":
                 unordered_settings.append((algorithm, rn, mem, label, df_mean, df_sem))

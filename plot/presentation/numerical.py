@@ -18,6 +18,7 @@ def check_recovery(directory):
         # obtain setting
         algorithm = parameters[0]
         env_name = parameters[1].split(":")[0]
+        n_timesteps = int(parameters[2].split(":")[1])
         mem = None
         rn = None
         for p in parameters:
@@ -25,6 +26,8 @@ def check_recovery(directory):
                 mem = eval(p.split(":")[1])
             elif "rn:" in p:
                 rn = eval(p.split(":")[1])
+            elif "tef" in p:
+                tef = int(p.split(":")[1])
 
         print(algorithm, env_name, "mem={}".format(mem), "rn:{}".format(rn))
 
@@ -94,7 +97,7 @@ def check_recovery(directory):
             # https://en.wikipedia.org/wiki/Wilcoxon_signed-rank_test
             # https://sphweb.bumc.bu.edu/otlt/mph-modules/bs/bs704_nonparametric/BS704_Nonparametric6.html
 
-            w, p = stats.wilcoxon(postfault_interval, prefault_interval)
+            w, p2 = stats.wilcoxon(postfault_interval, prefault_interval)
 
             if w <= 8:
                 # reject null hypothesis
@@ -108,7 +111,9 @@ def check_recovery(directory):
                 pass
             else:
                 # accept null hypothesis; performance has not changed
-                print("accept null", start, start + interval_size)
+                interval_start = n_timesteps + start * tef
+                interval_end = n_timesteps + (start + interval_size) * tef
+                print("accept null hypothesis, interval [{}, {}]".format(interval_start, interval_end))
                 break
 
             start += 1

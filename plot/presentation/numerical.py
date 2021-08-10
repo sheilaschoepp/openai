@@ -124,9 +124,59 @@ if __name__ == "__main__":
     os.makedirs(os.path.join(os.getcwd(), "data"), exist_ok=True)
 
     with open("data/numerical.txt", "w") as f:
-        sys.stdout = f  # todo
+        sys.stdout = f
+
+        """Ant"""
 
         # local for Ant PPO
+        ppo_data_dir = "/media/sschoepp/easystore/shared/ant/faulty/ppo"
+
+        # v1
+
+        directory = os.path.join(ppo_data_dir, "v1")
+        check_recovery(directory)
+
+        # v2
+
+        directory = os.path.join(ppo_data_dir, "v2")
+        check_recovery(directory)
+
+        # v3
+
+        directory = os.path.join(ppo_data_dir, "v3")
+        check_recovery(directory)
+
+        # v4
+
+        directory = os.path.join(ppo_data_dir, "v4")
+        check_recovery(directory)
+
+        # local for Ant SAC
+        ppo_data_dir = "/media/sschoepp/easystore/shared/ant/faulty/sac"
+
+        # v1
+
+        directory = os.path.join(ppo_data_dir, "v1")
+        check_recovery(directory)
+
+        # v2
+
+        # directory = os.path.join(ppo_data_dir, "v2")
+        # check_recovery(directory)
+
+        # v3
+
+        directory = os.path.join(ppo_data_dir, "v3")
+        check_recovery(directory)
+
+        # v4
+
+        directory = os.path.join(ppo_data_dir, "v4")
+        check_recovery(directory)
+
+        """FetchReach"""
+
+        # local for FetchReach PPO
         ppo_data_dir = "/media/sschoepp/easystore/shared/fetchreach/faulty/ppo"
 
         # v1
@@ -144,7 +194,7 @@ if __name__ == "__main__":
         directory = os.path.join(ppo_data_dir, "v6")
         check_recovery(directory)
 
-        # local for Ant SAC
+        # local for FetchReach SAC
         ppo_data_dir = "/media/sschoepp/easystore/shared/fetchreach/faulty/sac"
 
         # v1

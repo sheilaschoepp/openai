@@ -33,12 +33,12 @@ SAC_N_CONTROLLER_ABSOLUTE_PATH="/home/sschoepp/Documents/openai/controllers/sacv
 
 for s in {0..1}
 do
-  tmux new-session -d -s sacf-$s "CUDA_VISIBLE_DEVICES=0 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -a -c -e FetchreachEnv-v0 -ps -pss 61 -s $s --resumable -t 2000000 -tef 10000 -tmsf 2000"
+  tmux new-session -d -s sacf-$s "CUDA_VISIBLE_DEVICES=0 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -a -c -e FetchReachEnv-v0 -ps -pss 21 -s $s --resumable -t 2000000 -tef 10000 -tmsf 2000"
 done
 
 for s in {2..3}
 do
-  tmux new-session -d -s sacf-$s "CUDA_VISIBLE_DEVICES=1 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -a -c -e FetchreachEnv-v0 -ps -pss 61 -s $s --resumable -t 2000000 -tef 10000 -tmsf 2000"
+  tmux new-session -d -s sacf-$s "CUDA_VISIBLE_DEVICES=1 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -a -c -e FetchReachEnv-v0 -ps -pss 21 -s $s --resumable -t 2000000 -tef 10000 -tmsf 2000"
 done
 
 #for s in {5..9}

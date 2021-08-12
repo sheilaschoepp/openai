@@ -193,10 +193,10 @@ def plot_experiment(directory):
             zoom.plot(x, y, color=colors[i + 1])
             zoom.fill_between(x, lb, ub, color=colors[i + 1], alpha=0.3)
 
-        main.axvline(x=x_fault_onset, color="red")
+        main.axvline(x=x_fault_onset, color="red", ymin=0.9)
         main.fill_between((zoom_xmin, zoom_xmax), zoom_ymin, zoom_ymax, facecolor="black", alpha=0.2)
 
-        zoom.axvline(x=zoom_xmin, color="red", lw=4)
+        zoom.axvline(x=zoom_xmin, color="red", lw=4, ymin=0.9)
 
         connector1 = ConnectionPatch(xyA=(zoom_xmin, zoom_ymin), coordsA=main.transData,
                                      xyB=(zoom_xmin, zoom_ymax), coordsB=zoom.transData,
@@ -250,7 +250,7 @@ def plot_experiment(directory):
 
         plt.plot(x, y, color=colors[0], label="normal")
         plt.fill_between(x, lb, ub, color=colors[0], alpha=0.3)
-        plt.axvline(x=x_fault_onset, color="red")
+        plt.axvline(x=x_fault_onset, color="red", ymin=0.9)
 
         # plot fault performance
 
@@ -312,7 +312,7 @@ def plot_experiment(directory):
 
             plt.plot(x, y, color=colors[0], label="normal")
             plt.fill_between(x, lb, ub, color=colors[0], alpha=0.3)
-            plt.axvline(x=x_fault_onset, color="red")
+            plt.axvline(x=x_fault_onset, color="red", ymin=0.9)
 
             # plot fault performance
 
@@ -454,7 +454,7 @@ if __name__ == "__main__":
     zoom_ymin = ymin
     zoom_ymax = ymax
 
-    # plot_experiment(os.path.join(sac_data_dir, "v2"))
+    plot_experiment(os.path.join(sac_data_dir, "v2"))
 
     # v3
 

@@ -146,9 +146,9 @@ def plot_experiment(directory):
         fig = plt.figure()
 
         main = fig.add_subplot(2, 1, 1)
-        zoom = fig.add_subplot(2, 6, (9, 12))
+        zoom = fig.add_subplot(2, 6, (8, 11))
 
-        x_fault_onset = ordered_settings[0][4].iloc[201, 0] / x_divisor
+        x_fault_onset = ordered_settings[0][4].iloc[200, 0] / x_divisor
 
         # plot normal performance
 
@@ -171,7 +171,7 @@ def plot_experiment(directory):
 
         # plot fault performance
 
-        fault_start_index = 201
+        fault_start_index = 200
 
         for i in range(4):
 
@@ -193,10 +193,10 @@ def plot_experiment(directory):
             zoom.plot(x, y, color=colors[i + 1])
             zoom.fill_between(x, lb, ub, color=colors[i + 1], alpha=0.3)
 
-        main.axvline(x=x_fault_onset, color="red")
+        main.axvline(x=x_fault_onset, color="red", ymin=0.95)
         main.fill_between((zoom_xmin, zoom_xmax), zoom_ymin, zoom_ymax, facecolor="black", alpha=0.2)
 
-        zoom.axvline(x=zoom_xmin, color="red", lw=4)
+        zoom.axvline(x=zoom_xmin, color="red", lw=5, ymin=0.95)
 
         connector1 = ConnectionPatch(xyA=(zoom_xmin, zoom_ymin), coordsA=main.transData,
                                      xyB=(zoom_xmin, zoom_ymax), coordsB=zoom.transData,
@@ -210,14 +210,16 @@ def plot_experiment(directory):
                                      alpha=0.3)
         fig.add_artist(connector2)
 
-        fig.legend(bbox_to_anchor=[0.2, 0.25], loc="center")
+        # fig.legend(bbox_to_anchor=[0.2, 0.25], loc="center")
 
         main.set_xlim(xmin, xmax)
         zoom.set_xlim(zoom_xmin, zoom_xmax)
         main.set_ylim(ymin, ymax)
         zoom.set_ylim(zoom_ymin, zoom_ymax)
         main.set_xlabel("million steps")
+        zoom.set_xlabel("million steps")
         main.set_ylabel("average return\n(10 seeds)")
+        zoom.set_ylabel("average return\n(10 seeds)")
         main.set_title(title)
         plt.tight_layout()
         plt.savefig(plot_directory + "/{}_{}_sub.jpg".format(algorithm, ab_env), dpi=300)
@@ -230,7 +232,7 @@ def plot_experiment(directory):
 
     def plot_all_standard():
 
-        x_fault_onset = ordered_settings[0][4].iloc[201, 0] / x_divisor
+        x_fault_onset = ordered_settings[0][4].iloc[200, 0] / x_divisor
 
         # plot normal performance
 
@@ -250,11 +252,11 @@ def plot_experiment(directory):
 
         plt.plot(x, y, color=colors[0], label="normal")
         plt.fill_between(x, lb, ub, color=colors[0], alpha=0.3)
-        plt.axvline(x=x_fault_onset, color="red")
+        plt.axvline(x=x_fault_onset, color="red", ymin=0.95)
 
         # plot fault performance
 
-        fault_start_index = 201
+        fault_start_index = 200
 
         for i in range(4):
 
@@ -277,7 +279,7 @@ def plot_experiment(directory):
         plt.ylim(ymin, ymax)
         plt.xlabel("million steps")
         plt.ylabel("average return (10 seeds)")
-        plt.legend(bbox_to_anchor=[0.465, 0.35], loc=0)
+        # plt.legend(bbox_to_anchor=[0.465, 0.35], loc=0)
         plt.title(title)
         plt.tight_layout()
         plt.savefig(plot_directory + "/{}_{}_all.jpg".format(algorithm, ab_env), dpi=300)
@@ -292,7 +294,7 @@ def plot_experiment(directory):
 
         for i in range(4):
 
-            x_fault_onset = ordered_settings[0][4].iloc[201, 0] / x_divisor
+            x_fault_onset = ordered_settings[0][4].iloc[200, 0] / x_divisor
 
             # plot normal performance
 
@@ -312,11 +314,11 @@ def plot_experiment(directory):
 
             plt.plot(x, y, color=colors[0], label="normal")
             plt.fill_between(x, lb, ub, color=colors[0], alpha=0.3)
-            plt.axvline(x=x_fault_onset, color="red")
+            plt.axvline(x=x_fault_onset, color="red", ymin=0.95)
 
             # plot fault performance
 
-            fault_start_index = 201
+            fault_start_index = 200
 
             subscript = ""
             rn = ordered_settings[i][1]
@@ -347,7 +349,7 @@ def plot_experiment(directory):
             plt.ylim(ymin, ymax)
             plt.xlabel("million steps")
             plt.ylabel("average return (10 seeds)")
-            plt.legend(loc=0)
+            # plt.legend(loc=0)
             plt.title(title)
             plt.tight_layout()
             plt.savefig(plot_directory + "/{}_{}{}.jpg".format(algorithm, ab_env, subscript), dpi=300)
@@ -391,7 +393,7 @@ if __name__ == "__main__":
     xmax = 1200
 
     # local for Ant PPO
-    ppo_data_dir = "/media/sschoepp/easystore/shared/ant/faulty/ppo"
+    ppo_data_dir = "/mnt/DATA/shared/ant/faulty/ppo"
 
     # v1
 
@@ -436,7 +438,7 @@ if __name__ == "__main__":
     xmax = 40
 
     # local for Ant SAC
-    sac_data_dir = "/media/sschoepp/easystore/shared/ant/faulty/sac"
+    sac_data_dir = "/mnt/DATA/shared/ant/faulty/sac"
 
     # v1
 
@@ -454,7 +456,7 @@ if __name__ == "__main__":
     zoom_ymin = ymin
     zoom_ymax = ymax
 
-    # plot_experiment(os.path.join(sac_data_dir, "v2"))
+    plot_experiment(os.path.join(sac_data_dir, "v2"))
 
     # v3
 
@@ -490,7 +492,7 @@ if __name__ == "__main__":
     xmax = 12
 
     # local for FetchReach PPO
-    ppo_data_dir = "/media/sschoepp/easystore/shared/fetchreach/faulty/ppo"
+    ppo_data_dir = "/mnt/DATA/shared/fetchreach/faulty/ppo"
 
     # v1
 
@@ -535,7 +537,7 @@ if __name__ == "__main__":
     xmax = 4
 
     # local for FetchReach SAC
-    sac_data_dir = "/media/sschoepp/easystore/shared/fetchreach/faulty/sac"
+    sac_data_dir = "/mnt/DATA/shared/fetchreach/faulty/sac"
 
     # v1
 

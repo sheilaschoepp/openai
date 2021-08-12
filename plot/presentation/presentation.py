@@ -148,7 +148,7 @@ def plot_experiment(directory):
         main = fig.add_subplot(2, 1, 1)
         zoom = fig.add_subplot(2, 6, (9, 12))
 
-        x_fault_onset = ordered_settings[0][4].iloc[200, 0] / x_divisor
+        x_fault_onset = ordered_settings[0][4].iloc[201, 0] / x_divisor
 
         # plot normal performance
 
@@ -230,7 +230,7 @@ def plot_experiment(directory):
 
     def plot_all_standard():
 
-        x_fault_onset = ordered_settings[0][4].iloc[200, 0] / x_divisor
+        x_fault_onset = ordered_settings[0][4].iloc[201, 0] / x_divisor
 
         # plot normal performance
 
@@ -292,7 +292,7 @@ def plot_experiment(directory):
 
         for i in range(4):
 
-            x_fault_onset = ordered_settings[0][4].iloc[200, 0] / x_divisor
+            x_fault_onset = ordered_settings[0][4].iloc[201, 0] / x_divisor
 
             # plot normal performance
 

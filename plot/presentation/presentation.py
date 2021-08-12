@@ -316,6 +316,7 @@ def plot_experiment(directory):
         plt.close()
 
     plot_zoom()
+    # plot_zoom_mod()
 
     # plot standard figure
 

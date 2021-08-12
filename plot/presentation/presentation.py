@@ -196,7 +196,7 @@ def plot_experiment(directory):
         main.axvline(x=x_fault_onset, color="red", ymin=0.95)
         main.fill_between((zoom_xmin, zoom_xmax), zoom_ymin, zoom_ymax, facecolor="black", alpha=0.2)
 
-        zoom.axvline(x=zoom_xmin, color="red", lw=5, ymin=0.95)
+        zoom.axvline(x=zoom_xmin, color="red", lw=4, ymin=0.95)
 
         connector1 = ConnectionPatch(xyA=(zoom_xmin, zoom_ymin), coordsA=main.transData,
                                      xyB=(zoom_xmin, zoom_ymax), coordsB=zoom.transData,
@@ -217,9 +217,9 @@ def plot_experiment(directory):
         main.set_ylim(ymin, ymax)
         zoom.set_ylim(zoom_ymin, zoom_ymax)
         main.set_xlabel("million steps")
-        zoom.set_xlabel("million steps")
+        # zoom.set_xlabel("million steps")
         main.set_ylabel("average return\n(10 seeds)")
-        zoom.set_ylabel("average return\n(10 seeds)")
+        # zoom.set_ylabel("average return\n(10 seeds)")
         main.set_title(title)
         plt.tight_layout()
         plt.savefig(plot_directory + "/{}_{}_sub.jpg".format(algorithm, ab_env), dpi=300)
@@ -393,7 +393,7 @@ if __name__ == "__main__":
     xmax = 1200
 
     # local for Ant PPO
-    ppo_data_dir = "/mnt/DATA/shared/ant/faulty/ppo"
+    ppo_data_dir = "/media/sschoepp/easystore/shared/ant/faulty/ppo"
 
     # v1
 
@@ -438,7 +438,7 @@ if __name__ == "__main__":
     xmax = 40
 
     # local for Ant SAC
-    sac_data_dir = "/mnt/DATA/shared/ant/faulty/sac"
+    sac_data_dir = "/media/sschoepp/easystore/shared/ant/faulty/sac"
 
     # v1
 
@@ -478,6 +478,10 @@ if __name__ == "__main__":
 
     """fetchreach"""
 
+    num_seeds = 30
+    CI_Z = 2.045
+    ci = True
+
     # global for FetchReach
     env_name = "fetchreach"
 
@@ -492,7 +496,7 @@ if __name__ == "__main__":
     xmax = 12
 
     # local for FetchReach PPO
-    ppo_data_dir = "/mnt/DATA/shared/fetchreach/faulty/ppo"
+    ppo_data_dir = "/media/sschoepp/easystore/shared/fetchreach/seeds/faulty/ppo"
 
     # v1
 
@@ -537,7 +541,7 @@ if __name__ == "__main__":
     xmax = 4
 
     # local for FetchReach SAC
-    sac_data_dir = "/mnt/DATA/shared/fetchreach/faulty/sac"
+    sac_data_dir = "/media/sschoepp/easystore/shared/fetchreach/seeds/faulty/sac"
 
     # v1
 

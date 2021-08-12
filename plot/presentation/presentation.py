@@ -226,6 +226,95 @@ def plot_experiment(directory):
         # plt.show()
         plt.close()
 
+    def plot_zoom_mod():
+
+        x_fault_onset = ordered_settings[0][4].iloc[200, 0] / x_divisor
+
+        # plot normal performance
+
+        fault_end_index = 201
+
+        x = ordered_settings[0][4].iloc[:fault_end_index, 0] / x_divisor
+        y = ordered_settings[0][4].iloc[:fault_end_index, 1]
+
+        if ci:
+            # 95 % confidence interval
+            lb = y - CI_Z * ordered_settings[0][5].iloc[:fault_end_index, 1]
+            ub = y + CI_Z * ordered_settings[0][5].iloc[:fault_end_index, 1]
+        else:
+            # standard error
+            lb = y - ordered_settings[0][5].iloc[:fault_end_index, 1]
+            ub = y + ordered_settings[0][5].iloc[:fault_end_index, 1]
+
+        plt.plot(x, y, color=colors[0], label="normal")
+        plt.fill_between(x, lb, ub, color=colors[0], alpha=0.3)
+
+        # plot fault performance
+
+        fault_start_index = 200
+
+        for i in range(4):
+
+            x = ordered_settings[i][4].iloc[fault_start_index:, 0] / x_divisor
+            y = ordered_settings[i][4].iloc[fault_start_index:, 1]
+
+            if ci:
+                # 95 % confidence interval
+                lb = y - CI_Z * ordered_settings[i][5].iloc[fault_start_index:, 1]
+                ub = y + CI_Z * ordered_settings[i][5].iloc[fault_start_index:, 1]
+            else:
+                # standard error
+                lb = y - ordered_settings[i][5].iloc[fault_start_index:, 1]
+                ub = y + ordered_settings[i][5].iloc[fault_start_index:, 1]
+
+            plt.plot(x, y, color=colors[i + 1], label=labels[i])
+            plt.fill_between(x, lb, ub, color=colors[i + 1], alpha=0.3)
+
+        plt.axvline(x=x_fault_onset, color="red", ymin=0.95)
+        plt.fill_between((zoom_xmin, zoom_xmax), zoom_ymin, zoom_ymax, facecolor="black", alpha=0.2)
+
+        plt.xlim(xmin, xmax)
+        plt.ylim(ymin, ymax)
+        plt.xlabel("million steps")
+        plt.ylabel("average return\n({} seeds)".format(num_seeds))
+        plt.title(title)
+        plt.tight_layout()
+
+        zoom = plt.axes([0.68, 0.2, .25, .25])
+
+        l = 0
+        h = 222
+
+        test = x[l:h]
+
+        for i in range(4):
+
+            x = ordered_settings[i][4].iloc[fault_start_index:, 0] / x_divisor
+            y = ordered_settings[i][4].iloc[fault_start_index:, 1]
+
+            if ci:
+                # 95 % confidence interval
+                lb = y - CI_Z * ordered_settings[i][5].iloc[fault_start_index:, 1]
+                ub = y + CI_Z * ordered_settings[i][5].iloc[fault_start_index:, 1]
+            else:
+                # standard error
+                lb = y - ordered_settings[i][5].iloc[fault_start_index:, 1]
+                ub = y + ordered_settings[i][5].iloc[fault_start_index:, 1]
+
+            zoom.plot(x[l:h], y[l:h], color=colors[i + 1])
+            zoom.fill_between(x[l:h], lb[l:h], ub[l:h], color=colors[i + 1], alpha=0.3)
+
+        zoom.set_xlim(zoom_xmin, zoom_xmax)
+        zoom.set_ylim(zoom_ymin, zoom_ymax)
+
+        zoom.axvline(x=zoom_xmin, color="red", lw=1, ymin=0.95)
+
+        # fig.legend(bbox_to_anchor=[0.2, 0.25], loc="center")
+
+        plt.savefig(plot_directory + "/{}_{}_sub.jpg".format(algorithm, ab_env), dpi=300)
+        plt.show()
+        plt.close()
+
     plot_zoom()
 
     # plot standard figure

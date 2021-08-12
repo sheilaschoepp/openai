@@ -8,7 +8,7 @@ import custom_gym_envs
 
 parser = argparse.ArgumentParser(description="PyTorch Soft Actor-Critic Arguments")
 
-parser.add_argument("-e", "--env_name", default="FetchReachEnv-v6",
+parser.add_argument("-e", "--env_name", default="FetchReachEnv-v0",
                     help="name of MuJoCo Gym environment (default: FetchReachEnvGE-v0)")
 
 args = parser.parse_args()

@@ -220,7 +220,7 @@ def plot_experiment(directory):
         main.set_ylabel("average return\n(10 seeds)")
         main.set_title(title)
         plt.tight_layout()
-        plt.savefig(plot_directory + "/{}_{}_sub.jpg".format(algorithm, ab_env))
+        plt.savefig(plot_directory + "/{}_{}_sub.jpg".format(algorithm, ab_env), dpi=300)
         # plt.show()
         plt.close()
 
@@ -280,7 +280,7 @@ def plot_experiment(directory):
         plt.legend(bbox_to_anchor=[0.465, 0.35], loc=0)
         plt.title(title)
         plt.tight_layout()
-        plt.savefig(plot_directory + "/{}_{}_all.jpg".format(algorithm, ab_env))
+        plt.savefig(plot_directory + "/{}_{}_all.jpg".format(algorithm, ab_env), dpi=300)
         # plt.show()
         plt.close()
 
@@ -350,7 +350,7 @@ def plot_experiment(directory):
             plt.legend(loc=0)
             plt.title(title)
             plt.tight_layout()
-            plt.savefig(plot_directory + "/{}_{}{}.jpg".format(algorithm, ab_env, subscript))
+            plt.savefig(plot_directory + "/{}_{}{}.jpg".format(algorithm, ab_env, subscript), dpi=300)
             # plt.show()
             plt.close()
 

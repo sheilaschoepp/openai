@@ -79,9 +79,9 @@ def plot_experiment(directory):
                 df = df[["num_time_steps", "average_return"]]
                 dfs.append(df)
 
-            if len(dfs) != num_seeds:
+            if len(dfs) < num_seeds:
                 # warning to let user know that seeds are missing
-                print(colored("The number of seeds for this experiment is 10 but this setting only has {} seeds: {}".format(str(len(dfs)), dir_), "red"))
+                print(colored("The number of seeds for this experiment is {} but this setting only has {} seeds: {}".format(num_seeds, str(len(dfs)), dir_), "red"))
 
             df = pd.concat(dfs)
             df = df.groupby(df.index)
@@ -218,8 +218,8 @@ def plot_experiment(directory):
         zoom.set_ylim(zoom_ymin, zoom_ymax)
         main.set_xlabel("million steps")
         # zoom.set_xlabel("million steps")
-        main.set_ylabel("average return\n(10 seeds)")
-        # zoom.set_ylabel("average return\n(10 seeds)")
+        main.set_ylabel("average return\n({} seeds)".format(num_seeds))
+        # zoom.set_ylabel("average return\n({} seeds)".format(num_seeds))
         main.set_title(title)
         plt.tight_layout()
         plt.savefig(plot_directory + "/{}_{}_sub.jpg".format(algorithm, ab_env), dpi=300)
@@ -278,7 +278,7 @@ def plot_experiment(directory):
         plt.xlim(xmin, xmax)
         plt.ylim(ymin, ymax)
         plt.xlabel("million steps")
-        plt.ylabel("average return (10 seeds)")
+        plt.ylabel("average return ({} seeds)".format(num_seeds))
         # plt.legend(bbox_to_anchor=[0.465, 0.35], loc=0)
         plt.title(title)
         plt.tight_layout()
@@ -348,7 +348,7 @@ def plot_experiment(directory):
             plt.xlim(xmin, xmax)
             plt.ylim(ymin, ymax)
             plt.xlabel("million steps")
-            plt.ylabel("average return (10 seeds)")
+            plt.ylabel("average return ({} seeds)".format(num_seeds))
             # plt.legend(loc=0)
             plt.title(title)
             plt.tight_layout()
@@ -361,23 +361,16 @@ def plot_experiment(directory):
 
 if __name__ == "__main__":
 
+    """ant"""
+
     # number of seeds to plot
     num_seeds = 10
-    print(colored("you have set the number of seeds to 10", "blue"))
 
     # confidence interval z value for 9 degrees of freedom (10 seeds)
-    if num_seeds == 10:
-        CI_Z = 2.262
-    elif num_seeds == 30:
-        CI_Z = 2.045
-    else:
-        print(colored("__main__: you have specified {} seeds; you must set a new value for CI_Z".format(num_seeds), "red"))
-        exit()
+    CI_Z = 2.262
 
     # if True, plot 95% confidence interval; if False, plot standard error
     ci = False
-    
-    """ant"""
 
     # global for Ant
     env_name = "ant"
@@ -478,15 +471,20 @@ if __name__ == "__main__":
 
     """fetchreach"""
 
+    # number of seeds to plot
     num_seeds = 30
+
+    # confidence interval z value for 9 degrees of freedom (10 seeds)
     CI_Z = 2.045
+
+    # if True, plot 95% confidence interval; if False, plot standard error
     ci = True
 
     # global for FetchReach
     env_name = "fetchreach"
 
     # global ymin/ymax for FetchReach
-    ymin = -40
+    ymin = -30
     ymax = 5
 
     # PPO
@@ -506,15 +504,6 @@ if __name__ == "__main__":
     zoom_ymax = 1
 
     plot_experiment(os.path.join(ppo_data_dir, "v1"))
-
-    # v1GE
-
-    zoom_xmin = 6
-    zoom_xmax = 6.6
-    zoom_ymin = -15
-    zoom_ymax = 1
-
-    plot_experiment(os.path.join(ppo_data_dir, "v1GE"))
 
     # v4
 
@@ -551,15 +540,6 @@ if __name__ == "__main__":
     zoom_ymax = 1
 
     plot_experiment(os.path.join(sac_data_dir, "v1"))
-
-    # v1GE
-
-    zoom_xmin = 2
-    zoom_xmax = 2.2
-    zoom_ymin = -15
-    zoom_ymax = 1
-
-    plot_experiment(os.path.join(sac_data_dir, "v1GE"))
 
     # v4
 

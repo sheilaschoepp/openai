@@ -198,6 +198,10 @@ def percent_recovery(d):
         end = postfault.shape[0]
 
         finished = False
+        eighty = False
+        ninety = False
+        ninetyfive = False
+
         while not finished:
             if start + interval_size > end:
                 finished = True
@@ -212,12 +216,15 @@ def percent_recovery(d):
             if percentage >= 80:
                 interval_start = n_timesteps + start * tef
                 interval_end = n_timesteps + (start + interval_size) * tef
-                if 80 <= percentage < 90:
+                if 80 <= percentage < 90 and not eighty:
                     print("80%, interval [{}, {}]".format(interval_start, interval_end))
-                if 90 <= percentage < 95:
+                    eighty = True
+                if 90 <= percentage < 95 and not ninety:
                     print("90%, interval [{}, {}]".format(interval_start, interval_end))
-                if percentage >= 95:
+                    ninety = True
+                if percentage >= 95 and not ninetyfive:
                     print("95%, interval [{}, {}]".format(interval_start, interval_end))
+                    ninetyfive = True
 
             start += 1
 
@@ -232,7 +239,7 @@ if __name__ == "__main__":
         """Ant"""
 
         # local for Ant PPO
-        ppo_data_dir = "/media/sschoepp/easystore/shared/ant/faulty/ppo"
+        ppo_data_dir = "/mnt/DATA/shared/ant/faulty/ppo"
 
         # v1
 
@@ -259,7 +266,7 @@ if __name__ == "__main__":
         percent_recovery(directory)
 
         # local for Ant SAC
-        ppo_data_dir = "/media/sschoepp/easystore/shared/ant/faulty/sac"
+        ppo_data_dir = "/mnt/DATA/shared/ant/faulty/sac"
 
         # v1
 
@@ -269,9 +276,9 @@ if __name__ == "__main__":
 
         # v2
 
-        # directory = os.path.join(ppo_data_dir, "v2")
-        # check_recovery(directory)
-        # percent_recovery(directory)
+        directory = os.path.join(ppo_data_dir, "v2")
+        paired_t_test(directory)
+        percent_recovery(directory)
 
         # v3
 
@@ -288,7 +295,7 @@ if __name__ == "__main__":
         """FetchReach"""
 
         # local for FetchReach PPO
-        ppo_data_dir = "/media/sschoepp/easystore/shared/fetchreach/faulty/ppo"
+        ppo_data_dir = "/mnt/DATA/shared/fetchreach/faulty/ppo"
 
         # v1
 
@@ -309,7 +316,7 @@ if __name__ == "__main__":
         percent_recovery(directory)
 
         # local for FetchReach SAC
-        ppo_data_dir = "/media/sschoepp/easystore/shared/fetchreach/faulty/sac"
+        ppo_data_dir = "/mnt/DATA/shared/fetchreach/faulty/sac"
 
         # v1
 

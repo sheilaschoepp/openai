@@ -12,6 +12,8 @@ sns.set_palette("colorblind", color_codes=True)
 
 plt.rc('axes', titlesize=14)     # fontsize of the axes title
 plt.rc('axes', labelsize=14)    # fontsize of the x and y labels
+plt.rc('xtick', labelsize=12)    # fontsize of the tick labels
+plt.rc('ytick', labelsize=12)    # fontsize of the tick labels
 
 
 def plot_experiment(directory):

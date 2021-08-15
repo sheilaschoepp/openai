@@ -1,5 +1,6 @@
 import os
 
+import matplotlib
 import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
@@ -8,6 +9,9 @@ from matplotlib.patches import ConnectionPatch
 
 sns.set_theme()
 sns.set_palette("colorblind", color_codes=True)
+
+plt.rc('axes', titlesize=14)     # fontsize of the axes title
+plt.rc('axes', labelsize=14)    # fontsize of the x and y labels
 
 
 def plot_experiment(directory):
@@ -194,18 +198,18 @@ def plot_experiment(directory):
             zoom.fill_between(x, lb, ub, color=colors[i + 1], alpha=0.3)
 
         main.axvline(x=x_fault_onset, color="red", ymin=0.95)
-        main.fill_between((zoom_xmin, zoom_xmax), zoom_ymin, zoom_ymax, facecolor="black", alpha=0.2)
+        main.fill_between((zoom_init_xmin, zoom_init_xmax), zoom_init_ymin, zoom_init_ymax, facecolor="black", alpha=0.2)
 
-        zoom.axvline(x=zoom_xmin, color="red", lw=4, ymin=0.95)
+        zoom.axvline(x=zoom_init_xmin, color="red", lw=4, ymin=0.95)
 
-        connector1 = ConnectionPatch(xyA=(zoom_xmin, zoom_ymin), coordsA=main.transData,
-                                     xyB=(zoom_xmin, zoom_ymax), coordsB=zoom.transData,
+        connector1 = ConnectionPatch(xyA=(zoom_init_xmin, zoom_init_ymin), coordsA=main.transData,
+                                     xyB=(zoom_init_xmin, zoom_init_ymax), coordsB=zoom.transData,
                                      color="black",
                                      alpha=0.3)
         fig.add_artist(connector1)
 
-        connector2 = ConnectionPatch(xyA=(zoom_xmax, zoom_ymin), coordsA=main.transData,
-                                     xyB=(zoom_xmax, zoom_ymax), coordsB=zoom.transData,
+        connector2 = ConnectionPatch(xyA=(zoom_init_xmax, zoom_init_ymin), coordsA=main.transData,
+                                     xyB=(zoom_init_xmax, zoom_init_ymax), coordsB=zoom.transData,
                                      color="black",
                                      alpha=0.3)
         fig.add_artist(connector2)
@@ -213,9 +217,9 @@ def plot_experiment(directory):
         # fig.legend(bbox_to_anchor=[0.2, 0.25], loc="center")
 
         main.set_xlim(xmin, xmax)
-        zoom.set_xlim(zoom_xmin, zoom_xmax)
+        zoom.set_xlim(zoom_init_xmin, zoom_init_xmax)
         main.set_ylim(ymin, ymax)
-        zoom.set_ylim(zoom_ymin, zoom_ymax)
+        zoom.set_ylim(zoom_init_ymin, zoom_init_ymax)
         main.set_xlabel("million steps")
         # zoom.set_xlabel("million steps")
         main.set_ylabel("average return\n({} seeds)".format(num_seeds))
@@ -230,8 +234,9 @@ def plot_experiment(directory):
 
         fig = plt.figure()
 
-        main = fig.add_subplot(2, 12, (1, 24))
-        zoom = fig.add_subplot(2, 6, (8, 9))
+        main = fig.add_subplot(2, 1, 1)
+        zoom_init = fig.add_subplot(2, 6, (7, 9))
+        zoom_final = fig.add_subplot(2, 6, (10, 12))
 
         x_fault_onset = ordered_settings[0][4].iloc[200, 0] / x_divisor
 
@@ -275,40 +280,54 @@ def plot_experiment(directory):
             main.plot(x, y, color=colors[i + 1], label=labels[i])
             main.fill_between(x, lb, ub, color=colors[i + 1], alpha=0.3)
 
-            zoom.plot(x, y, color=colors[i + 1])
-            zoom.fill_between(x, lb, ub, color=colors[i + 1], alpha=0.3)
+            zoom_init.plot(x, y, color=colors[i + 1])
+            zoom_init.fill_between(x, lb, ub, color=colors[i + 1], alpha=0.2)
+
+            zoom_final.plot(x, y, color=colors[i + 1])
+            zoom_final.fill_between(x, lb, ub, color=colors[i + 1], alpha=0.2)
 
         main.axvline(x=x_fault_onset, color="red", ymin=0.95)
-        main.fill_between((zoom_xmin, zoom_xmax), zoom_ymin, zoom_ymax, facecolor="black", alpha=0.2)
+        main.fill_between((zoom_init_xmin, zoom_init_xmax), zoom_init_ymin, zoom_init_ymax, facecolor="black", alpha=0.2)
+        main.fill_between((zoom_final_xmin, zoom_final_xmax), zoom_final_ymin, zoom_final_ymax, facecolor="black", alpha=0.2)
 
-        zoom.axvline(x=zoom_xmin, color="red", lw=4, ymin=0.95)
+        zoom_init.axvline(x=zoom_init_xmin, color="red", lw=4, ymin=0.95)
 
-        connector1 = ConnectionPatch(xyA=(zoom_xmin, zoom_ymin), coordsA=main.transData,
-                                     xyB=(zoom_xmin, zoom_ymax), coordsB=zoom.transData,
+        connector1 = ConnectionPatch(xyA=(zoom_init_xmin, zoom_init_ymin), coordsA=main.transData,
+                                     xyB=(zoom_init_xmin, zoom_init_ymax), coordsB=zoom_init.transData,
                                      color="black",
                                      alpha=0.3)
         fig.add_artist(connector1)
 
-        connector2 = ConnectionPatch(xyA=(zoom_xmax, zoom_ymin), coordsA=main.transData,
-                                     xyB=(zoom_xmax, zoom_ymax), coordsB=zoom.transData,
+        connector2 = ConnectionPatch(xyA=(zoom_init_xmax, zoom_init_ymin), coordsA=main.transData,
+                                     xyB=(zoom_init_xmax, zoom_init_ymax), coordsB=zoom_init.transData,
                                      color="black",
                                      alpha=0.3)
         fig.add_artist(connector2)
 
-        # fig.legend(bbox_to_anchor=[0.2, 0.25], loc="center")
+        connector1 = ConnectionPatch(xyA=(zoom_final_xmin, zoom_final_ymin), coordsA=main.transData,
+                                     xyB=(zoom_final_xmin, zoom_final_ymax), coordsB=zoom_final.transData,
+                                     color="black",
+                                     alpha=0.3)
+        fig.add_artist(connector1)
+
+        connector2 = ConnectionPatch(xyA=(zoom_final_xmax, zoom_final_ymin), coordsA=main.transData,
+                                     xyB=(zoom_final_xmax, zoom_final_ymax), coordsB=zoom_final.transData,
+                                     color="black",
+                                     alpha=0.3)
+        fig.add_artist(connector2)
 
         main.set_xlim(xmin, xmax)
-        zoom.set_xlim(zoom_xmin, zoom_xmax)
+        zoom_init.set_xlim(zoom_init_xmin, zoom_init_xmax)
+        zoom_final.set_xlim(zoom_final_xmin, zoom_final_xmax)
         main.set_ylim(ymin, ymax)
-        zoom.set_ylim(zoom_ymin, zoom_ymax)
+        zoom_init.set_ylim(zoom_init_ymin, zoom_init_ymax)
+        zoom_final.set_ylim(zoom_final_ymin, zoom_final_ymax)
         main.set_xlabel("million steps")
-        # zoom.set_xlabel("million steps")
         main.set_ylabel("average return\n({} seeds)".format(num_seeds))
-        # zoom.set_ylabel("average return\n({} seeds)".format(num_seeds))
         main.set_title(title)
         plt.tight_layout()
         plt.savefig(plot_directory + "/{}_{}_sub.jpg".format(algorithm, ab_env), dpi=300)
-        # plt.show()
+        plt.show()
         plt.close()
 
     plot_zoom()
@@ -467,14 +486,11 @@ def legend():
     plt.show()
 
 
-legend()
-
-
 if __name__ == "__main__":
 
-    legend()
+    # legend()
 
-    repeat = False
+    repeat = True
 
     if repeat:
 
@@ -507,37 +523,53 @@ if __name__ == "__main__":
 
         # v1
 
-        zoom_xmin = 600
-        zoom_xmax = 660
-        zoom_ymin = ymin
-        zoom_ymax = ymax
+        zoom_init_xmin = 600
+        zoom_init_xmax = 660
+        zoom_final_xmin = 1140
+        zoom_final_xmax = 1200
+        zoom_init_ymin = ymin
+        zoom_init_ymax = ymax
+        zoom_final_ymin = 5000
+        zoom_final_ymax = 8000
 
         plot_experiment(os.path.join(ppo_data_dir, "v1"))
 
         # v2
 
-        zoom_xmin = 600
-        zoom_xmax = 660
-        zoom_ymin = ymin
-        zoom_ymax = ymax
+        zoom_init_xmin = 600
+        zoom_init_xmax = 660
+        zoom_final_xmin = 1140
+        zoom_final_xmax = 1200
+        zoom_init_ymin = ymin
+        zoom_init_ymax = ymax
+        zoom_final_ymin = 5000
+        zoom_final_ymax = 8000
 
         plot_experiment(os.path.join(ppo_data_dir, "v2"))
 
         # v3
 
-        zoom_xmin = 600
-        zoom_xmax = 660
-        zoom_ymin = ymin
-        zoom_ymax = ymax
+        zoom_init_xmin = 600
+        zoom_init_xmax = 660
+        zoom_final_xmin = 1140
+        zoom_final_xmax = 1200
+        zoom_init_ymin = ymin
+        zoom_init_ymax = ymax
+        zoom_final_ymin = 5000
+        zoom_final_ymax = 8000
 
         plot_experiment(os.path.join(ppo_data_dir, "v3"))
 
         # v4
 
-        zoom_xmin = 600
-        zoom_xmax = 660
-        zoom_ymin = ymin
-        zoom_ymax = ymax
+        zoom_init_xmin = 600
+        zoom_init_xmax = 660
+        zoom_final_xmin = 1140
+        zoom_final_xmax = 1200
+        zoom_init_ymin = ymin
+        zoom_init_ymax = ymax
+        zoom_final_ymin = 5000
+        zoom_final_ymax = 8000
 
         plot_experiment(os.path.join(ppo_data_dir, "v4"))
 
@@ -552,37 +584,53 @@ if __name__ == "__main__":
 
         # v1
 
-        zoom_xmin = 20
-        zoom_xmax = 22
-        zoom_ymin = ymin
-        zoom_ymax = ymax
+        zoom_init_xmin = 20
+        zoom_init_xmax = 22
+        zoom_final_xmin = 38
+        zoom_final_xmax = 40
+        zoom_init_ymin = ymin
+        zoom_init_ymax = ymax
+        zoom_final_ymin = 5000
+        zoom_final_ymax = 8000
 
         plot_experiment(os.path.join(sac_data_dir, "v1"))
 
         # v2
 
-        zoom_xmin = 20
-        zoom_xmax = 22
-        zoom_ymin = ymin
-        zoom_ymax = ymax
+        zoom_init_xmin = 20
+        zoom_init_xmax = 22
+        zoom_final_xmin = 38
+        zoom_final_xmax = 40
+        zoom_init_ymin = ymin
+        zoom_init_ymax = ymax
+        zoom_final_ymin = 5000
+        zoom_final_ymax = 8000
 
         plot_experiment(os.path.join(sac_data_dir, "v2"))
 
         # v3
 
-        zoom_xmin = 20
-        zoom_xmax = 22
-        zoom_ymin = ymin
-        zoom_ymax = ymax
+        zoom_init_xmin = 20
+        zoom_init_xmax = 22
+        zoom_final_xmin = 38
+        zoom_final_xmax = 40
+        zoom_init_ymin = ymin
+        zoom_init_ymax = ymax
+        zoom_final_ymin = 5000
+        zoom_final_ymax = 8000
 
         plot_experiment(os.path.join(sac_data_dir, "v3"))
 
         # v4
 
-        zoom_xmin = 20
-        zoom_xmax = 22
-        zoom_ymin = ymin
-        zoom_ymax = ymax
+        zoom_init_xmin = 20
+        zoom_init_xmax = 22
+        zoom_final_xmin = 38
+        zoom_final_xmax = 40
+        zoom_init_ymin = ymin
+        zoom_init_ymax = ymax
+        zoom_final_ymin = 5000
+        zoom_final_ymax = 8000
 
         plot_experiment(os.path.join(sac_data_dir, "v4"))
 
@@ -615,28 +663,40 @@ if __name__ == "__main__":
 
         # v1
 
-        zoom_xmin = 6
-        zoom_xmax = 6.6
-        zoom_ymin = -12
-        zoom_ymax = 1
+        zoom_init_xmin = 6
+        zoom_init_xmax = 6.6
+        zoom_final_xmin = 11.4
+        zoom_final_xmax = 12
+        zoom_init_ymin = -12
+        zoom_init_ymax = 1
+        zoom_final_ymin = -5
+        zoom_final_ymax = 5
 
         plot_experiment(os.path.join(ppo_data_dir, "v1"))
 
         # v4
 
-        zoom_xmin = 6
-        zoom_xmax = 6.6
-        zoom_ymin = -25
-        zoom_ymax = 1
+        zoom_init_xmin = 6
+        zoom_init_xmax = 6.6
+        zoom_final_xmin = 11.4
+        zoom_final_xmax = 12
+        zoom_init_ymin = -25
+        zoom_init_ymax = 1
+        zoom_final_ymin = -5
+        zoom_final_ymax = 5
 
         plot_experiment(os.path.join(ppo_data_dir, "v4"))
 
         # v6
 
-        zoom_xmin = 6
-        zoom_xmax = 6.6
-        zoom_ymin = -25
-        zoom_ymax = 1
+        zoom_init_xmin = 6
+        zoom_init_xmax = 6.6
+        zoom_final_xmin = 11.4
+        zoom_final_xmax = 12
+        zoom_init_ymin = -25
+        zoom_init_ymax = 1
+        zoom_final_ymin = -5
+        zoom_final_ymax = 5
 
         plot_experiment(os.path.join(ppo_data_dir, "v6"))
 
@@ -651,27 +711,39 @@ if __name__ == "__main__":
 
         # v1
 
-        zoom_xmin = 2
-        zoom_xmax = 2.2
-        zoom_ymin = -12
-        zoom_ymax = 1
+        zoom_init_xmin = 2
+        zoom_init_xmax = 2.2
+        zoom_final_xmin = 3.8
+        zoom_final_xmax = 4.0
+        zoom_init_ymin = -12
+        zoom_init_ymax = 1
+        zoom_final_ymin = -5
+        zoom_final_ymax = 5
 
         plot_experiment(os.path.join(sac_data_dir, "v1"))
 
         # v4
 
-        zoom_xmin = 2
-        zoom_xmax = 2.2
-        zoom_ymin = -25
-        zoom_ymax = 1
+        zoom_init_xmin = 2
+        zoom_init_xmax = 2.2
+        zoom_final_xmin = 3.8
+        zoom_final_xmax = 4.0
+        zoom_init_ymin = -25
+        zoom_init_ymax = 1
+        zoom_final_ymin = -5
+        zoom_final_ymax = 5
 
         plot_experiment(os.path.join(sac_data_dir, "v4"))
 
         # v6
 
-        zoom_xmin = 2
-        zoom_xmax = 2.2
-        zoom_ymin = -25
-        zoom_ymax = 1
+        zoom_init_xmin = 2
+        zoom_init_xmax = 2.2
+        zoom_final_xmin = 3.8
+        zoom_final_xmax = 4.0
+        zoom_init_ymin = -25
+        zoom_init_ymax = 1
+        zoom_final_ymin = -5
+        zoom_final_ymax = 5
 
         plot_experiment(os.path.join(sac_data_dir, "v6"))

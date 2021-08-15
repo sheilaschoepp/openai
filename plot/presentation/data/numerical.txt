@@ -25,6 +25,21 @@ PPOv2 AntEnv-v1 mem=True rn:False
 95%, interval [45.1875, 51.2125]
 
 
+SACv2 AntEnv-v1 mem=False rn:True
+SACv2 AntEnv-v1 mem=True rn:True
+accept null hypothesis, interval [26.871666666666666, 32.71333333333333]
+SACv2 AntEnv-v1 mem=True rn:False
+SACv2 AntEnv-v1 mem=False rn:False
+
+SACv2 AntEnv-v1 mem=False rn:True
+SACv2 AntEnv-v1 mem=True rn:True
+80%, interval [12.851666666666667, 18.69333333333333]
+90%, interval [19.2775, 25.11916666666667]
+95%, interval [27.455833333333334, 33.2975]
+SACv2 AntEnv-v1 mem=True rn:False
+SACv2 AntEnv-v1 mem=False rn:False
+
+
 PPOv2 AntEnv-v2 mem=False rn:True
 PPOv2 AntEnv-v2 mem=False rn:False
 PPOv2 AntEnv-v2 mem=True rn:False
@@ -44,6 +59,21 @@ PPOv2 AntEnv-v2 mem=True rn:True
 80%, interval [4.098611111111111, 12.295833333333333]
 90%, interval [45.904444444444444, 54.10166666666667]
 
+SACv2 AntEnv-v2 mem=False rn:False
+SACv2 AntEnv-v2 mem=False rn:True
+SACv2 AntEnv-v2 mem=True rn:False
+SACv2 AntEnv-v2 mem=True rn:True
+accept null hypothesis, interval [29.336666666666666, 34.97833333333333]
+
+SACv2 AntEnv-v2 mem=False rn:False
+80%, interval [6.52, 11.953333333333333]
+SACv2 AntEnv-v2 mem=False rn:True
+SACv2 AntEnv-v2 mem=True rn:False
+SACv2 AntEnv-v2 mem=True rn:True
+80%, interval [6.77, 12.411666666666667]
+90%, interval [24.823333333333334, 30.465]
+95%, interval [31.593333333333334, 37.235]
+
 
 PPOv2 AntEnv-v3 mem=False rn:True
 PPOv2 AntEnv-v3 mem=False rn:False
@@ -61,6 +91,16 @@ PPOv2 AntEnv-v3 mem=True rn:True
 PPOv2 AntEnv-v3 mem=True rn:False
 80%, interval [0.6427777777777778, 7.070555555555556]
 90%, interval [91.27444444444444, 97.70222222222222]
+
+SACv2 AntEnv-v3 mem=True rn:False
+SACv2 AntEnv-v3 mem=False rn:True
+SACv2 AntEnv-v3 mem=False rn:False
+SACv2 AntEnv-v3 mem=True rn:True
+
+SACv2 AntEnv-v3 mem=True rn:False
+SACv2 AntEnv-v3 mem=False rn:True
+SACv2 AntEnv-v3 mem=False rn:False
+SACv2 AntEnv-v3 mem=True rn:True
 
 
 PPOv2 AntEnv-v4 mem=False rn:True
@@ -83,56 +123,26 @@ PPOv2 AntEnv-v4 mem=True rn:True
 PPOv2 AntEnv-v4 mem=True rn:False
 80%, interval [4.478055555555556, 10.875277777777777]
 
-
-SACv2 AntEnv-v1 mem=False rn:True
-SACv2 AntEnv-v1 mem=True rn:True
-accept null hypothesis, interval [26.871666666666666, 32.71333333333333]
-SACv2 AntEnv-v1 mem=True rn:False
-SACv2 AntEnv-v1 mem=False rn:False
-SACv2 AntEnv-v1 mem=False rn:True
-SACv2 AntEnv-v1 mem=True rn:True
-80%, interval [12.851666666666667, 18.69333333333333]
-90%, interval [19.2775, 25.11916666666667]
-95%, interval [27.455833333333334, 33.2975]
-SACv2 AntEnv-v1 mem=True rn:False
-SACv2 AntEnv-v1 mem=False rn:False
-SACv2 AntEnv-v2 mem=False rn:False
-SACv2 AntEnv-v2 mem=False rn:True
-SACv2 AntEnv-v2 mem=True rn:False
-SACv2 AntEnv-v2 mem=True rn:True
-accept null hypothesis, interval [29.336666666666666, 34.97833333333333]
-SACv2 AntEnv-v2 mem=False rn:False
-80%, interval [6.52, 11.953333333333333]
-SACv2 AntEnv-v2 mem=False rn:True
-SACv2 AntEnv-v2 mem=True rn:False
-SACv2 AntEnv-v2 mem=True rn:True
-80%, interval [6.77, 12.411666666666667]
-90%, interval [24.823333333333334, 30.465]
-95%, interval [31.593333333333334, 37.235]
-SACv2 AntEnv-v3 mem=True rn:False
-SACv2 AntEnv-v3 mem=False rn:True
-SACv2 AntEnv-v3 mem=False rn:False
-SACv2 AntEnv-v3 mem=True rn:True
-SACv2 AntEnv-v3 mem=True rn:False
-SACv2 AntEnv-v3 mem=False rn:True
-SACv2 AntEnv-v3 mem=False rn:False
-SACv2 AntEnv-v3 mem=True rn:True
 SACv2 AntEnv-v4 mem=True rn:False
 SACv2 AntEnv-v4 mem=False rn:False
 SACv2 AntEnv-v4 mem=False rn:True
 SACv2 AntEnv-v4 mem=True rn:True
+
 SACv2 AntEnv-v4 mem=True rn:False
 SACv2 AntEnv-v4 mem=False rn:False
 SACv2 AntEnv-v4 mem=False rn:True
 SACv2 AntEnv-v4 mem=True rn:True
 80%, interval [17.58, 24.09111111111111]
 90%, interval [43.62444444444444, 50.135555555555555]
+
+
 PPOv2 FetchReachEnv-v1 mem=False rn:True
 accept null hypothesis, interval [10.5525, 11.110833333333334]
 SACv2 FetchReachEnv-v1 mem=True rn:True
 accept null hypothesis, interval [6.766666666666667, 7.25]
 PPOv2 FetchReachEnv-v1 mem=False rn:False
 accept null hypothesis, interval [10.123611111111112, 10.670833333333333]
+
 SACv2 FetchReachEnv-v1 mem=False rn:False
 accept null hypothesis, interval [0.0, 0.6861111111111111]
 PPOv2 FetchReachEnv-v1 mem=True rn:True
@@ -146,6 +156,8 @@ accept null hypothesis, interval [10.385, 10.943333333333333]
 PPOv2 FetchReachEnv-v1 mem=False rn:True
 80%, interval [0.0, 0.5583333333333333]
 95%, interval [0.05583333333333333, 0.6141666666666666]
+
+
 SACv2 FetchReachEnv-v1 mem=True rn:True
 80%, interval [0.0, 0.48333333333333334]
 90%, interval [0.04833333333333333, 0.5316666666666666]
@@ -154,6 +166,8 @@ PPOv2 FetchReachEnv-v1 mem=False rn:False
 95%, interval [0.0, 0.5472222222222223]
 SACv2 FetchReachEnv-v1 mem=False rn:False
 95%, interval [0.0, 0.6861111111111111]
+
+
 PPOv2 FetchReachEnv-v1 mem=True rn:True
 80%, interval [0.0, 0.5555555555555556]
 95%, interval [0.05555555555555555, 0.6111111111111112]

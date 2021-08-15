@@ -442,228 +442,236 @@ def plot_experiment(directory):
             # plt.show()
             plt.close()
 
-    plot_one_standard()
+    plot_one_standard(), "m"
 
-    def legend():
 
-        fig, ax = plt.subplots()
-        # fig.patch.set_visible(False)
-        ax.axis('off')
+def legend():
 
-        colors = ["b", "g", "r", "w", "m", "k"]
-        f = lambda m, c: plt.plot([], [], marker=m, color=c, ls="none")[0]
-        handles = [f("s", colors[i]) for i in range(6)]
-        labels = ["normal", "retain all data", "discard all data", "", "discard experiences in storage", "reinitialize network parameters"]
-        legend = plt.legend(handles, labels, ncol=2, loc=1, framealpha=1, frameon=False)
+    fig, ax = plt.subplots()
+    # fig.patch.set_visible(False)
+    ax.axis('off')
 
-        def export_legend(legend, filename="legend.jpg"):
-            fig = legend.figure
-            fig.canvas.draw()
-            bbox = legend.get_window_extent().transformed(fig.dpi_scale_trans.inverted())
-            fig.savefig(filename, dpi=300, bbox_inches=bbox)
+    colors = ["b", "g", "m", "k", "r"]
+    f = lambda m, c: plt.plot([], [], marker=m, color=c, ls="none")[0]
+    handles = [f("s", colors[i]) for i in range(5)]
+    labels = ["normal", "retain networks\nretain storage", "retain networks\ndiscard storage", "discard networks\nretain storage", "discard networks\ndiscard storage"]
+    legend = plt.legend(handles, labels, ncol=5, loc=1, framealpha=1, frameon=False)
 
-        export_legend(legend)
-        plt.show()
+    def export_legend(legend, filename="legend.jpg"):
+        fig = legend.figure
+        fig.canvas.draw()
+        bbox = legend.get_window_extent().transformed(fig.dpi_scale_trans.inverted())
+        fig.savefig(filename, dpi=300, bbox_inches=bbox)
 
-    # legend()
+    export_legend(legend)
+    plt.show()
+
+
+legend()
 
 
 if __name__ == "__main__":
 
-    """ant"""
+    legend()
 
-    # number of seeds to plot
-    num_seeds = 10
+    repeat = False
 
-    # confidence interval z value for 9 degrees of freedom (10 seeds)
-    CI_Z = 2.262
+    if repeat:
 
-    # if True, plot 95% confidence interval; if False, plot standard error
-    ci = False
+        """ant"""
 
-    # global for Ant
-    env_name = "ant"
+        # number of seeds to plot
+        num_seeds = 10
 
-    # global ymin/ymax for Ant
-    ymin = -1000
-    ymax = 8000
+        # confidence interval z value for 9 degrees of freedom (10 seeds)
+        CI_Z = 2.262
 
-    # PPO
+        # if True, plot 95% confidence interval; if False, plot standard error
+        ci = False
 
-    # local for Ant PPO
-    xmin = 0
-    xmax = 1200
+        # global for Ant
+        env_name = "ant"
 
-    # local for Ant PPO
-    ppo_data_dir = "/mnt/DATA/shared/ant/faulty/ppo"
+        # global ymin/ymax for Ant
+        ymin = -1000
+        ymax = 8000
 
-    # v1
+        # PPO
 
-    zoom_xmin = 600
-    zoom_xmax = 660
-    zoom_ymin = ymin
-    zoom_ymax = ymax
+        # local for Ant PPO
+        xmin = 0
+        xmax = 1200
 
-    plot_experiment(os.path.join(ppo_data_dir, "v1"))
+        # local for Ant PPO
+        ppo_data_dir = "/mnt/DATA/shared/ant/faulty/ppo"
 
-    # v2
+        # v1
 
-    zoom_xmin = 600
-    zoom_xmax = 660
-    zoom_ymin = ymin
-    zoom_ymax = ymax
+        zoom_xmin = 600
+        zoom_xmax = 660
+        zoom_ymin = ymin
+        zoom_ymax = ymax
 
-    plot_experiment(os.path.join(ppo_data_dir, "v2"))
+        plot_experiment(os.path.join(ppo_data_dir, "v1"))
 
-    # v3
+        # v2
 
-    zoom_xmin = 600
-    zoom_xmax = 660
-    zoom_ymin = ymin
-    zoom_ymax = ymax
+        zoom_xmin = 600
+        zoom_xmax = 660
+        zoom_ymin = ymin
+        zoom_ymax = ymax
 
-    plot_experiment(os.path.join(ppo_data_dir, "v3"))
+        plot_experiment(os.path.join(ppo_data_dir, "v2"))
 
-    # v4
+        # v3
 
-    zoom_xmin = 600
-    zoom_xmax = 660
-    zoom_ymin = ymin
-    zoom_ymax = ymax
+        zoom_xmin = 600
+        zoom_xmax = 660
+        zoom_ymin = ymin
+        zoom_ymax = ymax
 
-    plot_experiment(os.path.join(ppo_data_dir, "v4"))
+        plot_experiment(os.path.join(ppo_data_dir, "v3"))
 
-    # SAC
+        # v4
 
-    # local for Ant SAC
-    xmin = 0
-    xmax = 40
+        zoom_xmin = 600
+        zoom_xmax = 660
+        zoom_ymin = ymin
+        zoom_ymax = ymax
 
-    # local for Ant SAC
-    sac_data_dir = "/mnt/DATA/shared/ant/faulty/sac"
+        plot_experiment(os.path.join(ppo_data_dir, "v4"))
 
-    # v1
+        # SAC
 
-    zoom_xmin = 20
-    zoom_xmax = 22
-    zoom_ymin = ymin
-    zoom_ymax = ymax
+        # local for Ant SAC
+        xmin = 0
+        xmax = 40
 
-    plot_experiment(os.path.join(sac_data_dir, "v1"))
+        # local for Ant SAC
+        sac_data_dir = "/mnt/DATA/shared/ant/faulty/sac"
 
-    # v2
+        # v1
 
-    zoom_xmin = 20
-    zoom_xmax = 22
-    zoom_ymin = ymin
-    zoom_ymax = ymax
+        zoom_xmin = 20
+        zoom_xmax = 22
+        zoom_ymin = ymin
+        zoom_ymax = ymax
 
-    plot_experiment(os.path.join(sac_data_dir, "v2"))
+        plot_experiment(os.path.join(sac_data_dir, "v1"))
 
-    # v3
+        # v2
 
-    zoom_xmin = 20
-    zoom_xmax = 22
-    zoom_ymin = ymin
-    zoom_ymax = ymax
+        zoom_xmin = 20
+        zoom_xmax = 22
+        zoom_ymin = ymin
+        zoom_ymax = ymax
 
-    plot_experiment(os.path.join(sac_data_dir, "v3"))
+        plot_experiment(os.path.join(sac_data_dir, "v2"))
 
-    # v4
+        # v3
 
-    zoom_xmin = 20
-    zoom_xmax = 22
-    zoom_ymin = ymin
-    zoom_ymax = ymax
+        zoom_xmin = 20
+        zoom_xmax = 22
+        zoom_ymin = ymin
+        zoom_ymax = ymax
 
-    plot_experiment(os.path.join(sac_data_dir, "v4"))
+        plot_experiment(os.path.join(sac_data_dir, "v3"))
 
-    """fetchreach"""
+        # v4
 
-    # number of seeds to plot
-    num_seeds = 30
+        zoom_xmin = 20
+        zoom_xmax = 22
+        zoom_ymin = ymin
+        zoom_ymax = ymax
 
-    # confidence interval z value for 9 degrees of freedom (10 seeds)
-    CI_Z = 2.045
+        plot_experiment(os.path.join(sac_data_dir, "v4"))
 
-    # if True, plot 95% confidence interval; if False, plot standard error
-    ci = True
+        """fetchreach"""
 
-    # global for FetchReach
-    env_name = "fetchreach"
+        # number of seeds to plot
+        num_seeds = 30
 
-    # global ymin/ymax for FetchReach
-    ymin = -30
-    ymax = 5
+        # confidence interval z value for 9 degrees of freedom (10 seeds)
+        CI_Z = 2.045
 
-    # PPO
+        # if True, plot 95% confidence interval; if False, plot standard error
+        ci = True
 
-    # local for FetchReach PPO
-    xmin = 0
-    xmax = 12
+        # global for FetchReach
+        env_name = "fetchreach"
 
-    # local for FetchReach PPO
-    ppo_data_dir = "/mnt/DATA/shared/fetchreach/seeds/faulty/ppo"
+        # global ymin/ymax for FetchReach
+        ymin = -30
+        ymax = 5
 
-    # v1
+        # PPO
 
-    zoom_xmin = 6
-    zoom_xmax = 6.6
-    zoom_ymin = -12
-    zoom_ymax = 1
+        # local for FetchReach PPO
+        xmin = 0
+        xmax = 12
 
-    plot_experiment(os.path.join(ppo_data_dir, "v1"))
+        # local for FetchReach PPO
+        ppo_data_dir = "/mnt/DATA/shared/fetchreach/seeds/faulty/ppo"
 
-    # v4
+        # v1
 
-    zoom_xmin = 6
-    zoom_xmax = 6.6
-    zoom_ymin = -25
-    zoom_ymax = 1
+        zoom_xmin = 6
+        zoom_xmax = 6.6
+        zoom_ymin = -12
+        zoom_ymax = 1
 
-    plot_experiment(os.path.join(ppo_data_dir, "v4"))
+        plot_experiment(os.path.join(ppo_data_dir, "v1"))
 
-    # v6
+        # v4
 
-    zoom_xmin = 6
-    zoom_xmax = 6.6
-    zoom_ymin = -25
-    zoom_ymax = 1
+        zoom_xmin = 6
+        zoom_xmax = 6.6
+        zoom_ymin = -25
+        zoom_ymax = 1
 
-    plot_experiment(os.path.join(ppo_data_dir, "v6"))
+        plot_experiment(os.path.join(ppo_data_dir, "v4"))
 
-    # SAC
+        # v6
 
-    # local for FetchReach SAC
-    xmin = 0
-    xmax = 4
+        zoom_xmin = 6
+        zoom_xmax = 6.6
+        zoom_ymin = -25
+        zoom_ymax = 1
 
-    # local for FetchReach SAC
-    sac_data_dir = "/mnt/DATA/shared/fetchreach/seeds/faulty/sac"
+        plot_experiment(os.path.join(ppo_data_dir, "v6"))
 
-    # v1
+        # SAC
 
-    zoom_xmin = 2
-    zoom_xmax = 2.2
-    zoom_ymin = -12
-    zoom_ymax = 1
+        # local for FetchReach SAC
+        xmin = 0
+        xmax = 4
 
-    plot_experiment(os.path.join(sac_data_dir, "v1"))
+        # local for FetchReach SAC
+        sac_data_dir = "/mnt/DATA/shared/fetchreach/seeds/faulty/sac"
 
-    # v4
+        # v1
 
-    zoom_xmin = 2
-    zoom_xmax = 2.2
-    zoom_ymin = -25
-    zoom_ymax = 1
+        zoom_xmin = 2
+        zoom_xmax = 2.2
+        zoom_ymin = -12
+        zoom_ymax = 1
 
-    plot_experiment(os.path.join(sac_data_dir, "v4"))
+        plot_experiment(os.path.join(sac_data_dir, "v1"))
 
-    # v6
+        # v4
 
-    zoom_xmin = 2
-    zoom_xmax = 2.2
-    zoom_ymin = -25
-    zoom_ymax = 1
+        zoom_xmin = 2
+        zoom_xmax = 2.2
+        zoom_ymin = -25
+        zoom_ymax = 1
 
-    plot_experiment(os.path.join(sac_data_dir, "v6"))
+        plot_experiment(os.path.join(sac_data_dir, "v4"))
+
+        # v6
+
+        zoom_xmin = 2
+        zoom_xmax = 2.2
+        zoom_ymin = -25
+        zoom_ymax = 1
+
+        plot_experiment(os.path.join(sac_data_dir, "v6"))

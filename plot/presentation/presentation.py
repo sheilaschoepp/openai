@@ -10,10 +10,13 @@ from matplotlib.patches import ConnectionPatch
 sns.set_theme()
 sns.set_palette("colorblind", color_codes=True)
 
-plt.rc('axes', titlesize=14)     # fontsize of the axes title
-plt.rc('axes', labelsize=14)    # fontsize of the x and y labels
-plt.rc('xtick', labelsize=12)    # fontsize of the tick labels
-plt.rc('ytick', labelsize=12)    # fontsize of the tick labels
+LARGE = 16
+MEDIUM = 14
+
+plt.rc('axes', titlesize=LARGE)     # fontsize of the axes title
+plt.rc('axes', labelsize=LARGE)    # fontsize of the x and y labels
+plt.rc('xtick', labelsize=MEDIUM)    # fontsize of the tick labels
+plt.rc('ytick', labelsize=MEDIUM)    # fontsize of the tick labels
 
 
 def plot_experiment(directory):
@@ -521,7 +524,7 @@ if __name__ == "__main__":
         xmax = 1200
 
         # local for Ant PPO
-        ppo_data_dir = "/mnt/DATA/shared/ant/faulty/ppo"
+        ppo_data_dir = "/media/sschoepp/easystore/shared/ant/faulty/ppo"
 
         # v1
 
@@ -582,7 +585,7 @@ if __name__ == "__main__":
         xmax = 40
 
         # local for Ant SAC
-        sac_data_dir = "/mnt/DATA/shared/ant/faulty/sac"
+        sac_data_dir = "/media/sschoepp/easystore/shared/ant/faulty/sac"
 
         # v1
 
@@ -661,7 +664,7 @@ if __name__ == "__main__":
         xmax = 12
 
         # local for FetchReach PPO
-        ppo_data_dir = "/mnt/DATA/shared/fetchreach/seeds/faulty/ppo"
+        ppo_data_dir = "/media/sschoepp/easystore/shared/fetchreach/seeds/faulty/ppo"
 
         # v1
 
@@ -709,7 +712,7 @@ if __name__ == "__main__":
         xmax = 4
 
         # local for FetchReach SAC
-        sac_data_dir = "/mnt/DATA/shared/fetchreach/seeds/faulty/sac"
+        sac_data_dir = "/media/sschoepp/easystore/shared/fetchreach/seeds/faulty/sac"
 
         # v1
 

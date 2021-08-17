@@ -1,5 +1,6 @@
 import os
 
+import matplotlib
 import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
@@ -8,6 +9,14 @@ from matplotlib.patches import ConnectionPatch
 
 sns.set_theme()
 sns.set_palette("colorblind", color_codes=True)
+
+LARGE = 16
+MEDIUM = 14
+
+plt.rc('axes', titlesize=LARGE)     # fontsize of the axes title
+plt.rc('axes', labelsize=LARGE)    # fontsize of the x and y labels
+plt.rc('xtick', labelsize=MEDIUM)    # fontsize of the tick labels
+plt.rc('ytick', labelsize=MEDIUM)    # fontsize of the tick labels
 
 
 def plot_experiment(directory):
@@ -194,44 +203,42 @@ def plot_experiment(directory):
             zoom.fill_between(x, lb, ub, color=colors[i + 1], alpha=0.3)
 
         main.axvline(x=x_fault_onset, color="red", ymin=0.95)
-        main.fill_between((zoom_xmin, zoom_xmax), zoom_ymin, zoom_ymax, facecolor="black", alpha=0.2)
+        main.fill_between((zoom_init_xmin, zoom_init_xmax), zoom_init_ymin, zoom_init_ymax, facecolor="black", alpha=0.2)
 
-        zoom.axvline(x=zoom_xmin, color="red", lw=4, ymin=0.95)
+        zoom.axvline(x=zoom_init_xmin, color="red", lw=4, ymin=0.95)
 
-        connector1 = ConnectionPatch(xyA=(zoom_xmin, zoom_ymin), coordsA=main.transData,
-                                     xyB=(zoom_xmin, zoom_ymax), coordsB=zoom.transData,
+        connector1 = ConnectionPatch(xyA=(zoom_init_xmin, zoom_init_ymin), coordsA=main.transData,
+                                     xyB=(zoom_init_xmin, zoom_init_ymax), coordsB=zoom.transData,
                                      color="black",
                                      alpha=0.3)
         fig.add_artist(connector1)
 
-        connector2 = ConnectionPatch(xyA=(zoom_xmax, zoom_ymin), coordsA=main.transData,
-                                     xyB=(zoom_xmax, zoom_ymax), coordsB=zoom.transData,
+        connector2 = ConnectionPatch(xyA=(zoom_init_xmax, zoom_init_ymin), coordsA=main.transData,
+                                     xyB=(zoom_init_xmax, zoom_init_ymax), coordsB=zoom.transData,
                                      color="black",
                                      alpha=0.3)
         fig.add_artist(connector2)
 
-        # fig.legend(bbox_to_anchor=[0.2, 0.25], loc="center")
-
         main.set_xlim(xmin, xmax)
-        zoom.set_xlim(zoom_xmin, zoom_xmax)
+        zoom.set_xlim(zoom_init_xmin, zoom_init_xmax)
         main.set_ylim(ymin, ymax)
-        zoom.set_ylim(zoom_ymin, zoom_ymax)
+        zoom.set_ylim(zoom_init_ymin, zoom_init_ymax)
         main.set_xlabel("million steps")
-        # zoom.set_xlabel("million steps")
         main.set_ylabel("average return\n({} seeds)".format(num_seeds))
-        # zoom.set_ylabel("average return\n({} seeds)".format(num_seeds))
         main.set_title(title)
         plt.tight_layout()
         plt.savefig(plot_directory + "/{}_{}_sub.jpg".format(algorithm, ab_env), dpi=300)
-        # plt.show()
+        plt.show()
         plt.close()
 
     def plot_zoom_mod():
 
+        plt.gcf().subplots_adjust(bottom=0.5)
+
         fig = plt.figure()
 
-        main = fig.add_subplot(2, 12, (1, 24))
-        zoom = fig.add_subplot(2, 6, (8, 9))
+        main = fig.add_subplot(4, 20, (1, 80))
+        zoom = fig.add_subplot(4, 20, (54, 59))
 
         x_fault_onset = ordered_settings[0][4].iloc[200, 0] / x_divisor
 
@@ -279,40 +286,25 @@ def plot_experiment(directory):
             zoom.fill_between(x, lb, ub, color=colors[i + 1], alpha=0.3)
 
         main.axvline(x=x_fault_onset, color="red", ymin=0.95)
-        main.fill_between((zoom_xmin, zoom_xmax), zoom_ymin, zoom_ymax, facecolor="black", alpha=0.2)
 
-        zoom.axvline(x=zoom_xmin, color="red", lw=4, ymin=0.95)
-
-        connector1 = ConnectionPatch(xyA=(zoom_xmin, zoom_ymin), coordsA=main.transData,
-                                     xyB=(zoom_xmin, zoom_ymax), coordsB=zoom.transData,
-                                     color="black",
-                                     alpha=0.3)
-        fig.add_artist(connector1)
-
-        connector2 = ConnectionPatch(xyA=(zoom_xmax, zoom_ymin), coordsA=main.transData,
-                                     xyB=(zoom_xmax, zoom_ymax), coordsB=zoom.transData,
-                                     color="black",
-                                     alpha=0.3)
-        fig.add_artist(connector2)
-
-        # fig.legend(bbox_to_anchor=[0.2, 0.25], loc="center")
+        zoom.axvline(x=zoom_init_xmin, color="red", lw=4, ymin=0.95)
 
         main.set_xlim(xmin, xmax)
-        zoom.set_xlim(zoom_xmin, zoom_xmax)
+        zoom.set_xlim(zoom_init_xmin, zoom_init_xmax)
         main.set_ylim(ymin, ymax)
-        zoom.set_ylim(zoom_ymin, zoom_ymax)
+        zoom.set_ylim(zoom_init_ymin, zoom_init_ymax)
         main.set_xlabel("million steps")
-        # zoom.set_xlabel("million steps")
-        main.set_ylabel("average return\n({} seeds)".format(num_seeds))
-        # zoom.set_ylabel("average return\n({} seeds)".format(num_seeds))
+        main.set_ylabel("average return({} seeds)".format(num_seeds))
         main.set_title(title)
-        plt.tight_layout()
-        plt.savefig(plot_directory + "/{}_{}_sub.jpg".format(algorithm, ab_env), dpi=300)
-        # plt.show()
+        fig.canvas.draw()
+        plt.savefig(plot_directory + "/{}_{}_sub.jpg".format(algorithm, ab_env), bbox_inches="tight", dpi=300)
+        plt.show()
         plt.close()
 
-    plot_zoom()
-    # plot_zoom_mod()
+    if "ant" in env_name:
+        plot_zoom()
+    elif "fetchreach" in env_name:
+        plot_zoom_mod()
 
     # plot standard figure
 
@@ -442,33 +434,33 @@ def plot_experiment(directory):
             # plt.show()
             plt.close()
 
-    plot_one_standard()
+    plot_one_standard(), "m"
 
-    def legend():
 
-        fig, ax = plt.subplots()
-        # fig.patch.set_visible(False)
-        ax.axis('off')
+def legend():
 
-        colors = ["b", "g", "r", "w", "m", "k"]
-        f = lambda m, c: plt.plot([], [], marker=m, color=c, ls="none")[0]
-        handles = [f("s", colors[i]) for i in range(6)]
-        labels = ["normal", "retain all data", "discard all data", "", "discard experiences in storage", "reinitialize network parameters"]
-        legend = plt.legend(handles, labels, ncol=2, loc=1, framealpha=1, frameon=False)
+    fig, ax = plt.subplots()
+    ax.axis('off')
 
-        def export_legend(legend, filename="legend.jpg"):
-            fig = legend.figure
-            fig.canvas.draw()
-            bbox = legend.get_window_extent().transformed(fig.dpi_scale_trans.inverted())
-            fig.savefig(filename, dpi=300, bbox_inches=bbox)
+    colors = ["b", "g", "m", "k", "r"]
+    f = lambda m, c: plt.plot([], [], marker=m, color=c, ls="none")[0]
+    handles = [f("s", colors[i]) for i in range(5)]
+    labels = ["normal\nenvironment", "retain networks\nretain storage", "retain networks\ndiscard storage", "discard networks\nretain storage", "discard networks\ndiscard storage"]
+    legend = plt.legend(handles, labels, ncol=5, loc=1, framealpha=1, frameon=False)
 
-        export_legend(legend)
-        plt.show()
+    def export_legend(legend, filename="legend.jpg"):
+        fig = legend.figure
+        fig.canvas.draw()
+        bbox = legend.get_window_extent().transformed(fig.dpi_scale_trans.inverted())
+        fig.savefig("plots/{}".format(filename), dpi=300, bbox_inches=bbox)
 
-    # legend()
+    export_legend(legend)
+    plt.close()
 
 
 if __name__ == "__main__":
+
+    legend()
 
     """ant"""
 
@@ -495,41 +487,57 @@ if __name__ == "__main__":
     xmax = 1200
 
     # local for Ant PPO
-    ppo_data_dir = "/mnt/DATA/shared/ant/faulty/ppo"
+    ppo_data_dir = "/media/sschoepp/easystore/shared/ant/faulty/ppo"
 
     # v1
 
-    zoom_xmin = 600
-    zoom_xmax = 660
-    zoom_ymin = ymin
-    zoom_ymax = ymax
+    zoom_init_xmin = 600
+    zoom_init_xmax = 660
+    zoom_final_xmin = 1140
+    zoom_final_xmax = 1200
+    zoom_init_ymin = ymin
+    zoom_init_ymax = ymax
+    zoom_final_ymin = 5000
+    zoom_final_ymax = 8000
 
     plot_experiment(os.path.join(ppo_data_dir, "v1"))
 
     # v2
 
-    zoom_xmin = 600
-    zoom_xmax = 660
-    zoom_ymin = ymin
-    zoom_ymax = ymax
+    zoom_init_xmin = 600
+    zoom_init_xmax = 660
+    zoom_final_xmin = 1140
+    zoom_final_xmax = 1200
+    zoom_init_ymin = ymin
+    zoom_init_ymax = ymax
+    zoom_final_ymin = 5000
+    zoom_final_ymax = 8000
 
     plot_experiment(os.path.join(ppo_data_dir, "v2"))
 
     # v3
 
-    zoom_xmin = 600
-    zoom_xmax = 660
-    zoom_ymin = ymin
-    zoom_ymax = ymax
+    zoom_init_xmin = 600
+    zoom_init_xmax = 660
+    zoom_final_xmin = 1140
+    zoom_final_xmax = 1200
+    zoom_init_ymin = ymin
+    zoom_init_ymax = ymax
+    zoom_final_ymin = 5000
+    zoom_final_ymax = 8000
 
     plot_experiment(os.path.join(ppo_data_dir, "v3"))
 
     # v4
 
-    zoom_xmin = 600
-    zoom_xmax = 660
-    zoom_ymin = ymin
-    zoom_ymax = ymax
+    zoom_init_xmin = 600
+    zoom_init_xmax = 660
+    zoom_final_xmin = 1140
+    zoom_final_xmax = 1200
+    zoom_init_ymin = ymin
+    zoom_init_ymax = ymax
+    zoom_final_ymin = 5000
+    zoom_final_ymax = 8000
 
     plot_experiment(os.path.join(ppo_data_dir, "v4"))
 
@@ -540,41 +548,57 @@ if __name__ == "__main__":
     xmax = 40
 
     # local for Ant SAC
-    sac_data_dir = "/mnt/DATA/shared/ant/faulty/sac"
+    sac_data_dir = "/media/sschoepp/easystore/shared/ant/faulty/sac"
 
     # v1
 
-    zoom_xmin = 20
-    zoom_xmax = 22
-    zoom_ymin = ymin
-    zoom_ymax = ymax
+    zoom_init_xmin = 20
+    zoom_init_xmax = 22
+    zoom_final_xmin = 38
+    zoom_final_xmax = 40
+    zoom_init_ymin = ymin
+    zoom_init_ymax = ymax
+    zoom_final_ymin = 5000
+    zoom_final_ymax = 8000
 
     plot_experiment(os.path.join(sac_data_dir, "v1"))
 
     # v2
 
-    zoom_xmin = 20
-    zoom_xmax = 22
-    zoom_ymin = ymin
-    zoom_ymax = ymax
+    zoom_init_xmin = 20
+    zoom_init_xmax = 22
+    zoom_final_xmin = 38
+    zoom_final_xmax = 40
+    zoom_init_ymin = ymin
+    zoom_init_ymax = ymax
+    zoom_final_ymin = 5000
+    zoom_final_ymax = 8000
 
     plot_experiment(os.path.join(sac_data_dir, "v2"))
 
     # v3
 
-    zoom_xmin = 20
-    zoom_xmax = 22
-    zoom_ymin = ymin
-    zoom_ymax = ymax
+    zoom_init_xmin = 20
+    zoom_init_xmax = 22
+    zoom_final_xmin = 38
+    zoom_final_xmax = 40
+    zoom_init_ymin = ymin
+    zoom_init_ymax = ymax
+    zoom_final_ymin = 5000
+    zoom_final_ymax = 8000
 
     plot_experiment(os.path.join(sac_data_dir, "v3"))
 
     # v4
 
-    zoom_xmin = 20
-    zoom_xmax = 22
-    zoom_ymin = ymin
-    zoom_ymax = ymax
+    zoom_init_xmin = 20
+    zoom_init_xmax = 22
+    zoom_final_xmin = 38
+    zoom_final_xmax = 40
+    zoom_init_ymin = ymin
+    zoom_init_ymax = ymax
+    zoom_final_ymin = 5000
+    zoom_final_ymax = 8000
 
     plot_experiment(os.path.join(sac_data_dir, "v4"))
 
@@ -603,32 +627,44 @@ if __name__ == "__main__":
     xmax = 12
 
     # local for FetchReach PPO
-    ppo_data_dir = "/mnt/DATA/shared/fetchreach/seeds/faulty/ppo"
+    ppo_data_dir = "/media/sschoepp/easystore/shared/fetchreach/seeds/faulty/ppo"
 
     # v1
 
-    zoom_xmin = 6
-    zoom_xmax = 6.6
-    zoom_ymin = -12
-    zoom_ymax = 1
+    zoom_init_xmin = 6
+    zoom_init_xmax = 6.15
+    zoom_final_xmin = 11.4
+    zoom_final_xmax = 12
+    zoom_init_ymin = -12
+    zoom_init_ymax = 1
+    zoom_final_ymin = -5
+    zoom_final_ymax = 5
 
     plot_experiment(os.path.join(ppo_data_dir, "v1"))
 
     # v4
 
-    zoom_xmin = 6
-    zoom_xmax = 6.6
-    zoom_ymin = -25
-    zoom_ymax = 1
+    zoom_init_xmin = 6
+    zoom_init_xmax = 6.25
+    zoom_final_xmin = 11.4
+    zoom_final_xmax = 12
+    zoom_init_ymin = -25
+    zoom_init_ymax = 1
+    zoom_final_ymin = -5
+    zoom_final_ymax = 5
 
     plot_experiment(os.path.join(ppo_data_dir, "v4"))
 
     # v6
 
-    zoom_xmin = 6
-    zoom_xmax = 6.6
-    zoom_ymin = -25
-    zoom_ymax = 1
+    zoom_init_xmin = 6
+    zoom_init_xmax = 6.25
+    zoom_final_xmin = 11.4
+    zoom_final_xmax = 12
+    zoom_init_ymin = -25
+    zoom_init_ymax = 1
+    zoom_final_ymin = -5
+    zoom_final_ymax = 5
 
     plot_experiment(os.path.join(ppo_data_dir, "v6"))
 
@@ -639,31 +675,43 @@ if __name__ == "__main__":
     xmax = 4
 
     # local for FetchReach SAC
-    sac_data_dir = "/mnt/DATA/shared/fetchreach/seeds/faulty/sac"
+    sac_data_dir = "/media/sschoepp/easystore/shared/fetchreach/seeds/faulty/sac"
 
     # v1
 
-    zoom_xmin = 2
-    zoom_xmax = 2.2
-    zoom_ymin = -12
-    zoom_ymax = 1
+    zoom_init_xmin = 2
+    zoom_init_xmax = 2.5
+    zoom_final_xmin = 3.8
+    zoom_final_xmax = 4.0
+    zoom_init_ymin = -12
+    zoom_init_ymax = 1
+    zoom_final_ymin = -5
+    zoom_final_ymax = 5
 
     plot_experiment(os.path.join(sac_data_dir, "v1"))
 
     # v4
 
-    zoom_xmin = 2
-    zoom_xmax = 2.2
-    zoom_ymin = -25
-    zoom_ymax = 1
+    zoom_init_xmin = 2
+    zoom_init_xmax = 2.1
+    zoom_final_xmin = 3.8
+    zoom_final_xmax = 4.0
+    zoom_init_ymin = -25
+    zoom_init_ymax = 1
+    zoom_final_ymin = -5
+    zoom_final_ymax = 5
 
     plot_experiment(os.path.join(sac_data_dir, "v4"))
 
     # v6
 
-    zoom_xmin = 2
-    zoom_xmax = 2.2
-    zoom_ymin = -25
-    zoom_ymax = 1
+    zoom_init_xmin = 2
+    zoom_init_xmax = 2.1
+    zoom_final_xmin = 3.8
+    zoom_final_xmax = 4.0
+    zoom_init_ymin = -25
+    zoom_init_ymax = 1
+    zoom_final_ymin = -5
+    zoom_final_ymax = 5
 
     plot_experiment(os.path.join(sac_data_dir, "v6"))

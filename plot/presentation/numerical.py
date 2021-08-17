@@ -46,11 +46,24 @@ def paired_t_test(d):
 
         data_dir = os.path.join(directory, dir_)
 
+        average_real_time = 0
+        num_seeds = 0
+
         for s in os.listdir(data_dir):
             seed_foldername = os.path.join(data_dir, s)
             csv_filename = os.path.join(seed_foldername, "csv", "eval_data.csv")
 
             df = pd.read_csv(csv_filename)
+
+            rt = df[["real_time"]][201:]
+            rt = rt.diff()
+
+            rt = rt[rt["real_time"] > 0]
+            rt = rt.min().values[0]
+            average_real_time += rt
+
+            num_seeds += 1
+
             df = df[["average_return"]]
             df.rename(columns={"average_return":s}, inplace=True)
             dfs.append(df)
@@ -60,6 +73,9 @@ def paired_t_test(d):
 
             postfault = df[201:]
             postfault_dfs.append(postfault)
+
+        average_real_time /= num_seeds
+        average_real_time = int(average_real_time)  # seconds
 
         start = 0
 
@@ -116,8 +132,8 @@ def paired_t_test(d):
                 pass
             else:
                 # accept null hypothesis; performance has not changed
-                interval_start = n_timesteps + start * tef
-                interval_end = n_timesteps + (start + interval_size) * tef
+                interval_start = (start * average_real_time) / (60 * 60)
+                interval_end = ((start + interval_size) * average_real_time) / (60 * 60)
                 print("accept null hypothesis, interval [{}, {}]".format(interval_start, interval_end))
                 break
 
@@ -165,11 +181,24 @@ def percent_recovery(d):
 
         data_dir = os.path.join(directory, dir_)
 
+        average_real_time = 0
+        num_seeds = 0
+
         for s in os.listdir(data_dir):
             seed_foldername = os.path.join(data_dir, s)
             csv_filename = os.path.join(seed_foldername, "csv", "eval_data.csv")
 
             df = pd.read_csv(csv_filename)
+
+            rt = df[["real_time"]][201:]
+            rt = rt.diff()
+
+            rt = rt[rt["real_time"] > 0]
+            rt = rt.min().values[0]
+            average_real_time += rt
+
+            num_seeds += 1
+
             df = df[["average_return"]]
             df.rename(columns={"average_return":s}, inplace=True)
             dfs.append(df)
@@ -179,6 +208,9 @@ def percent_recovery(d):
 
             postfault = df[201:]
             postfault_dfs.append(postfault)
+
+        average_real_time /= num_seeds
+        average_real_time = int(average_real_time)  # seconds
 
         start = 0
 
@@ -214,8 +246,8 @@ def percent_recovery(d):
             percentage = (postfault_interval - min) / (max - min) * 100
 
             if percentage >= 80:
-                interval_start = n_timesteps + start * tef
-                interval_end = n_timesteps + (start + interval_size) * tef
+                interval_start = (start * average_real_time) / (60 * 60)
+                interval_end = ((start + interval_size) * average_real_time) / (60 * 60)
                 if 80 <= percentage < 90 and not eighty:
                     print("80%, interval [{}, {}]".format(interval_start, interval_end))
                     eighty = True

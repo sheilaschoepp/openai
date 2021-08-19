@@ -22,9 +22,9 @@ class AntEnvV1(mujoco_env.MujocoEnv, utils.EzPickle):  # modification here
         self.computecanada = not any(host in self.hostname for host in self.localhosts)
         home = str(Path.home())
         if self.computecanada:
-            filepath = home + "/scratch/openai/custom_gym_envs/envs/ant/xml/AntEnv_v1_brokenleg.xml"
+            filepath = home + "/scratch/openai/custom_gym_envs/envs/ant/xml/AntEnv_v1_BrokenSeveredLimb.xml"
         else:
-            filepath = home + "/Documents/openai/custom_gym_envs/envs/ant/xml/AntEnv_v1_brokenleg.xml"
+            filepath = home + "/Documents/openai/custom_gym_envs/envs/ant/xml/AntEnv_v1_BrokenSeveredLimb.xml"
         # modification here: end
 
         mujoco_env.MujocoEnv.__init__(self, filepath, 5)

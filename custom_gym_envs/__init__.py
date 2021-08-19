@@ -8,7 +8,7 @@ register(
 
 register(
     id="AntEnv-v1",
-    entry_point="custom_gym_envs.envs.ant.AntEnv_v1_BrokenSeveredLeg:AntEnvV1",
+    entry_point="custom_gym_envs.envs.ant.AntEnv_v1_BrokenSeveredLimb:AntEnvV1",
     max_episode_steps=1000,
 )
 
@@ -26,7 +26,7 @@ register(
 
 register(
     id="AntEnv-v4",
-    entry_point="custom_gym_envs.envs.ant.AntEnv_v4_BrokenUnseveredLeg:AntEnvV4",
+    entry_point="custom_gym_envs.envs.ant.AntEnv_v4_BrokenUnseveredLimb:AntEnvV4",
     max_episode_steps=1000,
 )
 

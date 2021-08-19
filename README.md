@@ -67,14 +67,14 @@ If using CUDA 11.1: `pip3 install torch==1.9.0+cu111 torchvision==0.10.0+cu111 t
 
 #### Before Running an Experiment
 
-1. In your activated virtual environment within terminal, run `python <ALG>_n_controller.py --help` and observe the different parameters and their default settings.  The <ALG>_n_controller.py file has various arguments, including the name of the normal environment and the number of timesteps to take within this environment.\
+1. In your activated virtual environment within terminal, run `python <ALG>_n_controller.py --help` and observe the different parameters and their default settings.  The \<ALG\>_n_controller.py file has various arguments, including the name of the normal environment and the number of timesteps to take within this environment.\
 `usage: sacv2_n_controller.py [-h] [-e N_ENV_NAME] [-t N] [--gamma G] [--tau G]
                              [--alpha G] [--lr G] [--hidden_dim N] [-rbs N]
                              [--batch_size N] [--model_updates_per_step N]
                              [--target_update_interval N] [-tef N] [-ee N] [-tmsf N]
                              [-a] [-c] [-s N] [-d] [--resumable] [--resume]
                              [-rf RESUME_FILE] [-tl N] [-ps] [-pss N]`
-2. In your activated virtual environment within terminal, run `python <ALG>_ab_controller.py --help` and observe the different parameters and their default settings.  The <ALG>_ab_controller.py file has various arguments, including the name of the abnormal environment and the number of timesteps to take within this environment.  The <ALG>_ab_controller.py file is used only after <ALG>_n_controller.py has been run.  The filename argument is the absolute path of the seed# folder containing the data obtained from running <ALG>_n_controller.py to completion.  Note that <ALG>_ab_controller.py has fewer arguments than <ALG>_n_controller.py.  Many of the arguments set in <ALG>_n_controller.py are loaded from file and are retained in <ALG>_ab_controller.py.\
+2. In your activated virtual environment within terminal, run `python <ALG>_ab_controller.py --help` and observe the different parameters and their default settings.  The \<ALG\>_ab_controller.py file has various arguments, including the name of the abnormal environment and the number of timesteps to take within this environment.  The \<ALG\>_ab_controller.py file is used only after \<ALG\>_n_controller.py has been run.  The filename argument is the absolute path of the seed# folder containing the data obtained from running \<ALG\>_n_controller.py to completion.  Note that \<ALG\>_ab_controller.py has fewer arguments than \<ALG\>_n_controller.py.  Many of the arguments set in \<ALG\>_n_controller.py are loaded from file and are retained in \<ALG\>_ab_controller.py.\
 `usage: sacv2_ab_controller.py [-h] [-e AB_ENV_NAME] [-t N] [-crb] [-rn] [-c] [-f FILE]
                               [-d] [--resumable] [--resume] [-rf RESUME_FILE] [-tl N]`
 
@@ -83,9 +83,9 @@ If using CUDA 11.1: `pip3 install torch==1.9.0+cu111 torchvision==0.10.0+cu111 t
 1. Add `export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/<path_to_mujoco_folder>/.mujoco/mujoco200/bin` and
 `export PYTHONPATH="<path_to_openai_folder>/openai/"` to your ~/.bashrc file.
 2. Run `python <ALG>_n_controller.py <arguments>` where \<arguments\> is your selected arguments settings that are different from the default settings.
-3. Allow <ALG>_n_controller.py to run to completion.
-4. Run `python <ALG>_ab_controller.py <arguments>` where \<arguments\> is your selected arguments settings that are different from the default settings.  The filename argument is the absolute path of the seed# folder containing the data obtained from running <ALG>_n_controller.py to completion.  Note that <ALG>_ab_controller.py has fewer arguments than <ALG>_n_controller.py.  Many of the arguments set in <ALG>_n_controller.py are loaded from file and are retained in <ALG>_ab_controller.py.
-5. Allow <ALG>_ab_controller.py to run to completion.
+3. Allow \<ALG\>_n_controller.py to run to completion.
+4. Run `python <ALG>_ab_controller.py <arguments>` where \<arguments\> is your selected arguments settings that are different from the default settings.  The filename argument is the absolute path of the seed# folder containing the data obtained from running \<ALG\>_n_controller.py to completion.  Note that \<ALG\>_ab_controller.py has fewer arguments than \<ALG\>_n_controller.py.  Many of the arguments set in \<ALG\>_n_controller.py are loaded from file and are retained in \<ALG\>_ab_controller.py.
+5. Allow \<ALG\>_ab_controller.py to run to completion.
 
 #### To Run an Experiment in PyCharm
 
@@ -113,7 +113,7 @@ To resume a (resumable) experiment:
 
 #### Design
 
-* It was a design choice to separate <ALG>_n_controller.py and <ALG>_ab_controller.py.  In doing this, I only had to run <ALG>_n_controller.py once for each set of parameters.  The model learned from running <ALG>_n_controller.py could then be used to continue learning in different malfunction environments with <ALG>_ab_controller.py.
+* It was a design choice to separate \<ALG\>_n_controller.py and \<ALG\>_ab_controller.py.  In doing this, I only had to run \<ALG\>_n_controller.py once for each set of parameters.  The model learned from running \<ALG\>_n_controller.py could then be used to continue learning in different malfunction environments with \<ALG\>_ab_controller.py.
 
 #### Create a Malfunctioning Ant
 
@@ -122,14 +122,14 @@ To create a malfunctioning Ant, the following steps must be taken:
   * within the openai/custom_gym_envs/envs/ant/xml folder, copy and paste AntEnv_v0_Normal.xml, editing the version of the .xml filename
   * add malfunction to one or more joints
 * python file
-  * within the openai/custom_gym_envs/envs/ant/ folder, copy and paste AntEnv_v0_Normal.py, editing the version of the .py filename
+  * within the openai/custom_gym_envs/envs/ant folder, copy and paste AntEnv_v0_Normal.py, editing the version of the .py filename
   * update the class name with the version number
   * update the filepath instance variable for the class with the path to the appropriate xml file
 * init file
   * add new environment to openai/custom_gym_envs/__init__.py
 
 To create a malfunctioning FetchReach, the following steps must be taken:
-* copy openai/custom_gym_envs/envs/fetchreach/FetchReachEnv_v0_normal/ folder
+* copy openai/custom_gym_envs/envs/fetchreach/FetchReachEnv_v0_normal folder
 * modify one or more of the following files to apply a fault: 
   * assets/fetch/robot.xml
   * fetch/reach.py

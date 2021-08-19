@@ -3,7 +3,6 @@
 ## Required Software and Code
 
 1. [Download](https://mujoco.org/) and [install](https://github.com/openai/mujoco-py#install-mujoco) MuJoCo.
-Note: The required mjkey.txt file is located in the openai/utils folder.  This file contains the MuJoCo license for the University of Alberta.  Please do not share this with people outside of this project.
 2. Clone [this](https://github.com/sheilaschoepp/openai.git) repository into a directory of your choice (on Linux, clone into the Documents directory).\
 `git clone https://github.com/sheilaschoepp/openai.git`
 

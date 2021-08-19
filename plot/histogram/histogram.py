@@ -44,15 +44,15 @@ def get_ant_xml_data():
     # if env_name == "Ant-v2":
     #     model_xml = anaconda_path + "/envs/openai3.7/lib/python3.7/site-packages/gym/envs/mujoco/assets/ant.xml"
     # elif "v0" in env_name:
-    #     model_xml = str(Path.home()) + "/Documents/openai/custom_gym_envs/envs/ant/xml/AntEnv_v0_normal.xml"
+    #     model_xml = str(Path.home()) + "/Documents/openai/custom_gym_envs/envs/ant/xml/AntEnv_v0_Normal.xml"
     # elif "v1" in env_name:
-    #     model_xml = str(Path.home()) + "/Documents/openai/custom_gym_envs/envs/ant/xml/AntEnv_v1_brokenleg.xml"
+    #     model_xml = str(Path.home()) + "/Documents/openai/custom_gym_envs/envs/ant/xml/AntEnv_v1_BrokenSeveredLimb.xml"
     # elif "v2" in env_name:
-    #     model_xml = str(Path.home()) + "/Documents/openai/custom_gym_envs/envs/ant/xml/AntEnv_v2_hip4rom.xml"
+    #     model_xml = str(Path.home()) + "/Documents/openai/custom_gym_envs/envs/ant/xml/AntEnv_v2_Hip4ROM.xml"
     # elif "v3" in env_name:
-    #     model_xml = str(Path.home()) + "/Documents/openai/custom_gym_envs/envs/ant/xml/AntEnv_v3_ankle4rom.xml"
+    #     model_xml = str(Path.home()) + "/Documents/openai/custom_gym_envs/envs/ant/xml/AntEnv_v3_Ankle4ROM.xml"
     # elif "v4" in env_name:
-    #     model_xml = str(Path.home()) + "/Documents/openai/custom_gym_envs/envs/ant/xml/AntEnv_v4_ab_addedlink.xml"
+    #     model_xml = str(Path.home()) + "/Documents/openai/custom_gym_envs/envs/ant/xml/AntEnv_v4_BrokenUnseveredLimb.xml"
 
     # use normal xml to define the ranges for plotting
     model_xml = anaconda_path + "/envs/openai3.7/lib/python3.7/site-packages/gym/envs/mujoco/assets/ant.xml"

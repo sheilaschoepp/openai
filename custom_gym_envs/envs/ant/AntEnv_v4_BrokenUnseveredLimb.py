@@ -3,6 +3,7 @@ modifications:
 renamed env
 modified filepath in __init__ method
 added code to viewer_setup method to modify the camera perspective while rendering Ant
+modified _get_obs method by removing the last element for qpos and qvel, and the last 6 elements of cfrc_ext - these were added because we added an extra joint but this joint is not conrolled, so we can remove them to retain the state dimension
 """
 
 import numpy as np
@@ -13,7 +14,7 @@ from mujoco_py.generated import const  # do not delete; may need in viewer_setup
 import os  # modification here
 
 
-class AntEnvV1(mujoco_env.MujocoEnv, utils.EzPickle):  # modification here
+class AntEnvV4(mujoco_env.MujocoEnv, utils.EzPickle):  # modification here
     def __init__(self):
 
         # modification here: start
@@ -22,9 +23,9 @@ class AntEnvV1(mujoco_env.MujocoEnv, utils.EzPickle):  # modification here
         self.computecanada = not any(host in self.hostname for host in self.localhosts)
         home = str(Path.home())
         if self.computecanada:
-            filepath = home + "/scratch/openai/custom_gym_envs/envs/ant/xml/AntEnv_v1_brokenleg.xml"
+            filepath = home + "/scratch/openai/custom_gym_envs/envs/ant/xml/AntEnv_v4_BrokenUnseveredLimb.xml"
         else:
-            filepath = home + "/Documents/openai/custom_gym_envs/envs/ant/xml/AntEnv_v1_brokenleg.xml"
+            filepath = home + "/Documents/openai/custom_gym_envs/envs/ant/xml/AntEnv_v4_BrokenUnseveredLimb.xml"
         # modification here: end
 
         mujoco_env.MujocoEnv.__init__(self, filepath, 5)
@@ -53,9 +54,9 @@ class AntEnvV1(mujoco_env.MujocoEnv, utils.EzPickle):  # modification here
 
     def _get_obs(self):
         return np.concatenate([
-            self.sim.data.qpos.flat[2:],
-            self.sim.data.qvel.flat,
-            np.clip(self.sim.data.cfrc_ext, -1, 1).flat,
+            self.sim.data.qpos.flat[2:-1],  # modification here
+            self.sim.data.qvel.flat[:-1],  # modification here
+            np.clip(self.sim.data.cfrc_ext, -1, 1).flat[:-6],  # modification here
         ])
 
     def reset_model(self):

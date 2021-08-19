@@ -294,7 +294,7 @@ def plot_experiment(directory):
         main.set_ylim(ymin, ymax)
         zoom.set_ylim(zoom_init_ymin, zoom_init_ymax)
         main.set_xlabel("million steps")
-        main.set_ylabel("average return({} seeds)".format(num_seeds))
+        main.set_ylabel("average return ({} seeds)".format(num_seeds))
         main.set_title(title)
         fig.canvas.draw()
         plt.savefig(plot_directory + "/{}_{}_sub.jpg".format(algorithm, ab_env), bbox_inches="tight", dpi=300)

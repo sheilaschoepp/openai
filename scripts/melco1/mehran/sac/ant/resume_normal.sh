@@ -1,5 +1,5 @@
 SAC_N_CONTROLLER_ABSOLUTE_PATH="/home/taghianj/Documents/openai/controllers/sacv2/mod/sacv2_n_controller.py"
-RESUME_FILE="/local/melco2-1/shared/ant/seeds/normal/SACv2_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:100000_a:True_d:cuda_ps:True_pss:61_r_mod"
+RESUME_FILE="/home/taghianj/Documents/openai/data/SACv2_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:100000_a:True_d:cuda_ps:True_pss:61_r_mod"
 
 #tmux new-session -d -s sacv2-0 "CUDA_VISIBLE_DEVICES=0 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -c --resume -rf $RESUME_FILE/seed0"
 #tmux new-session -d -s sacv2-1 "CUDA_VISIBLE_DEVICES=0 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -c --resume -rf $RESUME_FILE/seed1"
@@ -12,12 +12,12 @@ RESUME_FILE="/local/melco2-1/shared/ant/seeds/normal/SACv2_Ant-v2:20000000_g:0.9
 #tmux new-session -d -s sacv2-8 "CUDA_VISIBLE_DEVICES=1 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -c --resume -rf $RESUME_FILE/seed8"
 #tmux new-session -d -s sacv2-9 "CUDA_VISIBLE_DEVICES=1 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -c --resume -rf $RESUME_FILE/seed9"
 
-tmux new-session -d -s sacv2-10 "CUDA_VISIBLE_DEVICES=0 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -c --resume -rf $RESUME_FILE/seed10"
-tmux new-session -d -s sacv2-11 "CUDA_VISIBLE_DEVICES=0 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -c --resume -rf $RESUME_FILE/seed11"
-tmux new-session -d -s sacv2-12 "CUDA_VISIBLE_DEVICES=0 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -c --resume -rf $RESUME_FILE/seed12"
-tmux new-session -d -s sacv2-13 "CUDA_VISIBLE_DEVICES=0 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -c --resume -rf $RESUME_FILE/seed13"
-tmux new-session -d -s sacv2-14 "CUDA_VISIBLE_DEVICES=0 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -c --resume -rf $RESUME_FILE/seed14"
-tmux new-session -d -s sacv2-15 "CUDA_VISIBLE_DEVICES=1 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -c --resume -rf $RESUME_FILE/seed15"
-tmux new-session -d -s sacv2-16 "CUDA_VISIBLE_DEVICES=1 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -c --resume -rf $RESUME_FILE/seed16"
+tmux new-session -d -s sacv2-10 "CUDA_VISIBLE_DEVICES=3 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -c --resume -rf $RESUME_FILE/seed10"
+tmux new-session -d -s sacv2-11 "CUDA_VISIBLE_DEVICES=3 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -c --resume -rf $RESUME_FILE/seed11"
+tmux new-session -d -s sacv2-12 "CUDA_VISIBLE_DEVICES=3 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -c --resume -rf $RESUME_FILE/seed12"
+tmux new-session -d -s sacv2-13 "CUDA_VISIBLE_DEVICES=3 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -c --resume -rf $RESUME_FILE/seed13"
+tmux new-session -d -s sacv2-14 "CUDA_VISIBLE_DEVICES=3 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -c --resume -rf $RESUME_FILE/seed14"
+tmux new-session -d -s sacv2-15 "CUDA_VISIBLE_DEVICES=3 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -c --resume -rf $RESUME_FILE/seed15"
+tmux new-session -d -s sacv2-16 "CUDA_VISIBLE_DEVICES=3 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -c --resume -rf $RESUME_FILE/seed16"
 
 

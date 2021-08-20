@@ -5,7 +5,7 @@
 #SBATCH --ntasks-per-node=30
 #SBATCH --mem=191000M
 #SBATCH --time=7-00:00
-#SBATCH --job-name=sac_v1a
+#SBATCH --job-name=sac_v2d
 #SBATCH --output=%x-%j.out
 #SBATCH --mail-user=taghianj@ualberta.ca
 #SBATCH --mail-type=BEGIN

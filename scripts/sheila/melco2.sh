@@ -7,5 +7,5 @@ done
 
 for s in 17 18 19
 do
-  tmux new-session -d -s sac-$s "CUDA_VISIBLE_DEVICES=1 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -s $s -c -e AntEnv-v1 -f $FILE/seed$s -t 20000000 --resumable -crb -rn"
+  tmux new-session -d -s sac2-$s "CUDA_VISIBLE_DEVICES=1 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -s $s -c -e AntEnv-v1 -f $FILE/seed$s -t 20000000 --resumable -crb -rn"
 done

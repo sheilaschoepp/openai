@@ -3,12 +3,12 @@ FILE="/local/melco2-1/shared/ant/seeds/normal/SACv2_Ant-v2:20000000_g:0.9646_t:0
 
 for s in 17 18 19
 do
-  tmux new-session -d -s sac3-$s "CUDA_VISIBLE_DEVICES=0 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -c -e AntEnv-v1 -f $FILE/seed$s -t 200000000 --resumable -rn"
+  tmux new-session -d -s sac1-$s "CUDA_VISIBLE_DEVICES=0 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -c -e AntEnv-v1 -f $FILE/seed$s -t 200000000 --resumable -rn"
 done
 
 for s in 17 18 19
 do
-  tmux new-session -d -s sac4-$s "CUDA_VISIBLE_DEVICES=1 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -c -e AntEnv-v1 -f $FILE/seed$s -t 20000000 --resumable -crb -rn"
+  tmux new-session -d -s sac2-$s "CUDA_VISIBLE_DEVICES=1 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -c -e AntEnv-v1 -f $FILE/seed$s -t 20000000 --resumable -crb -rn"
 done
 for s in 17 18 19
 do

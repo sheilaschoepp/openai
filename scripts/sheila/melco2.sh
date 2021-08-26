@@ -12,23 +12,28 @@
 
 
 PPO_AB_CONTROLLER_ABSOLUTE_PATH="/home/sschoepp/Documents/openai/controllers/ppov2/mod/ppov2_ab_controller.py"
-FILE="/local/melco2-1/shared/ant/seeds/faulty/PPOv2_AntEnv-v1:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:6000000_cm:False_rn:False_d:cpu_r"
+FILE="/local/melco2-1/shared/ant/seeds/faulty/PPOv2_AntEnv-v2:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:6000000_cm:False_rn:False_d:cpu_r"
+FILE2="/local/melco2-1/shared/ant/seeds/faulty/PPOv2_AntEnv-v3:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:6000000_cm:False_rn:False_d:cpu_r"
+FILE3="/local/melco2-1/shared/ant/seeds/faulty/PPOv2_AntEnv-v2:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:6000000_cm:False_rn:False_d:cpu_r"
 
 for s in {10..29}
 do
-  tmux new-session -d -s ppov1-$s "python $PPO_AB_CONTROLLER_ABSOLUTE_PATH --resume -rf $FILE/seed$s"
+  tmux new-session -d -s ppo-$s "python $PPO_AB_CONTROLLER_ABSOLUTE_PATH --resume -rf $FILE2/seed$s; python $PPO_AB_CONTROLLER_ABSOLUTE_PATH --resume -rf $FILE/seed$s; python $PPO_AB_CONTROLLER_ABSOLUTE_PATH --resume -rf $FILE3/seed$s"
 done
 
-FILE="/local/melco2-1/shared/ant/seeds/faulty/PPOv2_AntEnv-v1:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:6000000_cm:False_rn:True_d:cpu_r"
+FILE="/local/melco2-1/shared/ant/seeds/faulty/PPOv2_AntEnv-v2:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:6000000_cm:False_rn:True_d:cpu_r"
+FILE2="/local/melco2-1/shared/ant/seeds/faulty/PPOv2_AntEnv-v3:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:6000000_cm:False_rn:True_d:cpu_r"
+FILE3="/local/melco2-1/shared/ant/seeds/faulty/PPOv2_AntEnv-v3:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:6000000_cm:False_rn:False_d:cpu_r"
 
 for s in {10..29}
 do
-  tmux new-session -d -s ppov1rn-$s "python $PPO_AB_CONTROLLER_ABSOLUTE_PATH --resume -rf $FILE/seed$s"
+  tmux new-session -d -s ppo2-$s "python $PPO_AB_CONTROLLER_ABSOLUTE_PATH --resume -rf $FILE/seed$s; python $PPO_AB_CONTROLLER_ABSOLUTE_PATH --resume -rf $FILE2/seed$s; python $PPO_AB_CONTROLLER_ABSOLUTE_PATH --resume -rf $FILE3/seed$s"
 done
 
-FILE="/local/melco2-1/shared/ant/seeds/faulty/PPOv2_AntEnv-v1:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:6000000_cm:True_rn:False_d:cpu_r"
+FILE="/local/melco2-1/shared/ant/seeds/faulty/PPOv2_AntEnv-v2:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:6000000_cm:True_rn:False_d:cpu_r"
+FILE2="/local/melco2-1/shared/ant/seeds/faulty/PPOv2_AntEnv-v3:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:6000000_cm:True_rn:False_d:cpu_r"
 
 for s in {10..29}
 do
-  tmux new-session -d -s ppov1cm-$s "python $PPO_AB_CONTROLLER_ABSOLUTE_PATH --resume -rf $FILE/seed$s"
+  tmux new-session -d -s ppo3-$s "python $PPO_AB_CONTROLLER_ABSOLUTE_PATH --resume -rf $FILE/seed$s; python $PPO_AB_CONTROLLER_ABSOLUTE_PATH --resume -rf $FILE2/seed$s"
 done

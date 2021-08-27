@@ -1,49 +1,7 @@
-#SAC_N_CONTROLLER_ABSOLUTE_PATH="/home/sschoepp/Documents/openai/controllers/sacv2/mod/sacv2_n_controller.py"
+PPO_AB_CONTROLLER_ABSOLUTE_PATH="/home/sschoepp/Documents/openai/controllers/ppov2/mod/ppov2_ab_controller.py"
+FILE="/home/sschoepp/Documents/openai/data/PPOv2_AntEnv-v1:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:6000000_cm:True_rn:True_d:cpu_r"
 
-#for s in 14 15 16 17
-#do
-#  tmux new-session -d -s sac-$s "CUDA_VISIBLE_DEVICES=6 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -e FetchReachEnv-v0 -a -c -t 2000000 -tef 10000 -tmsf 20000 -ps -pss 21 -s $s"
-#done
-#
-#for s in 18 19 20 21
-#do
-#  tmux new-session -d -s sac-$s "CUDA_VISIBLE_DEVICES=7 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -e FetchReachEnv-v0 -a -c -t 2000000 -tef 10000 -tmsf 20000 -ps -pss 21 -s $s"
-#done
-
-#for s in 22 23 24 25 26 27 28
-#do
-#  tmux new-session -d -s sac-$s "CUDA_VISIBLE_DEVICES=5 python $SAC_N_CONTROLLER_ABSOLUTE_PATH -e FetchReachEnv-v0 -a -c -t 2000000 -tef 10000 -tmsf 20000 -ps -pss 21 -s $s"
-#done
-
-SAC_AB_CONTROLLER_ABSOLUTE_PATH="/home/sschoepp/Documents/openai/controllers/sacv2/mod/sacv2_ab_controller.py"
-FILE="/home/sschoepp/Documents/openai/data/SACv2_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_a:True_d:cuda_ps:True_pss:21_mod"
-
-for s in {10..15}
+for s in {10..29}
 do
-  tmux new-session -d -s saccrbrn-$s "CUDA_VISIBLE_DEVICES=3 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -c -crb -rn -e FetchReachEnv-v1 -f $FILE/seed$s -t 2000000"
+  tmux new-session -d -s ppov1-$s "python $PPO_AB_CONTROLLER_ABSOLUTE_PATH --resume -rf $FILE/seed$s"
 done
-
-for s in {16..21}
-do
-  tmux new-session -d -s saccrbrn-$s "CUDA_VISIBLE_DEVICES=4 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -c -crb -rn -e FetchReachEnv-v1 -f $FILE/seed$s -t 2000000"
-done
-
-for s in {22..27}
-do
-  tmux new-session -d -s saccrbrn-$s "CUDA_VISIBLE_DEVICES=5 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -c -crb -rn -e FetchReachEnv-v1 -f $FILE/seed$s -t 2000000"
-done
-
-for s in {28..29}
-do
-  tmux new-session -d -s saccrbrn-$s "CUDA_VISIBLE_DEVICES=6 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -c -crb -rn -e FetchReachEnv-v1 -f $FILE/seed$s -t 2000000"
-done
-
-tmux new-session -d -s saccrbrnv1-19 "CUDA_VISIBLE_DEVICES=6 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -c -e FetchReachEnv-v1 -f $FILE/seed19 -t 2000000"
-tmux new-session -d -s saccrbrnv1-12 "CUDA_VISIBLE_DEVICES=6 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -c -crb -e FetchReachEnv-v1 -f $FILE/seed12 -t 2000000"
-tmux new-session -d -s saccrbrnv1-27 "CUDA_VISIBLE_DEVICES=6 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -c -crb -e FetchReachEnv-v1 -f $FILE/seed27 -t 2000000"
-tmux new-session -d -s saccrbrnv1-20 "CUDA_VISIBLE_DEVICES=6 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -c -rn -e FetchReachEnv-v1 -f $FILE/seed19 -t 2000000"
-
-#tmux new-session -d -s saccrbrn4-19 "CUDA_VISIBLE_DEVICES=0 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -c -rn -e FetchReachEnv-v4 -f $FILE/seed19 -t 2000000"
-#tmux new-session -d -s saccrbrn4-12 "CUDA_VISIBLE_DEVICES=1 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -c -rn -e FetchReachEnv-v4 -f $FILE/seed19 -t 2000000"
-#tmux new-session -d -s saccrbrn4-27 "CUDA_VISIBLE_DEVICES=3 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -c -rn -e FetchReachEnv-v4 -f $FILE/seed19 -t 2000000"
-#tmux new-session -d -s saccrbrn4-20 "CUDA_VISIBLE_DEVICES=4 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -c -rn -e FetchReachEnv-v4 -f $FILE/seed19 -t 2000000"

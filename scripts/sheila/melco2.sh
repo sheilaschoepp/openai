@@ -29,7 +29,7 @@ do
   tmux new-session -d -s ppo-$s "python $PPO_AB_CONTROLLER_ABSOLUTE_PATH --resume -rf $FILE/seed$s"
 done
 
-FILE="/local/melco2-1/shared/ant/seeds/faulty/ppo/v3/old/PPOv2_AntEnv-v2:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:6000000_cm:True_rn:True_d:cpu_r"
+FILE="/local/melco2-1/shared/ant/seeds/faulty/ppo/v2/old/PPOv2_AntEnv-v2:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:6000000_cm:True_rn:True_d:cpu_r"
 
 for s in {10..29}
 do

@@ -1,24 +1,30 @@
 SAC_AB_CONTROLLER_ABSOLUTE_PATH="/home/taghianj/Documents/openai/controllers/sacv2/mod/sacv2_ab_controller.py"
 RESUME_FILE="/home/taghianj/Documents/openai/data/SACv2_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:100000_a:True_d:cuda_ps:True_pss:61_resumed_mod"
 
+
+# Failed seeds on CC
+
+tmux new-session -d -s sacv2-failed "CUDA_VISIBLE_DEVICES=0 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -c -e AntEnv-v2 -f $RESUME_FILE/seed14 -t 20000000 --resumable"
+
+
 # Remaining seeds from CC
 
-tmux new-session -d -s sacv3-15 "CUDA_VISIBLE_DEVICES=0 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -c -e AntEnv-v3 -f $RESUME_FILE/seed15 -t 20000000 --resumable"
-tmux new-session -d -s sacv3-16 "CUDA_VISIBLE_DEVICES=0 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -c -e AntEnv-v3 -f $RESUME_FILE/seed16 -t 20000000 --resumable"
-tmux new-session -d -s sacv3-15_crb "CUDA_VISIBLE_DEVICES=0 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -c -e AntEnv-v3 -f $RESUME_FILE/seed15 -t 20000000 --resumable -crb"
-tmux new-session -d -s sacv3-16_crb "CUDA_VISIBLE_DEVICES=0 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -c -e AntEnv-v3 -f $RESUME_FILE/seed16 -t 20000000 --resumable -crb"
-tmux new-session -d -s sacv3-15_rn "CUDA_VISIBLE_DEVICES=0 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -c -e AntEnv-v3 -f $RESUME_FILE/seed15 -t 20000000 --resumable -rn"
-tmux new-session -d -s sacv3-16_rn "CUDA_VISIBLE_DEVICES=0 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -c -e AntEnv-v3 -f $RESUME_FILE/seed16 -t 20000000 --resumable -rn"
-tmux new-session -d -s sacv3-15_crb_rn "CUDA_VISIBLE_DEVICES=1 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -c -e AntEnv-v3 -f $RESUME_FILE/seed15 -t 20000000 --resumable -crb -rn"
-tmux new-session -d -s sacv3-16_crb_rn "CUDA_VISIBLE_DEVICES=1 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -c -e AntEnv-v3 -f $RESUME_FILE/seed16 -t 20000000 --resumable -crb -rn"
-tmux new-session -d -s sacv4-15 "CUDA_VISIBLE_DEVICES=1 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -c -e AntEnv-v4 -f $RESUME_FILE/seed15 -t 20000000 --resumable"
-tmux new-session -d -s sacv4-16 "CUDA_VISIBLE_DEVICES=1 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -c -e AntEnv-v4 -f $RESUME_FILE/seed16 -t 20000000 --resumable"
-tmux new-session -d -s sacv4-15_crb "CUDA_VISIBLE_DEVICES=1 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -c -e AntEnv-v4 -f $RESUME_FILE/seed15 -t 20000000 --resumable -crb"
-tmux new-session -d -s sacv4-16_crb "CUDA_VISIBLE_DEVICES=1 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -c -e AntEnv-v4 -f $RESUME_FILE/seed16 -t 20000000 --resumable -crb"
-tmux new-session -d -s sacv4-15_rn "CUDA_VISIBLE_DEVICES=3 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -c -e AntEnv-v4 -f $RESUME_FILE/seed15 -t 20000000 --resumable -rn"
-tmux new-session -d -s sacv4-16_rn "CUDA_VISIBLE_DEVICES=3 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -c -e AntEnv-v4 -f $RESUME_FILE/seed16 -t 20000000 --resumable -rn"
-tmux new-session -d -s sacv4-15_crb_rn "CUDA_VISIBLE_DEVICES=3 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -c -e AntEnv-v4 -f $RESUME_FILE/seed15 -t 20000000 --resumable -crb -rn"
-tmux new-session -d -s sacv4-16_crb_rn "CUDA_VISIBLE_DEVICES=3 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -c -e AntEnv-v4 -f $RESUME_FILE/seed16 -t 20000000 --resumable -crb -rn"
+#tmux new-session -d -s sacv3-15 "CUDA_VISIBLE_DEVICES=0 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -c -e AntEnv-v3 -f $RESUME_FILE/seed15 -t 20000000 --resumable"
+#tmux new-session -d -s sacv3-16 "CUDA_VISIBLE_DEVICES=0 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -c -e AntEnv-v3 -f $RESUME_FILE/seed16 -t 20000000 --resumable"
+#tmux new-session -d -s sacv3-15_crb "CUDA_VISIBLE_DEVICES=0 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -c -e AntEnv-v3 -f $RESUME_FILE/seed15 -t 20000000 --resumable -crb"
+#tmux new-session -d -s sacv3-16_crb "CUDA_VISIBLE_DEVICES=0 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -c -e AntEnv-v3 -f $RESUME_FILE/seed16 -t 20000000 --resumable -crb"
+#tmux new-session -d -s sacv3-15_rn "CUDA_VISIBLE_DEVICES=0 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -c -e AntEnv-v3 -f $RESUME_FILE/seed15 -t 20000000 --resumable -rn"
+#tmux new-session -d -s sacv3-16_rn "CUDA_VISIBLE_DEVICES=0 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -c -e AntEnv-v3 -f $RESUME_FILE/seed16 -t 20000000 --resumable -rn"
+#tmux new-session -d -s sacv3-15_crb_rn "CUDA_VISIBLE_DEVICES=1 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -c -e AntEnv-v3 -f $RESUME_FILE/seed15 -t 20000000 --resumable -crb -rn"
+#tmux new-session -d -s sacv3-16_crb_rn "CUDA_VISIBLE_DEVICES=1 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -c -e AntEnv-v3 -f $RESUME_FILE/seed16 -t 20000000 --resumable -crb -rn"
+#tmux new-session -d -s sacv4-15 "CUDA_VISIBLE_DEVICES=1 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -c -e AntEnv-v4 -f $RESUME_FILE/seed15 -t 20000000 --resumable"
+#tmux new-session -d -s sacv4-16 "CUDA_VISIBLE_DEVICES=1 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -c -e AntEnv-v4 -f $RESUME_FILE/seed16 -t 20000000 --resumable"
+#tmux new-session -d -s sacv4-15_crb "CUDA_VISIBLE_DEVICES=1 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -c -e AntEnv-v4 -f $RESUME_FILE/seed15 -t 20000000 --resumable -crb"
+#tmux new-session -d -s sacv4-16_crb "CUDA_VISIBLE_DEVICES=1 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -c -e AntEnv-v4 -f $RESUME_FILE/seed16 -t 20000000 --resumable -crb"
+#tmux new-session -d -s sacv4-15_rn "CUDA_VISIBLE_DEVICES=3 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -c -e AntEnv-v4 -f $RESUME_FILE/seed15 -t 20000000 --resumable -rn"
+#tmux new-session -d -s sacv4-16_rn "CUDA_VISIBLE_DEVICES=3 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -c -e AntEnv-v4 -f $RESUME_FILE/seed16 -t 20000000 --resumable -rn"
+#tmux new-session -d -s sacv4-15_crb_rn "CUDA_VISIBLE_DEVICES=3 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -c -e AntEnv-v4 -f $RESUME_FILE/seed15 -t 20000000 --resumable -crb -rn"
+#tmux new-session -d -s sacv4-16_crb_rn "CUDA_VISIBLE_DEVICES=3 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -c -e AntEnv-v4 -f $RESUME_FILE/seed16 -t 20000000 --resumable -crb -rn"
 
 
 

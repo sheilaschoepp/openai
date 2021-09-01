@@ -35,5 +35,5 @@ done
 
 for s in 17 18 19
 do
-  tmux new-session -d -s sac2-$s "CUDA_VISIBLE_DEVICES=0 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -c -e AntEnv-v3 -f $FILE/seed$s -rn -t 20000000"
+  tmux new-session -d -s sac3-$s "CUDA_VISIBLE_DEVICES=0 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -c -e AntEnv-v3 -f $FILE/seed$s -rn -t 20000000"
 done

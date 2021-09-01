@@ -375,7 +375,7 @@ class AbnormalController:
                 break
 
         self.save()
-        self.plot()
+        # self.plot()
         self.cleanup()
 
     def cleanup(self):

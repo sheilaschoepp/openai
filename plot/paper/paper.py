@@ -9,10 +9,14 @@ from termcolor import colored
 from PIL import Image
 
 sns.set_theme()
-sns.set_palette("colorblind", color_codes=True)
+# sns.set_style("whitegrid")
+# sns.set_palette("colorblind", color_codes=True)
 # print(sns.color_palette("colorblind").as_hex())
 # [blue, orange, green, red, purple, brown, pink, grey, green, aqua]
-# ['#0173b2', '#de8f05', '#029e73', '#d55e00', '#cc78bc', '#ca9161', '#fbafe4', '#949494', '#ece133', '#56b4e9']
+# ["#0173b2", "#de8f05", "#029e73", "#d55e00", "#cc78bc", "#ca9161", "#fbafe4", "#949494", "#ece133", "#56b4e9"]
+# converted above colour pallet to WACG compliant colors using https://webaim.org/resources/contrastchecker/
+colours = ["#0173b2", "#875603", "#027957", "#AD4B00", "#A63F93", "#915C30", "#C3098E", "#696969", "#70680A", "#156FA2"]
+sns.set_palette(colours, color_codes=True)
 
 LARGE = 16
 MEDIUM = 14

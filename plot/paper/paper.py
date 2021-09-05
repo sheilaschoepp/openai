@@ -235,9 +235,6 @@ def plot_experiment(directory):
         main.set_title(title)
         plt.tight_layout()
         plt.savefig(plot_directory + "/{}_{}_sub.jpg".format(algorithm, ab_env), dpi=300)
-        with Image.open(plot_directory + "/{}_{}_sub.jpg") as im:
-            im = Image.fromarray(im, mode="CMYK")
-            im.save(plot_directory + "/{}_{}_sub.jpg")
         # plt.show()
         plt.close()
 

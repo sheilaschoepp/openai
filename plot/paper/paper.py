@@ -15,8 +15,11 @@ sns.set_theme()
 # [blue, orange, green, red, purple, brown, pink, grey, green, aqua]
 # ["#0173b2", "#de8f05", "#029e73", "#d55e00", "#cc78bc", "#ca9161", "#fbafe4", "#949494", "#ece133", "#56b4e9"]
 # converted above colour pallet to WACG compliant colors using https://webaim.org/resources/contrastchecker/
-colours = ["#0173b2", "#875603", "#027957", "#AD4B00", "#A63F93", "#915C30", "#C3098E", "#696969", "#70680A", "#156FA2"]
-sns.set_palette(colours, color_codes=True)
+#                   blue       orange      green       red      purple      brown      pink       grey       green      aqua
+palette_colours = ["#0173b2", "#875603", "#027957", "#AD4B00", "#A63F93", "#915C30", "#C3098E", "#696969", "#70680A", "#156FA2"]
+#                   blue        green  magneta/purple  black     red
+palette_colours = ["#0173b2", "#027957", "#A63F93", "#000000", "#AD4B00"]
+sns.set_palette(palette_colours)
 
 LARGE = 16
 MEDIUM = 14
@@ -28,6 +31,11 @@ plt.rc("ytick", labelsize=MEDIUM)   # fontsize of the tick labels
 plt.rcParams['pdf.fonttype'] = 42
 plt.rcParams['ps.fonttype'] = 42
 plt.rcParams["font.family"] = "Times New Roman"
+
+
+# "b" as blue, "g" as green, "r" as red, "c" as cyan, "m" as magenta, "y" as yellow, "k" as black, "w" as white
+colours = ["b", "g", "m", "k", "r"]
+colours = palette_colours[0:5]
 
 
 def plot_experiment(directory):
@@ -154,9 +162,6 @@ def plot_experiment(directory):
     plot_directory = os.path.join(os.getcwd(), "plots", env_name, algorithm, ab_env)
     os.makedirs(plot_directory, exist_ok=True)
 
-    # "b" as blue, "g" as green, "r" as red, "c" as cyan, "m" as magenta, "y" as yellow, "k" as black, "w" as white
-    colors = ["b", "g", "m", "k", "r"]
-
     x_divisor = 1000000
 
     # create a zoomed subplot
@@ -186,8 +191,8 @@ def plot_experiment(directory):
             lb = y - ordered_settings[0][5].iloc[:fault_end_index, 1]
             ub = y + ordered_settings[0][5].iloc[:fault_end_index, 1]
 
-        main.plot(x, y, color=colors[0], label="normal")
-        main.fill_between(x, lb, ub, color=colors[0], alpha=0.3)
+        main.plot(x, y, color=colours[0], label="normal")
+        main.fill_between(x, lb, ub, color=colours[0], alpha=0.3)
 
         # plot fault performance
 
@@ -207,11 +212,11 @@ def plot_experiment(directory):
                 lb = y - ordered_settings[i][5].iloc[fault_start_index:, 1]
                 ub = y + ordered_settings[i][5].iloc[fault_start_index:, 1]
 
-            main.plot(x, y, color=colors[i + 1], label=labels[i])
-            main.fill_between(x, lb, ub, color=colors[i + 1], alpha=0.3)
+            main.plot(x, y, color=colours[i + 1], label=labels[i])
+            main.fill_between(x, lb, ub, color=colours[i + 1], alpha=0.3)
 
-            zoom.plot(x, y, color=colors[i + 1])
-            zoom.fill_between(x, lb, ub, color=colors[i + 1], alpha=0.3)
+            zoom.plot(x, y, color=colours[i + 1])
+            zoom.fill_between(x, lb, ub, color=colours[i + 1], alpha=0.3)
 
         main.axvline(x=x_fault_onset, color="red", ymin=0.95)
         main.fill_between((zoom_init_xmin, zoom_init_xmax), zoom_init_ymin, zoom_init_ymax, facecolor="black", alpha=0.2)
@@ -271,8 +276,8 @@ def plot_experiment(directory):
             lb = y - ordered_settings[0][5].iloc[:fault_end_index, 1]
             ub = y + ordered_settings[0][5].iloc[:fault_end_index, 1]
 
-        main.plot(x, y, color=colors[0], label="normal")
-        main.fill_between(x, lb, ub, color=colors[0], alpha=0.3)
+        main.plot(x, y, color=colours[0], label="normal")
+        main.fill_between(x, lb, ub, color=colours[0], alpha=0.3)
 
         # plot fault performance
 
@@ -292,11 +297,11 @@ def plot_experiment(directory):
                 lb = y - ordered_settings[i][5].iloc[fault_start_index:, 1]
                 ub = y + ordered_settings[i][5].iloc[fault_start_index:, 1]
 
-            main.plot(x, y, color=colors[i + 1], label=labels[i])
-            main.fill_between(x, lb, ub, color=colors[i + 1], alpha=0.3)
+            main.plot(x, y, color=colours[i + 1], label=labels[i])
+            main.fill_between(x, lb, ub, color=colours[i + 1], alpha=0.3)
 
-            zoom.plot(x, y, color=colors[i + 1])
-            zoom.fill_between(x, lb, ub, color=colors[i + 1], alpha=0.3)
+            zoom.plot(x, y, color=colours[i + 1])
+            zoom.fill_between(x, lb, ub, color=colours[i + 1], alpha=0.3)
 
         main.axvline(x=x_fault_onset, color="red", ymin=0.95)
 
@@ -343,8 +348,8 @@ def plot_experiment(directory):
             lb = y - ordered_settings[0][5].iloc[:fault_end_index, 1]
             ub = y + ordered_settings[0][5].iloc[:fault_end_index, 1]
 
-        plt.plot(x, y, color=colors[0], label="normal")
-        plt.fill_between(x, lb, ub, color=colors[0], alpha=0.3)
+        plt.plot(x, y, color=colours[0], label="normal")
+        plt.fill_between(x, lb, ub, color=colours[0], alpha=0.3)
         plt.axvline(x=x_fault_onset, color="red", ymin=0.95)
 
         # plot fault performance
@@ -365,8 +370,8 @@ def plot_experiment(directory):
                 lb = y - ordered_settings[i][5].iloc[fault_start_index:, 1]
                 ub = y + ordered_settings[i][5].iloc[fault_start_index:, 1]
 
-            plt.plot(x, y, color=colors[i + 1], label=labels[i])
-            plt.fill_between(x, lb, ub, color=colors[i + 1], alpha=0.3)
+            plt.plot(x, y, color=colours[i + 1], label=labels[i])
+            plt.fill_between(x, lb, ub, color=colours[i + 1], alpha=0.3)
 
         plt.xlim(xmin, xmax)
         plt.ylim(ymin, ymax)
@@ -407,8 +412,8 @@ def plot_experiment(directory):
                 lb = y - ordered_settings[0][5].iloc[:fault_end_index, 1]
                 ub = y + ordered_settings[0][5].iloc[:fault_end_index, 1]
 
-            plt.plot(x, y, color=colors[0], label="normal")
-            plt.fill_between(x, lb, ub, color=colors[0], alpha=0.3)
+            plt.plot(x, y, color=colours[0], label="normal")
+            plt.fill_between(x, lb, ub, color=colours[0], alpha=0.3)
             plt.axvline(x=x_fault_onset, color="red", ymin=0.95)
 
             # plot fault performance
@@ -437,8 +442,8 @@ def plot_experiment(directory):
                 lb = y - ordered_settings[i][5].iloc[fault_start_index:, 1]
                 ub = y + ordered_settings[i][5].iloc[fault_start_index:, 1]
 
-            plt.plot(x, y, color=colors[i + 1], label=labels[i])
-            plt.fill_between(x, lb, ub, color=colors[i + 1], alpha=0.3)
+            plt.plot(x, y, color=colours[i + 1], label=labels[i])
+            plt.fill_between(x, lb, ub, color=colours[i + 1], alpha=0.3)
 
             plt.xlim(xmin, xmax)
             plt.ylim(ymin, ymax)
@@ -461,9 +466,8 @@ def legend():
     fig, ax = plt.subplots()
     ax.axis("off")
 
-    colors = ["b", "g", "m", "k", "r"]
     f = lambda m, c: plt.plot([], [], marker=m, color=c, ls="none")[0]
-    handles = [f("s", colors[i]) for i in range(5)]
+    handles = [f("s", colours[i]) for i in range(5)]
     labels = ["normal\nenvironment", "retain networks\nretain storage", "retain networks\ndiscard storage", "discard networks\nretain storage", "discard networks\ndiscard storage"]
     legend = plt.legend(handles, labels, ncol=5, loc=1, framealpha=1, frameon=False)
 

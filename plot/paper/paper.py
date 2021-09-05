@@ -234,7 +234,9 @@ def plot_experiment(directory):
         main.set_ylabel("average return\n({} seeds)".format(num_seeds))
         main.set_title(title)
         plt.tight_layout()
-        plt.savefig(plot_directory + "/{}_{}_sub.jpg".format(algorithm, ab_env), dpi=300)
+        filename = plot_directory + "/{}_{}_sub.jpg".format(algorithm, ab_env)
+        plt.savefig(filename, dpi=300)
+        Image.open(filename).convert("CMYK").save(filename)
         # plt.show()
         plt.close()
 
@@ -304,7 +306,9 @@ def plot_experiment(directory):
         main.set_ylabel("average return ({} seeds)".format(num_seeds))
         main.set_title(title)
         fig.canvas.draw()
-        plt.savefig(plot_directory + "/{}_{}_sub.jpg".format(algorithm, ab_env), bbox_inches="tight", dpi=300)
+        filename = plot_directory + "/{}_{}_sub.jpg".format(algorithm, ab_env)
+        plt.savefig(filename, bbox_inches="tight", dpi=300)
+        Image.open(filename).convert("CMYK").save(filename)
         # plt.show()
         plt.close()
 
@@ -367,7 +371,9 @@ def plot_experiment(directory):
         # plt.legend(bbox_to_anchor=[0.465, 0.35], loc=0)
         plt.title(title)
         plt.tight_layout()
-        plt.savefig(plot_directory + "/{}_{}_all.jpg".format(algorithm, ab_env), dpi=300)
+        filename = plot_directory + "/{}_{}_all.jpg".format(algorithm, ab_env)
+        plt.savefig(filename, dpi=300)
+        Image.open(filename).convert("CMYK").save(filename)
         # plt.show()
         plt.close()
 
@@ -437,7 +443,9 @@ def plot_experiment(directory):
             # plt.legend(loc=0)
             plt.title(title)
             plt.tight_layout()
-            plt.savefig(plot_directory + "/{}_{}{}.jpg".format(algorithm, ab_env, subscript), dpi=300)
+            filename = plot_directory + "/{}_{}{}.jpg".format(algorithm, ab_env, subscript)
+            plt.savefig(filename, dpi=300)
+            Image.open(filename).convert("CMYK").save(filename)
             # plt.show()
             plt.close()
 
@@ -459,7 +467,9 @@ def legend():
         fig = legend.figure
         fig.canvas.draw()
         bbox = legend.get_window_extent().transformed(fig.dpi_scale_trans.inverted())
-        fig.savefig("plots/{}".format(filename), dpi=300, bbox_inches=bbox)
+        filename = "plots/{}".format(filename)
+        fig.savefig(filename, dpi=300, bbox_inches=bbox)
+        Image.open(filename).convert("CMYK").save(filename)
 
     export_legend(legend)
     plt.close()

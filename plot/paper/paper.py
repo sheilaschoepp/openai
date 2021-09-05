@@ -467,6 +467,7 @@ if __name__ == "__main__":
 
     PROJECT_PATH = pathlib.Path(os.getcwd()).parents[1]
     DATA_FOLDER_PATH = os.path.join(PROJECT_PATH, "data")
+    DATA_FOLDER_PATH = "/media/sschoepp/easystore/shared"  # todo
 
     # number of seeds to plot
     num_seeds = 30
@@ -494,6 +495,7 @@ if __name__ == "__main__":
 
     # local for Ant PPO
     ppo_data_dir = DATA_FOLDER_PATH + "/ant/faulty/ppo"
+    ppo_data_dir = DATA_FOLDER_PATH + "/ant/seeds/faulty/ppo"  # todo
 
     # v1
 
@@ -539,6 +541,7 @@ if __name__ == "__main__":
 
     # local for Ant SAC
     sac_data_dir = DATA_FOLDER_PATH + "/ant/faulty/sac"
+    sac_data_dir = DATA_FOLDER_PATH + "/ant/seeds/faulty/sac"  # todo
 
     # v1
 
@@ -593,6 +596,7 @@ if __name__ == "__main__":
 
     # local for FetchReach PPO
     ppo_data_dir = DATA_FOLDER_PATH + "/fetchreach/faulty/ppo"
+    ppo_data_dir = DATA_FOLDER_PATH + "/fetchreach/seeds/faulty/ppo"  # todo
 
     # v1
 
@@ -629,6 +633,7 @@ if __name__ == "__main__":
 
     # local for FetchReach SAC
     sac_data_dir = DATA_FOLDER_PATH + "/fetchreach/faulty/sac"
+    sac_data_dir = DATA_FOLDER_PATH + "/fetchreach/seeds/faulty/sac"  # todo
 
     # v1
 

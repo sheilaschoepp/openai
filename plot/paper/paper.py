@@ -6,9 +6,13 @@ import pandas as pd
 import seaborn as sns
 from matplotlib.patches import ConnectionPatch
 from termcolor import colored
+from PIL import Image
 
 sns.set_theme()
 sns.set_palette("colorblind", color_codes=True)
+# print(sns.color_palette("colorblind").as_hex())
+# [blue, orange, green, red, purple, brown, pink, grey, green, aqua]
+# ['#0173b2', '#de8f05', '#029e73', '#d55e00', '#cc78bc', '#ca9161', '#fbafe4', '#949494', '#ece133', '#56b4e9']
 
 LARGE = 16
 MEDIUM = 14
@@ -231,7 +235,10 @@ def plot_experiment(directory):
         main.set_title(title)
         plt.tight_layout()
         plt.savefig(plot_directory + "/{}_{}_sub.jpg".format(algorithm, ab_env), dpi=300)
-        plt.show()
+        with Image.open(plot_directory + "/{}_{}_sub.jpg") as im:
+            im = Image.fromarray(im, mode="CMYK")
+            im.save(plot_directory + "/{}_{}_sub.jpg")
+        # plt.show()
         plt.close()
 
     def plot_zoom_mod():
@@ -301,7 +308,7 @@ def plot_experiment(directory):
         main.set_title(title)
         fig.canvas.draw()
         plt.savefig(plot_directory + "/{}_{}_sub.jpg".format(algorithm, ab_env), bbox_inches="tight", dpi=300)
-        plt.show()
+        # plt.show()
         plt.close()
 
     if "ant" in env_name:
@@ -467,7 +474,7 @@ if __name__ == "__main__":
 
     PROJECT_PATH = pathlib.Path(os.getcwd()).parents[1]
     DATA_FOLDER_PATH = os.path.join(PROJECT_PATH, "data")
-    DATA_FOLDER_PATH = "/media/sschoepp/easystore/shared"  # todo
+    DATA_FOLDER_PATH = "/mnt/DATA/shared"  # todo
 
     # number of seeds to plot
     num_seeds = 30

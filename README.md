@@ -16,7 +16,7 @@ I ran into errors creating an anaconda environment on machines running Ubuntu 20
 2. [Source 2](https://github.com/openai/mujoco-py/issues/147) \
 `sudo apt install patchelf`
 
-#### Option 1: Quick Setup for Linux with CUDA 11.0 (currently broken due to pytorch version stored in yml file)
+#### Option 1: Quick Setup for Linux with CUDA 11.0
 3. Navigate to the openai/yml folder.\
 `cd openai/yml`
 4. [Create openai anaconda environment from an environment.yml file](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#creating-an-environment-from-an-environment-yml-file). \

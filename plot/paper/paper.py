@@ -1,11 +1,11 @@
 import os
+import pathlib
 
-import matplotlib
 import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
-from termcolor import colored
 from matplotlib.patches import ConnectionPatch
+from termcolor import colored
 
 sns.set_theme()
 sns.set_palette("colorblind", color_codes=True)
@@ -13,10 +13,13 @@ sns.set_palette("colorblind", color_codes=True)
 LARGE = 16
 MEDIUM = 14
 
-plt.rc('axes', titlesize=LARGE)     # fontsize of the axes title
-plt.rc('axes', labelsize=LARGE)    # fontsize of the x and y labels
-plt.rc('xtick', labelsize=MEDIUM)    # fontsize of the tick labels
-plt.rc('ytick', labelsize=MEDIUM)    # fontsize of the tick labels
+plt.rc("axes", titlesize=LARGE)     # fontsize of the axes title
+plt.rc("axes", labelsize=LARGE)     # fontsize of the x and y labels
+plt.rc("xtick", labelsize=MEDIUM)   # fontsize of the tick labels
+plt.rc("ytick", labelsize=MEDIUM)   # fontsize of the tick labels
+plt.rcParams['pdf.fonttype'] = 42
+plt.rcParams['ps.fonttype'] = 42
+plt.rcParams["font.family"] = "Times New Roman"
 
 
 def plot_experiment(directory):
@@ -440,7 +443,7 @@ def plot_experiment(directory):
 def legend():
 
     fig, ax = plt.subplots()
-    ax.axis('off')
+    ax.axis("off")
 
     colors = ["b", "g", "m", "k", "r"]
     f = lambda m, c: plt.plot([], [], marker=m, color=c, ls="none")[0]
@@ -462,16 +465,19 @@ if __name__ == "__main__":
 
     legend()
 
-    """ant"""
+    PROJECT_PATH = pathlib.Path(os.getcwd()).parents[1]
+    DATA_FOLDER_PATH = os.path.join(PROJECT_PATH, "data")
 
     # number of seeds to plot
-    num_seeds = 10
+    num_seeds = 30
 
-    # confidence interval z value for 9 degrees of freedom (10 seeds)
-    CI_Z = 2.262
+    # confidence interval z value for 29 degrees of freedom (30 seeds)
+    CI_Z = 2.045
 
     # if True, plot 95% confidence interval; if False, plot standard error
-    ci = False
+    ci = True
+
+    """ant"""
 
     # global for Ant
     env_name = "ant"
@@ -487,18 +493,14 @@ if __name__ == "__main__":
     xmax = 1200
 
     # local for Ant PPO
-    ppo_data_dir = "/media/sschoepp/easystore/shared/ant/faulty/ppo"
+    ppo_data_dir = DATA_FOLDER_PATH + "/ant/faulty/ppo"
 
     # v1
 
     zoom_init_xmin = 600
     zoom_init_xmax = 660
-    zoom_final_xmin = 1140
-    zoom_final_xmax = 1200
     zoom_init_ymin = ymin
     zoom_init_ymax = ymax
-    zoom_final_ymin = 5000
-    zoom_final_ymax = 8000
 
     plot_experiment(os.path.join(ppo_data_dir, "v1"))
 
@@ -506,12 +508,8 @@ if __name__ == "__main__":
 
     zoom_init_xmin = 600
     zoom_init_xmax = 660
-    zoom_final_xmin = 1140
-    zoom_final_xmax = 1200
     zoom_init_ymin = ymin
     zoom_init_ymax = ymax
-    zoom_final_ymin = 5000
-    zoom_final_ymax = 8000
 
     plot_experiment(os.path.join(ppo_data_dir, "v2"))
 
@@ -519,12 +517,8 @@ if __name__ == "__main__":
 
     zoom_init_xmin = 600
     zoom_init_xmax = 660
-    zoom_final_xmin = 1140
-    zoom_final_xmax = 1200
     zoom_init_ymin = ymin
     zoom_init_ymax = ymax
-    zoom_final_ymin = 5000
-    zoom_final_ymax = 8000
 
     plot_experiment(os.path.join(ppo_data_dir, "v3"))
 
@@ -532,12 +526,8 @@ if __name__ == "__main__":
 
     zoom_init_xmin = 600
     zoom_init_xmax = 660
-    zoom_final_xmin = 1140
-    zoom_final_xmax = 1200
     zoom_init_ymin = ymin
     zoom_init_ymax = ymax
-    zoom_final_ymin = 5000
-    zoom_final_ymax = 8000
 
     plot_experiment(os.path.join(ppo_data_dir, "v4"))
 
@@ -548,18 +538,14 @@ if __name__ == "__main__":
     xmax = 40
 
     # local for Ant SAC
-    sac_data_dir = "/media/sschoepp/easystore/shared/ant/faulty/sac"
+    sac_data_dir = DATA_FOLDER_PATH + "/ant/faulty/sac"
 
     # v1
 
     zoom_init_xmin = 20
     zoom_init_xmax = 22
-    zoom_final_xmin = 38
-    zoom_final_xmax = 40
     zoom_init_ymin = ymin
     zoom_init_ymax = ymax
-    zoom_final_ymin = 5000
-    zoom_final_ymax = 8000
 
     plot_experiment(os.path.join(sac_data_dir, "v1"))
 
@@ -567,12 +553,8 @@ if __name__ == "__main__":
 
     zoom_init_xmin = 20
     zoom_init_xmax = 22
-    zoom_final_xmin = 38
-    zoom_final_xmax = 40
     zoom_init_ymin = ymin
     zoom_init_ymax = ymax
-    zoom_final_ymin = 5000
-    zoom_final_ymax = 8000
 
     plot_experiment(os.path.join(sac_data_dir, "v2"))
 
@@ -580,12 +562,8 @@ if __name__ == "__main__":
 
     zoom_init_xmin = 20
     zoom_init_xmax = 22
-    zoom_final_xmin = 38
-    zoom_final_xmax = 40
     zoom_init_ymin = ymin
     zoom_init_ymax = ymax
-    zoom_final_ymin = 5000
-    zoom_final_ymax = 8000
 
     plot_experiment(os.path.join(sac_data_dir, "v3"))
 
@@ -593,25 +571,12 @@ if __name__ == "__main__":
 
     zoom_init_xmin = 20
     zoom_init_xmax = 22
-    zoom_final_xmin = 38
-    zoom_final_xmax = 40
     zoom_init_ymin = ymin
     zoom_init_ymax = ymax
-    zoom_final_ymin = 5000
-    zoom_final_ymax = 8000
 
     plot_experiment(os.path.join(sac_data_dir, "v4"))
 
     """fetchreach"""
-
-    # number of seeds to plot
-    num_seeds = 30
-
-    # confidence interval z value for 9 degrees of freedom (10 seeds)
-    CI_Z = 2.045
-
-    # if True, plot 95% confidence interval; if False, plot standard error
-    ci = True
 
     # global for FetchReach
     env_name = "fetchreach"
@@ -627,18 +592,14 @@ if __name__ == "__main__":
     xmax = 12
 
     # local for FetchReach PPO
-    ppo_data_dir = "/media/sschoepp/easystore/shared/fetchreach/seeds/faulty/ppo"
+    ppo_data_dir = DATA_FOLDER_PATH + "/fetchreach/faulty/ppo"
 
     # v1
 
     zoom_init_xmin = 6
     zoom_init_xmax = 6.15
-    zoom_final_xmin = 11.4
-    zoom_final_xmax = 12
     zoom_init_ymin = -12
     zoom_init_ymax = 1
-    zoom_final_ymin = -5
-    zoom_final_ymax = 5
 
     plot_experiment(os.path.join(ppo_data_dir, "v1"))
 
@@ -646,12 +607,8 @@ if __name__ == "__main__":
 
     zoom_init_xmin = 6
     zoom_init_xmax = 6.25
-    zoom_final_xmin = 11.4
-    zoom_final_xmax = 12
     zoom_init_ymin = -25
     zoom_init_ymax = 1
-    zoom_final_ymin = -5
-    zoom_final_ymax = 5
 
     plot_experiment(os.path.join(ppo_data_dir, "v4"))
 
@@ -659,12 +616,8 @@ if __name__ == "__main__":
 
     zoom_init_xmin = 6
     zoom_init_xmax = 6.25
-    zoom_final_xmin = 11.4
-    zoom_final_xmax = 12
     zoom_init_ymin = -25
     zoom_init_ymax = 1
-    zoom_final_ymin = -5
-    zoom_final_ymax = 5
 
     plot_experiment(os.path.join(ppo_data_dir, "v6"))
 
@@ -675,18 +628,14 @@ if __name__ == "__main__":
     xmax = 4
 
     # local for FetchReach SAC
-    sac_data_dir = "/media/sschoepp/easystore/shared/fetchreach/seeds/faulty/sac"
+    sac_data_dir = DATA_FOLDER_PATH + "/fetchreach/faulty/sac"
 
     # v1
 
     zoom_init_xmin = 2
     zoom_init_xmax = 2.5
-    zoom_final_xmin = 3.8
-    zoom_final_xmax = 4.0
     zoom_init_ymin = -12
     zoom_init_ymax = 1
-    zoom_final_ymin = -5
-    zoom_final_ymax = 5
 
     plot_experiment(os.path.join(sac_data_dir, "v1"))
 
@@ -694,12 +643,8 @@ if __name__ == "__main__":
 
     zoom_init_xmin = 2
     zoom_init_xmax = 2.1
-    zoom_final_xmin = 3.8
-    zoom_final_xmax = 4.0
     zoom_init_ymin = -25
     zoom_init_ymax = 1
-    zoom_final_ymin = -5
-    zoom_final_ymax = 5
 
     plot_experiment(os.path.join(sac_data_dir, "v4"))
 
@@ -707,11 +652,7 @@ if __name__ == "__main__":
 
     zoom_init_xmin = 2
     zoom_init_xmax = 2.1
-    zoom_final_xmin = 3.8
-    zoom_final_xmax = 4.0
     zoom_init_ymin = -25
     zoom_init_ymax = 1
-    zoom_final_ymin = -5
-    zoom_final_ymax = 5
 
     plot_experiment(os.path.join(sac_data_dir, "v6"))

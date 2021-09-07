@@ -519,7 +519,8 @@ if __name__ == "__main__":
     zoom_init_ymin = ymin
     zoom_init_ymax = ymax
 
-    plot_experiment(os.path.join(ppo_data_dir, "v1"))
+    # plot_experiment(os.path.join(ppo_data_dir, "v1"))
+    plot_experiment(os.path.join(ppo_data_dir, "v1", "combined"))
 
     # v2
 
@@ -528,7 +529,8 @@ if __name__ == "__main__":
     zoom_init_ymin = ymin
     zoom_init_ymax = ymax
 
-    plot_experiment(os.path.join(ppo_data_dir, "v2"))
+    # plot_experiment(os.path.join(ppo_data_dir, "v2"))
+    plot_experiment(os.path.join(ppo_data_dir, "v2", "combined"))
 
     # v3
 
@@ -537,7 +539,8 @@ if __name__ == "__main__":
     zoom_init_ymin = ymin
     zoom_init_ymax = ymax
 
-    plot_experiment(os.path.join(ppo_data_dir, "v3"))
+    # plot_experiment(os.path.join(ppo_data_dir, "v3"))
+    plot_experiment(os.path.join(ppo_data_dir, "v3", "combined"))
 
     # v4
 
@@ -546,7 +549,8 @@ if __name__ == "__main__":
     zoom_init_ymin = ymin
     zoom_init_ymax = ymax
 
-    plot_experiment(os.path.join(ppo_data_dir, "v4"))
+    # plot_experiment(os.path.join(ppo_data_dir, "v4"))
+    plot_experiment(os.path.join(ppo_data_dir, "v4", "combined"))
 
     # SAC
 
@@ -565,7 +569,8 @@ if __name__ == "__main__":
     zoom_init_ymin = ymin
     zoom_init_ymax = ymax
 
-    plot_experiment(os.path.join(sac_data_dir, "v1"))
+    # plot_experiment(os.path.join(sac_data_dir, "v1"))
+    plot_experiment(os.path.join(sac_data_dir, "v1", "combined"))
 
     # v2
 
@@ -574,7 +579,8 @@ if __name__ == "__main__":
     zoom_init_ymin = ymin
     zoom_init_ymax = ymax
 
-    plot_experiment(os.path.join(sac_data_dir, "v2"))
+    # plot_experiment(os.path.join(sac_data_dir, "v2"))
+    plot_experiment(os.path.join(sac_data_dir, "v2", "combined"))
 
     # v3
 
@@ -583,7 +589,8 @@ if __name__ == "__main__":
     zoom_init_ymin = ymin
     zoom_init_ymax = ymax
 
-    plot_experiment(os.path.join(sac_data_dir, "v3"))
+    # plot_experiment(os.path.join(sac_data_dir, "v3"))
+    plot_experiment(os.path.join(sac_data_dir, "v3", "combined"))
 
     # v4
 
@@ -592,7 +599,8 @@ if __name__ == "__main__":
     zoom_init_ymin = ymin
     zoom_init_ymax = ymax
 
-    plot_experiment(os.path.join(sac_data_dir, "v4"))
+    # plot_experiment(os.path.join(sac_data_dir, "v4"))
+    plot_experiment(os.path.join(sac_data_dir, "v4", "combined"))
 
     """fetchreach"""
 

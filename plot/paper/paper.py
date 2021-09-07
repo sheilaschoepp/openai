@@ -482,7 +482,6 @@ if __name__ == "__main__":
 
     PROJECT_PATH = pathlib.Path(os.getcwd()).parents[1]
     DATA_FOLDER_PATH = os.path.join(PROJECT_PATH, "data")
-    DATA_FOLDER_PATH = "/mnt/DATA/shared"  # todo
 
     # number of seeds to plot
     num_seeds = 30
@@ -510,7 +509,6 @@ if __name__ == "__main__":
 
     # local for Ant PPO
     ppo_data_dir = DATA_FOLDER_PATH + "/ant/faulty/ppo"
-    ppo_data_dir = DATA_FOLDER_PATH + "/ant/seeds/faulty/ppo"  # todo
 
     # v1
 
@@ -519,8 +517,7 @@ if __name__ == "__main__":
     zoom_init_ymin = ymin
     zoom_init_ymax = ymax
 
-    # plot_experiment(os.path.join(ppo_data_dir, "v1"))
-    plot_experiment(os.path.join(ppo_data_dir, "v1", "combined"))
+    plot_experiment(os.path.join(ppo_data_dir, "v1"))
 
     # v2
 
@@ -529,8 +526,7 @@ if __name__ == "__main__":
     zoom_init_ymin = ymin
     zoom_init_ymax = ymax
 
-    # plot_experiment(os.path.join(ppo_data_dir, "v2"))
-    plot_experiment(os.path.join(ppo_data_dir, "v2", "combined"))
+    plot_experiment(os.path.join(ppo_data_dir, "v2"))
 
     # v3
 
@@ -539,8 +535,7 @@ if __name__ == "__main__":
     zoom_init_ymin = ymin
     zoom_init_ymax = ymax
 
-    # plot_experiment(os.path.join(ppo_data_dir, "v3"))
-    plot_experiment(os.path.join(ppo_data_dir, "v3", "combined"))
+    plot_experiment(os.path.join(ppo_data_dir, "v3"))
 
     # v4
 
@@ -549,8 +544,7 @@ if __name__ == "__main__":
     zoom_init_ymin = ymin
     zoom_init_ymax = ymax
 
-    # plot_experiment(os.path.join(ppo_data_dir, "v4"))
-    plot_experiment(os.path.join(ppo_data_dir, "v4", "combined"))
+    plot_experiment(os.path.join(ppo_data_dir, "v4"))
 
     # SAC
 
@@ -560,7 +554,6 @@ if __name__ == "__main__":
 
     # local for Ant SAC
     sac_data_dir = DATA_FOLDER_PATH + "/ant/faulty/sac"
-    sac_data_dir = DATA_FOLDER_PATH + "/ant/seeds/faulty/sac"  # todo
 
     # v1
 
@@ -569,8 +562,7 @@ if __name__ == "__main__":
     zoom_init_ymin = ymin
     zoom_init_ymax = ymax
 
-    # plot_experiment(os.path.join(sac_data_dir, "v1"))
-    plot_experiment(os.path.join(sac_data_dir, "v1", "combined"))
+    plot_experiment(os.path.join(sac_data_dir, "v1"))
 
     # v2
 
@@ -579,8 +571,7 @@ if __name__ == "__main__":
     zoom_init_ymin = ymin
     zoom_init_ymax = ymax
 
-    # plot_experiment(os.path.join(sac_data_dir, "v2"))
-    plot_experiment(os.path.join(sac_data_dir, "v2", "combined"))
+    plot_experiment(os.path.join(sac_data_dir, "v2"))
 
     # v3
 
@@ -589,8 +580,7 @@ if __name__ == "__main__":
     zoom_init_ymin = ymin
     zoom_init_ymax = ymax
 
-    # plot_experiment(os.path.join(sac_data_dir, "v3"))
-    plot_experiment(os.path.join(sac_data_dir, "v3", "combined"))
+    plot_experiment(os.path.join(sac_data_dir, "v3"))
 
     # v4
 
@@ -619,7 +609,6 @@ if __name__ == "__main__":
 
     # local for FetchReach PPO
     ppo_data_dir = DATA_FOLDER_PATH + "/fetchreach/faulty/ppo"
-    ppo_data_dir = DATA_FOLDER_PATH + "/fetchreach/seeds/faulty/ppo"  # todo
 
     # v1
 
@@ -656,7 +645,6 @@ if __name__ == "__main__":
 
     # local for FetchReach SAC
     sac_data_dir = DATA_FOLDER_PATH + "/fetchreach/faulty/sac"
-    sac_data_dir = DATA_FOLDER_PATH + "/fetchreach/seeds/faulty/sac"  # todo
 
     # v1
 

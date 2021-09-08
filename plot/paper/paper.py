@@ -36,7 +36,7 @@ def plot_experiment(directory):
     Plot all four settings for a single fault.
 
     @param directory: string
-        absolute path for directory containing all experiments for a single fault (e.g. .../shared/fetchreach/faulty/sac/v1/)
+        absolute path for directory containing all experiments for a single fault (e.g. .../data/fetchreach/exps/sac/v1/)
     """
 
     algorithm = ""
@@ -508,7 +508,7 @@ if __name__ == "__main__":
     xmax = 1200
 
     # local for Ant PPO
-    ppo_data_dir = DATA_FOLDER_PATH + "/ant/faulty/ppo"
+    ppo_data_dir = DATA_FOLDER_PATH + "/ant/exps/ppo"
 
     # v1
 
@@ -553,7 +553,7 @@ if __name__ == "__main__":
     xmax = 40
 
     # local for Ant SAC
-    sac_data_dir = DATA_FOLDER_PATH + "/ant/faulty/sac"
+    sac_data_dir = DATA_FOLDER_PATH + "/ant/exps/sac"
 
     # v1
 
@@ -562,7 +562,7 @@ if __name__ == "__main__":
     zoom_init_ymin = ymin
     zoom_init_ymax = ymax
 
-    plot_experiment(os.path.join(sac_data_dir, "v1"))
+    # plot_experiment(os.path.join(sac_data_dir, "v1"))
 
     # v2
 
@@ -589,8 +589,7 @@ if __name__ == "__main__":
     zoom_init_ymin = ymin
     zoom_init_ymax = ymax
 
-    # plot_experiment(os.path.join(sac_data_dir, "v4"))
-    plot_experiment(os.path.join(sac_data_dir, "v4", "combined"))
+    plot_experiment(os.path.join(sac_data_dir, "v4"))
 
     """fetchreach"""
 
@@ -608,16 +607,7 @@ if __name__ == "__main__":
     xmax = 12
 
     # local for FetchReach PPO
-    ppo_data_dir = DATA_FOLDER_PATH + "/fetchreach/faulty/ppo"
-
-    # v1
-
-    zoom_init_xmin = 6
-    zoom_init_xmax = 6.15
-    zoom_init_ymin = -12
-    zoom_init_ymax = 1
-
-    plot_experiment(os.path.join(ppo_data_dir, "v1"))
+    ppo_data_dir = DATA_FOLDER_PATH + "/fetchreach/exps/ppo"
 
     # v4
 
@@ -644,16 +634,7 @@ if __name__ == "__main__":
     xmax = 4
 
     # local for FetchReach SAC
-    sac_data_dir = DATA_FOLDER_PATH + "/fetchreach/faulty/sac"
-
-    # v1
-
-    zoom_init_xmin = 2
-    zoom_init_xmax = 2.5
-    zoom_init_ymin = -12
-    zoom_init_ymax = 1
-
-    plot_experiment(os.path.join(sac_data_dir, "v1"))
+    sac_data_dir = DATA_FOLDER_PATH + "/fetchreach/exps/sac"
 
     # v4
 

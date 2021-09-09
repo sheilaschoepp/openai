@@ -562,7 +562,7 @@ if __name__ == "__main__":
     zoom_init_ymin = ymin
     zoom_init_ymax = ymax
 
-    # plot_experiment(os.path.join(sac_data_dir, "v1"))
+    plot_experiment(os.path.join(sac_data_dir, "v1"))
 
     # v2
 

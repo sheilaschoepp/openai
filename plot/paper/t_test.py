@@ -20,8 +20,8 @@ def confidence_intervals(dir_):
             eval_data = pd.read_csv(eval_data_dir)
             pre.append(eval_data[191:201]["average_return"].values.tolist())
             post.append(eval_data[postfault_min:postfault_max]["average_return"].values.tolist())
-        else:
-            print(colored("missing" + dir1, "red"))
+        # else:
+        #     print(colored("missing" + dir1, "red"))
 
     pre = np.array(pre).flatten()
     post = np.array(post).flatten()

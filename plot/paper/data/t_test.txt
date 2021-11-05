@@ -2,21 +2,14 @@ SACv2_AntEnv-v1:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:
 pre_ci: (5970.578777990926, 6369.390741335741)
 post_ci: (2049.416870850988, 2850.010282942345)
 accept null: False
-[31mmissing/Users/sheilaschoepp/Dropbox/Mac/Documents/openai/data/ant/exps/sac/v1/SACv2_AntEnv-v1:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:True_rn:True_a:True_d:cuda/seed10[0m
 SACv2_AntEnv-v1:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:True_rn:True_a:True_d:cuda
 pre_ci: (5965.062831817516, 6376.975150451449)
 post_ci: (5870.665659663642, 6273.856483219115)
 accept null: True
-[31mmissing/Users/sheilaschoepp/Dropbox/Mac/Documents/openai/data/ant/exps/sac/v1/SACv2_AntEnv-v1:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:True_rn:False_a:True_d:cuda/seed10[0m
-[31mmissing/Users/sheilaschoepp/Dropbox/Mac/Documents/openai/data/ant/exps/sac/v1/SACv2_AntEnv-v1:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:True_rn:False_a:True_d:cuda/seed11[0m
-[31mmissing/Users/sheilaschoepp/Dropbox/Mac/Documents/openai/data/ant/exps/sac/v1/SACv2_AntEnv-v1:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:True_rn:False_a:True_d:cuda/seed12[0m
-[31mmissing/Users/sheilaschoepp/Dropbox/Mac/Documents/openai/data/ant/exps/sac/v1/SACv2_AntEnv-v1:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:True_rn:False_a:True_d:cuda/seed13[0m
-[31mmissing/Users/sheilaschoepp/Dropbox/Mac/Documents/openai/data/ant/exps/sac/v1/SACv2_AntEnv-v1:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:True_rn:False_a:True_d:cuda/seed14[0m
 SACv2_AntEnv-v1:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:True_rn:False_a:True_d:cuda
 pre_ci: (5857.2353246173925, 6325.900643430606)
 post_ci: (-136.28061713420348, 513.7162915502034)
 accept null: False
-[31mmissing/Users/sheilaschoepp/Dropbox/Mac/Documents/openai/data/ant/exps/sac/v1/SACv2_AntEnv-v1:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:False_rn:False_a:True_d:cuda/seed13[0m
 SACv2_AntEnv-v1:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:False_rn:False_a:True_d:cuda
 pre_ci: (5940.3519509521775, 6351.3930288409265)
 post_ci: (1694.7343609575596, 2344.8443105872684)

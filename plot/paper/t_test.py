@@ -107,7 +107,7 @@ if __name__ == "__main__":
     data_dir = "/Users/sheilaschoepp/Dropbox/Mac/Documents/openai/data"
 
     with open("data/t_test.txt", "w") as f:
-        # sys.stdout = f
+        sys.stdout = f
 
         prefault_min = 191
         prefault_max = 201

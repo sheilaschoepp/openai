@@ -48,8 +48,27 @@ def compute_stats(dir_):
     else:
         reject_null = False
 
-    # directory
-    print(dir_.split("/")[-1])
+    # experiment info
+    info = dir_.split("/")[-1].split("_")
+
+    env = None
+    cs = None  # clear storage
+    rn = None  # reinitialize networks
+
+    for entry in info:
+        if entry.startswith("SAC") or entry.startswith("PPO"):
+            algo = entry
+        elif entry.startswith("AntEnv") or entry.startswith("FetchReach"):
+            env = entry.split(":")[0]
+        elif entry.startswith("crb:") or entry.startswith("cm:"):
+            cs = entry.split(":")[1]
+        elif entry.startswith("rn:"):
+            rn = entry.split(":")[1]
+
+    print("algo:", algo)
+    print("env:", env)
+    print("cs:", cs)
+    print("rn:", rn)
 
     # confidence intervals
     print("pre_ci:", pre_ci)
@@ -57,16 +76,14 @@ def compute_stats(dir_):
 
     # accept/reject null
     if not reject_null:
-        print("accept null ---> (pre <= post)")
+        print("accept null ---> (pre <= post)\n")
     else:
-        print("reject null ---> (pre > post)")
-
-    print("/n/n")
+        print("reject null ---> (pre > post)\n")
 
 
 if __name__ == "__main__":
 
-    data_dir = "/data"
+    data_dir = "/Users/sheilaannschoepp/Dropbox/Mac/Documents/openai/data"
 
     with open("data/stats.txt", "w") as f:
         sys.stdout = f

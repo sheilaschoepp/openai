@@ -1,0 +1,384 @@
+algo: SACv2
+env: AntEnv-v1
+cs: False
+rn: True
+pre_ci: (5970.578777990926, 6369.390741335741)
+post_ci: (2049.416870850988, 2850.010282942345)
+reject null ---> (pre > post)
+
+algo: SACv2
+env: AntEnv-v1
+cs: True
+rn: True
+pre_ci: (5970.578777990926, 6369.390741335741)
+post_ci: (5907.807125858321, 6300.002150328343)
+accept null ---> (pre <= post)
+
+algo: SACv2
+env: AntEnv-v1
+cs: True
+rn: False
+pre_ci: (5970.578777990926, 6369.390741335741)
+post_ci: (-219.8636041282829, 363.7525294816162)
+reject null ---> (pre > post)
+
+algo: SACv2
+env: AntEnv-v1
+cs: False
+rn: False
+pre_ci: (5970.578777990926, 6369.390741335741)
+post_ci: (1750.0057366090716, 2382.4044624242624)
+reject null ---> (pre > post)
+
+algo: SACv2
+env: AntEnv-v2
+cs: True
+rn: False
+pre_ci: (5970.578777990926, 6369.390741335741)
+post_ci: (2822.289693263752, 3489.6560122829146)
+reject null ---> (pre > post)
+
+algo: SACv2
+env: AntEnv-v2
+cs: False
+rn: False
+pre_ci: (5970.578777990926, 6369.390741335741)
+post_ci: (2572.944585619553, 3254.9067063004472)
+reject null ---> (pre > post)
+
+algo: SACv2
+env: AntEnv-v2
+cs: True
+rn: True
+pre_ci: (5970.578777990926, 6369.390741335741)
+post_ci: (4973.82879551787, 5541.343572122129)
+reject null ---> (pre > post)
+
+algo: SACv2
+env: AntEnv-v2
+cs: False
+rn: True
+pre_ci: (5970.578777990926, 6369.390741335741)
+post_ci: (1987.851296916694, 2783.7866938099733)
+reject null ---> (pre > post)
+
+algo: SACv2
+env: AntEnv-v4
+cs: False
+rn: True
+pre_ci: (5970.578777990926, 6369.390741335741)
+post_ci: (1876.4685809400057, 2619.0594919333275)
+reject null ---> (pre > post)
+
+algo: SACv2
+env: AntEnv-v4
+cs: False
+rn: False
+pre_ci: (5970.578777990926, 6369.390741335741)
+post_ci: (1062.056121028506, 1637.5629218781605)
+reject null ---> (pre > post)
+
+algo: SACv2
+env: AntEnv-v4
+cs: True
+rn: False
+pre_ci: (5970.578777990926, 6369.390741335741)
+post_ci: (482.1131666384417, 1090.1281806815584)
+reject null ---> (pre > post)
+
+algo: SACv2
+env: AntEnv-v4
+cs: True
+rn: True
+pre_ci: (5970.578777990926, 6369.390741335741)
+post_ci: (2442.3277481184405, 3222.9406691615595)
+reject null ---> (pre > post)
+
+algo: SACv2
+env: AntEnv-v3
+cs: True
+rn: True
+pre_ci: (5970.578777990926, 6369.390741335741)
+post_ci: (3914.704370788662, 4477.675285691339)
+reject null ---> (pre > post)
+
+algo: SACv2
+env: AntEnv-v3
+cs: True
+rn: False
+pre_ci: (5970.578777990926, 6369.390741335741)
+post_ci: (2254.0745340612193, 2749.8998673854467)
+reject null ---> (pre > post)
+
+algo: SACv2
+env: AntEnv-v3
+cs: False
+rn: False
+pre_ci: (5970.578777990926, 6369.390741335741)
+post_ci: (2733.20963883482, 3255.7914143518456)
+reject null ---> (pre > post)
+
+algo: SACv2
+env: AntEnv-v3
+cs: False
+rn: True
+pre_ci: (5970.578777990926, 6369.390741335741)
+post_ci: (1864.342082826467, 2523.1929612335334)
+reject null ---> (pre > post)
+
+algo: PPOv2
+env: AntEnv-v1
+cs: True
+rn: False
+pre_ci: (6554.704633160756, 6639.316047652577)
+post_ci: (6329.8278193427695, 6424.320542090564)
+reject null ---> (pre > post)
+
+algo: PPOv2
+env: AntEnv-v1
+cs: False
+rn: True
+pre_ci: (6554.704633160756, 6639.316047652577)
+post_ci: (6851.162089358049, 6932.829896048617)
+accept null ---> (pre <= post)
+
+algo: PPOv2
+env: AntEnv-v1
+cs: True
+rn: True
+pre_ci: (6554.704633160756, 6639.316047652577)
+post_ci: (6862.665412135297, 6941.5008052180365)
+accept null ---> (pre <= post)
+
+algo: PPOv2
+env: AntEnv-v1
+cs: False
+rn: False
+pre_ci: (6554.704633160756, 6639.316047652577)
+post_ci: (6303.197345439058, 6386.777579180943)
+reject null ---> (pre > post)
+
+algo: PPOv2
+env: AntEnv-v2
+cs: True
+rn: False
+pre_ci: (6554.704633160756, 6639.316047652577)
+post_ci: (5891.136041100157, 6051.5391412665085)
+reject null ---> (pre > post)
+
+algo: PPOv2
+env: AntEnv-v2
+cs: False
+rn: False
+pre_ci: (6554.704633160756, 6639.316047652577)
+post_ci: (5908.430360078964, 6071.734938474368)
+reject null ---> (pre > post)
+
+algo: PPOv2
+env: AntEnv-v2
+cs: True
+rn: True
+pre_ci: (6554.704633160756, 6639.316047652577)
+post_ci: (6248.449006382147, 6368.483424297852)
+reject null ---> (pre > post)
+
+algo: PPOv2
+env: AntEnv-v2
+cs: False
+rn: True
+pre_ci: (6554.704633160756, 6639.316047652577)
+post_ci: (6185.267006939723, 6312.483713533609)
+reject null ---> (pre > post)
+
+algo: PPOv2
+env: AntEnv-v4
+cs: True
+rn: True
+pre_ci: (6554.704633160756, 6639.316047652577)
+post_ci: (6676.5514128686855, 6783.834052844647)
+accept null ---> (pre <= post)
+
+algo: PPOv2
+env: AntEnv-v4
+cs: True
+rn: False
+pre_ci: (6554.704633160756, 6639.316047652577)
+post_ci: (5616.808713953136, 5752.290248053529)
+reject null ---> (pre > post)
+
+algo: PPOv2
+env: AntEnv-v4
+cs: False
+rn: False
+pre_ci: (6554.704633160756, 6639.316047652577)
+post_ci: (5666.392818659779, 5797.286038733555)
+reject null ---> (pre > post)
+
+algo: PPOv2
+env: AntEnv-v4
+cs: False
+rn: True
+pre_ci: (6554.704633160756, 6639.316047652577)
+post_ci: (6633.680814874579, 6738.995888685424)
+accept null ---> (pre <= post)
+
+algo: PPOv2
+env: AntEnv-v3
+cs: True
+rn: True
+pre_ci: (6554.704633160756, 6639.316047652577)
+post_ci: (5775.809174341604, 5901.856123258396)
+reject null ---> (pre > post)
+
+algo: PPOv2
+env: AntEnv-v3
+cs: True
+rn: False
+pre_ci: (6554.704633160756, 6639.316047652577)
+post_ci: (5951.077629308841, 6033.197279517827)
+reject null ---> (pre > post)
+
+algo: PPOv2
+env: AntEnv-v3
+cs: False
+rn: False
+pre_ci: (6554.704633160756, 6639.316047652577)
+post_ci: (5950.09101640548, 6038.716532261185)
+reject null ---> (pre > post)
+
+algo: PPOv2
+env: AntEnv-v3
+cs: False
+rn: True
+pre_ci: (6554.704633160756, 6639.316047652577)
+post_ci: (5831.723010001712, 5958.391182798287)
+reject null ---> (pre > post)
+
+algo: SACv2
+env: FetchReachEnv-v0
+cs: False
+rn: True
+pre_ci: (-0.2804583494639086, -0.26799907720275806)
+post_ci: (-0.4643791920829506, -0.4426275612503828)
+reject null ---> (pre > post)
+
+algo: SACv2
+env: FetchReachEnv-v0
+cs: False
+rn: False
+pre_ci: (-0.2804583494639086, -0.26799907720275806)
+post_ci: (-0.4617627064275596, -0.4421964269057736)
+reject null ---> (pre > post)
+
+algo: SACv2
+env: FetchReachEnv-v0
+cs: True
+rn: False
+pre_ci: (-0.2804583494639086, -0.26799907720275806)
+post_ci: (-0.46542469357444116, -0.44276155309222553)
+reject null ---> (pre > post)
+
+algo: SACv2
+env: FetchReachEnv-v0
+cs: True
+rn: True
+pre_ci: (-0.2804583494639086, -0.26799907720275806)
+post_ci: (-0.47517416708265175, -0.4539650729173483)
+reject null ---> (pre > post)
+
+algo: SACv2
+env: FetchReachEnv-v0
+cs: True
+rn: False
+pre_ci: (-0.2804583494639086, -0.26799907720275806)
+post_ci: (-2.1929706085105134, -1.9413406581561525)
+reject null ---> (pre > post)
+
+algo: SACv2
+env: FetchReachEnv-v0
+cs: False
+rn: True
+pre_ci: (-0.2804583494639086, -0.26799907720275806)
+post_ci: (-1.5330984189519574, -1.3921607210480427)
+reject null ---> (pre > post)
+
+algo: SACv2
+env: FetchReachEnv-v0
+cs: True
+rn: True
+pre_ci: (-0.2804583494639086, -0.26799907720275806)
+post_ci: (-1.5568734166569864, -1.4168401300096807)
+reject null ---> (pre > post)
+
+algo: SACv2
+env: FetchReachEnv-v0
+cs: False
+rn: False
+pre_ci: (-0.2804583494639086, -0.26799907720275806)
+post_ci: (-2.1114194396211863, -1.9206501603788135)
+reject null ---> (pre > post)
+
+algo: PPOv2
+env: FetchReachEnv-v0
+cs: True
+rn: False
+pre_ci: (-0.19669471286867934, -0.18898226713132066)
+post_ci: (-0.8537416642387374, -0.7091278757612625)
+reject null ---> (pre > post)
+
+algo: PPOv2
+env: FetchReachEnv-v0
+cs: False
+rn: False
+pre_ci: (-0.19669471286867934, -0.18898226713132066)
+post_ci: (-0.8556222816017742, -0.710480218398226)
+reject null ---> (pre > post)
+
+algo: PPOv2
+env: FetchReachEnv-v0
+cs: False
+rn: True
+pre_ci: (-0.19669471286867934, -0.18898226713132066)
+post_ci: (-0.852572289614469, -0.7090310970521976)
+reject null ---> (pre > post)
+
+algo: PPOv2
+env: FetchReachEnv-v0
+cs: True
+rn: True
+pre_ci: (-0.19669471286867934, -0.18898226713132066)
+post_ci: (-0.8537207751323227, -0.7099730515343438)
+reject null ---> (pre > post)
+
+algo: PPOv2
+env: FetchReachEnv-v0
+cs: False
+rn: True
+pre_ci: (-0.19669471286867934, -0.18898226713132066)
+post_ci: (-0.4536746274822485, -0.3930541591844181)
+reject null ---> (pre > post)
+
+algo: PPOv2
+env: FetchReachEnv-v0
+cs: True
+rn: False
+pre_ci: (-0.19669471286867934, -0.18898226713132066)
+post_ci: (-2.392984807855024, -2.066515998811643)
+reject null ---> (pre > post)
+
+algo: PPOv2
+env: FetchReachEnv-v0
+cs: True
+rn: True
+pre_ci: (-0.19669471286867934, -0.18898226713132066)
+post_ci: (-0.4074272595878353, -0.3678533004121647)
+reject null ---> (pre > post)
+
+algo: PPOv2
+env: FetchReachEnv-v0
+cs: False
+rn: False
+pre_ci: (-0.19669471286867934, -0.18898226713132066)
+post_ci: (-2.0927760685168253, -1.800142011483175)
+reject null ---> (pre > post)
+

@@ -82,6 +82,55 @@ def compute_complete_adaptation_stats(dir_):
         print("reject null ---> (pre > post)\n")
 
 
+def compute_adaptation_time(dir_):
+
+    pre = []
+
+    for seed in range(0, 30):
+        dir1 = os.path.join(dir_, "seed" + str(seed))
+        if os.path.exists(dir1):
+            eval_data_dir = os.path.join(dir1, "csv", "eval_data.csv")
+            eval_data = pd.read_csv(eval_data_dir)
+            pre.append(eval_data[191:201]["average_return"].values.tolist())
+        else:
+            print(colored("missing" + dir1, "red"))
+
+    pre = np.array(pre).flatten()
+
+    for post_index in range(201, 401-9+1):
+        post = []
+        postfault_min = post_index
+        postfault_max = post_index + 10
+
+        for seed in range(0, 30):
+            dir1 = os.path.join(dir_, "seed" + str(seed))
+            if os.path.exists(dir1):
+                eval_data_dir = os.path.join(dir1, "csv", "eval_data.csv")
+                eval_data = pd.read_csv(eval_data_dir)
+                post.append(eval_data[postfault_min:postfault_max]["average_return"].values.tolist())
+
+        post = np.array(post).flatten()
+
+        t, p = ttest_ind(pre, post, equal_var=False)
+
+        alpha = 0.05
+
+        reject_null = None
+
+        # null hypothesis: the two means are equal
+        # alternative hypothesis: the two means are unequal
+
+        if p < alpha:
+            reject_null = True
+        else:
+            reject_null = False
+
+        if not reject_null:
+            print(dir_)
+            print("accept null index:", postfault_min)
+            break
+
+
 if __name__ == "__main__":
 
     data_dir = "/Users/sheilaannschoepp/Dropbox/Mac/Documents/openai/data"
@@ -94,6 +143,10 @@ if __name__ == "__main__":
 
         postfault_min = 392
         postfault_max = 402
+
+        print("----------------------------------------------------------\n")
+        print("complete adaptation stats\n")
+        print("----------------------------------------------------------\n")
 
         ant_data_dir = os.path.join(data_dir, "ant", "exps")
 

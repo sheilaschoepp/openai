@@ -9,47 +9,6 @@ from termcolor import colored
 
 
 def compute_complete_adaptation_stats(dir_):
-
-    pre = []
-    post = []
-
-    for seed in range(0, 30):
-        dir1 = os.path.join(dir_, "seed" + str(seed))
-        if os.path.exists(dir1):
-            eval_data_dir = os.path.join(dir1, "csv", "eval_data.csv")
-            eval_data = pd.read_csv(eval_data_dir)
-            pre.append(eval_data[prefault_min:prefault_max]["average_return"].values.tolist())
-            post.append(eval_data[postfault_min:postfault_max]["average_return"].values.tolist())
-        else:
-            print(colored("missing" + dir1, "red"))
-
-    pre = np.array(pre).flatten()
-    post = np.array(post).flatten()
-
-    # confidence intervals
-
-    confidence_level = 0.95
-
-    pre_ci = st.t.interval(alpha=confidence_level, df=len(pre) - 1, loc=np.mean(pre), scale=st.sem(pre))
-    pre_ci = [round(i) for i in pre_ci]
-    post_ci = st.t.interval(alpha=confidence_level, df=len(post) - 1, loc=np.mean(post), scale=st.sem(post))
-    post_ci = [round(i) for i in post_ci]
-
-    # one-tailed Welch’s t-test (do not assume equal variances)
-    # H0: pre <= post
-    # H1: pre > post
-
-    t, p = ttest_ind(pre, post, equal_var=False, alternative="greater")
-
-    alpha = 0.05
-
-    reject_null = None
-
-    if p/2 < alpha:
-        reject_null = True
-    else:
-        reject_null = False
-
     # experiment info
     info = dir_.split("/")[-1].split("_")
 
@@ -75,6 +34,52 @@ def compute_complete_adaptation_stats(dir_):
                 rn = "discard networks"
             else:
                 rn = "retain networks"
+
+    pre = []
+    post = []
+
+    for seed in range(0, 30):
+        dir1 = os.path.join(dir_, "seed" + str(seed))
+        if os.path.exists(dir1):
+            eval_data_dir = os.path.join(dir1, "csv", "eval_data.csv")
+            eval_data = pd.read_csv(eval_data_dir)
+            pre.append(eval_data[prefault_min:prefault_max]["average_return"].values.tolist())
+            post.append(eval_data[postfault_min:postfault_max]["average_return"].values.tolist())
+        else:
+            print(colored("missing" + dir1, "red"))
+
+    pre = np.array(pre).flatten()
+    post = np.array(post).flatten()
+
+    # confidence intervals
+
+    confidence_level = 0.95
+
+    pre_ci = st.t.interval(alpha=confidence_level, df=len(pre) - 1, loc=np.mean(pre), scale=st.sem(pre))
+    if env.startswith("AntEnv"):
+        pre_ci = [round(i) for i in pre_ci]
+    else:
+        pre_ci = [round(i, 2) for i in pre_ci]
+    post_ci = st.t.interval(alpha=confidence_level, df=len(post) - 1, loc=np.mean(post), scale=st.sem(post))
+    if env.startswith("AntEnv"):
+        post_ci = [round(i) for i in post_ci]
+    else:
+        post_ci = [round(i, 2) for i in post_ci]
+
+    # one-tailed Welch’s t-test (do not assume equal variances)
+    # H0: pre <= post
+    # H1: pre > post
+
+    t, p = ttest_ind(pre, post, equal_var=False, alternative="greater")
+
+    alpha = 0.05
+
+    reject_null = None
+
+    if p/2 < alpha:
+        reject_null = True
+    else:
+        reject_null = False
 
     print("algo:", algo)
     print("env:", env)
@@ -174,9 +179,15 @@ def compute_earliest_adaptation_stats(dir_):
             confidence_level = 0.95
 
             pre_ci = st.t.interval(alpha=confidence_level, df=len(pre) - 1, loc=np.mean(pre), scale=st.sem(pre))
-            pre_ci = [round(i) for i in pre_ci]
+            if env.startswith("AntEnv"):
+                pre_ci = [round(i) for i in pre_ci]
+            else:
+                pre_ci = [round(i, 2) for i in pre_ci]
             post_ci = st.t.interval(alpha=confidence_level, df=len(post) - 1, loc=np.mean(post), scale=st.sem(post))
-            post_ci = [round(i) for i in post_ci]
+            if env.startswith("AntEnv"):
+                post_ci = [round(i) for i in post_ci]
+            else:
+                post_ci = [round(i, 2) for i in post_ci]
 
             print("pre-fault CI:", pre_ci)
             print("post-fault CI:", post_ci)

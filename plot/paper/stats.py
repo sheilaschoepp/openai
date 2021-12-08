@@ -8,7 +8,7 @@ from scipy.stats import ttest_ind
 from termcolor import colored
 
 
-def confidence_intervals(dir_):
+def compute_stats(dir_):
 
     pre = []
     post = []
@@ -48,66 +48,27 @@ def confidence_intervals(dir_):
     else:
         reject_null = False
 
+    # directory
     print(dir_.split("/")[-1])
+
+    # confidence intervals
     print("pre_ci:", pre_ci)
     print("post_ci:", post_ci)
-    print("accept null:", not reject_null)
 
+    # accept/reject null
+    if not reject_null:
+        print("accept null ---> (pre <= post)")
+    else:
+        print("reject null ---> (pre > post)")
 
-def student_t_test(dir_):
-
-    pre = []
-
-    for seed in range(0, 30):
-        dir1 = os.path.join(dir_, "seed" + str(seed))
-        if os.path.exists(dir1):
-            eval_data_dir = os.path.join(dir1, "csv", "eval_data.csv")
-            eval_data = pd.read_csv(eval_data_dir)
-            pre.append(eval_data[prefault_min:prefault_max]["average_return"].values.tolist())
-        else:
-            print(colored("missing" + dir1, "red"))
-
-    pre = np.array(pre).flatten()
-
-    for post_index in range(201, 401-9+1):
-        post = []
-        postfault_min = post_index
-        postfault_max = post_index + 10
-
-        for seed in range(0, 30):
-            dir1 = os.path.join(dir_, "seed" + str(seed))
-            if os.path.exists(dir1):
-                eval_data_dir = os.path.join(dir1, "csv", "eval_data.csv")
-                eval_data = pd.read_csv(eval_data_dir)
-                post.append(eval_data[postfault_min:postfault_max]["average_return"].values.tolist())
-
-        post = np.array(post).flatten()
-
-        t, p = ttest_ind(pre, post, equal_var=False)
-
-        alpha = 0.05
-
-        reject_null = None
-
-        # null hypothesis: the two means are equal
-        # alternative hypothesis: the two means are unequal
-
-        if p < alpha:
-            reject_null = True
-        else:
-            reject_null = False
-
-        if not reject_null:
-            print(dir_)
-            print("accept null index:", postfault_min)
-            break
+    print("/n/n")
 
 
 if __name__ == "__main__":
 
     data_dir = "/data"
 
-    with open("data/t_test.txt", "w") as f:
+    with open("data/stats.txt", "w") as f:
         sys.stdout = f
 
         prefault_min = 191
@@ -124,7 +85,7 @@ if __name__ == "__main__":
                 dir2 = os.path.join(dir1, dir2)
                 for dir3 in os.listdir(dir2):
                     dir3 = os.path.join(dir2, dir3)
-                    confidence_intervals(dir3)
+                    compute_stats(dir3)
 
         fetchreach_data_dir = os.path.join(data_dir, "fetchreach", "exps")
 
@@ -134,7 +95,7 @@ if __name__ == "__main__":
                 dir2 = os.path.join(dir1, dir2)
                 for dir3 in os.listdir(dir2):
                     dir3 = os.path.join(dir2, dir3)
-                    confidence_intervals(dir3)
+                    compute_stats(dir3)
 
 
 

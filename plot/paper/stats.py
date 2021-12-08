@@ -221,9 +221,9 @@ def compute_earliest_adaptation_stats(dir_):
 
 if __name__ == "__main__":
 
-    dir = os.getcwd()
-
-    data_dir = "/Users/sheilaannschoepp/Dropbox/Mac/Documents/openai/data"
+    data_dir = os.getcwd().split("/")[:-2]
+    data_dir.append("data")
+    data_dir = "/".join(data_dir)
 
     with open("data/stats.txt", "w") as f:
         sys.stdout = f

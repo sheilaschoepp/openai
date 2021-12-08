@@ -8,7 +8,7 @@ from scipy.stats import ttest_ind
 from termcolor import colored
 
 
-def compute_stats(dir_):
+def compute_complete_adaptation_stats(dir_):
 
     pre = []
     post = []
@@ -51,6 +51,7 @@ def compute_stats(dir_):
     # experiment info
     info = dir_.split("/")[-1].split("_")
 
+    algo = None
     env = None
     cs = None  # clear storage
     rn = None  # reinitialize networks
@@ -102,7 +103,7 @@ if __name__ == "__main__":
                 dir2 = os.path.join(dir1, dir2)
                 for dir3 in os.listdir(dir2):
                     dir3 = os.path.join(dir2, dir3)
-                    compute_stats(dir3)
+                    compute_complete_adaptation_stats(dir3)
 
         fetchreach_data_dir = os.path.join(data_dir, "fetchreach", "exps")
 
@@ -112,7 +113,7 @@ if __name__ == "__main__":
                 dir2 = os.path.join(dir1, dir2)
                 for dir3 in os.listdir(dir2):
                     dir3 = os.path.join(dir2, dir3)
-                    compute_stats(dir3)
+                    compute_complete_adaptation_stats(dir3)
 
 
 

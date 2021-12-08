@@ -64,14 +64,21 @@ def compute_complete_adaptation_stats(dir_):
         elif entry.startswith("AntEnv") or entry.startswith("FetchReach"):
             env = entry.split(":")[0]
         elif entry.startswith("crb:") or entry.startswith("cm:"):
-            cs = entry.split(":")[1]
+            cs = eval(entry.split(":")[1])
+            if cs:
+                cs = "discard storage"
+            else:
+                cs = "retain storage"
         elif entry.startswith("rn:"):
-            rn = entry.split(":")[1]
+            rn = eval(entry.split(":")[1])
+            if rn:
+                rn = "discard networks"
+            else:
+                rn = "retain networks"
 
     print("algo:", algo)
     print("env:", env)
-    print("cs:", cs)
-    print("rn:", rn)
+    print("setting: {}, {}".format(rn, cs))
 
     # confidence intervals
     print("pre-fault CI:", pre_ci)
@@ -100,9 +107,17 @@ def compute_earliest_adaptation_stats(dir_):
         elif entry.startswith("AntEnv") or entry.startswith("FetchReach"):
             env = entry.split(":")[0]
         elif entry.startswith("crb:") or entry.startswith("cm:"):
-            cs = entry.split(":")[1]
+            cs = eval(entry.split(":")[1])
+            if cs:
+                cs = "discard storage"
+            else:
+                cs = "retain storage"
         elif entry.startswith("rn:"):
-            rn = entry.split(":")[1]
+            rn = eval(entry.split(":")[1])
+            if rn:
+                rn = "discard networks"
+            else:
+                rn = "retain networks"
 
     pre = []
 
@@ -152,8 +167,7 @@ def compute_earliest_adaptation_stats(dir_):
 
             print("algo:", algo)
             print("env:", env)
-            print("cs:", cs)
-            print("rn:", rn)
+            print("setting: {}, {}".format(rn, cs))
 
             # confidence intervals
 
@@ -206,6 +220,8 @@ def compute_earliest_adaptation_stats(dir_):
 
 
 if __name__ == "__main__":
+
+    dir = os.getcwd()
 
     data_dir = "/Users/sheilaannschoepp/Dropbox/Mac/Documents/openai/data"
 

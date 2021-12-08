@@ -486,8 +486,8 @@ if __name__ == "__main__":
     # number of seeds to plot
     num_seeds = 30
 
-    # confidence interval z value for 29 degrees of freedom (30 seeds)
-    CI_Z = 2.045
+    # 95% confidence interval z value (99% confidence interval z value = 2.576)
+    CI_Z = 1.960
 
     # if True, plot 95% confidence interval; if False, plot standard error
     ci = True

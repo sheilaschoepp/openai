@@ -20,7 +20,7 @@ def compute_complete_adaptation_stats(dir_):
     for entry in info:
         if entry.startswith("SAC") or entry.startswith("PPO"):
             algo = entry
-        elif entry.startswith("AntEnv") or entry.startswith("FetchReach"):
+        elif (entry.startswith("AntEnv") or entry.startswith("FetchReach")) and not entry.startswith("FetchReachEnv-v0"):
             env = entry.split(":")[0]
         elif entry.startswith("crb:") or entry.startswith("cm:"):
             cs = eval(entry.split(":")[1])
@@ -109,7 +109,7 @@ def compute_earliest_adaptation_stats(dir_):
     for entry in info:
         if entry.startswith("SAC") or entry.startswith("PPO"):
             algo = entry
-        elif entry.startswith("AntEnv") or entry.startswith("FetchReach"):
+        elif (entry.startswith("AntEnv") or entry.startswith("FetchReach")) and not entry.startswith("FetchReachEnv-v0"):
             env = entry.split(":")[0]
         elif entry.startswith("crb:") or entry.startswith("cm:"):
             cs = eval(entry.split(":")[1])
@@ -236,67 +236,79 @@ if __name__ == "__main__":
     data_dir.append("data")
     data_dir = "/".join(data_dir)
 
-    with open("stats/stats.txt", "w") as f:
-        sys.stdout = f
+    prefault_min = 191
+    prefault_max = 201
 
-        prefault_min = 191
-        prefault_max = 201
+    postfault_min = 392
+    postfault_max = 402
 
-        postfault_min = 392
-        postfault_max = 402
+    complete_adaptation = True
+    earliest_adaptation = True
 
-        print("----------------------------------------------------------\n")
-        print("complete adaptation (convergence) stats\n")
-        print("note: This compares the 10 evaluations prior to fault onset\nto the final 10 evaluations after fault onset\n")
-        print("----------------------------------------------------------\n")
+    if complete_adaptation:
 
-        ant_data_dir = os.path.join(data_dir, "ant", "exps")
+        with open("stats/complete_adaptation_stats.txt", "w") as f:
 
-        for dir1 in os.listdir(ant_data_dir):
-            dir1 = os.path.join(ant_data_dir, dir1)
-            for dir2 in os.listdir(dir1):
-                dir2 = os.path.join(dir1, dir2)
-                for dir3 in os.listdir(dir2):
-                    dir3 = os.path.join(dir2, dir3)
-                    compute_complete_adaptation_stats(dir3)
+            sys.stdout = f
 
-        fetchreach_data_dir = os.path.join(data_dir, "fetchreach", "exps")
+            print("----------------------------------------------------------\n")
+            print("complete adaptation (convergence) stats\n")
+            print("note: This compares the 10 evaluations prior to fault onset\nto the final 10 evaluations after fault onset\n")
+            print("----------------------------------------------------------\n")
 
-        for dir1 in os.listdir(fetchreach_data_dir):
-            dir1 = os.path.join(fetchreach_data_dir, dir1)
-            for dir2 in os.listdir(dir1):
-                dir2 = os.path.join(dir1, dir2)
-                for dir3 in os.listdir(dir2):
-                    dir3 = os.path.join(dir2, dir3)
-                    compute_complete_adaptation_stats(dir3)
+            ant_data_dir = os.path.join(data_dir, "ant", "exps")
 
-        print("----------------------------------------------------------\n")
-        print("earliest adaptation stats\n")
-        print("note: This compares the 10 evaluations prior to fault onset\n"
-              "to each set of 10 evaluations after fault onset.  This finds\n"
-              "the first set of evaluations for which the null hypothesis\n"
-              "is accepted\n")
-        print("----------------------------------------------------------\n")
+            for dir1 in os.listdir(ant_data_dir):
+                dir1 = os.path.join(ant_data_dir, dir1)
+                for dir2 in os.listdir(dir1):
+                    dir2 = os.path.join(dir1, dir2)
+                    for dir3 in os.listdir(dir2):
+                        dir3 = os.path.join(dir2, dir3)
+                        compute_complete_adaptation_stats(dir3)
 
-        ant_data_dir = os.path.join(data_dir, "ant", "exps")
+            fetchreach_data_dir = os.path.join(data_dir, "fetchreach", "exps")
 
-        for dir1 in os.listdir(ant_data_dir):
-            dir1 = os.path.join(ant_data_dir, dir1)
-            for dir2 in os.listdir(dir1):
-                dir2 = os.path.join(dir1, dir2)
-                for dir3 in os.listdir(dir2):
-                    dir3 = os.path.join(dir2, dir3)
-                    compute_earliest_adaptation_stats(dir3)
+            for dir1 in os.listdir(fetchreach_data_dir):
+                dir1 = os.path.join(fetchreach_data_dir, dir1)
+                for dir2 in os.listdir(dir1):
+                    dir2 = os.path.join(dir1, dir2)
+                    for dir3 in os.listdir(dir2):
+                        dir3 = os.path.join(dir2, dir3)
+                        compute_complete_adaptation_stats(dir3)
 
-        fetchreach_data_dir = os.path.join(data_dir, "fetchreach", "exps")
+    if earliest_adaptation:
 
-        for dir1 in os.listdir(fetchreach_data_dir):
-            dir1 = os.path.join(fetchreach_data_dir, dir1)
-            for dir2 in os.listdir(dir1):
-                dir2 = os.path.join(dir1, dir2)
-                for dir3 in os.listdir(dir2):
-                    dir3 = os.path.join(dir2, dir3)
-                    compute_earliest_adaptation_stats(dir3)
+        with open("stats/earliest_adaptation_stats.txt", "w") as f:
+
+            sys.stdout = f
+
+            print("----------------------------------------------------------\n")
+            print("earliest adaptation stats\n")
+            print("note: This compares the 10 evaluations prior to fault onset\n"
+                  "to each set of 10 evaluations after fault onset.  This finds\n"
+                  "the first set of evaluations for which the null hypothesis\n"
+                  "is accepted\n")
+            print("----------------------------------------------------------\n")
+
+            ant_data_dir = os.path.join(data_dir, "ant", "exps")
+
+            for dir1 in os.listdir(ant_data_dir):
+                dir1 = os.path.join(ant_data_dir, dir1)
+                for dir2 in os.listdir(dir1):
+                    dir2 = os.path.join(dir1, dir2)
+                    for dir3 in os.listdir(dir2):
+                        dir3 = os.path.join(dir2, dir3)
+                        compute_earliest_adaptation_stats(dir3)
+
+            fetchreach_data_dir = os.path.join(data_dir, "fetchreach", "exps")
+
+            for dir1 in os.listdir(fetchreach_data_dir):
+                dir1 = os.path.join(fetchreach_data_dir, dir1)
+                for dir2 in os.listdir(dir1):
+                    dir2 = os.path.join(dir1, dir2)
+                    for dir3 in os.listdir(dir2):
+                        dir3 = os.path.join(dir2, dir3)
+                        compute_earliest_adaptation_stats(dir3)
 
 
 

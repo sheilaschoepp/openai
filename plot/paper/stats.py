@@ -236,7 +236,7 @@ if __name__ == "__main__":
     data_dir.append("data")
     data_dir = "/".join(data_dir)
 
-    with open("data/stats.txt", "w") as f:
+    with open("stats/stats.txt", "w") as f:
         sys.stdout = f
 
         prefault_min = 191

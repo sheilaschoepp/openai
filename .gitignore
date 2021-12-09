@@ -1,5 +1,5 @@
 # ignore data folder
-data/**
+# data/**
 
 # ingore workspace data points
 **/plot/workspace/data/*

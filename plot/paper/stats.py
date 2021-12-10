@@ -403,8 +403,9 @@ if __name__ == "__main__":
     confidence_level = 0.95
     alpha = 0.05
 
-    complete_adaptation = True
-    earliest_adaptation = False
+    # todo: select what to run
+    complete_adaptation = False
+    earliest_adaptation = True
 
     if complete_adaptation:
 

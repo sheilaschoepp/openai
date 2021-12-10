@@ -9,31 +9,24 @@ from termcolor import colored
 
 
 def compute_complete_adaptation_stats(dir_):
+
     # experiment info
     info = dir_.split("/")[-1].split("_")
 
     algo = None
     env = None
-    cs = None  # clear storage
     rn = None  # reinitialize networks
+    cs = None  # clear storage
 
     for entry in info:
         if entry.startswith("SAC") or entry.startswith("PPO"):
             algo = entry
         elif (entry.startswith("AntEnv") or entry.startswith("FetchReach")) and not entry.startswith("FetchReachEnv-v0"):
             env = entry.split(":")[0]
-        elif entry.startswith("crb:") or entry.startswith("cm:"):
-            cs = eval(entry.split(":")[1])
-            if cs:
-                cs = "discard storage"
-            else:
-                cs = "retain storage"
         elif entry.startswith("rn:"):
             rn = eval(entry.split(":")[1])
-            if rn:
-                rn = "discard networks"
-            else:
-                rn = "retain networks"
+        elif entry.startswith("crb:") or entry.startswith("cm:"):
+            cs = eval(entry.split(":")[1])
 
     pre = []
     post = []
@@ -51,9 +44,9 @@ def compute_complete_adaptation_stats(dir_):
     pre = np.array(pre).flatten()
     post = np.array(post).flatten()
 
-    # confidence intervals
+    complete_adaptation_data.append([algo, env, rn, cs, post])
 
-    confidence_level = 0.95
+    # confidence intervals
 
     pre_ci = st.t.interval(alpha=confidence_level, df=len(pre) - 1, loc=np.mean(pre), scale=st.sem(pre))
     if env.startswith("AntEnv"):
@@ -67,12 +60,10 @@ def compute_complete_adaptation_stats(dir_):
         post_ci = [round(i, 2) for i in post_ci]
 
     # one-tailed Welch’s t-test (do not assume equal variances)
-    # H0: pre <= post
-    # H1: pre > post
+    # H0: pre_mean <= post_mean
+    # H1: pre_mean > post_mean
 
     t, p = ttest_ind(pre, post, equal_var=False, alternative="greater")
-
-    alpha = 0.05
 
     reject_null = None
 
@@ -83,6 +74,17 @@ def compute_complete_adaptation_stats(dir_):
 
     print("algo:", algo)
     print("env:", env)
+
+    if rn:
+        rn = "discard networks"
+    else:
+        rn = "retain networks"
+
+    if cs:
+        cs = "discard storage"
+    else:
+        cs = "retain storage"
+
     print("setting: {}, {}".format(rn, cs))
 
     # confidence intervals
@@ -91,9 +93,115 @@ def compute_complete_adaptation_stats(dir_):
 
     # accept/reject null
     if not reject_null:
-        print("accept null ---> (pre <= post)\n")
+        print("accept null ---> (pre_mean <= post_mean)\n")
     else:
-        print("reject null ---> (pre > post)\n")
+        print("reject null ---> (pre_mean > post_mean)\n")
+
+
+def compute_complete_adaptation_setting_comparison_stats():
+
+    # create a list of algorithms and environments
+    algorithms = []
+    envs = []
+
+    for entry in complete_adaptation_data:
+        algo = entry[0]
+        env = entry[1]
+        if algo not in algorithms:
+            algorithms.append(algo)
+        if env not in envs:
+            envs.append(env)
+
+    # compare settings
+    for algo in algorithms:
+        for env in envs:
+
+            # obtain data for all settings for a specific algorithm and environment
+
+            algo_ = None
+            env_ = None
+
+            setting_data = []
+
+            for entry in complete_adaptation_data:
+                algo_ = entry[0]
+                env_ = entry[1]
+                if algo == algo_ and env == env_:
+                    rn = entry[2]
+                    cs = entry[3]
+                    data = entry[4]
+                    setting_data.append([rn, cs, data])
+
+            assert(len(setting_data) == 4)  # check
+
+            setting_data.sort()
+
+            print("------------------------\n")
+            print("algo:", algo)
+            print("env:", env, "\n")
+            print("------------------------\n")
+
+            def compute_t_test(a, b):
+
+                a = setting_data[0]
+                a_rn = a[0]
+                a_cs = a[1]
+                a_data = a[2]
+
+                b = setting_data[i]
+                b_rn = b[0]
+                b_cs = b[1]
+                b_data = b[2]
+
+                # two-tailed Welch’s t-test (do not assume equal variances)
+                # H0: a_mean = b_mean
+                # H1: a_mean != b_mean
+
+                t, p = ttest_ind(a_data, b_data, equal_var=False)
+
+                reject_null = None
+
+                if p < alpha:
+                    reject_null = True
+                else:
+                    reject_null = False
+
+                if a_rn:
+                    a_rn = "discard networks"
+                else:
+                    a_rn = "retain networks"
+
+                if b_rn:
+                    b_rn = "discard networks"
+                else:
+                    b_rn = "retain networks"
+
+                if a_cs:
+                    a_cs = "discard storage"
+                else:
+                    a_cs = "retain storage"
+
+                if b_cs:
+                    b_cs = "discard storage"
+                else:
+                    b_cs = "retain storage"
+
+                print("a setting: {}, {}".format(a_rn, a_cs))
+                print("b setting: {}, {}".format(b_rn, b_cs))
+
+                # accept/reject null
+                if not reject_null:
+                    print("accept null ---> (a_mean = b_mean)\n")
+                else:
+                    print("reject null ---> (a_mean != b_mean)\n")
+
+            # (1) compare rn=T, cs=T to all other settings
+            for i in range(1, 4):
+
+                a_ = setting_data[0]
+                b_ = setting_data[i]
+
+                compute_t_test(a_, b_)
 
 
 def compute_earliest_adaptation_stats(dir_):
@@ -103,26 +211,18 @@ def compute_earliest_adaptation_stats(dir_):
 
     algo = None
     env = None
-    cs = None  # clear storage
     rn = None  # reinitialize networks
+    cs = None  # clear storage
 
     for entry in info:
         if entry.startswith("SAC") or entry.startswith("PPO"):
             algo = entry
         elif (entry.startswith("AntEnv") or entry.startswith("FetchReach")) and not entry.startswith("FetchReachEnv-v0"):
             env = entry.split(":")[0]
-        elif entry.startswith("crb:") or entry.startswith("cm:"):
-            cs = eval(entry.split(":")[1])
-            if cs:
-                cs = "discard storage"
-            else:
-                cs = "retain storage"
         elif entry.startswith("rn:"):
             rn = eval(entry.split(":")[1])
-            if rn:
-                rn = "discard networks"
-            else:
-                rn = "retain networks"
+        elif entry.startswith("crb:") or entry.startswith("cm:"):
+            cs = eval(entry.split(":")[1])
 
     pre = []
 
@@ -154,12 +254,10 @@ def compute_earliest_adaptation_stats(dir_):
         post = np.array(post).flatten()
 
         # one-tailed Welch’s t-test (do not assume equal variances)
-        # H0: pre <= post
-        # H1: pre > post
+        # H0: pre_mean <= post_mean
+        # H1: pre_mean > post_mean
 
         t, p = ttest_ind(pre, post, equal_var=False, alternative="greater")
-
-        alpha = 0.05
 
         reject_null = None
 
@@ -172,11 +270,20 @@ def compute_earliest_adaptation_stats(dir_):
 
             print("algo:", algo)
             print("env:", env)
+
+            if rn:
+                rn = "discard networks"
+            else:
+                rn = "retain networks"
+
+            if cs:
+                cs = "discard storage"
+            else:
+                cs = "retain storage"
+
             print("setting: {}, {}".format(rn, cs))
 
             # confidence intervals
-
-            confidence_level = 0.95
 
             pre_ci = st.t.interval(alpha=confidence_level, df=len(pre) - 1, loc=np.mean(pre), scale=st.sem(pre))
             if env.startswith("AntEnv"):
@@ -193,7 +300,7 @@ def compute_earliest_adaptation_stats(dir_):
             print("post-fault CI:", post_ci)
 
             # accept null
-            print("accept null ---> (pre <= post)")
+            print("accept null ---> (pre_mean <= post_mean)")
 
             # interval (time steps))
 
@@ -223,11 +330,22 @@ def compute_earliest_adaptation_stats(dir_):
 
             print("algo:", algo)
             print("env:", env)
-            print("cs:", cs)
+
+            if rn:
+                rn = "discard networks"
+            else:
+                rn = "retain networks"
+
+            if cs:
+                cs = "discard storage"
+            else:
+                cs = "retain storage"
+
             print("rn:", rn)
+            print("cs:", cs)
 
             # reject null
-            print("reject null ---> (pre > post)\n")
+            print("reject null ---> (pre_mean > post_mean)\n")
 
 
 if __name__ == "__main__":
@@ -242,10 +360,16 @@ if __name__ == "__main__":
     postfault_min = 392
     postfault_max = 402
 
+    confidence_level = 0.95
+    alpha = 0.05
+
     complete_adaptation = True
-    earliest_adaptation = True
+    earliest_adaptation = False
 
     if complete_adaptation:
+
+        # list of list: entries [algo, env, rn, cs, post]
+        complete_adaptation_data = []
 
         with open("stats/complete_adaptation_stats.txt", "w") as f:
 
@@ -253,7 +377,8 @@ if __name__ == "__main__":
 
             print("----------------------------------------------------------\n")
             print("complete adaptation (convergence) stats\n")
-            print("note: This compares the 10 evaluations prior to fault onset\nto the final 10 evaluations after fault onset\n")
+            print("note: This compares the 10 evaluations prior to fault onset\n"
+                  "to the final 10 evaluations after fault onset\n")
             print("----------------------------------------------------------\n")
 
             ant_data_dir = os.path.join(data_dir, "ant", "exps")
@@ -275,6 +400,18 @@ if __name__ == "__main__":
                     for dir3 in os.listdir(dir2):
                         dir3 = os.path.join(dir2, dir3)
                         compute_complete_adaptation_stats(dir3)
+
+        with open("stats/complete_adaptation_setting_comparison_stats.txt", "w") as f:
+
+            sys.stdout = f
+
+            print("----------------------------------------------------------\n")
+            print("complete adaptation (convergence) setting comparison stats\n")
+            print("note: This compares the final 10 evaluations after fault\n"
+                  "onset across all setting pairs.\n")
+            print("----------------------------------------------------------\n")
+
+            compute_complete_adaptation_setting_comparison_stats()
 
     if earliest_adaptation:
 

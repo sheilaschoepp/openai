@@ -12,334 +12,334 @@ env: AntEnv-v1
 setting: retain networks, discard storage
 pre-fault CI: [5971, 6369]
 post-fault CI: [-220, 364]
-reject null ---> (pre > post)
+reject null ---> (pre_mean > post_mean)
 
 algo: SACv2
 env: AntEnv-v1
 setting: discard networks, retain storage
 pre-fault CI: [5971, 6369]
 post-fault CI: [2049, 2850]
-reject null ---> (pre > post)
+reject null ---> (pre_mean > post_mean)
 
 algo: SACv2
 env: AntEnv-v1
 setting: discard networks, discard storage
 pre-fault CI: [5971, 6369]
 post-fault CI: [5908, 6300]
-accept null ---> (pre <= post)
+accept null ---> (pre_mean <= post_mean)
 
 algo: SACv2
 env: AntEnv-v1
 setting: retain networks, retain storage
 pre-fault CI: [5971, 6369]
 post-fault CI: [1750, 2382]
-reject null ---> (pre > post)
+reject null ---> (pre_mean > post_mean)
 
 algo: SACv2
 env: AntEnv-v3
 setting: discard networks, retain storage
 pre-fault CI: [5971, 6369]
 post-fault CI: [1864, 2523]
-reject null ---> (pre > post)
+reject null ---> (pre_mean > post_mean)
 
 algo: SACv2
 env: AntEnv-v3
 setting: discard networks, discard storage
 pre-fault CI: [5971, 6369]
 post-fault CI: [3915, 4478]
-reject null ---> (pre > post)
+reject null ---> (pre_mean > post_mean)
 
 algo: SACv2
 env: AntEnv-v3
 setting: retain networks, discard storage
 pre-fault CI: [5971, 6369]
 post-fault CI: [2254, 2750]
-reject null ---> (pre > post)
+reject null ---> (pre_mean > post_mean)
 
 algo: SACv2
 env: AntEnv-v3
 setting: retain networks, retain storage
 pre-fault CI: [5971, 6369]
 post-fault CI: [2733, 3256]
-reject null ---> (pre > post)
+reject null ---> (pre_mean > post_mean)
 
 algo: SACv2
 env: AntEnv-v4
 setting: discard networks, retain storage
 pre-fault CI: [5971, 6369]
 post-fault CI: [1876, 2619]
-reject null ---> (pre > post)
+reject null ---> (pre_mean > post_mean)
 
 algo: SACv2
 env: AntEnv-v4
 setting: retain networks, retain storage
 pre-fault CI: [5971, 6369]
 post-fault CI: [1062, 1638]
-reject null ---> (pre > post)
+reject null ---> (pre_mean > post_mean)
 
 algo: SACv2
 env: AntEnv-v4
 setting: retain networks, discard storage
 pre-fault CI: [5971, 6369]
 post-fault CI: [482, 1090]
-reject null ---> (pre > post)
+reject null ---> (pre_mean > post_mean)
 
 algo: SACv2
 env: AntEnv-v4
 setting: discard networks, discard storage
 pre-fault CI: [5971, 6369]
 post-fault CI: [2442, 3223]
-reject null ---> (pre > post)
+reject null ---> (pre_mean > post_mean)
 
 algo: SACv2
 env: AntEnv-v2
 setting: discard networks, retain storage
 pre-fault CI: [5971, 6369]
 post-fault CI: [1988, 2784]
-reject null ---> (pre > post)
+reject null ---> (pre_mean > post_mean)
 
 algo: SACv2
 env: AntEnv-v2
 setting: discard networks, discard storage
 pre-fault CI: [5971, 6369]
 post-fault CI: [4974, 5541]
-reject null ---> (pre > post)
+reject null ---> (pre_mean > post_mean)
 
 algo: SACv2
 env: AntEnv-v2
 setting: retain networks, discard storage
 pre-fault CI: [5971, 6369]
 post-fault CI: [2822, 3490]
-reject null ---> (pre > post)
+reject null ---> (pre_mean > post_mean)
 
 algo: SACv2
 env: AntEnv-v2
 setting: retain networks, retain storage
 pre-fault CI: [5971, 6369]
 post-fault CI: [2573, 3255]
-reject null ---> (pre > post)
+reject null ---> (pre_mean > post_mean)
 
 algo: PPOv2
 env: AntEnv-v1
 setting: retain networks, retain storage
 pre-fault CI: [6555, 6639]
 post-fault CI: [6303, 6387]
-reject null ---> (pre > post)
+reject null ---> (pre_mean > post_mean)
 
 algo: PPOv2
 env: AntEnv-v1
 setting: discard networks, discard storage
 pre-fault CI: [6555, 6639]
 post-fault CI: [6863, 6942]
-accept null ---> (pre <= post)
+accept null ---> (pre_mean <= post_mean)
 
 algo: PPOv2
 env: AntEnv-v1
 setting: retain networks, discard storage
 pre-fault CI: [6555, 6639]
 post-fault CI: [6330, 6424]
-reject null ---> (pre > post)
+reject null ---> (pre_mean > post_mean)
 
 algo: PPOv2
 env: AntEnv-v1
 setting: discard networks, retain storage
 pre-fault CI: [6555, 6639]
 post-fault CI: [6851, 6933]
-accept null ---> (pre <= post)
+accept null ---> (pre_mean <= post_mean)
 
 algo: PPOv2
 env: AntEnv-v3
 setting: retain networks, retain storage
 pre-fault CI: [6555, 6639]
 post-fault CI: [5950, 6039]
-reject null ---> (pre > post)
+reject null ---> (pre_mean > post_mean)
 
 algo: PPOv2
 env: AntEnv-v3
 setting: retain networks, discard storage
 pre-fault CI: [6555, 6639]
 post-fault CI: [5951, 6033]
-reject null ---> (pre > post)
+reject null ---> (pre_mean > post_mean)
 
 algo: PPOv2
 env: AntEnv-v3
 setting: discard networks, discard storage
 pre-fault CI: [6555, 6639]
 post-fault CI: [5776, 5902]
-reject null ---> (pre > post)
+reject null ---> (pre_mean > post_mean)
 
 algo: PPOv2
 env: AntEnv-v3
 setting: discard networks, retain storage
 pre-fault CI: [6555, 6639]
 post-fault CI: [5832, 5958]
-reject null ---> (pre > post)
+reject null ---> (pre_mean > post_mean)
 
 algo: PPOv2
 env: AntEnv-v4
 setting: retain networks, retain storage
 pre-fault CI: [6555, 6639]
 post-fault CI: [5666, 5797]
-reject null ---> (pre > post)
+reject null ---> (pre_mean > post_mean)
 
 algo: PPOv2
 env: AntEnv-v4
 setting: discard networks, discard storage
 pre-fault CI: [6555, 6639]
 post-fault CI: [6677, 6784]
-accept null ---> (pre <= post)
+accept null ---> (pre_mean <= post_mean)
 
 algo: PPOv2
 env: AntEnv-v4
 setting: discard networks, retain storage
 pre-fault CI: [6555, 6639]
 post-fault CI: [6634, 6739]
-accept null ---> (pre <= post)
+accept null ---> (pre_mean <= post_mean)
 
 algo: PPOv2
 env: AntEnv-v4
 setting: retain networks, discard storage
 pre-fault CI: [6555, 6639]
 post-fault CI: [5617, 5752]
-reject null ---> (pre > post)
+reject null ---> (pre_mean > post_mean)
 
 algo: PPOv2
 env: AntEnv-v2
 setting: retain networks, retain storage
 pre-fault CI: [6555, 6639]
 post-fault CI: [5908, 6072]
-reject null ---> (pre > post)
+reject null ---> (pre_mean > post_mean)
 
 algo: PPOv2
 env: AntEnv-v2
 setting: retain networks, discard storage
 pre-fault CI: [6555, 6639]
 post-fault CI: [5891, 6052]
-reject null ---> (pre > post)
+reject null ---> (pre_mean > post_mean)
 
 algo: PPOv2
 env: AntEnv-v2
 setting: discard networks, retain storage
 pre-fault CI: [6555, 6639]
 post-fault CI: [6185, 6312]
-reject null ---> (pre > post)
+reject null ---> (pre_mean > post_mean)
 
 algo: PPOv2
 env: AntEnv-v2
 setting: discard networks, discard storage
 pre-fault CI: [6555, 6639]
 post-fault CI: [6248, 6368]
-reject null ---> (pre > post)
+reject null ---> (pre_mean > post_mean)
 
 algo: SACv2
 env: FetchReachEnv-v4
 setting: retain networks, discard storage
 pre-fault CI: [-0.28, -0.27]
 post-fault CI: [-2.19, -1.94]
-reject null ---> (pre > post)
+reject null ---> (pre_mean > post_mean)
 
 algo: SACv2
 env: FetchReachEnv-v4
 setting: discard networks, discard storage
 pre-fault CI: [-0.28, -0.27]
 post-fault CI: [-1.56, -1.42]
-reject null ---> (pre > post)
+reject null ---> (pre_mean > post_mean)
 
 algo: SACv2
 env: FetchReachEnv-v4
 setting: discard networks, retain storage
 pre-fault CI: [-0.28, -0.27]
 post-fault CI: [-1.53, -1.39]
-reject null ---> (pre > post)
+reject null ---> (pre_mean > post_mean)
 
 algo: SACv2
 env: FetchReachEnv-v4
 setting: retain networks, retain storage
 pre-fault CI: [-0.28, -0.27]
 post-fault CI: [-2.11, -1.92]
-reject null ---> (pre > post)
+reject null ---> (pre_mean > post_mean)
 
 algo: SACv2
 env: FetchReachEnv-v6
 setting: retain networks, discard storage
 pre-fault CI: [-0.28, -0.27]
 post-fault CI: [-0.47, -0.44]
-reject null ---> (pre > post)
+reject null ---> (pre_mean > post_mean)
 
 algo: SACv2
 env: FetchReachEnv-v6
 setting: retain networks, retain storage
 pre-fault CI: [-0.28, -0.27]
 post-fault CI: [-0.46, -0.44]
-reject null ---> (pre > post)
+reject null ---> (pre_mean > post_mean)
 
 algo: SACv2
 env: FetchReachEnv-v6
 setting: discard networks, retain storage
 pre-fault CI: [-0.28, -0.27]
 post-fault CI: [-0.46, -0.44]
-reject null ---> (pre > post)
+reject null ---> (pre_mean > post_mean)
 
 algo: SACv2
 env: FetchReachEnv-v6
 setting: discard networks, discard storage
 pre-fault CI: [-0.28, -0.27]
 post-fault CI: [-0.48, -0.45]
-reject null ---> (pre > post)
+reject null ---> (pre_mean > post_mean)
 
 algo: PPOv2
 env: FetchReachEnv-v4
 setting: retain networks, retain storage
 pre-fault CI: [-0.2, -0.19]
 post-fault CI: [-2.09, -1.8]
-reject null ---> (pre > post)
+reject null ---> (pre_mean > post_mean)
 
 algo: PPOv2
 env: FetchReachEnv-v4
 setting: discard networks, retain storage
 pre-fault CI: [-0.2, -0.19]
 post-fault CI: [-0.45, -0.39]
-reject null ---> (pre > post)
+reject null ---> (pre_mean > post_mean)
 
 algo: PPOv2
 env: FetchReachEnv-v4
 setting: retain networks, discard storage
 pre-fault CI: [-0.2, -0.19]
 post-fault CI: [-2.39, -2.07]
-reject null ---> (pre > post)
+reject null ---> (pre_mean > post_mean)
 
 algo: PPOv2
 env: FetchReachEnv-v4
 setting: discard networks, discard storage
 pre-fault CI: [-0.2, -0.19]
 post-fault CI: [-0.41, -0.37]
-reject null ---> (pre > post)
+reject null ---> (pre_mean > post_mean)
 
 algo: PPOv2
 env: FetchReachEnv-v6
 setting: discard networks, retain storage
 pre-fault CI: [-0.2, -0.19]
 post-fault CI: [-0.85, -0.71]
-reject null ---> (pre > post)
+reject null ---> (pre_mean > post_mean)
 
 algo: PPOv2
 env: FetchReachEnv-v6
 setting: discard networks, discard storage
 pre-fault CI: [-0.2, -0.19]
 post-fault CI: [-0.85, -0.71]
-reject null ---> (pre > post)
+reject null ---> (pre_mean > post_mean)
 
 algo: PPOv2
 env: FetchReachEnv-v6
 setting: retain networks, retain storage
 pre-fault CI: [-0.2, -0.19]
 post-fault CI: [-0.86, -0.71]
-reject null ---> (pre > post)
+reject null ---> (pre_mean > post_mean)
 
 algo: PPOv2
 env: FetchReachEnv-v6
 setting: retain networks, discard storage
 pre-fault CI: [-0.2, -0.19]
 post-fault CI: [-0.85, -0.71]
-reject null ---> (pre > post)
+reject null ---> (pre_mean > post_mean)
 

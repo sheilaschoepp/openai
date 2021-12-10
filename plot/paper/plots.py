@@ -439,7 +439,7 @@ def plot_experiment(directory):
             plt.fill_between(x, lb, ub, color=palette_colours[i + 1], alpha=0.3)
 
             plt.xlim(xmin, xmax)
-            plt.ylim(ymilegendn, ymax)
+            plt.ylim(ymin, ymax)
             plt.xlabel("million steps")
             plt.ylabel("average return ({} seeds)".format(num_seeds))
             # plt.legend(loc=0)

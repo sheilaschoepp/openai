@@ -439,7 +439,7 @@ def plot_experiment(directory):
             plt.fill_between(x, lb, ub, color=palette_colours[i + 1], alpha=0.3)
 
             plt.xlim(xmin, xmax)
-            plt.ylim(ymin, ymax)
+            plt.ylim(ymilegendn, ymax)
             plt.xlabel("million steps")
             plt.ylabel("average return ({} seeds)".format(num_seeds))
             # plt.legend(loc=0)
@@ -461,7 +461,7 @@ def legend():
 
     f = lambda m, c: plt.plot([], [], marker=m, color=c, ls="none")[0]
     handles = [f("s", palette_colours[i]) for i in range(5)]
-    labels = ["normal\nenvironment", "retain networks\nretain storage", "retain networks\ndiscard storage", "discard networks\nretain storage", "discard networks\ndiscard storage"]
+    labels = ["normal\nenvironment", "retain networks,\nretain storage", "retain networks,\ndiscard storage", "discard networks,\nretain storage", "discard networks,\ndiscard storage"]
     legend = plt.legend(handles, labels, ncol=5, loc=1, framealpha=1, frameon=False)
 
     def export_legend(legend, filename="legend.jpg"):

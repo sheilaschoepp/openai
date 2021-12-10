@@ -329,12 +329,12 @@ def compute_earliest_adaptation_stats(dir_):
             if env.startswith("AntEnv"):
                 pre_ci = [round(i) for i in pre_ci]
             else:
-                pre_ci = [round(i, 2) for i in pre_ci]
+                pre_ci = [round(i, 3) for i in pre_ci]
             post_ci = st.t.interval(alpha=confidence_level, df=len(post) - 1, loc=np.mean(post), scale=st.sem(post))
             if env.startswith("AntEnv"):
                 post_ci = [round(i) for i in post_ci]
             else:
-                post_ci = [round(i, 2) for i in post_ci]
+                post_ci = [round(i, 3) for i in post_ci]
 
             print("pre-fault CI:", pre_ci)
             print("post-fault CI:", post_ci)

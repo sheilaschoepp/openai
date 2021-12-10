@@ -26,6 +26,18 @@ a setting: retain networks, retain storage
 b setting: discard networks, discard storage
 reject null ---> (a_mean != b_mean)
 
+a setting: retain networks, discard storage
+b setting: discard networks, retain storage
+reject null ---> (a_mean != b_mean)
+
+a setting: retain networks, discard storage
+b setting: discard networks, discard storage
+reject null ---> (a_mean != b_mean)
+
+a setting: discard networks, retain storage
+b setting: discard networks, discard storage
+reject null ---> (a_mean != b_mean)
+
 ------------------------
 
 algo: SACv2
@@ -42,6 +54,18 @@ b setting: discard networks, retain storage
 reject null ---> (a_mean != b_mean)
 
 a setting: retain networks, retain storage
+b setting: discard networks, discard storage
+reject null ---> (a_mean != b_mean)
+
+a setting: retain networks, discard storage
+b setting: discard networks, retain storage
+accept null ---> (a_mean = b_mean)
+
+a setting: retain networks, discard storage
+b setting: discard networks, discard storage
+reject null ---> (a_mean != b_mean)
+
+a setting: discard networks, retain storage
 b setting: discard networks, discard storage
 reject null ---> (a_mean != b_mean)
 
@@ -64,6 +88,18 @@ a setting: retain networks, retain storage
 b setting: discard networks, discard storage
 reject null ---> (a_mean != b_mean)
 
+a setting: retain networks, discard storage
+b setting: discard networks, retain storage
+reject null ---> (a_mean != b_mean)
+
+a setting: retain networks, discard storage
+b setting: discard networks, discard storage
+reject null ---> (a_mean != b_mean)
+
+a setting: discard networks, retain storage
+b setting: discard networks, discard storage
+reject null ---> (a_mean != b_mean)
+
 ------------------------
 
 algo: SACv2
@@ -80,6 +116,18 @@ b setting: discard networks, retain storage
 reject null ---> (a_mean != b_mean)
 
 a setting: retain networks, retain storage
+b setting: discard networks, discard storage
+reject null ---> (a_mean != b_mean)
+
+a setting: retain networks, discard storage
+b setting: discard networks, retain storage
+reject null ---> (a_mean != b_mean)
+
+a setting: retain networks, discard storage
+b setting: discard networks, discard storage
+reject null ---> (a_mean != b_mean)
+
+a setting: discard networks, retain storage
 b setting: discard networks, discard storage
 reject null ---> (a_mean != b_mean)
 
@@ -102,6 +150,18 @@ a setting: retain networks, retain storage
 b setting: discard networks, discard storage
 reject null ---> (a_mean != b_mean)
 
+a setting: retain networks, discard storage
+b setting: discard networks, retain storage
+reject null ---> (a_mean != b_mean)
+
+a setting: retain networks, discard storage
+b setting: discard networks, discard storage
+reject null ---> (a_mean != b_mean)
+
+a setting: discard networks, retain storage
+b setting: discard networks, discard storage
+accept null ---> (a_mean = b_mean)
+
 ------------------------
 
 algo: SACv2
@@ -118,6 +178,18 @@ b setting: discard networks, retain storage
 accept null ---> (a_mean = b_mean)
 
 a setting: retain networks, retain storage
+b setting: discard networks, discard storage
+accept null ---> (a_mean = b_mean)
+
+a setting: retain networks, discard storage
+b setting: discard networks, retain storage
+accept null ---> (a_mean = b_mean)
+
+a setting: retain networks, discard storage
+b setting: discard networks, discard storage
+accept null ---> (a_mean = b_mean)
+
+a setting: discard networks, retain storage
 b setting: discard networks, discard storage
 accept null ---> (a_mean = b_mean)
 
@@ -140,6 +212,18 @@ a setting: retain networks, retain storage
 b setting: discard networks, discard storage
 reject null ---> (a_mean != b_mean)
 
+a setting: retain networks, discard storage
+b setting: discard networks, retain storage
+reject null ---> (a_mean != b_mean)
+
+a setting: retain networks, discard storage
+b setting: discard networks, discard storage
+reject null ---> (a_mean != b_mean)
+
+a setting: discard networks, retain storage
+b setting: discard networks, discard storage
+accept null ---> (a_mean = b_mean)
+
 ------------------------
 
 algo: PPOv2
@@ -158,6 +242,18 @@ reject null ---> (a_mean != b_mean)
 a setting: retain networks, retain storage
 b setting: discard networks, discard storage
 reject null ---> (a_mean != b_mean)
+
+a setting: retain networks, discard storage
+b setting: discard networks, retain storage
+reject null ---> (a_mean != b_mean)
+
+a setting: retain networks, discard storage
+b setting: discard networks, discard storage
+reject null ---> (a_mean != b_mean)
+
+a setting: discard networks, retain storage
+b setting: discard networks, discard storage
+accept null ---> (a_mean = b_mean)
 
 ------------------------
 
@@ -178,6 +274,18 @@ a setting: retain networks, retain storage
 b setting: discard networks, discard storage
 reject null ---> (a_mean != b_mean)
 
+a setting: retain networks, discard storage
+b setting: discard networks, retain storage
+reject null ---> (a_mean != b_mean)
+
+a setting: retain networks, discard storage
+b setting: discard networks, discard storage
+reject null ---> (a_mean != b_mean)
+
+a setting: discard networks, retain storage
+b setting: discard networks, discard storage
+accept null ---> (a_mean = b_mean)
+
 ------------------------
 
 algo: PPOv2
@@ -196,6 +304,18 @@ reject null ---> (a_mean != b_mean)
 a setting: retain networks, retain storage
 b setting: discard networks, discard storage
 reject null ---> (a_mean != b_mean)
+
+a setting: retain networks, discard storage
+b setting: discard networks, retain storage
+reject null ---> (a_mean != b_mean)
+
+a setting: retain networks, discard storage
+b setting: discard networks, discard storage
+reject null ---> (a_mean != b_mean)
+
+a setting: discard networks, retain storage
+b setting: discard networks, discard storage
+accept null ---> (a_mean = b_mean)
 
 ------------------------
 
@@ -216,6 +336,18 @@ a setting: retain networks, retain storage
 b setting: discard networks, discard storage
 reject null ---> (a_mean != b_mean)
 
+a setting: retain networks, discard storage
+b setting: discard networks, retain storage
+reject null ---> (a_mean != b_mean)
+
+a setting: retain networks, discard storage
+b setting: discard networks, discard storage
+reject null ---> (a_mean != b_mean)
+
+a setting: discard networks, retain storage
+b setting: discard networks, discard storage
+accept null ---> (a_mean = b_mean)
+
 ------------------------
 
 algo: PPOv2
@@ -232,6 +364,18 @@ b setting: discard networks, retain storage
 accept null ---> (a_mean = b_mean)
 
 a setting: retain networks, retain storage
+b setting: discard networks, discard storage
+accept null ---> (a_mean = b_mean)
+
+a setting: retain networks, discard storage
+b setting: discard networks, retain storage
+accept null ---> (a_mean = b_mean)
+
+a setting: retain networks, discard storage
+b setting: discard networks, discard storage
+accept null ---> (a_mean = b_mean)
+
+a setting: discard networks, retain storage
 b setting: discard networks, discard storage
 accept null ---> (a_mean = b_mean)
 

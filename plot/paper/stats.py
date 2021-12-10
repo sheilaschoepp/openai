@@ -4,7 +4,7 @@ import pandas as pd
 import scipy.stats as st
 import sys
 
-from scipy.stats import ttest_ind
+from scipy.stats import sem, ttest_ind
 from termcolor import colored
 
 
@@ -52,12 +52,12 @@ def compute_complete_adaptation_stats(dir_):
     if env.startswith("AntEnv"):
         pre_ci = [round(i) for i in pre_ci]
     else:
-        pre_ci = [round(i, 2) for i in pre_ci]
+        pre_ci = [round(i, 3) for i in pre_ci]
     post_ci = st.t.interval(alpha=confidence_level, df=len(post) - 1, loc=np.mean(post), scale=st.sem(post))
     if env.startswith("AntEnv"):
         post_ci = [round(i) for i in post_ci]
     else:
-        post_ci = [round(i, 2) for i in post_ci]
+        post_ci = [round(i, 3) for i in post_ci]
 
     # one-tailed Welch’s t-test (do not assume equal variances)
     # H0: pre_mean <= post_mean
@@ -87,8 +87,37 @@ def compute_complete_adaptation_stats(dir_):
 
     print("setting: {}, {}".format(rn, cs))
 
-    # confidence intervals
+    pre_mean = np.mean(pre)
+    if env.startswith("AntEnv"):
+        pre_mean = round(pre_mean)
+    else:
+        pre_mean = round(pre_mean, 3)
+
+    pre_sem = sem(pre)
+    if env.startswith("AntEnv"):
+        pre_sem = round(pre_sem)
+    else:
+        pre_sem = round(pre_sem, 3)
+
+    post_mean = np.mean(post)
+    if env.startswith("AntEnv"):
+        post_mean = round(post_mean)
+    else:
+        post_mean = round(post_mean, 3)
+
+    post_sem = sem(post)
+    if env.startswith("AntEnv"):
+        post_sem = round(post_sem)
+    else:
+        post_sem = round(post_sem, 3)
+
+    # stats
+    print("pre-fault mean:", pre_mean)
+    print("pre-fault sem:", pre_sem)
     print("pre-fault CI:", pre_ci)
+
+    print("post-fault mean:", post_mean)
+    print("post-fault sem:", post_sem)
     print("post-fault CI:", post_ci)
 
     # accept/reject null
@@ -143,12 +172,10 @@ def compute_complete_adaptation_setting_comparison_stats():
 
             def compute_t_test(a, b):
 
-                a = setting_data[0]
                 a_rn = a[0]
                 a_cs = a[1]
                 a_data = a[2]
 
-                b = setting_data[i]
                 b_rn = b[0]
                 b_cs = b[1]
                 b_data = b[2]
@@ -195,10 +222,23 @@ def compute_complete_adaptation_setting_comparison_stats():
                 else:
                     print("reject null ---> (a_mean != b_mean)\n")
 
-            # (1) compare rn=T, cs=T to all other settings
             for i in range(1, 4):
 
                 a_ = setting_data[0]
+                b_ = setting_data[i]
+
+                compute_t_test(a_, b_)
+
+            for i in range(2, 4):
+
+                a_ = setting_data[1]
+                b_ = setting_data[i]
+
+                compute_t_test(a_, b_)
+
+            for i in range(3, 4):
+
+                a_ = setting_data[2]
                 b_ = setting_data[i]
 
                 compute_t_test(a_, b_)

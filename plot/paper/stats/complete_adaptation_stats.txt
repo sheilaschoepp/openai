@@ -10,336 +10,528 @@ to the final 10 evaluations after fault onset
 algo: SACv2
 env: AntEnv-v1
 setting: retain networks, discard storage
+pre-fault mean: 6170
+pre-fault sem: 101
 pre-fault CI: [5971, 6369]
+post-fault mean: 72
+post-fault sem: 148
 post-fault CI: [-220, 364]
 reject null ---> (pre_mean > post_mean)
 
 algo: SACv2
 env: AntEnv-v1
 setting: discard networks, retain storage
+pre-fault mean: 6170
+pre-fault sem: 101
 pre-fault CI: [5971, 6369]
+post-fault mean: 2450
+post-fault sem: 203
 post-fault CI: [2049, 2850]
 reject null ---> (pre_mean > post_mean)
 
 algo: SACv2
 env: AntEnv-v1
 setting: discard networks, discard storage
+pre-fault mean: 6170
+pre-fault sem: 101
 pre-fault CI: [5971, 6369]
+post-fault mean: 6104
+post-fault sem: 100
 post-fault CI: [5908, 6300]
 accept null ---> (pre_mean <= post_mean)
 
 algo: SACv2
 env: AntEnv-v1
 setting: retain networks, retain storage
+pre-fault mean: 6170
+pre-fault sem: 101
 pre-fault CI: [5971, 6369]
+post-fault mean: 2066
+post-fault sem: 161
 post-fault CI: [1750, 2382]
 reject null ---> (pre_mean > post_mean)
 
 algo: SACv2
 env: AntEnv-v3
 setting: discard networks, retain storage
+pre-fault mean: 6170
+pre-fault sem: 101
 pre-fault CI: [5971, 6369]
+post-fault mean: 2194
+post-fault sem: 167
 post-fault CI: [1864, 2523]
 reject null ---> (pre_mean > post_mean)
 
 algo: SACv2
 env: AntEnv-v3
 setting: discard networks, discard storage
+pre-fault mean: 6170
+pre-fault sem: 101
 pre-fault CI: [5971, 6369]
+post-fault mean: 4196
+post-fault sem: 143
 post-fault CI: [3915, 4478]
 reject null ---> (pre_mean > post_mean)
 
 algo: SACv2
 env: AntEnv-v3
 setting: retain networks, discard storage
+pre-fault mean: 6170
+pre-fault sem: 101
 pre-fault CI: [5971, 6369]
+post-fault mean: 2502
+post-fault sem: 126
 post-fault CI: [2254, 2750]
 reject null ---> (pre_mean > post_mean)
 
 algo: SACv2
 env: AntEnv-v3
 setting: retain networks, retain storage
+pre-fault mean: 6170
+pre-fault sem: 101
 pre-fault CI: [5971, 6369]
+post-fault mean: 2995
+post-fault sem: 133
 post-fault CI: [2733, 3256]
 reject null ---> (pre_mean > post_mean)
 
 algo: SACv2
 env: AntEnv-v4
 setting: discard networks, retain storage
+pre-fault mean: 6170
+pre-fault sem: 101
 pre-fault CI: [5971, 6369]
+post-fault mean: 2248
+post-fault sem: 189
 post-fault CI: [1876, 2619]
 reject null ---> (pre_mean > post_mean)
 
 algo: SACv2
 env: AntEnv-v4
 setting: retain networks, retain storage
+pre-fault mean: 6170
+pre-fault sem: 101
 pre-fault CI: [5971, 6369]
+post-fault mean: 1350
+post-fault sem: 146
 post-fault CI: [1062, 1638]
 reject null ---> (pre_mean > post_mean)
 
 algo: SACv2
 env: AntEnv-v4
 setting: retain networks, discard storage
+pre-fault mean: 6170
+pre-fault sem: 101
 pre-fault CI: [5971, 6369]
+post-fault mean: 786
+post-fault sem: 154
 post-fault CI: [482, 1090]
 reject null ---> (pre_mean > post_mean)
 
 algo: SACv2
 env: AntEnv-v4
 setting: discard networks, discard storage
+pre-fault mean: 6170
+pre-fault sem: 101
 pre-fault CI: [5971, 6369]
+post-fault mean: 2833
+post-fault sem: 198
 post-fault CI: [2442, 3223]
 reject null ---> (pre_mean > post_mean)
 
 algo: SACv2
 env: AntEnv-v2
 setting: discard networks, retain storage
+pre-fault mean: 6170
+pre-fault sem: 101
 pre-fault CI: [5971, 6369]
+post-fault mean: 2386
+post-fault sem: 202
 post-fault CI: [1988, 2784]
 reject null ---> (pre_mean > post_mean)
 
 algo: SACv2
 env: AntEnv-v2
 setting: discard networks, discard storage
+pre-fault mean: 6170
+pre-fault sem: 101
 pre-fault CI: [5971, 6369]
+post-fault mean: 5258
+post-fault sem: 144
 post-fault CI: [4974, 5541]
 reject null ---> (pre_mean > post_mean)
 
 algo: SACv2
 env: AntEnv-v2
 setting: retain networks, discard storage
+pre-fault mean: 6170
+pre-fault sem: 101
 pre-fault CI: [5971, 6369]
+post-fault mean: 3156
+post-fault sem: 170
 post-fault CI: [2822, 3490]
 reject null ---> (pre_mean > post_mean)
 
 algo: SACv2
 env: AntEnv-v2
 setting: retain networks, retain storage
+pre-fault mean: 6170
+pre-fault sem: 101
 pre-fault CI: [5971, 6369]
+post-fault mean: 2914
+post-fault sem: 173
 post-fault CI: [2573, 3255]
 reject null ---> (pre_mean > post_mean)
 
 algo: PPOv2
 env: AntEnv-v1
 setting: retain networks, retain storage
+pre-fault mean: 6597
+pre-fault sem: 21
 pre-fault CI: [6555, 6639]
+post-fault mean: 6345
+post-fault sem: 21
 post-fault CI: [6303, 6387]
 reject null ---> (pre_mean > post_mean)
 
 algo: PPOv2
 env: AntEnv-v1
 setting: discard networks, discard storage
+pre-fault mean: 6597
+pre-fault sem: 21
 pre-fault CI: [6555, 6639]
+post-fault mean: 6902
+post-fault sem: 20
 post-fault CI: [6863, 6942]
 accept null ---> (pre_mean <= post_mean)
 
 algo: PPOv2
 env: AntEnv-v1
 setting: retain networks, discard storage
+pre-fault mean: 6597
+pre-fault sem: 21
 pre-fault CI: [6555, 6639]
+post-fault mean: 6377
+post-fault sem: 24
 post-fault CI: [6330, 6424]
 reject null ---> (pre_mean > post_mean)
 
 algo: PPOv2
 env: AntEnv-v1
 setting: discard networks, retain storage
+pre-fault mean: 6597
+pre-fault sem: 21
 pre-fault CI: [6555, 6639]
+post-fault mean: 6892
+post-fault sem: 21
 post-fault CI: [6851, 6933]
 accept null ---> (pre_mean <= post_mean)
 
 algo: PPOv2
 env: AntEnv-v3
 setting: retain networks, retain storage
+pre-fault mean: 6597
+pre-fault sem: 21
 pre-fault CI: [6555, 6639]
+post-fault mean: 5994
+post-fault sem: 23
 post-fault CI: [5950, 6039]
 reject null ---> (pre_mean > post_mean)
 
 algo: PPOv2
 env: AntEnv-v3
 setting: retain networks, discard storage
+pre-fault mean: 6597
+pre-fault sem: 21
 pre-fault CI: [6555, 6639]
+post-fault mean: 5992
+post-fault sem: 21
 post-fault CI: [5951, 6033]
 reject null ---> (pre_mean > post_mean)
 
 algo: PPOv2
 env: AntEnv-v3
 setting: discard networks, discard storage
+pre-fault mean: 6597
+pre-fault sem: 21
 pre-fault CI: [6555, 6639]
+post-fault mean: 5839
+post-fault sem: 32
 post-fault CI: [5776, 5902]
 reject null ---> (pre_mean > post_mean)
 
 algo: PPOv2
 env: AntEnv-v3
 setting: discard networks, retain storage
+pre-fault mean: 6597
+pre-fault sem: 21
 pre-fault CI: [6555, 6639]
+post-fault mean: 5895
+post-fault sem: 32
 post-fault CI: [5832, 5958]
 reject null ---> (pre_mean > post_mean)
 
 algo: PPOv2
 env: AntEnv-v4
 setting: retain networks, retain storage
+pre-fault mean: 6597
+pre-fault sem: 21
 pre-fault CI: [6555, 6639]
+post-fault mean: 5732
+post-fault sem: 33
 post-fault CI: [5666, 5797]
 reject null ---> (pre_mean > post_mean)
 
 algo: PPOv2
 env: AntEnv-v4
 setting: discard networks, discard storage
+pre-fault mean: 6597
+pre-fault sem: 21
 pre-fault CI: [6555, 6639]
+post-fault mean: 6730
+post-fault sem: 27
 post-fault CI: [6677, 6784]
 accept null ---> (pre_mean <= post_mean)
 
 algo: PPOv2
 env: AntEnv-v4
 setting: discard networks, retain storage
+pre-fault mean: 6597
+pre-fault sem: 21
 pre-fault CI: [6555, 6639]
+post-fault mean: 6686
+post-fault sem: 27
 post-fault CI: [6634, 6739]
 accept null ---> (pre_mean <= post_mean)
 
 algo: PPOv2
 env: AntEnv-v4
 setting: retain networks, discard storage
+pre-fault mean: 6597
+pre-fault sem: 21
 pre-fault CI: [6555, 6639]
+post-fault mean: 5685
+post-fault sem: 34
 post-fault CI: [5617, 5752]
 reject null ---> (pre_mean > post_mean)
 
 algo: PPOv2
 env: AntEnv-v2
 setting: retain networks, retain storage
+pre-fault mean: 6597
+pre-fault sem: 21
 pre-fault CI: [6555, 6639]
+post-fault mean: 5990
+post-fault sem: 41
 post-fault CI: [5908, 6072]
 reject null ---> (pre_mean > post_mean)
 
 algo: PPOv2
 env: AntEnv-v2
 setting: retain networks, discard storage
+pre-fault mean: 6597
+pre-fault sem: 21
 pre-fault CI: [6555, 6639]
+post-fault mean: 5971
+post-fault sem: 41
 post-fault CI: [5891, 6052]
 reject null ---> (pre_mean > post_mean)
 
 algo: PPOv2
 env: AntEnv-v2
 setting: discard networks, retain storage
+pre-fault mean: 6597
+pre-fault sem: 21
 pre-fault CI: [6555, 6639]
+post-fault mean: 6249
+post-fault sem: 32
 post-fault CI: [6185, 6312]
 reject null ---> (pre_mean > post_mean)
 
 algo: PPOv2
 env: AntEnv-v2
 setting: discard networks, discard storage
+pre-fault mean: 6597
+pre-fault sem: 21
 pre-fault CI: [6555, 6639]
+post-fault mean: 6308
+post-fault sem: 30
 post-fault CI: [6248, 6368]
 reject null ---> (pre_mean > post_mean)
 
 algo: SACv2
 env: FetchReachEnv-v4
 setting: retain networks, discard storage
-pre-fault CI: [-0.28, -0.27]
-post-fault CI: [-2.19, -1.94]
+pre-fault mean: -0.274
+pre-fault sem: 0.003
+pre-fault CI: [-0.28, -0.268]
+post-fault mean: -2.067
+post-fault sem: 0.064
+post-fault CI: [-2.193, -1.941]
 reject null ---> (pre_mean > post_mean)
 
 algo: SACv2
 env: FetchReachEnv-v4
 setting: discard networks, discard storage
-pre-fault CI: [-0.28, -0.27]
-post-fault CI: [-1.56, -1.42]
+pre-fault mean: -0.274
+pre-fault sem: 0.003
+pre-fault CI: [-0.28, -0.268]
+post-fault mean: -1.487
+post-fault sem: 0.036
+post-fault CI: [-1.557, -1.417]
 reject null ---> (pre_mean > post_mean)
 
 algo: SACv2
 env: FetchReachEnv-v4
 setting: discard networks, retain storage
-pre-fault CI: [-0.28, -0.27]
-post-fault CI: [-1.53, -1.39]
+pre-fault mean: -0.274
+pre-fault sem: 0.003
+pre-fault CI: [-0.28, -0.268]
+post-fault mean: -1.463
+post-fault sem: 0.036
+post-fault CI: [-1.533, -1.392]
 reject null ---> (pre_mean > post_mean)
 
 algo: SACv2
 env: FetchReachEnv-v4
 setting: retain networks, retain storage
-pre-fault CI: [-0.28, -0.27]
-post-fault CI: [-2.11, -1.92]
+pre-fault mean: -0.274
+pre-fault sem: 0.003
+pre-fault CI: [-0.28, -0.268]
+post-fault mean: -2.016
+post-fault sem: 0.048
+post-fault CI: [-2.111, -1.921]
 reject null ---> (pre_mean > post_mean)
 
 algo: SACv2
 env: FetchReachEnv-v6
 setting: retain networks, discard storage
-pre-fault CI: [-0.28, -0.27]
-post-fault CI: [-0.47, -0.44]
+pre-fault mean: -0.274
+pre-fault sem: 0.003
+pre-fault CI: [-0.28, -0.268]
+post-fault mean: -0.454
+post-fault sem: 0.006
+post-fault CI: [-0.465, -0.443]
 reject null ---> (pre_mean > post_mean)
 
 algo: SACv2
 env: FetchReachEnv-v6
 setting: retain networks, retain storage
-pre-fault CI: [-0.28, -0.27]
-post-fault CI: [-0.46, -0.44]
+pre-fault mean: -0.274
+pre-fault sem: 0.003
+pre-fault CI: [-0.28, -0.268]
+post-fault mean: -0.452
+post-fault sem: 0.005
+post-fault CI: [-0.462, -0.442]
 reject null ---> (pre_mean > post_mean)
 
 algo: SACv2
 env: FetchReachEnv-v6
 setting: discard networks, retain storage
-pre-fault CI: [-0.28, -0.27]
-post-fault CI: [-0.46, -0.44]
+pre-fault mean: -0.274
+pre-fault sem: 0.003
+pre-fault CI: [-0.28, -0.268]
+post-fault mean: -0.454
+post-fault sem: 0.006
+post-fault CI: [-0.464, -0.443]
 reject null ---> (pre_mean > post_mean)
 
 algo: SACv2
 env: FetchReachEnv-v6
 setting: discard networks, discard storage
-pre-fault CI: [-0.28, -0.27]
-post-fault CI: [-0.48, -0.45]
+pre-fault mean: -0.274
+pre-fault sem: 0.003
+pre-fault CI: [-0.28, -0.268]
+post-fault mean: -0.465
+post-fault sem: 0.005
+post-fault CI: [-0.475, -0.454]
 reject null ---> (pre_mean > post_mean)
 
 algo: PPOv2
 env: FetchReachEnv-v4
 setting: retain networks, retain storage
-pre-fault CI: [-0.2, -0.19]
-post-fault CI: [-2.09, -1.8]
+pre-fault mean: -0.193
+pre-fault sem: 0.002
+pre-fault CI: [-0.197, -0.189]
+post-fault mean: -1.946
+post-fault sem: 0.074
+post-fault CI: [-2.093, -1.8]
 reject null ---> (pre_mean > post_mean)
 
 algo: PPOv2
 env: FetchReachEnv-v4
 setting: discard networks, retain storage
-pre-fault CI: [-0.2, -0.19]
-post-fault CI: [-0.45, -0.39]
+pre-fault mean: -0.193
+pre-fault sem: 0.002
+pre-fault CI: [-0.197, -0.189]
+post-fault mean: -0.423
+post-fault sem: 0.015
+post-fault CI: [-0.454, -0.393]
 reject null ---> (pre_mean > post_mean)
 
 algo: PPOv2
 env: FetchReachEnv-v4
 setting: retain networks, discard storage
-pre-fault CI: [-0.2, -0.19]
-post-fault CI: [-2.39, -2.07]
+pre-fault mean: -0.193
+pre-fault sem: 0.002
+pre-fault CI: [-0.197, -0.189]
+post-fault mean: -2.23
+post-fault sem: 0.083
+post-fault CI: [-2.393, -2.067]
 reject null ---> (pre_mean > post_mean)
 
 algo: PPOv2
 env: FetchReachEnv-v4
 setting: discard networks, discard storage
-pre-fault CI: [-0.2, -0.19]
-post-fault CI: [-0.41, -0.37]
+pre-fault mean: -0.193
+pre-fault sem: 0.002
+pre-fault CI: [-0.197, -0.189]
+post-fault mean: -0.388
+post-fault sem: 0.01
+post-fault CI: [-0.407, -0.368]
 reject null ---> (pre_mean > post_mean)
 
 algo: PPOv2
 env: FetchReachEnv-v6
 setting: discard networks, retain storage
-pre-fault CI: [-0.2, -0.19]
-post-fault CI: [-0.85, -0.71]
+pre-fault mean: -0.193
+pre-fault sem: 0.002
+pre-fault CI: [-0.197, -0.189]
+post-fault mean: -0.781
+post-fault sem: 0.036
+post-fault CI: [-0.853, -0.709]
 reject null ---> (pre_mean > post_mean)
 
 algo: PPOv2
 env: FetchReachEnv-v6
 setting: discard networks, discard storage
-pre-fault CI: [-0.2, -0.19]
-post-fault CI: [-0.85, -0.71]
+pre-fault mean: -0.193
+pre-fault sem: 0.002
+pre-fault CI: [-0.197, -0.189]
+post-fault mean: -0.782
+post-fault sem: 0.037
+post-fault CI: [-0.854, -0.71]
 reject null ---> (pre_mean > post_mean)
 
 algo: PPOv2
 env: FetchReachEnv-v6
 setting: retain networks, retain storage
-pre-fault CI: [-0.2, -0.19]
-post-fault CI: [-0.86, -0.71]
+pre-fault mean: -0.193
+pre-fault sem: 0.002
+pre-fault CI: [-0.197, -0.189]
+post-fault mean: -0.783
+post-fault sem: 0.037
+post-fault CI: [-0.856, -0.71]
 reject null ---> (pre_mean > post_mean)
 
 algo: PPOv2
 env: FetchReachEnv-v6
 setting: retain networks, discard storage
-pre-fault CI: [-0.2, -0.19]
-post-fault CI: [-0.85, -0.71]
+pre-fault mean: -0.193
+pre-fault sem: 0.002
+pre-fault CI: [-0.197, -0.189]
+post-fault mean: -0.781
+post-fault sem: 0.037
+post-fault CI: [-0.854, -0.709]
 reject null ---> (pre_mean > post_mean)
 

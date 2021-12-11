@@ -120,6 +120,9 @@ def compute_complete_adaptation_stats(dir_):
     print("post-fault sem:", post_sem)
     print("post-fault CI:", post_ci)
 
+    print("t:", round(t, 2))
+    print("p:", p)
+
     # accept/reject null
     if not reject_null:
         print("accept null ---> (pre_mean <= post_mean)\n")
@@ -215,6 +218,9 @@ def compute_complete_adaptation_setting_comparison_stats():
 
                 print("a setting: {}, {}".format(a_rn, a_cs))
                 print("b setting: {}, {}".format(b_rn, b_cs))
+
+                print("t:", t)
+                print("p:", p)
 
                 # accept/reject null
                 if not reject_null:
@@ -404,8 +410,8 @@ if __name__ == "__main__":
     alpha = 0.05
 
     # todo: select what to run
-    complete_adaptation = False
-    earliest_adaptation = True
+    complete_adaptation = True
+    earliest_adaptation = False
 
     if complete_adaptation:
 

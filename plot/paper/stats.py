@@ -121,8 +121,8 @@ def compute_complete_adaptation_stats(dir_):
     print("post-fault sem:", post_sem)
     print("post-fault CI:", post_ci)
 
-    print("t:", round(t, 2))
-    print("p:", round(p, 2))
+    print("t:", round(t, 3))
+    print("p:", round(p, 3))
 
     # accept/reject null
     if not reject_null:
@@ -220,8 +220,8 @@ def compute_complete_adaptation_setting_comparison_stats():
                 print("a setting: {}, {}".format(a_rn, a_cs))
                 print("b setting: {}, {}".format(b_rn, b_cs))
 
-                print("t:", round(t, 2))
-                print("p:", round(p, 2))
+                print("t:", round(t, 3))
+                print("p:", round(p, 3))
 
                 # accept/reject null
                 if not reject_null:

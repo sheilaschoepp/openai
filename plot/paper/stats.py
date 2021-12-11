@@ -64,6 +64,7 @@ def compute_complete_adaptation_stats(dir_):
     # H1: pre_mean > post_mean
 
     t, p = ttest_ind(pre, post, equal_var=False, alternative="greater")
+    p = p / 2  # one-tailed test
 
     reject_null = None
 
@@ -121,7 +122,7 @@ def compute_complete_adaptation_stats(dir_):
     print("post-fault CI:", post_ci)
 
     print("t:", round(t, 2))
-    print("p:", p)
+    print("p:", round(p, 2))
 
     # accept/reject null
     if not reject_null:
@@ -219,8 +220,8 @@ def compute_complete_adaptation_setting_comparison_stats():
                 print("a setting: {}, {}".format(a_rn, a_cs))
                 print("b setting: {}, {}".format(b_rn, b_cs))
 
-                print("t:", t)
-                print("p:", p)
+                print("t:", round(t, 2))
+                print("p:", round(p, 2))
 
                 # accept/reject null
                 if not reject_null:

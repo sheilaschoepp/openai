@@ -390,10 +390,10 @@ def compute_earliest_adaptation_stats(dir_):
                             real_time_per_eval = (first + second + third) / 3  # seconds
                         elif rn and not cs:
                             init = 2
-                            first = 0 - init
-                            second = 0 - init - first
-                            third = 0 - init - first - second
-                            real_time_per_eval = (first + second + third) / 3  # seconds TODO
+                            first = (29 * 60 + 39) - init
+                            second = (58 * 60 + 59) - init - first
+                            third = (87 * 60 + 55) - init - first - second
+                            real_time_per_eval = (first + second + third) / 3  # seconds
                 elif env == "AntEnv-v2":
                     if algo.startswith("SAC"):
                         if rn and cs:

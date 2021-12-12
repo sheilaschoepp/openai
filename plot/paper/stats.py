@@ -338,6 +338,32 @@ def compute_earliest_adaptation_stats(dir_):
             else:
                 post_ci = [round(i, 3) for i in post_ci]
 
+            # mean
+
+            pre_mean = np.mean(pre)
+            if env.startswith("AntEnv"):
+                pre_mean = round(pre_mean)
+            else:
+                pre_mean = round(pre_mean, 3)
+
+            pre_sem = sem(pre)
+            if env.startswith("AntEnv"):
+                pre_sem = round(pre_sem)
+            else:
+                pre_sem = round(pre_sem, 3)
+
+            post_mean = np.mean(post)
+            if env.startswith("AntEnv"):
+                post_mean = round(post_mean)
+            else:
+                post_mean = round(post_mean, 3)
+
+            post_sem = sem(post)
+            if env.startswith("AntEnv"):
+                post_sem = round(post_sem)
+            else:
+                post_sem = round(post_sem, 3)
+
             # interval (time steps)
 
             interval_min = (postfault_min - 1) * tef
@@ -350,20 +376,20 @@ def compute_earliest_adaptation_stats(dir_):
                 if env == "AntEnv-v1":
                     if algo.startswith("SAC"):
                         if rn and cs:
-                            init = 0  # TODO
+                            init = 24
                             first = (14 * 60 + 26) - init
                             second = (28 * 60 + 41) - init - first
                             third = (42 * 60 + 58) - init - first - second
                             real_time_per_eval = (first + second + third) / 3  # average (seconds)
                     else:
                         if rn and cs:
-                            init = 0
-                            first = 0 - init
-                            second = 0 - init - first
-                            third = 0 - init - first - second
-                            real_time_per_eval = (first + second + third) / 3  # seconds TODO
+                            init = 2
+                            first = (30 * 60 + 4) - init
+                            second = (59 * 60 + 53) - init - first
+                            third = (89 * 60 + 31) - init - first - second
+                            real_time_per_eval = (first + second + third) / 3  # seconds
                         elif rn and not cs:
-                            init = 0
+                            init = 2
                             first = 0 - init
                             second = 0 - init - first
                             third = 0 - init - first - second
@@ -373,9 +399,9 @@ def compute_earliest_adaptation_stats(dir_):
                         if rn and cs:
                             init = 21
                             first = (14 * 60 + 16) - init
-                            second = 0 - init - first
-                            third = 0 - init - first - second
-                            real_time_per_eval = (first + second + third) / 3  # seconds TODO
+                            second = (28 * 60 + 26) - init - first
+                            third = (42 * 60 + 34) - init - first - second
+                            real_time_per_eval = (first + second + third) / 3  # seconds
                     else:
                         real_time_per_eval = 0  # seconds
                 elif env == "AntEnv-v3":
@@ -414,6 +440,7 @@ def compute_earliest_adaptation_stats(dir_):
             num_intervals = (interval_max - nt) / tef
             real_time = real_time_per_eval * (interval_max - nt) / tef
             real_time = real_time / (60 * 60)  # hours
+            real_time = round(real_time, 2)
 
             if rn:
                 rn = "discard networks"
@@ -427,7 +454,13 @@ def compute_earliest_adaptation_stats(dir_):
 
             print("setting: {}, {}".format(rn, cs))
 
+            # stats
+            print("pre-fault mean:", pre_mean)
+            print("pre-fault sem:", pre_sem)
             print("pre-fault CI:", pre_ci)
+
+            print("post-fault mean:", post_mean)
+            print("post-fault sem:", post_sem)
             print("post-fault CI:", post_ci)
 
             print("t:", round(t, 3))
@@ -484,7 +517,6 @@ if __name__ == "__main__":
     confidence_level = 0.95
     alpha = 0.05
 
-    # todo: select what to run
     complete_adaptation = False
     earliest_adaptation = True
 

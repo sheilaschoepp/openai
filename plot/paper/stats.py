@@ -387,13 +387,13 @@ def compute_earliest_adaptation_stats(dir_):
                             first = (30 * 60 + 4) - init
                             second = (59 * 60 + 53) - init - first
                             third = (89 * 60 + 31) - init - first - second
-                            real_time_per_eval = (first + second + third) / 3  # seconds
+                            real_time_per_eval = (first + second + third) / 3  # average (seconds)
                         elif rn and not cs:
                             init = 2
                             first = (29 * 60 + 39) - init
                             second = (58 * 60 + 59) - init - first
                             third = (87 * 60 + 55) - init - first - second
-                            real_time_per_eval = (first + second + third) / 3  # seconds
+                            real_time_per_eval = (first + second + third) / 3  # average (seconds)
                 elif env == "AntEnv-v2":
                     if algo.startswith("SAC"):
                         if rn and cs:
@@ -401,43 +401,42 @@ def compute_earliest_adaptation_stats(dir_):
                             first = (14 * 60 + 16) - init
                             second = (28 * 60 + 26) - init - first
                             third = (42 * 60 + 34) - init - first - second
-                            real_time_per_eval = (first + second + third) / 3  # seconds
+                            real_time_per_eval = (first + second + third) / 3  # average (seconds)
                     else:
-                        real_time_per_eval = 0  # seconds
+                        real_time_per_eval = 0
                 elif env == "AntEnv-v3":
                     if algo.startswith("SAC"):
-                        real_time_per_eval = 0  # seconds
+                        real_time_per_eval = 0
                     else:
-                        real_time_per_eval = 0  # seconds
+                        real_time_per_eval = 0
                 elif env == "AntEnv-v4":
                     if algo.startswith("SAC"):
-                        real_time_per_eval = 0  # seconds
+                        real_time_per_eval = 0
                     else:
                         if rn and cs:
                             init = 0
                             first = 0 - init
                             second = 0 - init - first
                             third = 0 - init - first - second
-                            real_time_per_eval = (first + second + third) / 3  # seconds TODO
+                            real_time_per_eval = (first + second + third) / 3  # average (seconds) TODO
                         elif rn and not cs:
                             init = 0
                             first = 0 - init
                             second = 0 - init - first
                             third = 0 - init - first - second
-                            real_time_per_eval = (first + second + third) / 3  # seconds TODO
+                            real_time_per_eval = (first + second + third) / 3  # average (seconds) TODO
             else:
                 if env == "FetchReachEnv-v4":
                     if algo.startswith("SAC"):
-                        real_time_per_eval = 0  # seconds
+                        real_time_per_eval = 0
                     else:
-                        real_time_per_eval = 0  # seconds
+                        real_time_per_eval = 0
                 elif env == "FetchReachEnv-v6":
                     if algo.startswith("SAC"):
-                        real_time_per_eval = 0  # seconds
+                        real_time_per_eval = 0
                     else:
-                        real_time_per_eval = 0  # seconds
+                        real_time_per_eval = 0
 
-            num_intervals = (interval_max - nt) / tef
             real_time = real_time_per_eval * (interval_max - nt) / tef
             real_time = real_time / (60 * 60)  # hours
             real_time = round(real_time, 2)

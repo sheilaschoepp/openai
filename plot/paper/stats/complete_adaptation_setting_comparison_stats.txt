@@ -1,0 +1,525 @@
+----------------------------------------------------------
+
+complete adaptation (convergence) setting comparison stats
+
+note: This compares the final 10 evaluations after fault
+onset across all setting pairs.
+
+----------------------------------------------------------
+
+------------------------
+
+algo: SACv2
+env: AntEnv-v1 
+
+------------------------
+
+a setting: retain networks, retain storage
+b setting: retain networks, discard storage
+t: 9.121
+p: 0.0
+reject null ---> (a_mean != b_mean)
+
+a setting: retain networks, retain storage
+b setting: discard networks, retain storage
+t: -1.479
+p: 0.14
+accept null ---> (a_mean = b_mean)
+
+a setting: retain networks, retain storage
+b setting: discard networks, discard storage
+t: -21.356
+p: 0.0
+reject null ---> (a_mean != b_mean)
+
+a setting: retain networks, discard storage
+b setting: discard networks, retain storage
+t: -9.446
+p: 0.0
+reject null ---> (a_mean != b_mean)
+
+a setting: retain networks, discard storage
+b setting: discard networks, discard storage
+t: -33.764
+p: 0.0
+reject null ---> (a_mean != b_mean)
+
+a setting: discard networks, retain storage
+b setting: discard networks, discard storage
+t: -16.133
+p: 0.0
+reject null ---> (a_mean != b_mean)
+
+------------------------
+
+algo: SACv2
+env: AntEnv-v3 
+
+------------------------
+
+a setting: retain networks, retain storage
+b setting: retain networks, discard storage
+t: 2.691
+p: 0.007
+reject null ---> (a_mean != b_mean)
+
+a setting: retain networks, retain storage
+b setting: discard networks, retain storage
+t: 3.748
+p: 0.0
+reject null ---> (a_mean != b_mean)
+
+a setting: retain networks, retain storage
+b setting: discard networks, discard storage
+t: -6.157
+p: 0.0
+reject null ---> (a_mean != b_mean)
+
+a setting: retain networks, discard storage
+b setting: discard networks, retain storage
+t: 1.471
+p: 0.142
+accept null ---> (a_mean = b_mean)
+
+a setting: retain networks, discard storage
+b setting: discard networks, discard storage
+t: -8.889
+p: 0.0
+reject null ---> (a_mean != b_mean)
+
+a setting: discard networks, retain storage
+b setting: discard networks, discard storage
+t: -9.094
+p: 0.0
+reject null ---> (a_mean != b_mean)
+
+------------------------
+
+algo: SACv2
+env: AntEnv-v4 
+
+------------------------
+
+a setting: retain networks, retain storage
+b setting: retain networks, discard storage
+t: 2.65
+p: 0.008
+reject null ---> (a_mean != b_mean)
+
+a setting: retain networks, retain storage
+b setting: discard networks, retain storage
+t: -3.762
+p: 0.0
+reject null ---> (a_mean != b_mean)
+
+a setting: retain networks, retain storage
+b setting: discard networks, discard storage
+t: -6.018
+p: 0.0
+reject null ---> (a_mean != b_mean)
+
+a setting: retain networks, discard storage
+b setting: discard networks, retain storage
+t: -5.994
+p: 0.0
+reject null ---> (a_mean != b_mean)
+
+a setting: retain networks, discard storage
+b setting: discard networks, discard storage
+t: -8.141
+p: 0.0
+reject null ---> (a_mean != b_mean)
+
+a setting: discard networks, retain storage
+b setting: discard networks, discard storage
+t: -2.137
+p: 0.033
+reject null ---> (a_mean != b_mean)
+
+------------------------
+
+algo: SACv2
+env: AntEnv-v2 
+
+------------------------
+
+a setting: retain networks, retain storage
+b setting: retain networks, discard storage
+t: -0.998
+p: 0.318
+accept null ---> (a_mean = b_mean)
+
+a setting: retain networks, retain storage
+b setting: discard networks, retain storage
+t: 1.983
+p: 0.048
+reject null ---> (a_mean != b_mean)
+
+a setting: retain networks, retain storage
+b setting: discard networks, discard storage
+t: -10.397
+p: 0.0
+reject null ---> (a_mean != b_mean)
+
+a setting: retain networks, discard storage
+b setting: discard networks, retain storage
+t: 2.918
+p: 0.004
+reject null ---> (a_mean != b_mean)
+
+a setting: retain networks, discard storage
+b setting: discard networks, discard storage
+t: -9.442
+p: 0.0
+reject null ---> (a_mean != b_mean)
+
+a setting: discard networks, retain storage
+b setting: discard networks, discard storage
+t: -11.563
+p: 0.0
+reject null ---> (a_mean != b_mean)
+
+------------------------
+
+algo: SACv2
+env: FetchReachEnv-v4 
+
+------------------------
+
+a setting: retain networks, retain storage
+b setting: retain networks, discard storage
+t: 0.637
+p: 0.524
+accept null ---> (a_mean = b_mean)
+
+a setting: retain networks, retain storage
+b setting: discard networks, retain storage
+t: -9.183
+p: 0.0
+reject null ---> (a_mean != b_mean)
+
+a setting: retain networks, retain storage
+b setting: discard networks, discard storage
+t: -8.801
+p: 0.0
+reject null ---> (a_mean != b_mean)
+
+a setting: retain networks, discard storage
+b setting: discard networks, retain storage
+t: -8.25
+p: 0.0
+reject null ---> (a_mean != b_mean)
+
+a setting: retain networks, discard storage
+b setting: discard networks, discard storage
+t: -7.931
+p: 0.0
+reject null ---> (a_mean != b_mean)
+
+a setting: discard networks, retain storage
+b setting: discard networks, discard storage
+t: 0.48
+p: 0.631
+accept null ---> (a_mean = b_mean)
+
+------------------------
+
+algo: SACv2
+env: FetchReachEnv-v6 
+
+------------------------
+
+a setting: retain networks, retain storage
+b setting: retain networks, discard storage
+t: 0.278
+p: 0.781
+accept null ---> (a_mean = b_mean)
+
+a setting: retain networks, retain storage
+b setting: discard networks, retain storage
+t: 0.205
+p: 0.838
+accept null ---> (a_mean = b_mean)
+
+a setting: retain networks, retain storage
+b setting: discard networks, discard storage
+t: 1.717
+p: 0.086
+accept null ---> (a_mean = b_mean)
+
+a setting: retain networks, discard storage
+b setting: discard networks, retain storage
+t: -0.074
+p: 0.941
+accept null ---> (a_mean = b_mean)
+
+a setting: retain networks, discard storage
+b setting: discard networks, discard storage
+t: 1.328
+p: 0.185
+accept null ---> (a_mean = b_mean)
+
+a setting: discard networks, retain storage
+b setting: discard networks, discard storage
+t: 1.434
+p: 0.152
+accept null ---> (a_mean = b_mean)
+
+------------------------
+
+algo: PPOv2
+env: AntEnv-v1 
+
+------------------------
+
+a setting: retain networks, retain storage
+b setting: retain networks, discard storage
+t: -1.001
+p: 0.317
+accept null ---> (a_mean = b_mean)
+
+a setting: retain networks, retain storage
+b setting: discard networks, retain storage
+t: -18.424
+p: 0.0
+reject null ---> (a_mean != b_mean)
+
+a setting: retain networks, retain storage
+b setting: discard networks, discard storage
+t: -19.084
+p: 0.0
+reject null ---> (a_mean != b_mean)
+
+a setting: retain networks, discard storage
+b setting: discard networks, retain storage
+t: -16.227
+p: 0.0
+reject null ---> (a_mean != b_mean)
+
+a setting: retain networks, discard storage
+b setting: discard networks, discard storage
+t: -16.791
+p: 0.0
+reject null ---> (a_mean != b_mean)
+
+a setting: discard networks, retain storage
+b setting: discard networks, discard storage
+t: -0.35
+p: 0.727
+accept null ---> (a_mean = b_mean)
+
+------------------------
+
+algo: PPOv2
+env: AntEnv-v3 
+
+------------------------
+
+a setting: retain networks, retain storage
+b setting: retain networks, discard storage
+t: 0.074
+p: 0.941
+accept null ---> (a_mean = b_mean)
+
+a setting: retain networks, retain storage
+b setting: discard networks, retain storage
+t: 2.529
+p: 0.012
+reject null ---> (a_mean != b_mean)
+
+a setting: retain networks, retain storage
+b setting: discard networks, discard storage
+t: 3.974
+p: 0.0
+reject null ---> (a_mean != b_mean)
+
+a setting: retain networks, discard storage
+b setting: discard networks, retain storage
+t: 2.531
+p: 0.012
+reject null ---> (a_mean != b_mean)
+
+a setting: retain networks, discard storage
+b setting: discard networks, discard storage
+t: 4.011
+p: 0.0
+reject null ---> (a_mean != b_mean)
+
+a setting: discard networks, retain storage
+b setting: discard networks, discard storage
+t: 1.238
+p: 0.216
+accept null ---> (a_mean = b_mean)
+
+------------------------
+
+algo: PPOv2
+env: AntEnv-v4 
+
+------------------------
+
+a setting: retain networks, retain storage
+b setting: retain networks, discard storage
+t: 0.988
+p: 0.324
+accept null ---> (a_mean = b_mean)
+
+a setting: retain networks, retain storage
+b setting: discard networks, retain storage
+t: -22.362
+p: 0.0
+reject null ---> (a_mean != b_mean)
+
+a setting: retain networks, retain storage
+b setting: discard networks, discard storage
+t: -23.218
+p: 0.0
+reject null ---> (a_mean != b_mean)
+
+a setting: retain networks, discard storage
+b setting: discard networks, retain storage
+t: -22.977
+p: 0.0
+reject null ---> (a_mean != b_mean)
+
+a setting: retain networks, discard storage
+b setting: discard networks, discard storage
+t: -23.815
+p: 0.0
+reject null ---> (a_mean != b_mean)
+
+a setting: discard networks, retain storage
+b setting: discard networks, discard storage
+t: -1.148
+p: 0.251
+accept null ---> (a_mean = b_mean)
+
+------------------------
+
+algo: PPOv2
+env: AntEnv-v2 
+
+------------------------
+
+a setting: retain networks, retain storage
+b setting: retain networks, discard storage
+t: 0.322
+p: 0.747
+accept null ---> (a_mean = b_mean)
+
+a setting: retain networks, retain storage
+b setting: discard networks, retain storage
+t: -4.92
+p: 0.0
+reject null ---> (a_mean != b_mean)
+
+a setting: retain networks, retain storage
+b setting: discard networks, discard storage
+t: -6.183
+p: 0.0
+reject null ---> (a_mean != b_mean)
+
+a setting: retain networks, discard storage
+b setting: discard networks, retain storage
+t: -5.336
+p: 0.0
+reject null ---> (a_mean != b_mean)
+
+a setting: retain networks, discard storage
+b setting: discard networks, discard storage
+t: -6.623
+p: 0.0
+reject null ---> (a_mean != b_mean)
+
+a setting: discard networks, retain storage
+b setting: discard networks, discard storage
+t: -1.341
+p: 0.18
+accept null ---> (a_mean = b_mean)
+
+------------------------
+
+algo: PPOv2
+env: FetchReachEnv-v4 
+
+------------------------
+
+a setting: retain networks, retain storage
+b setting: retain networks, discard storage
+t: 2.543
+p: 0.011
+reject null ---> (a_mean != b_mean)
+
+a setting: retain networks, retain storage
+b setting: discard networks, retain storage
+t: -20.059
+p: 0.0
+reject null ---> (a_mean != b_mean)
+
+a setting: retain networks, retain storage
+b setting: discard networks, discard storage
+t: -20.777
+p: 0.0
+reject null ---> (a_mean != b_mean)
+
+a setting: retain networks, discard storage
+b setting: discard networks, retain storage
+t: -21.412
+p: 0.0
+reject null ---> (a_mean != b_mean)
+
+a setting: retain networks, discard storage
+b setting: discard networks, discard storage
+t: -22.047
+p: 0.0
+reject null ---> (a_mean != b_mean)
+
+a setting: discard networks, retain storage
+b setting: discard networks, discard storage
+t: -1.942
+p: 0.053
+accept null ---> (a_mean = b_mean)
+
+------------------------
+
+algo: PPOv2
+env: FetchReachEnv-v6 
+
+------------------------
+
+a setting: retain networks, retain storage
+b setting: retain networks, discard storage
+t: -0.031
+p: 0.975
+accept null ---> (a_mean = b_mean)
+
+a setting: retain networks, retain storage
+b setting: discard networks, retain storage
+t: -0.043
+p: 0.965
+accept null ---> (a_mean = b_mean)
+
+a setting: retain networks, retain storage
+b setting: discard networks, discard storage
+t: -0.023
+p: 0.981
+accept null ---> (a_mean = b_mean)
+
+a setting: retain networks, discard storage
+b setting: discard networks, retain storage
+t: -0.012
+p: 0.99
+accept null ---> (a_mean = b_mean)
+
+a setting: retain networks, discard storage
+b setting: discard networks, discard storage
+t: 0.008
+p: 0.994
+accept null ---> (a_mean = b_mean)
+
+a setting: discard networks, retain storage
+b setting: discard networks, discard storage
+t: 0.02
+p: 0.984
+accept null ---> (a_mean = b_mean)
+

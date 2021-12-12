@@ -68,7 +68,7 @@ def compute_complete_adaptation_stats(dir_):
 
     reject_null = None
 
-    if p/2 < alpha:
+    if p < alpha:
         reject_null = True
     else:
         reject_null = False
@@ -256,10 +256,12 @@ def compute_earliest_adaptation_stats(dir_):
     # experiment info
     info = dir_.split("/")[-1].split("_")
 
-    algo = None
-    env = None
+    algo = None  # algorithm
+    env = None  # environment
     rn = None  # reinitialize networks
     cs = None  # clear storage
+    tef = None  # time step evaluation frequency
+    nt = None  # normal time steps
 
     for entry in info:
         if entry.startswith("SAC") or entry.startswith("PPO"):
@@ -270,6 +272,10 @@ def compute_earliest_adaptation_stats(dir_):
             rn = eval(entry.split(":")[1])
         elif entry.startswith("crb:") or entry.startswith("cm:"):
             cs = eval(entry.split(":")[1])
+        elif entry.startswith("tef:"):
+            tef = int(entry.split(":")[1])
+        elif entry.startswith("Ant-v2") or entry.startswith("FetchReachEnv-v0"):
+            nt = int(entry.split(":")[1])
 
     pre = []
 
@@ -305,10 +311,11 @@ def compute_earliest_adaptation_stats(dir_):
         # H1: pre_mean > post_mean
 
         t, p = ttest_ind(pre, post, equal_var=False, alternative="greater")
+        p = p / 2  # one-tailed test
 
         reject_null = None
 
-        if p / 2 < alpha:
+        if p < alpha:
             reject_null = True
         else:
             reject_null = False
@@ -317,18 +324,6 @@ def compute_earliest_adaptation_stats(dir_):
 
             print("algo:", algo)
             print("env:", env)
-
-            if rn:
-                rn = "discard networks"
-            else:
-                rn = "retain networks"
-
-            if cs:
-                cs = "discard storage"
-            else:
-                cs = "retain storage"
-
-            print("setting: {}, {}".format(rn, cs))
 
             # confidence intervals
 
@@ -343,40 +338,57 @@ def compute_earliest_adaptation_stats(dir_):
             else:
                 post_ci = [round(i, 3) for i in post_ci]
 
-            print("pre-fault CI:", pre_ci)
-            print("post-fault CI:", post_ci)
+            # interval (time steps)
 
-            # accept null
-            print("accept null ---> (pre_mean <= post_mean)")
+            interval_min = (postfault_min - 1) * tef
+            interval_max = (postfault_max - 1) * tef
 
-            # interval (time steps))
+            # real time (hours)
 
-            interval_length = 0
-
-            if algo == "SACv2":
-                if env.startswith("AntEnv"):
-                    interval_length = 100000
-                elif env.startswith("FetchReachEnv"):
-                    interval_length = 10000
-            elif algo == "PPOv2":
-                if env.startswith("AntEnv"):
-                    interval_length = 3000000
-                elif env.startswith("FetchReachEnv"):
-                    interval_length = 30000
+            real_time_per_eval = None
+            if env.startswith("AntEnv"):
+                if env == "AntEnv-v1":
+                    if algo.startswith("SAC"):
+                        if rn and cs:
+                            real_time_per_eval = 0  # seconds TODO
+                    else:
+                        if rn and cs:
+                            real_time_per_eval = 0  # seconds TODO
+                        elif rn and not cs:
+                            real_time_per_eval = 0  # seconds TODO
+                elif env == "AntEnv-v2":
+                    if algo.startswith("SAC"):
+                        if rn and cs:
+                            real_time_per_eval = 0  # seconds TODO
+                    else:
+                        real_time_per_eval = 0  # seconds
+                elif env == "AntEnv-v3":
+                    if algo.startswith("SAC"):
+                        real_time_per_eval = 0  # seconds
+                    else:
+                        real_time_per_eval = 0  # seconds
+                elif env == "AntEnv-v4":
+                    if algo.startswith("SAC"):
+                        real_time_per_eval = 0  # seconds
+                    else:
+                        if rn and cs:
+                            real_time_per_eval = 0  # seconds TODO
+                        elif rn and not cs:
+                            real_time_per_eval = 0  # seconds TODO
             else:
-                pass
+                if env == "FetchReachEnv-v4":
+                    if algo.startswith("SAC"):
+                        real_time_per_eval = 0  # seconds
+                    else:
+                        real_time_per_eval = 0  # seconds
+                elif env == "FetchReachEnv-v6":
+                    if algo.startswith("SAC"):
+                        real_time_per_eval = 0  # seconds
+                    else:
+                        real_time_per_eval = 0  # seconds
 
-            interval_min = (postfault_min - 1) * interval_length
-            interval_max = (postfault_max - 1) * interval_length
-            print("interval (time steps): " + str([interval_min, interval_max]) + "\n")
-
-            break
-
-        # reached the end of the data array
-        if postfault_max == 402:
-
-            print("algo:", algo)
-            print("env:", env)
+            real_time = real_time_per_eval * (interval_max - nt)
+            real_time = real_time / (60 * 60)  # hours
 
             if rn:
                 rn = "discard networks"
@@ -388,11 +400,48 @@ def compute_earliest_adaptation_stats(dir_):
             else:
                 cs = "retain storage"
 
-            print("rn:", rn)
-            print("cs:", cs)
+            print("setting: {}, {}".format(rn, cs))
 
-            # reject null
-            print("reject null ---> (pre_mean > post_mean)\n")
+            print("pre-fault CI:", pre_ci)
+            print("post-fault CI:", post_ci)
+
+            print("t:", round(t, 3))
+            print("p:", round(p, 3))
+
+            # accept null
+            print("accept null ---> (pre_mean <= post_mean)")
+
+            # interval
+            print("interval (time steps): " + str([interval_min, interval_max]))
+
+            # real time
+            print("real time to reach interval max (hours):", real_time, "\n")
+
+            break
+
+        # reached the end of the data array
+        if postfault_max == 402:
+
+            # print("algo:", algo)
+            # print("env:", env)
+            #
+            # if rn:
+            #     rn = "discard networks"
+            # else:
+            #     rn = "retain networks"
+            #
+            # if cs:
+            #     cs = "discard storage"
+            # else:
+            #     cs = "retain storage"
+            #
+            # print("rn:", rn)
+            # print("cs:", cs)
+            #
+            # # reject null
+            # print("reject null ---> (pre_mean > post_mean)\n")
+
+            pass
 
 
 if __name__ == "__main__":
@@ -411,8 +460,8 @@ if __name__ == "__main__":
     alpha = 0.05
 
     # todo: select what to run
-    complete_adaptation = True
-    earliest_adaptation = False
+    complete_adaptation = False
+    earliest_adaptation = True
 
     if complete_adaptation:
 

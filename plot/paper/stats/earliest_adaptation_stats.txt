@@ -11,39 +11,67 @@ is accepted
 
 algo: SACv2
 env: AntEnv-v1
-rn: retain networks
-cs: discard storage
-reject null ---> (pre_mean > post_mean)
-
-algo: SACv2
-env: AntEnv-v1
-rn: discard networks
-cs: retain storage
-reject null ---> (pre_mean > post_mean)
-
-algo: SACv2
-env: AntEnv-v1
 setting: discard networks, discard storage
 pre-fault CI: [5971, 6369]
 post-fault CI: [5925, 6135]
+t: 1.221
+p: 0.056
 accept null ---> (pre_mean <= post_mean)
 interval (time steps): [25300000, 26300000]
+real time to reach interval max (hours): 0.0 
 
 algo: SACv2
+env: AntEnv-v2
+setting: discard networks, discard storage
+pre-fault CI: [5971, 6369]
+post-fault CI: [5915, 6157]
+t: 1.132
+p: 0.065
+accept null ---> (pre_mean <= post_mean)
+interval (time steps): [27800000, 28800000]
+real time to reach interval max (hours): 0.0 
+
+algo: PPOv2
 env: AntEnv-v1
-rn: retain networks
-cs: retain storage
-reject null ---> (pre_mean > post_mean)
+setting: discard networks, discard storage
+pre-fault CI: [6555, 6639]
+post-fault CI: [6522, 6605]
+t: 1.116
+p: 0.066
+accept null ---> (pre_mean <= post_mean)
+interval (time steps): [801000000, 831000000]
+real time to reach interval max (hours): 0.0 
 
-algo: SACv2
-env: AntEnv-v3
-rn: discard networks
-cs: retain storage
-reject null ---> (pre_mean > post_mean)
+algo: PPOv2
+env: AntEnv-v1
+setting: discard networks, retain storage
+pre-fault CI: [6555, 6639]
+post-fault CI: [6535, 6611]
+t: 0.828
+p: 0.102
+accept null ---> (pre_mean <= post_mean)
+interval (time steps): [792000000, 822000000]
+real time to reach interval max (hours): 0.0 
 
-algo: SACv2
-env: AntEnv-v3
-rn: discard networks
-cs: discard storage
-reject null ---> (pre_mean > post_mean)
+algo: PPOv2
+env: AntEnv-v4
+setting: discard networks, discard storage
+pre-fault CI: [6555, 6639]
+post-fault CI: [6502, 6607]
+t: 1.236
+p: 0.054
+accept null ---> (pre_mean <= post_mean)
+interval (time steps): [942000000, 972000000]
+real time to reach interval max (hours): 0.0 
+
+algo: PPOv2
+env: AntEnv-v4
+setting: discard networks, retain storage
+pre-fault CI: [6555, 6639]
+post-fault CI: [6503, 6619]
+t: 0.992
+p: 0.08
+accept null ---> (pre_mean <= post_mean)
+interval (time steps): [1014000000, 1044000000]
+real time to reach interval max (hours): 0.0 
 

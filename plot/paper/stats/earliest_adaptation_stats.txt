@@ -97,5 +97,5 @@ t: 0.992
 p: 0.08
 accept null ---> (pre_mean <= post_mean)
 interval (time steps): [1014000000, 1044000000]
-real time to reach interval max (hours): 0.0 
+real time to reach interval max (hours): 74.36 
 

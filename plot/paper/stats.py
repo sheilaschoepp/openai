@@ -421,10 +421,10 @@ def compute_earliest_adaptation_stats(dir_):
                             real_time_per_eval = (first + second + third) / 3  # average (seconds)
                         elif rn and not cs:
                             init = 1
-                            first = 0 - init
-                            second = 0 - init - first
-                            third = 0 - init - first - second
-                            real_time_per_eval = (first + second + third) / 3  # average (seconds) TODO
+                            first = (30 * 60 + 16) - init
+                            second = (60 * 60 + 27) - init - first
+                            third = (90 * 60 + 27) - init - first - second
+                            real_time_per_eval = (first + second + third) / 3  # average (seconds)
             else:
                 if env == "FetchReachEnv-v4":
                     if algo.startswith("SAC"):

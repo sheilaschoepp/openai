@@ -414,13 +414,13 @@ def compute_earliest_adaptation_stats(dir_):
                         real_time_per_eval = 0
                     else:
                         if rn and cs:
-                            init = 0
-                            first = 0 - init
-                            second = 0 - init - first
-                            third = 0 - init - first - second
-                            real_time_per_eval = (first + second + third) / 3  # average (seconds) TODO
+                            init = 1
+                            first = (30 * 60 + 6) - init
+                            second = (60 * 60 + 16) - init - first
+                            third = (90 * 60 + 9) - init - first - second
+                            real_time_per_eval = (first + second + third) / 3  # average (seconds)
                         elif rn and not cs:
-                            init = 0
+                            init = 1
                             first = 0 - init
                             second = 0 - init - first
                             third = 0 - init - first - second

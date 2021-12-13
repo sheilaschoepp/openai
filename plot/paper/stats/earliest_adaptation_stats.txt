@@ -67,7 +67,7 @@ t: 0.828
 p: 0.102
 accept null ---> (pre_mean <= post_mean)
 interval (time steps): [792000000, 822000000]
-real time to reach interval max (hours): -0.01 
+real time to reach interval max (hours): 36.13 
 
 algo: PPOv2
 env: AntEnv-v4
@@ -82,7 +82,7 @@ t: 1.236
 p: 0.054
 accept null ---> (pre_mean <= post_mean)
 interval (time steps): [942000000, 972000000]
-real time to reach interval max (hours): 0.0 
+real time to reach interval max (hours): 62.09 
 
 algo: PPOv2
 env: AntEnv-v4

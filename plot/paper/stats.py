@@ -542,14 +542,25 @@ def compute_performance_drop_stats(dir_):
         diff = post[i] - pre[i]
         drops.append(diff)
 
-    drop_mean = np.mean(drops)
-    drop_sem = sem(drops)
+    performance_drop_data.append([algo, env, rn, cs, drops])
 
     drop_ci = st.t.interval(alpha=confidence_level, df=len(pre) - 1, loc=np.mean(drops), scale=st.sem(drops))
     if env.startswith("AntEnv"):
         drop_ci = [round(i) for i in drop_ci]
     else:
         drop_ci = [round(i, 3) for i in drop_ci]
+
+    drop_mean = np.mean(drops)
+    if env.startswith("AntEnv"):
+        drop_mean = round(drop_mean)
+    else:
+        drop_mean = round(drop_mean, 3)
+
+    drop_sem = sem(drops)
+    if env.startswith("AntEnv"):
+        drop_sem = round(drop_sem)
+    else:
+        drop_sem = round(drop_sem, 3)
 
     if rn:
         rn = "discard networks"
@@ -569,6 +580,126 @@ def compute_performance_drop_stats(dir_):
     print("drop mean:", drop_mean)
     print("drop sem:", drop_sem)
     print("drop CI:", drop_ci, "\n")
+
+
+def compute_performance_drop_comparison_stats():
+
+    # create a list of algorithms and environments
+    algorithms = []
+    envs = []
+
+    for entry in performance_drop_data:
+        algo = entry[0]
+        env = entry[1]
+        if algo not in algorithms:
+            algorithms.append(algo)
+        if env not in envs:
+            envs.append(env)
+
+    # compare settings
+    for algo in algorithms:
+        for env in envs:
+
+            # obtain data for all settings for a specific algorithm and environment
+
+            algo_ = None
+            env_ = None
+
+            setting_data = []
+
+            for entry in performance_drop_data:
+                algo_ = entry[0]
+                env_ = entry[1]
+                if algo == algo_ and env == env_:
+                    rn = entry[2]
+                    cs = entry[3]
+                    data = entry[4]
+                    setting_data.append([rn, cs, data])
+
+            assert(len(setting_data) == 4)  # check
+
+            setting_data.sort()
+
+            print("------------------------\n")
+            print("algo:", algo)
+            print("env:", env, "\n")
+            print("------------------------\n")
+
+            def compute_t_test(a, b):
+
+                a_rn = a[0]
+                a_cs = a[1]
+                a_data = a[2]
+
+                b_rn = b[0]
+                b_cs = b[1]
+                b_data = b[2]
+
+                # two-tailed Welch’s t-test (do not assume equal variances)
+                # H0: a_mean = b_mean
+                # H1: a_mean != b_mean
+
+                t, p = ttest_ind(a_data, b_data, equal_var=False)
+
+                reject_null = None
+
+                if p < alpha:
+                    reject_null = True
+                else:
+                    reject_null = False
+
+                if a_rn:
+                    a_rn = "discard networks"
+                else:
+                    a_rn = "retain networks"
+
+                if b_rn:
+                    b_rn = "discard networks"
+                else:
+                    b_rn = "retain networks"
+
+                if a_cs:
+                    a_cs = "discard storage"
+                else:
+                    a_cs = "retain storage"
+
+                if b_cs:
+                    b_cs = "discard storage"
+                else:
+                    b_cs = "retain storage"
+
+                print("a setting: {}, {}".format(a_rn, a_cs))
+                print("b setting: {}, {}".format(b_rn, b_cs))
+
+                print("t:", round(t, 3))
+                print("p:", round(p, 3))
+
+                # accept/reject null
+                if not reject_null:
+                    print("accept null ---> (a_mean = b_mean)\n")
+                else:
+                    print("reject null ---> (a_mean != b_mean)\n")
+
+            for i in range(1, 4):
+
+                a_ = setting_data[0]
+                b_ = setting_data[i]
+
+                compute_t_test(a_, b_)
+
+            for i in range(2, 4):
+
+                a_ = setting_data[1]
+                b_ = setting_data[i]
+
+                compute_t_test(a_, b_)
+
+            for i in range(3, 4):
+
+                a_ = setting_data[2]
+                b_ = setting_data[i]
+
+                compute_t_test(a_, b_)
 
 
 if __name__ == "__main__":
@@ -673,6 +804,9 @@ if __name__ == "__main__":
 
     if performance_drop:
 
+        # list of list: entries [algo, env, rn, cs, post]
+        performance_drop_data = []
+
         with open("stats/performance_drop_stats.txt", "w") as f:
 
             sys.stdout = f
@@ -703,3 +837,15 @@ if __name__ == "__main__":
                     for dir3 in os.listdir(dir2):
                         dir3 = os.path.join(dir2, dir3)
                         compute_performance_drop_stats(dir3)
+
+        with open("stats/performance_drop_comparison_stats.txt", "w") as f:
+
+            sys.stdout = f
+
+            print("----------------------------------------------------------\n")
+            print("performance drop comparison stats\n")
+            print("note: This compares the performance drop across all \n"
+                  "post-fault setting pairs.\n")
+            print("----------------------------------------------------------\n")
+
+            compute_performance_drop_comparison_stats()

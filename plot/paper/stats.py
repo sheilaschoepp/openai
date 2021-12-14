@@ -501,6 +501,76 @@ def compute_earliest_adaptation_stats(dir_):
             pass
 
 
+def compute_performance_drop_stats(dir_):
+
+    # experiment info
+    info = dir_.split("/")[-1].split("_")
+
+    algo = None
+    env = None
+    rn = None  # reinitialize networks
+    cs = None  # clear storage
+
+    for entry in info:
+        if entry.startswith("SAC") or entry.startswith("PPO"):
+            algo = entry
+        elif (entry.startswith("AntEnv") or entry.startswith("FetchReach")) and not entry.startswith("FetchReachEnv-v0"):
+            env = entry.split(":")[0]
+        elif entry.startswith("rn:"):
+            rn = eval(entry.split(":")[1])
+        elif entry.startswith("crb:") or entry.startswith("cm:"):
+            cs = eval(entry.split(":")[1])
+
+    pre = []
+    post = []
+
+    for seed in range(0, 30):
+        dir1 = os.path.join(dir_, "seed" + str(seed))
+        if os.path.exists(dir1):
+            eval_data_dir = os.path.join(dir1, "csv", "eval_data.csv")
+            eval_data = pd.read_csv(eval_data_dir)
+            pre.append(eval_data[prefault_min + 0:prefault_max]["average_return"].values.tolist())
+            post.append(eval_data[prefault_max:prefault_max + 10]["average_return"].values.tolist())
+        else:
+            print(colored("missing" + dir1, "red"))
+
+    pre = np.array(pre).flatten()
+    post = np.array(post).flatten()
+
+    drops = []
+    for i in range(len(pre)):
+        diff = post[i] - pre[i]
+        drops.append(diff)
+
+    drop_mean = np.mean(drops)
+    drop_sem = sem(drops)
+
+    drop_ci = st.t.interval(alpha=confidence_level, df=len(pre) - 1, loc=np.mean(drops), scale=st.sem(drops))
+    if env.startswith("AntEnv"):
+        drop_ci = [round(i) for i in drop_ci]
+    else:
+        drop_ci = [round(i, 3) for i in drop_ci]
+
+    if rn:
+        rn = "discard networks"
+    else:
+        rn = "retain networks"
+
+    if cs:
+        cs = "discard storage"
+    else:
+        cs = "retain storage"
+
+    print("algo:", algo)
+    print("env:", env)
+    print("setting: {}, {}".format(rn, cs))
+
+    # stats
+    print("drop mean:", drop_mean)
+    print("drop sem:", drop_sem)
+    print("drop CI:", drop_ci, "\n")
+
+
 if __name__ == "__main__":
 
     data_dir = os.getcwd().split("/")[:-2]
@@ -517,7 +587,8 @@ if __name__ == "__main__":
     alpha = 0.05
 
     complete_adaptation = False
-    earliest_adaptation = True
+    earliest_adaptation = False
+    performance_drop = True
 
     if complete_adaptation:
 
@@ -600,7 +671,35 @@ if __name__ == "__main__":
                         dir3 = os.path.join(dir2, dir3)
                         compute_earliest_adaptation_stats(dir3)
 
+    if performance_drop:
 
+        with open("stats/performance_drop_stats.txt", "w") as f:
 
+            sys.stdout = f
 
+            print("----------------------------------------------------------\n")
+            print("performance drop stats stats\n")
+            print("The drop in performance is measured as the average\n"
+                  "difference between the performance prior to fault onset and\n"
+                  "the lowest post-fault performance over 10 evaluations.\n")
+            print("----------------------------------------------------------\n")
 
+            ant_data_dir = os.path.join(data_dir, "ant", "exps")
+
+            for dir1 in os.listdir(ant_data_dir):
+                dir1 = os.path.join(ant_data_dir, dir1)
+                for dir2 in os.listdir(dir1):
+                    dir2 = os.path.join(dir1, dir2)
+                    for dir3 in os.listdir(dir2):
+                        dir3 = os.path.join(dir2, dir3)
+                        compute_performance_drop_stats(dir3)
+
+            fetchreach_data_dir = os.path.join(data_dir, "fetchreach", "exps")
+
+            for dir1 in os.listdir(fetchreach_data_dir):
+                dir1 = os.path.join(fetchreach_data_dir, dir1)
+                for dir2 in os.listdir(dir1):
+                    dir2 = os.path.join(dir1, dir2)
+                    for dir3 in os.listdir(dir2):
+                        dir3 = os.path.join(dir2, dir3)
+                        compute_performance_drop_stats(dir3)

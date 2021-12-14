@@ -1,0 +1,346 @@
+----------------------------------------------------------
+
+performance drop stats stats
+
+The drop in performance is measured as the average
+difference between the performance prior to fault onset and
+the lowest post-fault performance over 10 evaluations.
+
+----------------------------------------------------------
+
+algo: SACv2
+env: AntEnv-v1
+setting: retain networks, discard storage
+drop mean: -6332.954601609999
+drop sem: 107.59402064982808
+drop CI: [-6545, -6121] 
+
+algo: SACv2
+env: AntEnv-v1
+setting: discard networks, retain storage
+drop mean: -5115.68453992
+drop sem: 158.1044686948634
+drop CI: [-5427, -4805] 
+
+algo: SACv2
+env: AntEnv-v1
+setting: discard networks, discard storage
+drop mean: -3967.19791306
+drop sem: 123.55689656627067
+drop CI: [-4210, -3724] 
+
+algo: SACv2
+env: AntEnv-v1
+setting: retain networks, retain storage
+drop mean: -4987.096171616667
+drop sem: 134.78826462777175
+drop CI: [-5252, -4722] 
+
+algo: SACv2
+env: AntEnv-v3
+setting: discard networks, retain storage
+drop mean: -5711.698825023333
+drop sem: 136.7977149373082
+drop CI: [-5981, -5442] 
+
+algo: SACv2
+env: AntEnv-v3
+setting: discard networks, discard storage
+drop mean: -4340.247238203334
+drop sem: 121.90599408369208
+drop CI: [-4580, -4100] 
+
+algo: SACv2
+env: AntEnv-v3
+setting: retain networks, discard storage
+drop mean: -5436.261592579999
+drop sem: 109.19201716977584
+drop CI: [-5651, -5221] 
+
+algo: SACv2
+env: AntEnv-v3
+setting: retain networks, retain storage
+drop mean: -4589.813315386667
+drop sem: 125.43865721235362
+drop CI: [-4837, -4343] 
+
+algo: SACv2
+env: AntEnv-v4
+setting: discard networks, retain storage
+drop mean: -5028.805779933334
+drop sem: 139.439728547107
+drop CI: [-5303, -4754] 
+
+algo: SACv2
+env: AntEnv-v4
+setting: retain networks, retain storage
+drop mean: -5151.42110752
+drop sem: 122.55947605964845
+drop CI: [-5393, -4910] 
+
+algo: SACv2
+env: AntEnv-v4
+setting: retain networks, discard storage
+drop mean: -5631.929533930001
+drop sem: 121.11592592898141
+drop CI: [-5870, -5394] 
+
+algo: SACv2
+env: AntEnv-v4
+setting: discard networks, discard storage
+drop mean: -4093.693984609999
+drop sem: 125.87948996926988
+drop CI: [-4341, -3846] 
+
+algo: SACv2
+env: AntEnv-v2
+setting: discard networks, retain storage
+drop mean: -5143.625644073333
+drop sem: 183.39973586805036
+drop CI: [-5505, -4783] 
+
+algo: SACv2
+env: AntEnv-v2
+setting: discard networks, discard storage
+drop mean: -3361.6296163366665
+drop sem: 162.26787772250583
+drop CI: [-3681, -3042] 
+
+algo: SACv2
+env: AntEnv-v2
+setting: retain networks, discard storage
+drop mean: -4379.265875063334
+drop sem: 163.24083340456482
+drop CI: [-4701, -4058] 
+
+algo: SACv2
+env: AntEnv-v2
+setting: retain networks, retain storage
+drop mean: -2336.5190612100005
+drop sem: 151.6967211121265
+drop CI: [-2635, -2038] 
+
+algo: PPOv2
+env: AntEnv-v1
+setting: retain networks, retain storage
+drop mean: -1419.1247363866669
+drop sem: 89.59874013085046
+drop CI: [-1595, -1243] 
+
+algo: PPOv2
+env: AntEnv-v1
+setting: discard networks, discard storage
+drop mean: -3242.968643856667
+drop sem: 106.01914775402012
+drop CI: [-3452, -3034] 
+
+algo: PPOv2
+env: AntEnv-v1
+setting: retain networks, discard storage
+drop mean: -1471.42820947
+drop sem: 90.89920837355704
+drop CI: [-1650, -1293] 
+
+algo: PPOv2
+env: AntEnv-v1
+setting: discard networks, retain storage
+drop mean: -3256.510366493333
+drop sem: 105.66876884421504
+drop CI: [-3464, -3049] 
+
+algo: PPOv2
+env: AntEnv-v3
+setting: retain networks, retain storage
+drop mean: -1764.4648610333334
+drop sem: 84.22673243708117
+drop CI: [-1930, -1599] 
+
+algo: PPOv2
+env: AntEnv-v3
+setting: retain networks, discard storage
+drop mean: -1735.2075924366666
+drop sem: 83.5227912550371
+drop CI: [-1900, -1571] 
+
+algo: PPOv2
+env: AntEnv-v3
+setting: discard networks, discard storage
+drop mean: -3543.3277929633327
+drop sem: 92.36258937973584
+drop CI: [-3725, -3362] 
+
+algo: PPOv2
+env: AntEnv-v3
+setting: discard networks, retain storage
+drop mean: -3582.220121723333
+drop sem: 91.36231913931728
+drop CI: [-3762, -3402] 
+
+algo: PPOv2
+env: AntEnv-v4
+setting: retain networks, retain storage
+drop mean: -2010.7429590299996
+drop sem: 83.1083392719376
+drop CI: [-2174, -1847] 
+
+algo: PPOv2
+env: AntEnv-v4
+setting: discard networks, discard storage
+drop mean: -3102.65519856
+drop sem: 105.15793462087427
+drop CI: [-3310, -2896] 
+
+algo: PPOv2
+env: AntEnv-v4
+setting: discard networks, retain storage
+drop mean: -3088.96793627
+drop sem: 106.27867233010917
+drop CI: [-3298, -2880] 
+
+algo: PPOv2
+env: AntEnv-v4
+setting: retain networks, discard storage
+drop mean: -1982.956307206667
+drop sem: 81.0267466477707
+drop CI: [-2142, -1824] 
+
+algo: PPOv2
+env: AntEnv-v2
+setting: retain networks, retain storage
+drop mean: -1300.22809817
+drop sem: 82.10014036116154
+drop CI: [-1462, -1139] 
+
+algo: PPOv2
+env: AntEnv-v2
+setting: retain networks, discard storage
+drop mean: -1292.45847379
+drop sem: 82.64648331584765
+drop CI: [-1455, -1130] 
+
+algo: PPOv2
+env: AntEnv-v2
+setting: discard networks, retain storage
+drop mean: -2653.6680537833336
+drop sem: 113.95851226497832
+drop CI: [-2878, -2429] 
+
+algo: PPOv2
+env: AntEnv-v2
+setting: discard networks, discard storage
+drop mean: -2638.29951367
+drop sem: 114.28180104916827
+drop CI: [-2863, -2413] 
+
+algo: SACv2
+env: FetchReachEnv-v4
+setting: retain networks, discard storage
+drop mean: -5.88891686
+drop sem: 0.43765220555627193
+drop CI: [-6.75, -5.028] 
+
+algo: SACv2
+env: FetchReachEnv-v4
+setting: discard networks, discard storage
+drop mean: -2.5412266666666663
+drop sem: 0.16239854351893118
+drop CI: [-2.861, -2.222] 
+
+algo: SACv2
+env: FetchReachEnv-v4
+setting: discard networks, retain storage
+drop mean: -2.467091046666667
+drop sem: 0.16224800359889277
+drop CI: [-2.786, -2.148] 
+
+algo: SACv2
+env: FetchReachEnv-v4
+setting: retain networks, retain storage
+drop mean: -5.938766316666666
+drop sem: 0.4282293541699829
+drop CI: [-6.781, -5.096] 
+
+algo: SACv2
+env: FetchReachEnv-v6
+setting: retain networks, discard storage
+drop mean: -0.3554280966666666
+drop sem: 0.01923330307302294
+drop CI: [-0.393, -0.318] 
+
+algo: SACv2
+env: FetchReachEnv-v6
+setting: retain networks, retain storage
+drop mean: -0.36531815333333334
+drop sem: 0.0192850793955554
+drop CI: [-0.403, -0.327] 
+
+algo: SACv2
+env: FetchReachEnv-v6
+setting: discard networks, retain storage
+drop mean: -2.9842688366666668
+drop sem: 0.36372408295387165
+drop CI: [-3.7, -2.268] 
+
+algo: SACv2
+env: FetchReachEnv-v6
+setting: discard networks, discard storage
+drop mean: -2.9806728133333333
+drop sem: 0.3624839722249057
+drop CI: [-3.694, -2.267] 
+
+algo: PPOv2
+env: FetchReachEnv-v4
+setting: retain networks, retain storage
+drop mean: -15.146827253333335
+drop sem: 0.22415711428451837
+drop CI: [-15.588, -14.706] 
+
+algo: PPOv2
+env: FetchReachEnv-v4
+setting: discard networks, retain storage
+drop mean: -4.319630900000001
+drop sem: 0.3671694263571279
+drop CI: [-5.042, -3.597] 
+
+algo: PPOv2
+env: FetchReachEnv-v4
+setting: retain networks, discard storage
+drop mean: -15.245441476666668
+drop sem: 0.20340761727688259
+drop CI: [-15.646, -14.845] 
+
+algo: PPOv2
+env: FetchReachEnv-v4
+setting: discard networks, discard storage
+drop mean: -3.83342991
+drop sem: 0.34521088543188644
+drop CI: [-4.513, -3.154] 
+
+algo: PPOv2
+env: FetchReachEnv-v6
+setting: discard networks, retain storage
+drop mean: -3.8336050700000004
+drop sem: 0.38242567573287856
+drop CI: [-4.586, -3.081] 
+
+algo: PPOv2
+env: FetchReachEnv-v6
+setting: discard networks, discard storage
+drop mean: -3.5810515499999998
+drop sem: 0.3679291572544123
+drop CI: [-4.305, -2.857] 
+
+algo: PPOv2
+env: FetchReachEnv-v6
+setting: retain networks, retain storage
+drop mean: -2.265033926666667
+drop sem: 0.1456846966595302
+drop CI: [-2.552, -1.978] 
+
+algo: PPOv2
+env: FetchReachEnv-v6
+setting: retain networks, discard storage
+drop mean: -2.3164458233333334
+drop sem: 0.14761165824334269
+drop CI: [-2.607, -2.026] 
+

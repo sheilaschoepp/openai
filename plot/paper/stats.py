@@ -702,6 +702,10 @@ def compute_performance_drop_comparison_stats():
                 compute_t_test(a_, b_)
 
 
+def compute_post_fault_performance():
+    pass
+
+
 if __name__ == "__main__":
 
     data_dir = os.getcwd().split("/")[:-2]
@@ -719,7 +723,8 @@ if __name__ == "__main__":
 
     complete_adaptation = False
     earliest_adaptation = False
-    performance_drop = True
+    performance_drop = False
+    plot_performance_drop = True
 
     if complete_adaptation:
 
@@ -849,3 +854,37 @@ if __name__ == "__main__":
             print("----------------------------------------------------------\n")
 
             compute_performance_drop_comparison_stats()
+
+    if plot_performance_drop:
+
+        with open("stats/earliest_adaptation_stats.txt", "w") as f:
+
+            sys.stdout = f
+
+            print("----------------------------------------------------------\n")
+            print("earliest adaptation stats\n")
+            print("note: This compares the 10 evaluations prior to fault onset\n"
+                  "to each set of 10 evaluations after fault onset.  This finds\n"
+                  "the first set of evaluations for which the null hypothesis\n"
+                  "is accepted\n")
+            print("----------------------------------------------------------\n")
+
+            ant_data_dir = os.path.join(data_dir, "ant", "exps")
+
+            for dir1 in os.listdir(ant_data_dir):
+                dir1 = os.path.join(ant_data_dir, dir1)
+                for dir2 in os.listdir(dir1):
+                    dir2 = os.path.join(dir1, dir2)
+                    for dir3 in os.listdir(dir2):
+                        dir3 = os.path.join(dir2, dir3)
+                        compute_earliest_adaptation_stats(dir3)
+
+            fetchreach_data_dir = os.path.join(data_dir, "fetchreach", "exps")
+
+            for dir1 in os.listdir(fetchreach_data_dir):
+                dir1 = os.path.join(fetchreach_data_dir, dir1)
+                for dir2 in os.listdir(dir1):
+                    dir2 = os.path.join(dir1, dir2)
+                    for dir3 in os.listdir(dir2):
+                        dir3 = os.path.join(dir2, dir3)
+                        compute_earliest_adaptation_stats(dir3)

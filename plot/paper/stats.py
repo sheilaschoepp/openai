@@ -131,7 +131,7 @@ def compute_complete_adaptation_stats(dir_):
         print("reject null ---> (pre_mean > post_mean)\n")
 
 
-def compute_complete_adaptation_setting_comparison_stats():
+def compute_complete_adaptation_comparison_stats():
 
     # create a list of algorithms and environments
     algorithms = []
@@ -756,7 +756,7 @@ if __name__ == "__main__":
                         dir3 = os.path.join(dir2, dir3)
                         compute_complete_adaptation_stats(dir3)
 
-        with open("stats/complete_adaptation_setting_comparison_stats.txt", "w") as f:
+        with open("stats/complete_adaptation_comparison_stats.txt", "w") as f:
 
             sys.stdout = f
 
@@ -766,7 +766,7 @@ if __name__ == "__main__":
                   "onset across all setting pairs.\n")
             print("----------------------------------------------------------\n")
 
-            compute_complete_adaptation_setting_comparison_stats()
+            compute_complete_adaptation_comparison_stats()
 
     if earliest_adaptation:
 

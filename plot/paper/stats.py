@@ -747,13 +747,16 @@ def compute_postfault_performance_drop(dir_):
         if os.path.exists(dir1):
             eval_data_dir = os.path.join(dir1, "csv", "eval_data.csv")
             eval_data = pd.read_csv(eval_data_dir)
-            pre.append(eval_data[prefault_min + 0:prefault_max]["average_return"].values.tolist())
-            post.append(eval_data[prefault_max:prefault_max + 10]["average_return"].values.tolist())
+            pre.append(eval_data[prefault_min:prefault_max]["average_return"].values.tolist())
+            post.append(eval_data[postfault_min:postfault_max]["average_return"].values.tolist())
         else:
             print(colored("missing" + dir1, "red"))
 
-    pre = np.mean(np.array(pre).flatten())
-    post = np.mean(np.array(post).flatten())
+    pre = np.array(pre).flatten()
+    post = np.array(post).flatten()
+
+    pre = np.mean(pre)
+    post = np.mean(post)
 
     if env.startswith("Ant"):
         normal_env = "Ant-v2"
@@ -768,7 +771,7 @@ def compute_postfault_performance_drop(dir_):
     postfault_performance_data.append([algo, env, rn, cs, post])
 
 
-def plot_postfault_performance_drop():
+def plot_postfault_performance_drop(interval):
 
     algos = ["PPOv2", "SACv2"]
     envs = ["Ant", "FetchReach"]
@@ -906,12 +909,10 @@ def plot_postfault_performance_drop():
             plot_directory = os.path.join(os.getcwd(), "plots", env.lower(), algo[:-2])
             os.makedirs(plot_directory, exist_ok=True)
 
-            filename = plot_directory + "/performance_drop.jpg"
+            filename = plot_directory + "/performance_drop_{}.jpg".format(interval)
             plt.savefig(filename, dpi=300)
             Image.open(filename).convert("CMYK").save(filename)
-
-            plt.show()
-            print(1)
+            plt.close()
 
 
 if __name__ == "__main__":
@@ -1065,6 +1066,16 @@ if __name__ == "__main__":
 
     if plot_performance_drop:
 
+        # 10 evals
+
+        prefault_min = 191
+        prefault_max = 201
+
+        postfault_min = 201
+        postfault_max = 211
+
+        eval_interval = f"[{postfault_min}:{postfault_max}]"
+
         # dictionary: entries {"algo, env": mean}
         prefault_performance_data = {}
         # list of list: entries [algo, env, rn, cs, mean]
@@ -1091,5 +1102,80 @@ if __name__ == "__main__":
                     compute_postfault_performance_drop(dir3)
 
         postfault_performance_data.sort()
-        plot_postfault_performance_drop()
-        print(10)
+        plot_postfault_performance_drop(eval_interval)
+
+        # no evals
+
+        prefault_min = 191
+        prefault_max = 201
+
+        postfault_min = 201
+        postfault_max = 202
+
+        eval_interval = f"[{postfault_min}:{postfault_max}]"
+
+        # dictionary: entries {"algo, env": mean}
+        prefault_performance_data = {}
+        # list of list: entries [algo, env, rn, cs, mean]
+        postfault_performance_data = []
+
+        ant_data_dir = os.path.join(data_dir, "ant", "exps")
+
+        for dir1 in os.listdir(ant_data_dir):
+            dir1 = os.path.join(ant_data_dir, dir1)
+            for dir2 in os.listdir(dir1):
+                dir2 = os.path.join(dir1, dir2)
+                for dir3 in os.listdir(dir2):
+                    dir3 = os.path.join(dir2, dir3)
+                    compute_postfault_performance_drop(dir3)
+
+        fetchreach_data_dir = os.path.join(data_dir, "fetchreach", "exps")
+
+        for dir1 in os.listdir(fetchreach_data_dir):
+            dir1 = os.path.join(fetchreach_data_dir, dir1)
+            for dir2 in os.listdir(dir1):
+                dir2 = os.path.join(dir1, dir2)
+                for dir3 in os.listdir(dir2):
+                    dir3 = os.path.join(dir2, dir3)
+                    compute_postfault_performance_drop(dir3)
+
+        postfault_performance_data.sort()
+        plot_postfault_performance_drop(eval_interval)
+
+        # one eval
+
+        prefault_min = 191
+        prefault_max = 201
+
+        postfault_min = 202
+        postfault_max = 203
+
+        eval_interval = f"[{postfault_min}:{postfault_max}]"
+
+        # dictionary: entries {"algo, env": mean}
+        prefault_performance_data = {}
+        # list of list: entries [algo, env, rn, cs, mean]
+        postfault_performance_data = []
+
+        ant_data_dir = os.path.join(data_dir, "ant", "exps")
+
+        for dir1 in os.listdir(ant_data_dir):
+            dir1 = os.path.join(ant_data_dir, dir1)
+            for dir2 in os.listdir(dir1):
+                dir2 = os.path.join(dir1, dir2)
+                for dir3 in os.listdir(dir2):
+                    dir3 = os.path.join(dir2, dir3)
+                    compute_postfault_performance_drop(dir3)
+
+        fetchreach_data_dir = os.path.join(data_dir, "fetchreach", "exps")
+
+        for dir1 in os.listdir(fetchreach_data_dir):
+            dir1 = os.path.join(fetchreach_data_dir, dir1)
+            for dir2 in os.listdir(dir1):
+                dir2 = os.path.join(dir1, dir2)
+                for dir3 in os.listdir(dir2):
+                    dir3 = os.path.join(dir2, dir3)
+                    compute_postfault_performance_drop(dir3)
+
+        postfault_performance_data.sort()
+        plot_postfault_performance_drop(eval_interval)

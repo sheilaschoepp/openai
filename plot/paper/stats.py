@@ -786,21 +786,49 @@ def plot_postfault_performance_drop():
             elif rn and cs:
                 rnTcsT = post
             if rnFcsF and rnFcsT and rnTcsF and rnTcsT:
-                data.append([rnFcsF, rnFcsT, rnTcsF, rnTcsT])
+                data.append([env, rnFcsF, rnFcsT, rnTcsF, rnTcsT])
                 rnFcsF = None
                 rnFcsT = None
                 rnTcsF = None
                 rnTcsT = None
 
     # plot
-    x = np.arange(4)
-    fig = plt.figure()
-    ax = fig.add_axes([0, 0, 1, 1])
-    ax.bar(x + 0.00, data[0], color='b', width=0.25)
-    ax.bar(x + 0.25, data[1], color='g', width=0.25)
-    ax.bar(x + 0.50, data[2], color='r', width=0.25)
-    ax.bar(x + 0.75, data[3], color='y', width=0.25)
+    bar_width = 0.2
+    fig = plt.subplots(figsize=(12, 8))
+    labels = []
+    rnFcsFs = []
+    rnFcsTs = []
+    rnTcsFs = []
+    rnTcsTs = []
+    for entry in data:
+        labels.append(entry[0])
+        rnFcsFs.append(entry[1])
+        rnFcsTs.append(entry[2])
+        rnTcsFs.append(entry[3])
+        rnTcsTs.append(entry[4])
+    br1 = np.arange(len(labels))
+    br2 = [x + bar_width for x in br1]
+    br3 = [x + bar_width for x in br2]
+    br4 = [x + bar_width for x in br3]
+
+    plt.bar(br1, rnFcsFs, color="r", width=bar_width, label="retain networks, retain storage")
+    plt.bar(br2, rnFcsTs, color="b", width=bar_width, label="retain networks, discard storage")
+    plt.bar(br3, rnTcsFs, color="g", width=bar_width, label="discard networks, retain storage")
+    plt.bar(br4, rnTcsTs, color="y", width=bar_width, label="discard networks, discard storage")
+    plt.xticks([r + bar_width for r in range(len(labels))],  labels)
+
+    plt.yticks([0, 1000, 2000, 3000, 4000, 5000, 6000, 7000])
+    plt.legend()
     plt.show()
+
+    # x = np.arange(4)
+    # fig = plt.figure()
+    # ax = fig.add_axes([0, 0, 1, 1])
+    # ax.bar(x + bar_width, data[1], color='b', width=bar_width)
+    # ax.bar(x + bar_width, data[2], color='g', width=bar_width)
+    # ax.bar(x + 0.50, data[3], color='r', width=bar_width)
+    # ax.bar(x + 0.75, data[4], color='y', width=bar_width)
+    # plt.show()
 
     print(1)
 

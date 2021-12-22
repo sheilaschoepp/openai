@@ -3,10 +3,26 @@ import numpy as np
 import os
 import pandas as pd
 import scipy.stats as st
+import seaborn as sns
 import sys
 
+from PIL import Image
 from scipy.stats import sem, ttest_ind
 from termcolor import colored
+
+sns.set_theme()
+palette_colours = ["#0173b2", "#027957", "#A63F93", "#000000", "#AD4B00"]
+
+LARGE = 16
+MEDIUM = 14
+
+plt.rc("axes", titlesize=LARGE)     # fontsize of the axes title
+plt.rc("axes", labelsize=LARGE)     # fontsize of the x and y labels
+plt.rc("xtick", labelsize=MEDIUM)   # fontsize of the tick labels
+plt.rc("ytick", labelsize=MEDIUM)   # fontsize of the tick labels
+plt.rcParams['pdf.fonttype'] = 42
+plt.rcParams['ps.fonttype'] = 42
+plt.rcParams["font.family"] = "Times New Roman"
 
 
 def compute_complete_adaptation_stats(dir_):
@@ -754,83 +770,148 @@ def compute_postfault_performance_drop(dir_):
 
 def plot_postfault_performance_drop():
 
+    algos = ["PPOv2", "SACv2"]
+    envs = ["Ant", "FetchReach"]
+
     # dictionary: entries {"algo, env": mean}
     # prefault_performance_data = {}
     # list of list: entries [algo, env, rn, cs, mean]
     # postfault_performance_data = []
 
-    data = []
+    for algo in algos:
+        for env in envs:
 
-    # PPO
-    pre = prefault_performance_data["PPOv2, Ant-v2"]
+            data = []
+            data_ = []
 
-    rnFcsF = None
-    rnFcsT = None
-    rnTcsF = None
-    rnTcsT = None
+            if env == "Ant":
+                pre = prefault_performance_data[algo + ", " + "Ant-v2"]
+            elif env == "FetchReach":
+                pre = prefault_performance_data[algo + ", " + "FetchReach-v1"]
 
-    # AntEnv-v1
-    for entry in postfault_performance_data:
-        algo = entry[0]
-        env = entry[1]
-        if algo.startswith("PPO") and env.startswith("Ant"):
-            rn = entry[2]
-            cs = entry[3]
-            post = entry[4]
-            if not rn and not cs:
-                rnFcsF = post
-            elif not rn and cs:
-                rnFcsT = post
-            elif rn and not cs:
-                rnTcsF = post
-            elif rn and cs:
-                rnTcsT = post
-            if rnFcsF and rnFcsT and rnTcsF and rnTcsT:
-                data.append([env, rnFcsF, rnFcsT, rnTcsF, rnTcsT])
-                rnFcsF = None
-                rnFcsT = None
-                rnTcsF = None
-                rnTcsT = None
+            rnFcsF = None
+            rnFcsT = None
+            rnTcsF = None
+            rnTcsT = None
 
-    # plot
-    bar_width = 0.2
-    fig = plt.subplots(figsize=(12, 8))
-    labels = []
-    rnFcsFs = []
-    rnFcsTs = []
-    rnTcsFs = []
-    rnTcsTs = []
-    for entry in data:
-        labels.append(entry[0])
-        rnFcsFs.append(entry[1])
-        rnFcsTs.append(entry[2])
-        rnTcsFs.append(entry[3])
-        rnTcsTs.append(entry[4])
-    br1 = np.arange(len(labels))
-    br2 = [x + bar_width for x in br1]
-    br3 = [x + bar_width for x in br2]
-    br4 = [x + bar_width for x in br3]
+            for entry in postfault_performance_data:
+                algo_ = entry[0]
+                env_ = entry[1]
+                if algo_.startswith(algo) and env_.startswith(env):
+                    rn = entry[2]
+                    cs = entry[3]
+                    post = entry[4]
+                    if not rn and not cs:
+                        rnFcsF = post
+                    elif not rn and cs:
+                        rnFcsT = post
+                    elif rn and not cs:
+                        rnTcsF = post
+                    elif rn and cs:
+                        rnTcsT = post
+                    if rnFcsF and rnFcsT and rnTcsF and rnTcsT:
+                        data.append([algo_, env_, rnFcsF, rnFcsT, rnTcsF, rnTcsT])
+                        rnFcsF = None
+                        rnFcsT = None
+                        rnTcsF = None
+                        rnTcsT = None
 
-    plt.bar(br1, rnFcsFs, color="r", width=bar_width, label="retain networks, retain storage")
-    plt.bar(br2, rnFcsTs, color="b", width=bar_width, label="retain networks, discard storage")
-    plt.bar(br3, rnTcsFs, color="g", width=bar_width, label="discard networks, retain storage")
-    plt.bar(br4, rnTcsTs, color="y", width=bar_width, label="discard networks, discard storage")
-    plt.xticks([r + bar_width for r in range(len(labels))],  labels)
+            # plot
+            if env == "Ant":
 
-    plt.yticks([0, 1000, 2000, 3000, 4000, 5000, 6000, 7000])
-    plt.legend()
-    plt.show()
+                # reorganize data to ["AntEnv-v2", "AntEnv-v3", "AntEnv-v1", "AntEnv-v4"]
+                data_ = [data[1], data[2], data[0], data[3]]
+                labels = ["hip 4 ROM\nrestriction", "ankle 4 ROM\nrestriction", "broken,\nsevered limb", "broken,\nunsevered limb"]
 
-    # x = np.arange(4)
-    # fig = plt.figure()
-    # ax = fig.add_axes([0, 0, 1, 1])
-    # ax.bar(x + bar_width, data[1], color='b', width=bar_width)
-    # ax.bar(x + bar_width, data[2], color='g', width=bar_width)
-    # ax.bar(x + 0.50, data[3], color='r', width=bar_width)
-    # ax.bar(x + 0.75, data[4], color='y', width=bar_width)
-    # plt.show()
+                # reorganize the data
+                # labels = []
+                rnFcsFs = []
+                rnFcsTs = []
+                rnTcsFs = []
+                rnTcsTs = []
+                for entry in data_:
+                    # labels.append(entry[1])
+                    rnFcsFs.append(entry[2])
+                    rnFcsTs.append(entry[3])
+                    rnTcsFs.append(entry[4])
+                    rnTcsTs.append(entry[5])
 
-    print(1)
+                bar_width = 0.2
+                br1 = np.arange(len(labels))
+                br2 = [x + bar_width for x in br1]
+                br3 = [x + bar_width for x in br2]
+                br4 = [x + bar_width for x in br3]
+
+                plt.bar(br1, np.array(rnFcsFs) - pre, color=palette_colours[1], width=bar_width, bottom=pre)
+                plt.bar(br2, np.array(rnFcsTs) - pre, color=palette_colours[2], width=bar_width, bottom=pre)
+                plt.bar(br3, np.array(rnTcsFs) - pre, color=palette_colours[3], width=bar_width, bottom=pre)
+                plt.bar(br4, np.array(rnTcsTs) - pre, color=palette_colours[4], width=bar_width, bottom=pre)
+
+                plt.axhline(y=pre, color="black", linestyle="dashed", linewidth=1)
+
+                plt.axvline(x=0.3, color="black", ymax=0.025)
+                plt.axvline(x=1.3, color="black", ymax=0.025)
+                plt.axvline(x=2.3, color="black", ymax=0.025)
+                plt.axvline(x=3.3, color="black", ymax=0.025)
+
+                plt.xticks([r + 0.3 for r in range(len(labels))],  labels)
+                plt.yticks([-1000, 0, 1000, 2000, 3000, 4000, 5000, 6000, 7000])
+
+            elif env == "FetchReach":
+
+                data_ = data
+                labels = ["frozen shoulder lift\nposition sensor", "elbow flex\nposition slippage"]
+
+                # reorganize the data
+                # labels = []
+                rnFcsFs = []
+                rnFcsTs = []
+                rnTcsFs = []
+                rnTcsTs = []
+                for entry in data_:
+                    # labels.append(entry[1])
+                    rnFcsFs.append(entry[2])
+                    rnFcsTs.append(entry[3])
+                    rnTcsFs.append(entry[4])
+                    rnTcsTs.append(entry[5])
+
+                bar_width = 0.2
+                br1 = np.arange(len(labels))
+                br2 = [x + bar_width for x in br1]
+                br3 = [x + bar_width for x in br2]
+                br4 = [x + bar_width for x in br3]
+
+                plt.bar(br1, np.array(rnFcsFs) - pre, color=palette_colours[1], width=bar_width, bottom=pre)
+                plt.bar(br2, np.array(rnFcsTs) - pre, color=palette_colours[2], width=bar_width, bottom=pre)
+                plt.bar(br3, np.array(rnTcsFs) - pre, color=palette_colours[3], width=bar_width, bottom=pre)
+                plt.bar(br4, np.array(rnTcsTs) - pre, color=palette_colours[4], width=bar_width, bottom=pre)
+
+                plt.axhline(y=pre, color="black", linestyle="dashed", linewidth=1)
+
+                plt.axvline(x=0.3, color="black", ymax=0.025)
+                plt.axvline(x=1.3, color="black", ymax=0.025)
+
+                plt.xticks([r + 0.3 for r in range(len(labels))], labels)
+                plt.yticks([-16, -14, -12, -10, -8, -6, -4, -2, 0])
+
+            if algo.startswith("PPO"):
+                plt.title("Proximal Policy Optimization (PPO)")
+            elif algo.startswith("SAC"):
+                plt.title("Soft Actor-Critic (SAC)")
+
+            plt.xlabel("fault")
+            plt.ylabel("average drop in performance (30 seeds)")
+            plt.tight_layout()
+
+            plot_directory = os.path.join(os.getcwd(), "plots", env.lower(), algo[:-2])
+            os.makedirs(plot_directory, exist_ok=True)
+
+            filename = plot_directory + "/performance_drop.jpg"
+            plt.savefig(filename, dpi=300)
+            Image.open(filename).convert("CMYK").save(filename)
+
+            plt.show()
+            print(1)
 
 
 if __name__ == "__main__":

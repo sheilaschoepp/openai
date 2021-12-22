@@ -1,3 +1,4 @@
+import matplotlib.pyplot as plt
 import numpy as np
 import os
 import pandas as pd
@@ -702,8 +703,106 @@ def compute_performance_drop_comparison_stats():
                 compute_t_test(a_, b_)
 
 
-def compute_post_fault_performance():
-    pass
+def compute_postfault_performance_drop(dir_):
+
+    # experiment info
+    info = dir_.split("/")[-1].split("_")
+
+    algo = None
+    env = None
+    rn = None  # reinitialize networks
+    cs = None  # clear storage
+
+    for entry in info:
+        if entry.startswith("SAC") or entry.startswith("PPO"):
+            algo = entry
+        elif (entry.startswith("AntEnv") or entry.startswith("FetchReach")) and not entry.startswith("FetchReachEnv-v0"):
+            env = entry.split(":")[0]
+        elif entry.startswith("rn:"):
+            rn = eval(entry.split(":")[1])
+        elif entry.startswith("crb:") or entry.startswith("cm:"):
+            cs = eval(entry.split(":")[1])
+
+    pre = []
+    post = []
+
+    for seed in range(0, 30):
+        dir1 = os.path.join(dir_, "seed" + str(seed))
+        if os.path.exists(dir1):
+            eval_data_dir = os.path.join(dir1, "csv", "eval_data.csv")
+            eval_data = pd.read_csv(eval_data_dir)
+            pre.append(eval_data[prefault_min + 0:prefault_max]["average_return"].values.tolist())
+            post.append(eval_data[prefault_max:prefault_max + 10]["average_return"].values.tolist())
+        else:
+            print(colored("missing" + dir1, "red"))
+
+    pre = np.mean(np.array(pre).flatten())
+    post = np.mean(np.array(post).flatten())
+
+    if env.startswith("Ant"):
+        normal_env = "Ant-v2"
+        pre = round(pre)
+        post = round(post)
+    elif env.startswith("FetchReach"):
+        normal_env = "FetchReach-v1"
+        pre = round(pre, 3)
+        post = round(post, 3)
+
+    prefault_performance_data[algo + ", " + normal_env] = pre
+    postfault_performance_data.append([algo, env, rn, cs, post])
+
+
+def plot_postfault_performance_drop():
+
+    # dictionary: entries {"algo, env": mean}
+    # prefault_performance_data = {}
+    # list of list: entries [algo, env, rn, cs, mean]
+    # postfault_performance_data = []
+
+    data = []
+
+    # PPO
+    pre = prefault_performance_data["PPOv2, Ant-v2"]
+
+    rnFcsF = None
+    rnFcsT = None
+    rnTcsF = None
+    rnTcsT = None
+
+    # AntEnv-v1
+    for entry in postfault_performance_data:
+        algo = entry[0]
+        env = entry[1]
+        if algo.startswith("PPO") and env.startswith("Ant"):
+            rn = entry[2]
+            cs = entry[3]
+            post = entry[4]
+            if not rn and not cs:
+                rnFcsF = post
+            elif not rn and cs:
+                rnFcsT = post
+            elif rn and not cs:
+                rnTcsF = post
+            elif rn and cs:
+                rnTcsT = post
+            if rnFcsF and rnFcsT and rnTcsF and rnTcsT:
+                data.append([rnFcsF, rnFcsT, rnTcsF, rnTcsT])
+                rnFcsF = None
+                rnFcsT = None
+                rnTcsF = None
+                rnTcsT = None
+
+    # plot
+    x = np.arange(4)
+    fig = plt.figure()
+    ax = fig.add_axes([0, 0, 1, 1])
+    ax.bar(x + 0.00, data[0], color='b', width=0.25)
+    ax.bar(x + 0.25, data[1], color='g', width=0.25)
+    ax.bar(x + 0.50, data[2], color='r', width=0.25)
+    ax.bar(x + 0.75, data[3], color='y', width=0.25)
+    plt.show()
+
+    print(1)
 
 
 if __name__ == "__main__":
@@ -857,34 +956,31 @@ if __name__ == "__main__":
 
     if plot_performance_drop:
 
-        with open("stats/earliest_adaptation_stats.txt", "w") as f:
+        # dictionary: entries {"algo, env": mean}
+        prefault_performance_data = {}
+        # list of list: entries [algo, env, rn, cs, mean]
+        postfault_performance_data = []
 
-            sys.stdout = f
+        ant_data_dir = os.path.join(data_dir, "ant", "exps")
 
-            print("----------------------------------------------------------\n")
-            print("earliest adaptation stats\n")
-            print("note: This compares the 10 evaluations prior to fault onset\n"
-                  "to each set of 10 evaluations after fault onset.  This finds\n"
-                  "the first set of evaluations for which the null hypothesis\n"
-                  "is accepted\n")
-            print("----------------------------------------------------------\n")
+        for dir1 in os.listdir(ant_data_dir):
+            dir1 = os.path.join(ant_data_dir, dir1)
+            for dir2 in os.listdir(dir1):
+                dir2 = os.path.join(dir1, dir2)
+                for dir3 in os.listdir(dir2):
+                    dir3 = os.path.join(dir2, dir3)
+                    compute_postfault_performance_drop(dir3)
 
-            ant_data_dir = os.path.join(data_dir, "ant", "exps")
+        fetchreach_data_dir = os.path.join(data_dir, "fetchreach", "exps")
 
-            for dir1 in os.listdir(ant_data_dir):
-                dir1 = os.path.join(ant_data_dir, dir1)
-                for dir2 in os.listdir(dir1):
-                    dir2 = os.path.join(dir1, dir2)
-                    for dir3 in os.listdir(dir2):
-                        dir3 = os.path.join(dir2, dir3)
-                        compute_earliest_adaptation_stats(dir3)
+        for dir1 in os.listdir(fetchreach_data_dir):
+            dir1 = os.path.join(fetchreach_data_dir, dir1)
+            for dir2 in os.listdir(dir1):
+                dir2 = os.path.join(dir1, dir2)
+                for dir3 in os.listdir(dir2):
+                    dir3 = os.path.join(dir2, dir3)
+                    compute_postfault_performance_drop(dir3)
 
-            fetchreach_data_dir = os.path.join(data_dir, "fetchreach", "exps")
-
-            for dir1 in os.listdir(fetchreach_data_dir):
-                dir1 = os.path.join(fetchreach_data_dir, dir1)
-                for dir2 in os.listdir(dir1):
-                    dir2 = os.path.join(dir1, dir2)
-                    for dir3 in os.listdir(dir2):
-                        dir3 = os.path.join(dir2, dir3)
-                        compute_earliest_adaptation_stats(dir3)
+        postfault_performance_data.sort()
+        plot_postfault_performance_drop()
+        print(10)

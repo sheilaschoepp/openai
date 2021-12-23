@@ -755,20 +755,25 @@ def compute_postfault_performance_drop(dir_):
     pre = np.array(pre).flatten()
     post = np.array(post).flatten()
 
-    pre = np.mean(pre)
-    post = np.mean(post)
+    pre_mean = np.mean(pre)
+    post_mean = np.mean(post)
+
+    post_sem = sem(post)
 
     if env.startswith("Ant"):
         normal_env = "Ant-v2"
-        pre = round(pre)
-        post = round(post)
+        pre_mean = round(pre_mean)
+        post_mean = round(post_mean)
+        post_sem = round(post_sem)
     elif env.startswith("FetchReach"):
         normal_env = "FetchReach-v1"
-        pre = round(pre, 3)
-        post = round(post, 3)
+        pre_mean = round(pre_mean, 3)
+        post_mean = round(post_mean, 3)
+        post_sem = round(post_sem, 3)
 
-    prefault_performance_data[algo + ", " + normal_env] = pre
-    postfault_performance_data.append([algo, env, rn, cs, post])
+    prefault_performance_data[algo + ", " + normal_env] = pre_mean
+    postfault_performance_data.append([algo, env, rn, cs, post_mean, post_sem])
+    print(1)
 
 
 def plot_postfault_performance_drop(interval):
@@ -785,7 +790,6 @@ def plot_postfault_performance_drop(interval):
         for env in envs:
 
             data = []
-            data_ = []
 
             if env == "Ant":
                 pre = prefault_performance_data[algo + ", " + "Ant-v2"]
@@ -796,6 +800,12 @@ def plot_postfault_performance_drop(interval):
             rnFcsT = None
             rnTcsF = None
             rnTcsT = None
+            rnFcsF_sem = None
+            rnFcsT_sem = None
+            rnTcsF_sem = None
+            rnTcsT_sem = None
+
+            CI_Z = 1.960
 
             for entry in postfault_performance_data:
                 algo_ = entry[0]
@@ -803,21 +813,31 @@ def plot_postfault_performance_drop(interval):
                 if algo_.startswith(algo) and env_.startswith(env):
                     rn = entry[2]
                     cs = entry[3]
-                    post = entry[4]
+                    post_mean = entry[4]
+                    post_sem = entry[5]
                     if not rn and not cs:
-                        rnFcsF = post
+                        rnFcsF = post_mean
+                        rnFcsF_sem = post_sem * CI_Z
                     elif not rn and cs:
-                        rnFcsT = post
+                        rnFcsT = post_mean
+                        rnFcsT_sem = post_sem * CI_Z
                     elif rn and not cs:
-                        rnTcsF = post
+                        rnTcsF = post_mean
+                        rnTcsF_sem = post_sem * CI_Z
                     elif rn and cs:
-                        rnTcsT = post
+                        rnTcsT = post_mean
+                        rnTcsT_sem = post_sem * CI_Z
                     if rnFcsF and rnFcsT and rnTcsF and rnTcsT:
-                        data.append([algo_, env_, rnFcsF, rnFcsT, rnTcsF, rnTcsT])
+                        data.append([algo_, env_, rnFcsF, rnFcsT, rnTcsF, rnTcsT, rnFcsF_sem, rnFcsT_sem, rnTcsF_sem, rnTcsT_sem])
+
                         rnFcsF = None
                         rnFcsT = None
                         rnTcsF = None
                         rnTcsT = None
+                        rnFcsF_sem = None
+                        rnFcsT_sem = None
+                        rnTcsF_sem = None
+                        rnTcsT_sem = None
 
             # plot
             if env == "Ant":
@@ -832,12 +852,20 @@ def plot_postfault_performance_drop(interval):
                 rnFcsTs = []
                 rnTcsFs = []
                 rnTcsTs = []
+                rnFcsFs_sem = []
+                rnFcsTs_sem = []
+                rnTcsFs_sem = []
+                rnTcsTs_sem = []
                 for entry in data_:
                     # labels.append(entry[1])
                     rnFcsFs.append(entry[2])
                     rnFcsTs.append(entry[3])
                     rnTcsFs.append(entry[4])
                     rnTcsTs.append(entry[5])
+                    rnFcsFs_sem.append(entry[6])
+                    rnFcsTs_sem.append(entry[7])
+                    rnTcsFs_sem.append(entry[8])
+                    rnTcsTs_sem.append(entry[9])
 
                 bar_width = 0.2
                 br1 = np.arange(len(labels))
@@ -845,10 +873,10 @@ def plot_postfault_performance_drop(interval):
                 br3 = [x + bar_width for x in br2]
                 br4 = [x + bar_width for x in br3]
 
-                plt.bar(br1, np.array(rnFcsFs) - pre, color=palette_colours[1], width=bar_width, bottom=pre)
-                plt.bar(br2, np.array(rnFcsTs) - pre, color=palette_colours[2], width=bar_width, bottom=pre)
-                plt.bar(br3, np.array(rnTcsFs) - pre, color=palette_colours[3], width=bar_width, bottom=pre)
-                plt.bar(br4, np.array(rnTcsTs) - pre, color=palette_colours[4], width=bar_width, bottom=pre)
+                plt.bar(br1, np.array(rnFcsFs) - pre, yerr=rnFcsFs_sem, color=palette_colours[1], width=bar_width, bottom=pre)
+                plt.bar(br2, np.array(rnFcsTs) - pre, yerr=rnFcsTs_sem, color=palette_colours[2], width=bar_width, bottom=pre)
+                plt.bar(br3, np.array(rnTcsFs) - pre, yerr=rnTcsFs_sem, color=palette_colours[3], width=bar_width, bottom=pre)
+                plt.bar(br4, np.array(rnTcsTs) - pre, yerr=rnTcsTs_sem, color=palette_colours[4], width=bar_width, bottom=pre)
 
                 plt.axhline(y=pre, color="black", linestyle="dashed", linewidth=1)
 
@@ -871,12 +899,20 @@ def plot_postfault_performance_drop(interval):
                 rnFcsTs = []
                 rnTcsFs = []
                 rnTcsTs = []
+                rnFcsFs_sem = []
+                rnFcsTs_sem = []
+                rnTcsFs_sem = []
+                rnTcsTs_sem = []
                 for entry in data_:
                     # labels.append(entry[1])
                     rnFcsFs.append(entry[2])
                     rnFcsTs.append(entry[3])
                     rnTcsFs.append(entry[4])
                     rnTcsTs.append(entry[5])
+                    rnFcsFs_sem.append(entry[6])
+                    rnFcsTs_sem.append(entry[7])
+                    rnTcsFs_sem.append(entry[8])
+                    rnTcsTs_sem.append(entry[9])
 
                 bar_width = 0.2
                 br1 = np.arange(len(labels))
@@ -884,10 +920,10 @@ def plot_postfault_performance_drop(interval):
                 br3 = [x + bar_width for x in br2]
                 br4 = [x + bar_width for x in br3]
 
-                plt.bar(br1, np.array(rnFcsFs) - pre, color=palette_colours[1], width=bar_width, bottom=pre)
-                plt.bar(br2, np.array(rnFcsTs) - pre, color=palette_colours[2], width=bar_width, bottom=pre)
-                plt.bar(br3, np.array(rnTcsFs) - pre, color=palette_colours[3], width=bar_width, bottom=pre)
-                plt.bar(br4, np.array(rnTcsTs) - pre, color=palette_colours[4], width=bar_width, bottom=pre)
+                plt.bar(br1, np.array(rnFcsFs) - pre, yerr=rnFcsFs_sem, color=palette_colours[1], width=bar_width, bottom=pre)
+                plt.bar(br2, np.array(rnFcsTs) - pre, yerr=rnFcsTs_sem, color=palette_colours[2], width=bar_width, bottom=pre)
+                plt.bar(br3, np.array(rnTcsFs) - pre, yerr=rnTcsFs_sem, color=palette_colours[3], width=bar_width, bottom=pre)
+                plt.bar(br4, np.array(rnTcsTs) - pre, yerr=rnTcsTs_sem, color=palette_colours[4], width=bar_width, bottom=pre)
 
                 plt.axhline(y=pre, color="black", linestyle="dashed", linewidth=1)
 
@@ -912,6 +948,9 @@ def plot_postfault_performance_drop(interval):
             filename = plot_directory + "/performance_drop_{}.jpg".format(interval)
             plt.savefig(filename, dpi=300)
             Image.open(filename).convert("CMYK").save(filename)
+
+            plt.show()
+
             plt.close()
 
 

@@ -874,10 +874,10 @@ def plot_postfault_performance_drop(interval):
                 br3 = [x + bar_width for x in br2]
                 br4 = [x + bar_width for x in br3]
 
-                plt.bar(br1, rnFcsFs, yerr=rnFcsFs_sem, color=palette_colours[1], width=bar_width)
-                plt.bar(br2, rnFcsTs, yerr=rnFcsTs_sem, color=palette_colours[2], width=bar_width)
-                plt.bar(br3, rnTcsFs, yerr=rnTcsFs_sem, color=palette_colours[3], width=bar_width)
-                plt.bar(br4, rnTcsTs, yerr=rnTcsTs_sem, color=palette_colours[4], width=bar_width)
+                plt.bar(br1, np.array(rnFcsFs) - pre, yerr=rnFcsFs_sem, color=palette_colours[1], width=bar_width, bottom=pre)
+                plt.bar(br2, np.array(rnFcsTs) - pre, yerr=rnFcsTs_sem, color=palette_colours[2], width=bar_width, bottom=pre)
+                plt.bar(br3, np.array(rnTcsFs) - pre, yerr=rnTcsFs_sem, color=palette_colours[3], width=bar_width, bottom=pre)
+                plt.bar(br4, np.array(rnTcsTs) - pre, yerr=rnTcsTs_sem, color=palette_colours[4], width=bar_width, bottom=pre)
 
                 plt.axhline(y=pre, color="black", linestyle="dashed", linewidth=1)
 
@@ -921,10 +921,10 @@ def plot_postfault_performance_drop(interval):
                 br3 = [x + bar_width for x in br2]
                 br4 = [x + bar_width for x in br3]
 
-                plt.bar(br1, rnFcsFs, yerr=rnFcsFs_sem, color=palette_colours[1], width=bar_width)
-                plt.bar(br2, rnFcsTs, yerr=rnFcsTs_sem, color=palette_colours[2], width=bar_width)
-                plt.bar(br3, rnTcsFs, yerr=rnTcsFs_sem, color=palette_colours[3], width=bar_width)
-                plt.bar(br4, rnTcsTs, yerr=rnTcsTs_sem, color=palette_colours[4], width=bar_width)
+                plt.bar(br1, np.array(rnFcsFs) - pre, yerr=rnFcsFs_sem, color=palette_colours[1], width=bar_width, bottom=pre)
+                plt.bar(br2, np.array(rnFcsTs) - pre, yerr=rnFcsTs_sem, color=palette_colours[2], width=bar_width, bottom=pre)
+                plt.bar(br3, np.array(rnTcsFs) - pre, yerr=rnTcsFs_sem, color=palette_colours[3], width=bar_width, bottom=pre)
+                plt.bar(br4, np.array(rnTcsTs) - pre, yerr=rnTcsTs_sem, color=palette_colours[4], width=bar_width, bottom=pre)
 
                 plt.axhline(y=pre, color="black", linestyle="dashed", linewidth=1)
 

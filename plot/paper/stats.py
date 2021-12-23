@@ -773,7 +773,6 @@ def compute_postfault_performance_drop(dir_):
 
     prefault_performance_data[algo + ", " + normal_env] = pre_mean
     postfault_performance_data.append([algo, env, rn, cs, post_mean, post_sem])
-    print(1)
 
 
 def plot_postfault_performance_drop(interval):
@@ -945,7 +944,7 @@ def plot_postfault_performance_drop(interval):
             plot_directory = os.path.join(os.getcwd(), "plots", env.lower(), algo[:-2])
             os.makedirs(plot_directory, exist_ok=True)
 
-            filename = plot_directory + "/performance_drop_{}.jpg".format(interval)
+            filename = plot_directory + "/{}_performance_drop_{}.jpg".format(algo[:-2].upper(), interval)
             plt.savefig(filename, dpi=300)
             Image.open(filename).convert("CMYK").save(filename)
 

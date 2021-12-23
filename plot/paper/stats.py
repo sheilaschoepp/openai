@@ -885,7 +885,7 @@ def plot_postfault_performance_drop(interval):
                 plt.axvline(x=3.3, color="black", ymax=0.025)
 
                 plt.xticks([r + 0.3 for r in range(len(labels))],  labels)
-                plt.yticks([-1000, 0, 1000, 2000, 3000, 4000, 5000, 6000, 7000])
+                plt.yticks([-2000, -1000, 0, 1000, 2000, 3000, 4000, 5000, 6000, 7000])
 
             elif env == "FetchReach":
 
@@ -930,7 +930,8 @@ def plot_postfault_performance_drop(interval):
                 plt.axvline(x=1.3, color="black", ymax=0.025)
 
                 plt.xticks([r + 0.3 for r in range(len(labels))], labels)
-                plt.yticks([-16, -14, -12, -10, -8, -6, -4, -2, 0])
+                plt.yticks(np.arange(-30, 1, 5))
+                plt.ylim((-30, 1.5))
 
             if algo.startswith("PPO"):
                 plt.title("Proximal Policy Optimization (PPO)")

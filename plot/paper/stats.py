@@ -760,19 +760,21 @@ def compute_postfault_performance_drop(dir_):
 
     post_sem = sem(post)
 
+    CI_Z = 1.960
+
     if env.startswith("Ant"):
         normal_env = "Ant-v2"
         pre_mean = round(pre_mean)
         post_mean = round(post_mean)
-        post_sem = round(post_sem)
+        post_ci = round(post_sem * CI_Z)
     elif env.startswith("FetchReach"):
         normal_env = "FetchReach-v1"
         pre_mean = round(pre_mean, 3)
         post_mean = round(post_mean, 3)
-        post_sem = round(post_sem, 3)
+        post_ci = round(post_sem * CI_Z, 3)
 
     prefault_performance_data[algo + ", " + normal_env] = pre_mean
-    postfault_performance_data.append([algo, env, rn, cs, post_mean, post_sem])
+    postfault_performance_data.append([algo, env, rn, cs, post_mean, post_ci])
 
 
 def plot_postfault_performance_drop(interval):
@@ -799,44 +801,44 @@ def plot_postfault_performance_drop(interval):
             rnFcsT = None
             rnTcsF = None
             rnTcsT = None
-            rnFcsF_sem = None
-            rnFcsT_sem = None
-            rnTcsF_sem = None
-            rnTcsT_sem = None
+            rnFcsF_ci = None
+            rnFcsT_ci = None
+            rnTcsF_ci = None
+            rnTcsT_ci = None
 
             CI_Z = 1.960
 
             for entry in postfault_performance_data:
                 algo_ = entry[0]
                 env_ = entry[1]
-                if algo_.startswith(algo) and env_.startswith(env):
+                if algo_.startswith(algo):
                     rn = entry[2]
                     cs = entry[3]
                     post_mean = entry[4]
-                    post_sem = entry[5]
+                    post_ci = entry[5]
                     if not rn and not cs:
                         rnFcsF = post_mean
-                        rnFcsF_sem = post_sem * CI_Z
+                        rnFcsF_ci = post_ci
                     elif not rn and cs:
                         rnFcsT = post_mean
-                        rnFcsT_sem = post_sem * CI_Z
+                        rnFcsT_ci = post_ci
                     elif rn and not cs:
                         rnTcsF = post_mean
-                        rnTcsF_sem = post_sem * CI_Z
+                        rnTcsF_ci = post_ci
                     elif rn and cs:
                         rnTcsT = post_mean
-                        rnTcsT_sem = post_sem * CI_Z
+                        rnTcsT_ci = post_ci
                     if rnFcsF and rnFcsT and rnTcsF and rnTcsT:
-                        data.append([algo_, env_, rnFcsF, rnFcsT, rnTcsF, rnTcsT, rnFcsF_sem, rnFcsT_sem, rnTcsF_sem, rnTcsT_sem])
+                        data.append([algo_, env_, rnFcsF, rnFcsT, rnTcsF, rnTcsT, rnFcsF_ci, rnFcsT_ci, rnTcsF_ci, rnTcsT_ci])
 
                         rnFcsF = None
                         rnFcsT = None
                         rnTcsF = None
                         rnTcsT = None
-                        rnFcsF_sem = None
-                        rnFcsT_sem = None
-                        rnTcsF_sem = None
-                        rnTcsT_sem = None
+                        rnFcsF_ci = None
+                        rnFcsT_ci = None
+                        rnTcsF_ci = None
+                        rnTcsT_ci = None
 
             # plot
             if env == "Ant":

@@ -23,6 +23,17 @@ import custom_gym_envs  # DO NOT DELETE
 sns.set_theme()
 cmap = "viridis"
 
+LARGE = 16
+MEDIUM = 14
+
+plt.rc("axes", titlesize=LARGE)     # fontsize of the axes title
+plt.rc("axes", labelsize=LARGE)     # fontsize of the x and y labels
+plt.rc("xtick", labelsize=MEDIUM)   # fontsize of the tick labels
+plt.rc("ytick", labelsize=MEDIUM)   # fontsize of the tick labels
+plt.rcParams['pdf.fonttype'] = 42
+plt.rcParams['ps.fonttype'] = 42
+plt.rcParams["font.family"] = "Times New Roman"
+
 parser = argparse.ArgumentParser(description="Histogram")
 
 parser.add_argument("-cd", "--collect_data", default=False, action="store_true",
@@ -252,8 +263,15 @@ def plot_ant_heatmap(ranges):
     y_labels = ["1.0", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "0.5", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "0.0"]
     heatmap = sns.heatmap(data=df[::-1], cmap=cmap, yticklabels=y_labels)
 
+    algorithm_ = None
+
+    if algorithm == "PPO":
+        algorithm_ = "Proximal Policy Optimization (PPO)"
+    elif algorithm == "SAC":
+        algorithm_ = "Soft Actor-Critic (SAC)"
+
     if suffix == "":
-        heatmap.set_title("{}\n{}".format(algorithm, name))
+        heatmap.set_title("{}".format(algorithm_))
     else:
         heatmap.set_title("{} ({})\n{}".format(algorithm, suffix_eval, name))
     plt.xticks(rotation=45)
@@ -691,8 +709,15 @@ def plot_fetchreach_heatmap(ranges):
     y_labels = ["1.0", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "0.5", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "0.0"]
     heatmap = sns.heatmap(data=df[::-1], cmap=cmap, yticklabels=y_labels)
 
+    algorithm_ = None
+
+    if algorithm == "PPO":
+        algorithm_ = "Proximal Policy Optimization (PPO)"
+    elif algorithm == "SAC":
+        algorithm_ = "Soft Actor-Critic (SAC)"
+
     if suffix == "":
-        heatmap.set_title("{}\n{}".format(algorithm, name))
+        heatmap.set_title("{}".format(algorithm_))
     else:
         heatmap.set_title("{} ({})\n{}".format(algorithm, suffix_eval, name))
     plt.xticks(rotation=45)

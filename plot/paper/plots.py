@@ -461,7 +461,7 @@ def legend():
 
     f = lambda m, c: plt.plot([], [], marker=m, color=c, ls="none")[0]
     handles = [f("s", palette_colours[i]) for i in range(5)]
-    labels = ["pre-fault\ntask", "post-fault task:\nretain networks,\nretain storage", "post-fault task:\nretain networks,\ndiscard storage", "post-fault task:\ndiscard networks,\nretain storage", "post-fault task:\ndiscard networks,\ndiscard storage"]
+    labels = ["pre-fault\ntask", "post-fault task:\nretain NN params,\nretain storage", "post-fault task:\nretain NN params,\ndiscard storage", "post-fault task:\ndiscard NN params,\nretain storage", "post-fault task:\ndiscard NN params,\ndiscard storage"]
     legend = plt.legend(handles, labels, ncol=5, loc=1, framealpha=1, frameon=False)
 
     def export_legend(legend, filename="legend.jpg"):
@@ -486,7 +486,7 @@ def legend2():
     handles_ = [e()]
     handles = [f("s", palette_colours[i]) for i in range(1, 5)]
     handles.insert(0, handles_[0])
-    labels = ["pre-fault\ntask", "post-fault task:\nretain networks,\nretain storage", "post-fault task:\nretain networks,\ndiscard storage", "post-fault task:\ndiscard networks,\nretain storage", "post-fault task:\ndiscard networks,\ndiscard storage"]
+    labels = ["pre-fault\ntask", "post-fault task:\nretain NN params,\nretain storage", "post-fault task:\nretain NN params,\ndiscard storage", "post-fault task:\ndiscard NN params,\nretain storage", "post-fault task:\ndiscard NN params,\ndiscard storage"]
     legend = plt.legend(handles, labels, ncol=5, loc=1, framealpha=1, frameon=False)
 
     def export_legend(legend, filename="legend2.jpg"):

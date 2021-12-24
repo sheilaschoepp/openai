@@ -879,7 +879,7 @@ def plot_postfault_performance_drop(interval):
                 plt.bar(br3, np.array(rnTcsFs) - pre, yerr=rnTcsFs_sem, color=palette_colours[3], width=bar_width, bottom=pre)
                 plt.bar(br4, np.array(rnTcsTs) - pre, yerr=rnTcsTs_sem, color=palette_colours[4], width=bar_width, bottom=pre)
 
-                plt.axhline(y=pre, color="black", linestyle="dashed", linewidth=1)
+                plt.axhline(y=pre, color=palette_colours[0], linestyle="dashed", linewidth=1)
 
                 plt.axvline(x=0.3, color="black", ymax=0.025)
                 plt.axvline(x=1.3, color="black", ymax=0.025)
@@ -926,7 +926,7 @@ def plot_postfault_performance_drop(interval):
                 plt.bar(br3, np.array(rnTcsFs) - pre, yerr=rnTcsFs_sem, color=palette_colours[3], width=bar_width, bottom=pre)
                 plt.bar(br4, np.array(rnTcsTs) - pre, yerr=rnTcsTs_sem, color=palette_colours[4], width=bar_width, bottom=pre)
 
-                plt.axhline(y=pre, color="black", linestyle="dashed", linewidth=1)
+                plt.axhline(y=pre, color=palette_colours[0], linestyle="dashed", linewidth=1)
 
                 plt.axvline(x=0.3, color="black", ymax=0.025)
                 plt.axvline(x=1.3, color="black", ymax=0.025)

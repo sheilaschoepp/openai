@@ -481,7 +481,7 @@ def legend2():
     fig, ax = plt.subplots()
     ax.axis("off")
 
-    e = lambda: plt.plot([], [], ls="--")[0]
+    e = lambda: plt.plot([], [], ls="--", color=palette_colours[0])[0]
     f = lambda m, c: plt.plot([], [], marker=m, color=c, ls="none")[0]
     handles_ = [e()]
     handles = [f("s", palette_colours[i]) for i in range(1, 5)]

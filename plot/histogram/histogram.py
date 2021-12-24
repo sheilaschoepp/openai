@@ -16,6 +16,7 @@ from tqdm import tqdm
 from controllers.ppov2.ppov2_agent import PPOv2
 from controllers.sacv2.sacv2_agent import SACv2
 from environment.environment import Environment
+from PIL import Image
 from utils.rl_glue import RLGlue
 
 import custom_gym_envs  # DO NOT DELETE
@@ -145,7 +146,9 @@ def plot_ant_histograms(ranges):
     plot.set_title(title())
     plt.ylim(0, 1)
     plt.ylabel("probability")
-    plt.savefig(experiment_plot_directory + "/{}_hip_1_joint_{}.jpg".format(experiment_name, num_seeds), dpi=300)
+    filename = experiment_plot_directory + "/{}_hip_1_joint_{}.jpg".format(experiment_name, num_seeds)
+    plt.savefig(filename, dpi=300)
+    Image.open(filename).convert("CMYK").save(filename)
     plt.close()
 
     index = 1  # ankle_1
@@ -155,7 +158,9 @@ def plot_ant_histograms(ranges):
     plot.set_title(title())
     plt.ylim(0, 1)
     plt.ylabel("probability")
-    plt.savefig(experiment_plot_directory + "/{}_ankle_1_joint_{}.jpg".format(experiment_name, num_seeds), dpi=300)
+    filename = experiment_plot_directory + "/{}_ankle_1_joint_{}.jpg".format(experiment_name, num_seeds)
+    plt.savefig(filename, dpi=300)
+    Image.open(filename).convert("CMYK").save(filename)
     plt.close()
 
     index = 2  # hip_2
@@ -165,7 +170,9 @@ def plot_ant_histograms(ranges):
     plot.set_title(title())
     plt.ylim(0, 1)
     plt.ylabel("probability")
-    plt.savefig(experiment_plot_directory + "/{}_hip_2_joint_{}.jpg".format(experiment_name, num_seeds), dpi=300)
+    filename = experiment_plot_directory + "/{}_hip_2_joint_{}.jpg".format(experiment_name, num_seeds)
+    plt.savefig(filename, dpi=300)
+    Image.open(filename).convert("CMYK").save(filename)
     plt.close()
 
     index = 3  # ankle_2
@@ -175,7 +182,9 @@ def plot_ant_histograms(ranges):
     plot.set_title(title())
     plt.ylim(0, 1)
     plt.ylabel("probability")
-    plt.savefig(experiment_plot_directory + "/{}_ankle_2_joint_{}.jpg".format(experiment_name, num_seeds), dpi=300)
+    filename = experiment_plot_directory + "/{}_ankle_2_joint_{}.jpg".format(experiment_name, num_seeds)
+    plt.savefig(filename, dpi=300)
+    Image.open(filename).convert("CMYK").save(filename)
     plt.close()
 
     index = 4  # hip_3
@@ -185,7 +194,9 @@ def plot_ant_histograms(ranges):
     plot.set_title(title())
     plt.ylim(0, 1)
     plt.ylabel("probability")
-    plt.savefig(experiment_plot_directory + "/{}_hip_3_joint_{}.jpg".format(experiment_name, num_seeds), dpi=300)
+    filename = experiment_plot_directory + "/{}_hip_3_joint_{}.jpg".format(experiment_name, num_seeds)
+    plt.savefig(filename, dpi=300)
+    Image.open(filename).convert("CMYK").save(filename)
     plt.close()
 
     index = 5  # ankle_3
@@ -195,7 +206,9 @@ def plot_ant_histograms(ranges):
     plot.set_title(title())
     plt.ylim(0, 1)
     plt.ylabel("probability")
-    plt.savefig(experiment_plot_directory + "/{}_ankle_3_joint_{}.jpg".format(experiment_name, num_seeds), dpi=300)
+    filename = experiment_plot_directory + "/{}_ankle_3_joint_{}.jpg".format(experiment_name, num_seeds)
+    plt.savefig(filename, dpi=300)
+    Image.open(filename).convert("CMYK").save(filename)
     plt.close()
 
     index = 6  # hip_4
@@ -205,7 +218,9 @@ def plot_ant_histograms(ranges):
     plot.set_title(title())
     plt.ylim(0, 1)
     plt.ylabel("probability")
-    plt.savefig(experiment_plot_directory + "/{}_hip_4_joint_{}.jpg".format(experiment_name, num_seeds), dpi=300)
+    filename = experiment_plot_directory + "/{}_hip_4_joint_{}.jpg".format(experiment_name, num_seeds)
+    plt.savefig(filename, dpi=300)
+    Image.open(filename).convert("CMYK").save(filename)
     plt.close()
 
     index = 7  # ankle_4
@@ -215,7 +230,9 @@ def plot_ant_histograms(ranges):
     plot.set_title(title())
     plt.ylim(0, 1)
     plt.ylabel("probability")
-    plt.savefig(experiment_plot_directory + "/{}_ankle_4_joint_{}.jpg".format(experiment_name, num_seeds), dpi=300)
+    filename = experiment_plot_directory + "/{}_ankle_4_joint_{}.jpg".format(experiment_name, num_seeds)
+    plt.savefig(filename, dpi=300)
+    Image.open(filename).convert("CMYK").save(filename)
     plt.close()
 
 
@@ -279,7 +296,9 @@ def plot_ant_heatmap(ranges):
     plt.xlabel("joint")
     plt.ylabel("normalized angle")
     plt.tight_layout()
-    plt.savefig(experiment_plot_directory + "/{}_heatmap_{}.jpg".format(experiment_name, num_seeds), dpi=300)
+    filename = experiment_plot_directory + "/{}_heatmap_{}.jpg".format(experiment_name, num_seeds)
+    plt.savefig(filename, dpi=300)
+    Image.open(filename).convert("CMYK").save(filename)
     # plt.show()
     plt.close()
 
@@ -601,7 +620,9 @@ def plot_fetchreach_histograms(ranges):
     plot.set_title(title())
     plt.ylim(0, 1)
     plt.ylabel("probability")
-    plt.savefig(experiment_plot_directory + "/{}_shoulder_pan_joint_{}.jpg".format(experiment_name, num_seeds), dpi=300)
+    filename = experiment_plot_directory + "/{}_shoulder_pan_joint_{}.jpg".format(experiment_name, num_seeds)
+    plt.savefig(filename, dpi=300)
+    Image.open(filename).convert("CMYK").save(filename)
     plt.close()
 
     index = 1  # shoulder_lift_joint
@@ -611,7 +632,9 @@ def plot_fetchreach_histograms(ranges):
     plot.set_title(title())
     plt.ylim(0, 1)
     plt.ylabel("probability")
-    plt.savefig(experiment_plot_directory + "/{}_shoulder_lift_joint_{}.jpg".format(experiment_name, num_seeds), dpi=300)
+    filename = experiment_plot_directory + "/{}_shoulder_lift_joint_{}.jpg".format(experiment_name, num_seeds)
+    plt.savefig(filename, dpi=300)
+    Image.open(filename).convert("CMYK").save(filename)
     plt.close()
 
     index = 2  # upperarm_roll_joint
@@ -621,7 +644,9 @@ def plot_fetchreach_histograms(ranges):
     plot.set_title(title())
     plt.ylim(0, 1)
     plt.ylabel("probability")
-    plt.savefig(experiment_plot_directory + "/{}_upperarm_roll_joint_{}.jpg".format(experiment_name, num_seeds), dpi=300)
+    filename = experiment_plot_directory + "/{}_upperarm_roll_joint_{}.jpg".format(experiment_name, num_seeds)
+    plt.savefig(filename, dpi=300)
+    Image.open(filename).convert("CMYK").save(filename)
     plt.close()
 
     index = 3  # elbow_flex_joint
@@ -631,7 +656,9 @@ def plot_fetchreach_histograms(ranges):
     plot.set_title(title())
     plt.ylim(0, 1)
     plt.ylabel("probability")
-    plt.savefig(experiment_plot_directory + "/{}_elbow_flex_joint_{}.jpg".format(experiment_name, num_seeds), dpi=300)
+    filename = experiment_plot_directory + "/{}_elbow_flex_joint_{}.jpg".format(experiment_name, num_seeds)
+    plt.savefig(filename, dpi=300)
+    Image.open(filename).convert("CMYK").save(filename)
     plt.close()
 
     index = 4  # forearm_roll_joint
@@ -641,7 +668,9 @@ def plot_fetchreach_histograms(ranges):
     plot.set_title(title())
     plt.ylim(0, 1)
     plt.ylabel("probability")
-    plt.savefig(experiment_plot_directory + "/{}_forearm_roll_joint_{}.jpg".format(experiment_name, num_seeds), dpi=300)
+    filename = experiment_plot_directory + "/{}_forearm_roll_joint_{}.jpg".format(experiment_name, num_seeds)
+    plt.savefig(filename, dpi=300)
+    Image.open(filename).convert("CMYK").save(filename)
     plt.close()
 
     index = 5  # wrist_flex_joint
@@ -651,7 +680,9 @@ def plot_fetchreach_histograms(ranges):
     plot.set_title(title())
     plt.ylim(0, 1)
     plt.ylabel("probability")
-    plt.savefig(experiment_plot_directory + "/{}_wrist_flex_joint_{}.jpg".format(experiment_name, num_seeds), dpi=300)
+    filename = experiment_plot_directory + "/{}_wrist_flex_joint_{}.jpg".format(experiment_name, num_seeds)
+    plt.savefig(filename, dpi=300)
+    Image.open(filename).convert("CMYK").save(filename)
     plt.close()
 
     index = 6  # wrist_roll_joint
@@ -661,7 +692,9 @@ def plot_fetchreach_histograms(ranges):
     plot.set_title(title())
     plt.ylim(0, 1)
     plt.ylabel("probability")
-    plt.savefig(experiment_plot_directory + "/{}_wrist_roll_joint_{}.jpg".format(experiment_name, num_seeds), dpi=300)
+    filename = experiment_plot_directory + "/{}_wrist_roll_joint_{}.jpg".format(experiment_name, num_seeds)
+    plt.savefig(filename, dpi=300)
+    Image.open(filename).convert("CMYK").save(filename)
     plt.close()
 
 
@@ -725,7 +758,9 @@ def plot_fetchreach_heatmap(ranges):
     plt.xlabel("joint")
     plt.ylabel("normalized angle")
     plt.tight_layout()
-    plt.savefig(experiment_plot_directory + "/{}_heatmap_{}.jpg".format(experiment_name, num_seeds), dpi=300)
+    filename = experiment_plot_directory + "/{}_heatmap_{}.jpg".format(experiment_name, num_seeds)
+    plt.savefig(filename, dpi=300)
+    Image.open(filename).convert("CMYK").save(filename)
     # plt.show()
     plt.close()
 

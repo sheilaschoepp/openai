@@ -287,10 +287,7 @@ def plot_ant_heatmap(ranges):
     elif algorithm == "SAC":
         algorithm_ = "Soft Actor-Critic (SAC)"
 
-    if suffix == "":
-        heatmap.set_title("{}".format(algorithm_))
-    else:
-        heatmap.set_title("{} ({})\n{}".format(algorithm, suffix_eval, name))
+    heatmap.set_title("{}".format(algorithm_))
     plt.xticks(rotation=45)
     plt.yticks(rotation=0)
     plt.xlabel("joint")
@@ -749,10 +746,7 @@ def plot_fetchreach_heatmap(ranges):
     elif algorithm == "SAC":
         algorithm_ = "Soft Actor-Critic (SAC)"
 
-    if suffix == "":
-        heatmap.set_title("{}".format(algorithm_))
-    else:
-        heatmap.set_title("{} ({})\n{}".format(algorithm, suffix_eval, name))
+    heatmap.set_title("{}".format(algorithm_))
     plt.xticks(rotation=45)
     plt.yticks(rotation=0)
     plt.xlabel("joint")

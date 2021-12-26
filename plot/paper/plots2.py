@@ -9,7 +9,9 @@ from termcolor import colored
 from PIL import Image
 
 sns.set_theme()
-palette_colours = ["#0173b2", "#027957", "#A63F93", "#AD4B00", "#000000"]
+palette_colours = ["#0173b2", "#A63F93", "#027957", "#AD4B00", "#000000"]
+#                   blue        black      orange      green    pink
+palette_colours = ["#0173b2", "#000000", "#AD4B00", "#027957", "#A63F93"]
 
 LARGE = 16
 MEDIUM = 14
@@ -105,7 +107,7 @@ def plot_experiment(directory):
     # reorganize settings to obtain a plotting order
     # (rn, cs) desired_ordering = [(False, False), (False, True), (True, False), (True, True)]
 
-    ordered_settings.sort()
+    ordered_settings.sort(reverse=True)
 
     # plot
 
@@ -203,6 +205,7 @@ def legend():
     ax.axis("off")
 
     f = lambda m, c: plt.plot([], [], marker=m, color=c, ls="none")[0]
+    palette_colours = ["#0173b2", "#A63F93", "#027957", "#AD4B00", "#000000"]
     handles = [f("s", palette_colours[i]) for i in range(5)]
     labels = ["pre-fault", "retain NN params,\nretain storage", "retain NN params,\ndiscard storage", "discard NN params,\nretain storage", "discard NN params,\ndiscard storage"]
     legend = plt.legend(handles, labels, ncol=5, loc=1, framealpha=1, frameon=True, facecolor="#eaeaf4")

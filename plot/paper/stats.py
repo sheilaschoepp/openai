@@ -11,7 +11,7 @@ from scipy.stats import sem, ttest_ind
 from termcolor import colored
 
 sns.set_theme()
-palette_colours = ["#0173b2", "#027957", "#A63F93", "#AD4B00", "#000000"]
+palette_colours = ["#0173b2", "#A63F93", "#027957", "#AD4B00", "#000000"]
 
 LARGE = 16
 MEDIUM = 14

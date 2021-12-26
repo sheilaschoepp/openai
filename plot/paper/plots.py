@@ -18,6 +18,8 @@ sns.set_theme()
 # palette_colours = ["#0173b2", "#875603", "#027957", "#AD4B00", "#A63F93", "#915C30", "#C3098E", "#696969", "#70680A", "#156FA2"]
 #                   blue        green  magneta/purple  black     red
 palette_colours = ["#0173b2", "#027957", "#A63F93", "#AD4B00", "#000000"]
+#                   blue        black      orange      green    pink
+palette_colours = ["#0173b2", "#000000", "#AD4B00", "#027957", "#A63F93"]
 
 LARGE = 16
 MEDIUM = 14
@@ -140,6 +142,8 @@ def plot_experiment(directory):
             for s in unordered_settings:
                 if do[0] == s[1] and do[1] == s[2]:
                     ordered_settings.append(s)
+
+        ordered_settings.sort(reverse=True)
 
     get_data()
 

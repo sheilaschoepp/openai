@@ -351,7 +351,7 @@ def plot_complete_adaptation(directory):
     filename = plot_directory + "/{}_{}_all.jpg".format(algorithm, ab_env)
     plt.savefig(filename, dpi=300)
     # Image.open(filename).convert("CMYK").save(filename)
-    plt.show()
+    # plt.show()
     plt.close()
 
 

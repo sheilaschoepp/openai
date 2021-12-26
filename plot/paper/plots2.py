@@ -2,30 +2,22 @@ import os
 import pathlib
 
 import matplotlib.pyplot as plt
+import numpy as np
 import pandas as pd
 import seaborn as sns
-from matplotlib.patches import ConnectionPatch
 from termcolor import colored
 from PIL import Image
 
 sns.set_theme()
-# sns.set_palette("colorblind", color_codes=True)
-# print(sns.color_palette("colorblind").as_hex())
-# [blue, orange, green, red, purple, brown, pink, grey, green, aqua]
-# ["#0173b2", "#de8f05", "#029e73", "#d55e00", "#cc78bc", "#ca9161", "#fbafe4", "#949494", "#ece133", "#56b4e9"]
-# converted above colour pallet to WACG 2.0 compliant colors using https://webaim.org/resources/contrastchecker/
-#                   blue       orange      green       red      purple      brown      pink       grey       green      aqua
-# palette_colours = ["#0173b2", "#875603", "#027957", "#AD4B00", "#A63F93", "#915C30", "#C3098E", "#696969", "#70680A", "#156FA2"]
-#                   blue        green  magneta/purple  black     red
 palette_colours = ["#0173b2", "#027957", "#A63F93", "#000000", "#AD4B00"]
 
 LARGE = 16
 MEDIUM = 14
 
-plt.rc("axes", titlesize=LARGE)     # fontsize of the axes title
-plt.rc("axes", labelsize=LARGE)     # fontsize of the x and y labels
-plt.rc("xtick", labelsize=MEDIUM)   # fontsize of the tick labels
-plt.rc("ytick", labelsize=MEDIUM)   # fontsize of the tick labels
+plt.rc("axes", titlesize=LARGE)  # fontsize of the axes title
+plt.rc("axes", labelsize=LARGE)  # fontsize of the x and y labels
+plt.rc("xtick", labelsize=MEDIUM)  # fontsize of the tick labels
+plt.rc("ytick", labelsize=MEDIUM)  # fontsize of the tick labels
 plt.rcParams['pdf.fonttype'] = 42
 plt.rcParams['ps.fonttype'] = 42
 plt.rcParams["font.family"] = "Times New Roman"
@@ -45,11 +37,9 @@ def plot_experiment(directory):
     ab_env = ""
     n_env = ""
 
-    ordered_settings = []
-
     first_setting = True
 
-    unordered_settings = []
+    ordered_settings = []
 
     for dir_ in os.listdir(directory):
 
@@ -91,7 +81,6 @@ def plot_experiment(directory):
         data_dir = os.path.join(directory, dir_)
 
         for s in os.listdir(data_dir):
-
             seed_foldername = os.path.join(data_dir, s)
             csv_filename = os.path.join(seed_foldername, "csv", "eval_data.csv")
 
@@ -101,7 +90,12 @@ def plot_experiment(directory):
 
         if len(dfs) < num_seeds:
             # warning to let user know that seeds are missing
-            print(colored("The number of seeds for this experiment is {} but this setting only has {} seeds: {}".format(num_seeds, str(len(dfs)), dir_), "red"))
+            print(colored(
+                "The number of seeds for this experiment is {} but this setting only has {} seeds: {}".format(num_seeds,
+                                                                                                              str(len(
+                                                                                                                  dfs)),
+                                                                                                              dir_),
+                "red"))
 
         df = pd.concat(dfs)
         df = df.groupby(df.index)
@@ -109,23 +103,18 @@ def plot_experiment(directory):
         df_mean = df.mean()
         df_sem = df.sem()
 
-        if algorithm == "SAC":
-            unordered_settings.append((algorithm, rn, cs, df_mean, df_sem))
-        elif algorithm == "PPO":
-            unordered_settings.append((algorithm, rn, cs, df_mean, df_sem))
+        ordered_settings.append((algorithm, rn, cs, df_mean, df_sem))
 
-    assert len(unordered_settings) == 4, "plot_experiment: not four settings"
+    assert len(ordered_settings) == 4, "plot_experiment: not four settings"
 
     # reorganize settings to obtain a plotting order
     # (rn, cs) desired_ordering = [(False, False), (False, True), (True, False), (True, True)]
 
-    ordered_settings = unordered_settings.copy()
     ordered_settings.sort()
 
     # plot
 
     eval_fault_onset = 201
-    eval_fault_stop = 235
 
     if algorithm == "SAC":
         title = "Soft Actor-Critic (SAC)"
@@ -139,38 +128,72 @@ def plot_experiment(directory):
 
     x_fault_onset = ordered_settings[0][3].iloc[eval_fault_onset, 0] / x_divisor
 
+    ts_fault_onset = None
     if algorithm == "PPO":
-        x_fault_onset -= 600
+        if n_env == "Ant-v2":
+            ts_fault_onset = 600000000 / x_divisor
+        elif n_env == "FetchReachEnv-v0":
+            ts_fault_onset = 6000000 / x_divisor
     elif algorithm == "SAC":
-        x_fault_onset -= 20
+        if n_env == "Ant-v2":
+            ts_fault_onset = 20000000 / x_divisor
+        elif n_env == "FetchReachEnv-v0":
+            ts_fault_onset = 2000000 / x_divisor
 
-    # plot normal performance
+    x_fault_onset -= ts_fault_onset
 
-    normal = ordered_settings[0][3].iloc[eval_fault_onset - 10:eval_fault_onset, 0] / x_divisor
+    markers = ["o", "*", "v", "x"]
 
-    # plt.plot(x, y, color=palette_colours[0], label="normal")
-    # plt.fill_between(x, lb, ub, color=palette_colours[0], alpha=0.3)
-    # plt.axvline(x=x_fault_onset, color="red", ymin=0.95)
+    # plot normal asymptotic performance
+
+    x = ordered_settings[0][3].iloc[eval_fault_onset:, 0] / x_divisor - ts_fault_onset
+    normal_asymp = ordered_settings[0][3].iloc[eval_fault_onset - 10:eval_fault_onset, 1].mean()
+
+    temp = np.zeros(len(x))
+    temp.fill(normal_asymp)
+    normal_asymp = temp
+
+    plt.plot(x, normal_asymp, color=palette_colours[0], linestyle="--")
 
     # plot fault performance
 
+    x = ordered_settings[3][1]
+
     for i in range(4):
 
-        x = ordered_settings[i][3].iloc[eval_fault_onset:eval_fault_stop, 0] / x_divisor
+        # asymptotic performance
+        x_asymp = ordered_settings[i][3].iloc[eval_fault_onset:, 0] / x_divisor - ts_fault_onset
+        y_asymp = ordered_settings[i][3].iloc[-10:, 1].mean()
+        y_asymp_array = np.zeros(len(x_asymp))
+        y_asymp_array.fill(y_asymp)
+
+        y_array = ordered_settings[i][3].iloc[eval_fault_onset:, 1].to_numpy()
+
+        cut_plot = True
+        eval_fault_stop = 402
+        if cut_plot:
+            for j in range(len(y_array)):
+                if y_array[j] > y_asymp:
+                    eval_fault_stop = j + 1 + eval_fault_onset
+                    break
+
+        # data
+        x = ordered_settings[i][3].iloc[eval_fault_onset:eval_fault_stop, 0] / x_divisor - ts_fault_onset
         y = ordered_settings[i][3].iloc[eval_fault_onset:eval_fault_stop, 1]
 
         # 95 % confidence interval
         lb = y - CI_Z * ordered_settings[i][4].iloc[eval_fault_onset:eval_fault_stop, 1]
         ub = y + CI_Z * ordered_settings[i][4].iloc[eval_fault_onset:eval_fault_stop, 1]
 
-        plt.plot(x, y, color=palette_colours[i + 1])
+        plt.plot(x, y, color=palette_colours[i + 1]) # marker=markers[i], markersize=4
+        plt.plot(x_asymp, y_asymp_array, color=palette_colours[i + 1], linestyle="--")
         plt.fill_between(x, lb, ub, color=palette_colours[i + 1], alpha=0.2)
 
-    plt.xlim(xmin, xmax)
+    plt.axvline(x=x_fault_onset, color="red", ymin=0.95, linewidth=4)
+    plt.xlim(xmin - ts_fault_onset, xmax - ts_fault_onset)
     plt.ylim(ymin, ymax)
     plt.xlabel("million steps")
     plt.ylabel("average return ({} seeds)".format(num_seeds))
-    # plt.legend(bbox_to_anchor=[0.465, 0.35], loc=0)
     plt.title(title)
     plt.tight_layout()
     filename = plot_directory + "/{}_{}_all_mod.jpg".format(algorithm, ab_env)
@@ -181,13 +204,13 @@ def plot_experiment(directory):
 
 
 def legend():
-
     fig, ax = plt.subplots()
     ax.axis("off")
 
     f = lambda m, c: plt.plot([], [], marker=m, color=c, ls="none")[0]
     handles = [f("s", palette_colours[i]) for i in range(5)]
-    labels = ["pre-fault\ntask", "retain NN params,\nretain storage", "retain NN params,\ndiscard storage", "discard NN params,\nretain storage", "discard NN params,\ndiscard storage"]
+    labels = ["pre-fault", "retain NN params,\nretain storage", "retain NN params,\ndiscard storage",
+              "discard NN params,\nretain storage", "discard NN params,\ndiscard storage"]
     legend = plt.legend(handles, labels, ncol=5, loc=1, framealpha=1, frameon=False)
 
     def export_legend(legend, filename="legend.jpg"):
@@ -203,7 +226,6 @@ def legend():
 
 
 def legend2():
-
     fig, ax = plt.subplots()
     ax.axis("off")
 
@@ -212,7 +234,8 @@ def legend2():
     handles_ = [e()]
     handles = [f("s", palette_colours[i]) for i in range(1, 5)]
     handles.insert(0, handles_[0])
-    labels = ["pre-fault\ntask", "retain NN params,\nretain storage", "retain NN params,\ndiscard storage", "discard NN params,\nretain storage", "discard NN params,\ndiscard storage"]
+    labels = ["pre-fault", "retain NN params,\nretain storage", "retain NN params,\ndiscard storage",
+              "discard NN params,\nretain storage", "discard NN params,\ndiscard storage"]
     legend = plt.legend(handles, labels, ncol=5, loc=1, framealpha=1, frameon=False)
 
     def export_legend(legend, filename="legend2.jpg"):
@@ -257,89 +280,49 @@ if __name__ == "__main__":
 
     # local for Ant PPO
     xmin = 600
-    xmax = 700
+    xmax = 660
 
     # local for Ant PPO
     ppo_data_dir = DATA_FOLDER_PATH + "/ant/exps/ppo"
 
     # v1
 
-    zoom_init_xmin = 600
-    zoom_init_xmax = 660
-    zoom_init_ymin = ymin
-    zoom_init_ymax = ymax
-
     plot_experiment(os.path.join(ppo_data_dir, "v1"))
 
     # v2
-
-    zoom_init_xmin = 600
-    zoom_init_xmax = 660
-    zoom_init_ymin = ymin
-    zoom_init_ymax = ymax
 
     plot_experiment(os.path.join(ppo_data_dir, "v2"))
 
     # v3
 
-    zoom_init_xmin = 600
-    zoom_init_xmax = 660
-    zoom_init_ymin = ymin
-    zoom_init_ymax = ymax
-
     plot_experiment(os.path.join(ppo_data_dir, "v3"))
 
     # v4
-
-    zoom_init_xmin = 600
-    zoom_init_xmax = 660
-    zoom_init_ymin = ymin
-    zoom_init_ymax = ymax
 
     plot_experiment(os.path.join(ppo_data_dir, "v4"))
 
     # SAC
 
     # local for Ant SAC
-    xmin = 0
-    xmax = 40
+    xmin = 20
+    xmax = 22
 
     # local for Ant SAC
     sac_data_dir = DATA_FOLDER_PATH + "/ant/exps/sac"
 
     # v1
 
-    zoom_init_xmin = 20
-    zoom_init_xmax = 22
-    zoom_init_ymin = ymin
-    zoom_init_ymax = ymax
-
     plot_experiment(os.path.join(sac_data_dir, "v1"))
 
     # v2
-
-    zoom_init_xmin = 20
-    zoom_init_xmax = 22
-    zoom_init_ymin = ymin
-    zoom_init_ymax = ymax
 
     plot_experiment(os.path.join(sac_data_dir, "v2"))
 
     # v3
 
-    zoom_init_xmin = 20
-    zoom_init_xmax = 22
-    zoom_init_ymin = ymin
-    zoom_init_ymax = ymax
-
     plot_experiment(os.path.join(sac_data_dir, "v3"))
 
     # v4
-
-    zoom_init_xmin = 20
-    zoom_init_xmax = 22
-    zoom_init_ymin = ymin
-    zoom_init_ymax = ymax
 
     plot_experiment(os.path.join(sac_data_dir, "v4"))
 
@@ -355,53 +338,33 @@ if __name__ == "__main__":
     # PPO
 
     # local for FetchReach PPO
-    xmin = 0
-    xmax = 12
+    xmin = 6
+    xmax = 6.6
 
     # local for FetchReach PPO
     ppo_data_dir = DATA_FOLDER_PATH + "/fetchreach/exps/ppo"
 
     # v4
 
-    zoom_init_xmin = 6
-    zoom_init_xmax = 6.25
-    zoom_init_ymin = -25
-    zoom_init_ymax = 1
-
     plot_experiment(os.path.join(ppo_data_dir, "v4"))
 
     # v6
-
-    zoom_init_xmin = 6
-    zoom_init_xmax = 6.25
-    zoom_init_ymin = -25
-    zoom_init_ymax = 1
 
     plot_experiment(os.path.join(ppo_data_dir, "v6"))
 
     # SAC
 
     # local for FetchReach SAC
-    xmin = 0
-    xmax = 4
+    xmin = 2
+    xmax = 2.2
 
     # local for FetchReach SAC
     sac_data_dir = DATA_FOLDER_PATH + "/fetchreach/exps/sac"
 
     # v4
 
-    zoom_init_xmin = 2
-    zoom_init_xmax = 2.1
-    zoom_init_ymin = -25
-    zoom_init_ymax = 1
-
     plot_experiment(os.path.join(sac_data_dir, "v4"))
 
     # v6
-
-    zoom_init_xmin = 2
-    zoom_init_xmax = 2.1
-    zoom_init_ymin = -25
-    zoom_init_ymax = 1
 
     plot_experiment(os.path.join(sac_data_dir, "v6"))

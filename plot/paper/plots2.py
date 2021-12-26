@@ -90,12 +90,7 @@ def plot_experiment(directory):
 
         if len(dfs) < num_seeds:
             # warning to let user know that seeds are missing
-            print(colored(
-                "The number of seeds for this experiment is {} but this setting only has {} seeds: {}".format(num_seeds,
-                                                                                                              str(len(
-                                                                                                                  dfs)),
-                                                                                                              dir_),
-                "red"))
+            print(colored("The number of seeds for this experiment is {} but this setting only has {} seeds: {}".format(num_seeds, str(len( dfs)), dir_), "red"))
 
         df = pd.concat(dfs)
         df = df.groupby(df.index)
@@ -209,8 +204,7 @@ def legend():
 
     f = lambda m, c: plt.plot([], [], marker=m, color=c, ls="none")[0]
     handles = [f("s", palette_colours[i]) for i in range(5)]
-    labels = ["pre-fault", "retain NN params,\nretain storage", "retain NN params,\ndiscard storage",
-              "discard NN params,\nretain storage", "discard NN params,\ndiscard storage"]
+    labels = ["pre-fault", "retain NN params,\nretain storage", "retain NN params,\ndiscard storage", "discard NN params,\nretain storage", "discard NN params,\ndiscard storage"]
     legend = plt.legend(handles, labels, ncol=5, loc=1, framealpha=1, frameon=True, facecolor="#eaeaf4")
 
     def export_legend(legend, filename="legend.jpg"):

@@ -238,7 +238,7 @@ def plot_experiment(directory):
         plt.tight_layout()
         filename = plot_directory + "/{}_{}_sub.jpg".format(algorithm, ab_env)
         plt.savefig(filename, dpi=300)
-        Image.open(filename).convert("CMYK").save(filename)
+        # Image.open(filename).convert("CMYK").save(filename)
         # plt.show()
         plt.close()
 
@@ -310,7 +310,7 @@ def plot_experiment(directory):
         fig.canvas.draw()
         filename = plot_directory + "/{}_{}_sub.jpg".format(algorithm, ab_env)
         plt.savefig(filename, bbox_inches="tight", dpi=300)
-        Image.open(filename).convert("CMYK").save(filename)
+        # Image.open(filename).convert("CMYK").save(filename)
         # plt.show()
         plt.close()
 
@@ -375,7 +375,7 @@ def plot_experiment(directory):
         plt.tight_layout()
         filename = plot_directory + "/{}_{}_all.jpg".format(algorithm, ab_env)
         plt.savefig(filename, dpi=300)
-        Image.open(filename).convert("CMYK").save(filename)
+        # Image.open(filename).convert("CMYK").save(filename)
         # plt.show()
         plt.close()
 
@@ -447,7 +447,7 @@ def plot_experiment(directory):
             plt.tight_layout()
             filename = plot_directory + "/{}_{}{}.jpg".format(algorithm, ab_env, subscript)
             plt.savefig(filename, dpi=300)
-            Image.open(filename).convert("CMYK").save(filename)
+            # Image.open(filename).convert("CMYK").save(filename)
             # plt.show()
             plt.close()
 
@@ -470,7 +470,7 @@ def legend():
         bbox = legend.get_window_extent().transformed(fig.dpi_scale_trans.inverted())
         filename = "plots/{}".format(filename)
         fig.savefig(filename, dpi=300, bbox_inches=bbox)
-        Image.open(filename).convert("CMYK").save(filename)
+        # Image.open(filename).convert("CMYK").save(filename)
 
     export_legend(legend)
     plt.close()
@@ -495,7 +495,7 @@ def legend2():
         bbox = legend.get_window_extent().transformed(fig.dpi_scale_trans.inverted())
         filename = "plots/{}".format(filename)
         fig.savefig(filename, dpi=300, bbox_inches=bbox)
-        Image.open(filename).convert("CMYK").save(filename)
+        # Image.open(filename).convert("CMYK").save(filename)
 
     export_legend(legend)
     plt.close()
@@ -503,8 +503,8 @@ def legend2():
 
 if __name__ == "__main__":
 
-    legend()
-    legend2()
+    # legend()
+    # legend2()
 
     PROJECT_PATH = pathlib.Path(os.getcwd()).parents[1]
     DATA_FOLDER_PATH = os.path.join(PROJECT_PATH, "data")

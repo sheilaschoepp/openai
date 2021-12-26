@@ -1123,7 +1123,7 @@ if __name__ == "__main__":
 
     # PPO
 
-    ant_ppo_v0 = False
+    ant_ppo_v0 = True
 
     if ant_ppo_v0:
         
@@ -1132,7 +1132,7 @@ if __name__ == "__main__":
 
     # SAC
     
-    ant_sac_v0 = False
+    ant_sac_v0 = True
 
     if ant_sac_v0:
         
@@ -1147,16 +1147,16 @@ if __name__ == "__main__":
     
     if ant_ppo_v1:
 
-        file = "/media/sschoepp/easystore/shared/ant/combined/faulty/ppo/v1/PPOv2_AntEnv-v1:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:False_rn:False_d:cpu_resumed"
+        file = "/media/sschoepp/easystore/shared/ant/combined/faulty/ppo/v1/PPOv2_AntEnv-v1:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:False_rn:False_d:cpu"
         draw_histogram()
     
-        file = "/media/sschoepp/easystore/shared/ant/combined/faulty/ppo/v1/PPOv2_AntEnv-v1:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:False_rn:True_d:cpu_resumed"
+        file = "/media/sschoepp/easystore/shared/ant/combined/faulty/ppo/v1/PPOv2_AntEnv-v1:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:False_rn:True_d:cpu"
         draw_histogram()
     
-        file = "/media/sschoepp/easystore/shared/ant/combined/faulty/ppo/v1/PPOv2_AntEnv-v1:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:True_rn:False_d:cpu_resumed"
+        file = "/media/sschoepp/easystore/shared/ant/combined/faulty/ppo/v1/PPOv2_AntEnv-v1:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:True_rn:False_d:cpu"
         draw_histogram()
     
-        file = "/media/sschoepp/easystore/shared/ant/combined/faulty/ppo/v1/PPOv2_AntEnv-v1:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:True_rn:True_d:cpu_resumed"
+        file = "/media/sschoepp/easystore/shared/ant/combined/faulty/ppo/v1/PPOv2_AntEnv-v1:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:True_rn:True_d:cpu"
         draw_histogram()
 
     # PPO v2
@@ -1165,16 +1165,16 @@ if __name__ == "__main__":
     
     if ant_ppo_v2:
 
-        file = "/media/sschoepp/easystore/shared/ant/combined/faulty/ppo/v2/PPOv2_AntEnv-v2:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:False_rn:False_d:cpu_resumed"
+        file = "/media/sschoepp/easystore/shared/ant/combined/faulty/ppo/v2/PPOv2_AntEnv-v2:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:False_rn:False_d:cpu"
         draw_histogram()
     
-        file = "/media/sschoepp/easystore/shared/ant/combined/faulty/ppo/v2/PPOv2_AntEnv-v2:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:False_rn:True_d:cpu_resumed"
+        file = "/media/sschoepp/easystore/shared/ant/combined/faulty/ppo/v2/PPOv2_AntEnv-v2:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:False_rn:True_d:cpu"
         draw_histogram()
     
-        file = "/media/sschoepp/easystore/shared/ant/combined/faulty/ppo/v2/PPOv2_AntEnv-v2:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:True_rn:False_d:cpu_resumed"
+        file = "/media/sschoepp/easystore/shared/ant/combined/faulty/ppo/v2/PPOv2_AntEnv-v2:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:True_rn:False_d:cpu"
         draw_histogram()
     
-        file = "/media/sschoepp/easystore/shared/ant/combined/faulty/ppo/v2/PPOv2_AntEnv-v2:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:True_rn:True_d:cpu_resumed"
+        file = "/media/sschoepp/easystore/shared/ant/combined/faulty/ppo/v2/PPOv2_AntEnv-v2:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:True_rn:True_d:cpu"
         draw_histogram()
 
     # PPO v3
@@ -1183,16 +1183,16 @@ if __name__ == "__main__":
 
     if ant_ppo_v3:
 
-        file = "/media/sschoepp/easystore/shared/ant/combined/faulty/ppo/v3/PPOv2_AntEnv-v3:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:False_rn:False_d:cpu_resumed"
+        file = "/media/sschoepp/easystore/shared/ant/combined/faulty/ppo/v3/PPOv2_AntEnv-v3:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:False_rn:False_d:cpu"
         draw_histogram()
     
-        file = "/media/sschoepp/easystore/shared/ant/combined/faulty/ppo/v3/PPOv2_AntEnv-v3:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:False_rn:True_d:cpu_resumed"
+        file = "/media/sschoepp/easystore/shared/ant/combined/faulty/ppo/v3/PPOv2_AntEnv-v3:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:False_rn:True_d:cpu"
         draw_histogram()
     
-        file = "/media/sschoepp/easystore/shared/ant/combined/faulty/ppo/v3/PPOv2_AntEnv-v3:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:True_rn:False_d:cpu_resumed"
+        file = "/media/sschoepp/easystore/shared/ant/combined/faulty/ppo/v3/PPOv2_AntEnv-v3:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:True_rn:False_d:cpu"
         draw_histogram()
     
-        file = "/media/sschoepp/easystore/shared/ant/combined/faulty/ppo/v3/PPOv2_AntEnv-v3:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:True_rn:True_d:cpu_resumed"
+        file = "/media/sschoepp/easystore/shared/ant/combined/faulty/ppo/v3/PPOv2_AntEnv-v3:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:True_rn:True_d:cpu"
         draw_histogram()
 
     # PPO v4
@@ -1201,16 +1201,16 @@ if __name__ == "__main__":
     
     if ant_ppo_v4:
 
-        file = "/media/sschoepp/easystore/shared/ant/combined/faulty/ppo/v4/PPOv2_AntEnv-v4:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:False_rn:False_d:cpu_resumed"
+        file = "/media/sschoepp/easystore/shared/ant/combined/faulty/ppo/v4/PPOv2_AntEnv-v4:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:False_rn:False_d:cpu"
         draw_histogram()
     
-        file = "/media/sschoepp/easystore/shared/ant/combined/faulty/ppo/v4/PPOv2_AntEnv-v4:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:False_rn:True_d:cpu_resumed"
+        file = "/media/sschoepp/easystore/shared/ant/combined/faulty/ppo/v4/PPOv2_AntEnv-v4:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:False_rn:True_d:cpu"
         draw_histogram()
     
-        file = "/media/sschoepp/easystore/shared/ant/combined/faulty/ppo/v4/PPOv2_AntEnv-v4:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:True_rn:False_d:cpu_resumed"
+        file = "/media/sschoepp/easystore/shared/ant/combined/faulty/ppo/v4/PPOv2_AntEnv-v4:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:True_rn:False_d:cpu"
         draw_histogram()
     
-        file = "/media/sschoepp/easystore/shared/ant/combined/faulty/ppo/v4/PPOv2_AntEnv-v4:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:True_rn:True_d:cpu_resumed"
+        file = "/media/sschoepp/easystore/shared/ant/combined/faulty/ppo/v4/PPOv2_AntEnv-v4:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:True_rn:True_d:cpu"
         draw_histogram()
 
     # SAC v1
@@ -1219,16 +1219,16 @@ if __name__ == "__main__":
     
     if ant_sac_v1:
 
-        file = "/media/sschoepp/easystore/shared/ant/original/faulty/sac/v1/SACv2_AntEnv-v1:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:False_rn:False_a:True_d:cuda_resumed"
+        file = "/media/sschoepp/easystore/shared/ant/original/faulty/sac/v1/SACv2_AntEnv-v1:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:False_rn:False_a:True_d:cuda"
         draw_histogram()
     
-        file = "/media/sschoepp/easystore/shared/ant/original/faulty/sac/v1/SACv2_AntEnv-v1:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:False_rn:True_a:True_d:cuda_resumed"
+        file = "/media/sschoepp/easystore/shared/ant/original/faulty/sac/v1/SACv2_AntEnv-v1:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:False_rn:True_a:True_d:cuda"
         draw_histogram()
     
-        file = "/media/sschoepp/easystore/shared/ant/original/faulty/sac/v1/SACv2_AntEnv-v1:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:True_rn:False_a:True_d:cuda_resumed"
+        file = "/media/sschoepp/easystore/shared/ant/original/faulty/sac/v1/SACv2_AntEnv-v1:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:True_rn:False_a:True_d:cuda"
         draw_histogram()
     
-        file = "/media/sschoepp/easystore/shared/ant/original/faulty/sac/v1/SACv2_AntEnv-v1:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:True_rn:True_a:True_d:cuda_resumed"
+        file = "/media/sschoepp/easystore/shared/ant/original/faulty/sac/v1/SACv2_AntEnv-v1:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:True_rn:True_a:True_d:cuda"
         draw_histogram()
 
     # SAC v2
@@ -1237,16 +1237,16 @@ if __name__ == "__main__":
     
     if ant_sac_v2:
 
-        file = "/media/sschoepp/easystore/shared/ant/original/faulty/sac/v2/SACv2_AntEnv-v2:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:False_rn:False_a:True_d:cuda_resumed"
+        file = "/media/sschoepp/easystore/shared/ant/original/faulty/sac/v2/SACv2_AntEnv-v2:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:False_rn:False_a:True_d:cuda"
         draw_histogram()
     
-        file = "/media/sschoepp/easystore/shared/ant/original/faulty/sac/v2/SACv2_AntEnv-v2:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:False_rn:True_a:True_d:cuda_resumed"
+        file = "/media/sschoepp/easystore/shared/ant/original/faulty/sac/v2/SACv2_AntEnv-v2:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:False_rn:True_a:True_d:cuda"
         draw_histogram()
     
-        file = "/media/sschoepp/easystore/shared/ant/original/faulty/sac/v2/SACv2_AntEnv-v2:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:True_rn:False_a:True_d:cuda_resumed"
+        file = "/media/sschoepp/easystore/shared/ant/original/faulty/sac/v2/SACv2_AntEnv-v2:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:True_rn:False_a:True_d:cuda"
         draw_histogram()
     
-        file = "/media/sschoepp/easystore/shared/ant/original/faulty/sac/v2/SACv2_AntEnv-v2:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:True_rn:True_a:True_d:cuda_resumed"
+        file = "/media/sschoepp/easystore/shared/ant/original/faulty/sac/v2/SACv2_AntEnv-v2:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:True_rn:True_a:True_d:cuda"
         draw_histogram()
 
     # SAC v3
@@ -1255,16 +1255,16 @@ if __name__ == "__main__":
     
     if ant_sac_v3:
 
-        file = "/media/sschoepp/easystore/shared/ant/original/faulty/sac/v3/SACv2_AntEnv-v3:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:False_rn:False_a:True_d:cuda_resumed"
+        file = "/media/sschoepp/easystore/shared/ant/original/faulty/sac/v3/SACv2_AntEnv-v3:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:False_rn:False_a:True_d:cuda"
         draw_histogram()
     
-        file = "/media/sschoepp/easystore/shared/ant/original/faulty/sac/v3/SACv2_AntEnv-v3:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:False_rn:True_a:True_d:cuda_resumed"
+        file = "/media/sschoepp/easystore/shared/ant/original/faulty/sac/v3/SACv2_AntEnv-v3:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:False_rn:True_a:True_d:cuda"
         draw_histogram()
     
-        file = "/media/sschoepp/easystore/shared/ant/original/faulty/sac/v3/SACv2_AntEnv-v3:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:True_rn:False_a:True_d:cuda_resumed"
+        file = "/media/sschoepp/easystore/shared/ant/original/faulty/sac/v3/SACv2_AntEnv-v3:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:True_rn:False_a:True_d:cuda"
         draw_histogram()
     
-        file = "/media/sschoepp/easystore/shared/ant/original/faulty/sac/v3/SACv2_AntEnv-v3:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:True_rn:True_a:True_d:cuda_resumed"
+        file = "/media/sschoepp/easystore/shared/ant/original/faulty/sac/v3/SACv2_AntEnv-v3:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:True_rn:True_a:True_d:cuda"
         draw_histogram()
 
     # SAC v4
@@ -1273,16 +1273,16 @@ if __name__ == "__main__":
     
     if ant_sac_v4:
 
-        file = "/media/sschoepp/easystore/shared/ant/original/faulty/sac/v4/SACv2_AntEnv-v4:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:False_rn:False_a:True_d:cuda_resumed"
+        file = "/media/sschoepp/easystore/shared/ant/original/faulty/sac/v4/SACv2_AntEnv-v4:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:False_rn:False_a:True_d:cuda"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/shared/ant/original/faulty/sac/v4/SACv2_AntEnv-v4:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:False_rn:True_a:True_d:cuda_resumed"
+        file = "/media/sschoepp/easystore/shared/ant/original/faulty/sac/v4/SACv2_AntEnv-v4:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:False_rn:True_a:True_d:cuda"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/shared/ant/original/faulty/sac/v4/SACv2_AntEnv-v4:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:True_rn:False_a:True_d:cuda_resumed"
+        file = "/media/sschoepp/easystore/shared/ant/original/faulty/sac/v4/SACv2_AntEnv-v4:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:True_rn:False_a:True_d:cuda"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/shared/ant/original/faulty/sac/v4/SACv2_AntEnv-v4:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:True_rn:True_a:True_d:cuda_resumed"
+        file = "/media/sschoepp/easystore/shared/ant/original/faulty/sac/v4/SACv2_AntEnv-v4:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:True_rn:True_a:True_d:cuda"
         draw_histogram()
 
     """fetchreach normal"""

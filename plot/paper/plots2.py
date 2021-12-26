@@ -9,7 +9,7 @@ from termcolor import colored
 from PIL import Image
 
 sns.set_theme()
-palette_colours = ["#0173b2", "#027957", "#A63F93", "#000000", "#AD4B00"]
+palette_colours = ["#0173b2", "#027957", "#A63F93", "#AD4B00", "#000000"]
 
 LARGE = 16
 MEDIUM = 14
@@ -199,7 +199,7 @@ def plot_experiment(directory):
     filename = plot_directory + "/{}_{}_all_mod.jpg".format(algorithm, ab_env)
     plt.savefig(filename, dpi=300)
     # Image.open(filename).convert("CMYK").save(filename)
-    plt.show()
+    # plt.show()
     plt.close()
 
 
@@ -211,34 +211,9 @@ def legend():
     handles = [f("s", palette_colours[i]) for i in range(5)]
     labels = ["pre-fault", "retain NN params,\nretain storage", "retain NN params,\ndiscard storage",
               "discard NN params,\nretain storage", "discard NN params,\ndiscard storage"]
-    legend = plt.legend(handles, labels, ncol=5, loc=1, framealpha=1, frameon=False)
+    legend = plt.legend(handles, labels, ncol=5, loc=1, framealpha=1, frameon=True, facecolor="#eaeaf4")
 
     def export_legend(legend, filename="legend.jpg"):
-        fig = legend.figure
-        fig.canvas.draw()
-        bbox = legend.get_window_extent().transformed(fig.dpi_scale_trans.inverted())
-        filename = "plots/{}".format(filename)
-        fig.savefig(filename, dpi=300, bbox_inches=bbox)
-        # # Image.open(filename).convert("CMYK").save(filename)
-
-    export_legend(legend)
-    plt.close()
-
-
-def legend2():
-    fig, ax = plt.subplots()
-    ax.axis("off")
-
-    e = lambda: plt.plot([], [], ls="--", color=palette_colours[0])[0]
-    f = lambda m, c: plt.plot([], [], marker=m, color=c, ls="none")[0]
-    handles_ = [e()]
-    handles = [f("s", palette_colours[i]) for i in range(1, 5)]
-    handles.insert(0, handles_[0])
-    labels = ["pre-fault", "retain NN params,\nretain storage", "retain NN params,\ndiscard storage",
-              "discard NN params,\nretain storage", "discard NN params,\ndiscard storage"]
-    legend = plt.legend(handles, labels, ncol=5, loc=1, framealpha=1, frameon=False)
-
-    def export_legend(legend, filename="legend2.jpg"):
         fig = legend.figure
         fig.canvas.draw()
         bbox = legend.get_window_extent().transformed(fig.dpi_scale_trans.inverted())
@@ -253,7 +228,6 @@ def legend2():
 if __name__ == "__main__":
 
     legend()
-    legend2()
 
     PROJECT_PATH = pathlib.Path(os.getcwd()).parents[1]
     DATA_FOLDER_PATH = os.path.join(PROJECT_PATH, "data")

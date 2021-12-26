@@ -179,7 +179,7 @@ def plot_experiment(directory):
         title = "Proximal Policy Optimization (PPO)"
 
     plt.title(title)
-    
+
     # plt.legend()
 
     plt.tight_layout()

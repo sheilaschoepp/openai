@@ -949,7 +949,7 @@ def plot_postfault_performance_drop(interval):
 
             filename = plot_directory + "/{}_{}_performance_drop_{}.jpg".format(algo[:-2].upper(), env, interval)
             plt.savefig(filename, dpi=300)
-            Image.open(filename).convert("CMYK").save(filename)
+            # Image.open(filename).convert("CMYK").save(filename)
 
             plt.show()
 

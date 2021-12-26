@@ -9,8 +9,7 @@ from termcolor import colored
 from PIL import Image
 
 sns.set_theme()
-palette_colours = ["#0173b2", "#A63F93", "#027957", "#AD4B00", "#000000"]
-#                   blue        black      orange      green    pink
+#                    blue       black      orange      green     pink
 palette_colours = ["#0173b2", "#000000", "#AD4B00", "#027957", "#A63F93"]
 
 LARGE = 16
@@ -38,6 +37,7 @@ def plot_experiment(directory):
     algorithm = ""
     ab_env = ""
     n_env = ""
+    ts_fault_onset = None
 
     first_setting = True
 
@@ -54,15 +54,18 @@ def plot_experiment(directory):
             algorithm = parameters[0][:-2]
             ab_env = parameters[1].split(":")[0]
             n_env = parameters[2].split(":")[0]
+            ts_fault_onset = int(parameters[2].split(":")[1])
             first_setting = False
         else:
             # check to make sure that the four setting folders contained within directory are for the same algorithm, normal environment, and abnormal environment
             setting_algorithm = parameters[0][:-2]
             setting_ab_env = parameters[1].split(":")[0]
             setting_n_env = parameters[2].split(":")[0]
+            setting_ts_fault_onset = int(parameters[2].split(":")[1])
             assert setting_algorithm == algorithm, "plot_experiment: folders in directory are for more than one algorithm"
             assert setting_ab_env == ab_env, "plot_experiment: folders in directory are for more than one abnormal environment"
             assert setting_n_env == n_env, "plot_experiment: folders in directory are for more than one normal environment"
+            assert setting_ts_fault_onset == ts_fault_onset, "plot_experiment: folders in directory are for more than one normal environment"
 
         if parameters[-1] == "r":
             # skip over resumable experiments (final episode is not complete)
@@ -75,6 +78,16 @@ def plot_experiment(directory):
                 cs = eval(p.split(":")[1])
             elif "rn:" in p:
                 rn = eval(p.split(":")[1])
+                
+        label = None
+        if not cs and not rn:
+            label = "retain NN params\nretain storage"
+        elif cs and not rn:
+            label = "retain NN params\ndiscard storage"
+        elif not cs and rn:
+            label = "discard NN params\nretain storage"
+        elif cs and rn:
+            label = "discard NN params\ndiscard storage"
 
         # obtain data for setting: mean and standard error
 
@@ -100,12 +113,12 @@ def plot_experiment(directory):
         df_mean = df.mean()
         df_sem = df.sem()
 
-        ordered_settings.append((algorithm, rn, cs, df_mean, df_sem))
+        ordered_settings.append((algorithm, rn, cs, label, df_mean, df_sem))  # TODO
 
     assert len(ordered_settings) == 4, "plot_experiment: not four settings"
 
     # reorganize settings to obtain a plotting order
-    # (rn, cs) desired_ordering = [(False, False), (False, True), (True, False), (True, True)]
+    # (rn, cs) desired_ordering = [(True, True), (True, False), (False, True), (False, False)]
 
     ordered_settings.sort(reverse=True)
 
@@ -113,90 +126,70 @@ def plot_experiment(directory):
 
     eval_fault_onset = 201
 
+    x_divisor = 1000000
+
+    x_fault_onset = ordered_settings[0][4].iloc[eval_fault_onset, 0] - ts_fault_onset
+
+    # plot normal asymptotic performance
+
+    x = (ordered_settings[0][4].iloc[eval_fault_onset:, 0] - ts_fault_onset) / x_divisor
+    normal_asymp = ordered_settings[0][4].iloc[eval_fault_onset - 10:eval_fault_onset, 1].mean()
+
+    plt.axhline(y=normal_asymp, color=palette_colours[0], linestyle="dashed", linewidth=1)
+
+    # plot fault performance
+
+    for i in range(4):
+
+        # asymptotic performance
+        x_asymp = ordered_settings[i][4].iloc[eval_fault_onset:, 0] - ts_fault_onset
+        y_asymp = ordered_settings[i][4].iloc[-10:, 1].mean()
+
+        # cut plots when asymptotic performance is reached
+        y_array = ordered_settings[i][4].iloc[eval_fault_onset:, 1].to_numpy()
+        eval_fault_stop = 402
+        for j in range(len(y_array)):
+            if y_array[j] >= y_asymp:
+                eval_fault_stop = j + 1 + eval_fault_onset
+                break
+
+        # data
+        x = (ordered_settings[i][4].iloc[eval_fault_onset:eval_fault_stop, 0] - ts_fault_onset) / x_divisor
+        y = ordered_settings[i][4].iloc[eval_fault_onset:eval_fault_stop, 1]
+
+        # 95 % confidence interval
+        lb = y - CI_Z * ordered_settings[i][5].iloc[eval_fault_onset:eval_fault_stop, 1]
+        ub = y + CI_Z * ordered_settings[i][5].iloc[eval_fault_onset:eval_fault_stop, 1]
+
+        label = ordered_settings[i][3]
+
+        plt.plot(x, y, color=palette_colours[i + 1], label=label)
+        plt.fill_between(x, lb, ub, color=palette_colours[i + 1], alpha=0.2)
+        plt.axhline(y=y_asymp, color=palette_colours[i + 1], linestyle="dashed", linewidth=1)
+
+    plt.axvline(x=x_fault_onset, color="red", ymin=0.95, linewidth=4)
+    plt.xlim(xmin - (ts_fault_onset / x_divisor), xmax - (ts_fault_onset / x_divisor))
+    plt.ylim(ymin, ymax)
+    plt.xlabel("million steps")
+    plt.ylabel("average return ({} seeds)".format(num_seeds))
+
     if algorithm == "SAC":
         title = "Soft Actor-Critic (SAC)"
     else:
         title = "Proximal Policy Optimization (PPO)"
 
+    plt.title(title)
+    
+    # plt.legend()
+
+    plt.tight_layout()
+
     plot_directory = os.path.join(os.getcwd(), "plots", env_name, algorithm, ab_env)
     os.makedirs(plot_directory, exist_ok=True)
-
-    x_divisor = 1000000
-
-    x_fault_onset = ordered_settings[0][3].iloc[eval_fault_onset, 0] / x_divisor
-
-    ts_fault_onset = None
-    if algorithm == "PPO":
-        if n_env == "Ant-v2":
-            ts_fault_onset = 600000000 / x_divisor
-        elif n_env == "FetchReachEnv-v0":
-            ts_fault_onset = 6000000 / x_divisor
-    elif algorithm == "SAC":
-        if n_env == "Ant-v2":
-            ts_fault_onset = 20000000 / x_divisor
-        elif n_env == "FetchReachEnv-v0":
-            ts_fault_onset = 2000000 / x_divisor
-
-    x_fault_onset -= ts_fault_onset
-
-    markers = ["o", "*", "v", "x"]
-
-    # plot normal asymptotic performance
-
-    x = ordered_settings[0][3].iloc[eval_fault_onset:, 0] / x_divisor - ts_fault_onset
-    normal_asymp = ordered_settings[0][3].iloc[eval_fault_onset - 10:eval_fault_onset, 1].mean()
-
-    temp = np.zeros(len(x))
-    temp.fill(normal_asymp)
-    normal_asymp = temp
-
-    plt.plot(x, normal_asymp, color=palette_colours[0], linestyle="--")
-
-    # plot fault performance
-
-    x = ordered_settings[3][1]
-
-    for i in range(4):
-
-        # asymptotic performance
-        x_asymp = ordered_settings[i][3].iloc[eval_fault_onset:, 0] / x_divisor - ts_fault_onset
-        y_asymp = ordered_settings[i][3].iloc[-10:, 1].mean()
-        y_asymp_array = np.zeros(len(x_asymp))
-        y_asymp_array.fill(y_asymp)
-
-        y_array = ordered_settings[i][3].iloc[eval_fault_onset:, 1].to_numpy()
-
-        cut_plot = True
-        eval_fault_stop = 402
-        if cut_plot:
-            for j in range(len(y_array)):
-                if y_array[j] > y_asymp:
-                    eval_fault_stop = j + 1 + eval_fault_onset
-                    break
-
-        # data
-        x = ordered_settings[i][3].iloc[eval_fault_onset:eval_fault_stop, 0] / x_divisor - ts_fault_onset
-        y = ordered_settings[i][3].iloc[eval_fault_onset:eval_fault_stop, 1]
-
-        # 95 % confidence interval
-        lb = y - CI_Z * ordered_settings[i][4].iloc[eval_fault_onset:eval_fault_stop, 1]
-        ub = y + CI_Z * ordered_settings[i][4].iloc[eval_fault_onset:eval_fault_stop, 1]
-
-        plt.plot(x, y, color=palette_colours[i + 1]) # marker=markers[i], markersize=4
-        plt.plot(x_asymp, y_asymp_array, color=palette_colours[i + 1], linestyle="--")
-        plt.fill_between(x, lb, ub, color=palette_colours[i + 1], alpha=0.2)
-
-    plt.axvline(x=x_fault_onset, color="red", ymin=0.95, linewidth=4)
-    plt.xlim(xmin - ts_fault_onset, xmax - ts_fault_onset)
-    plt.ylim(ymin, ymax)
-    plt.xlabel("million steps")
-    plt.ylabel("average return ({} seeds)".format(num_seeds))
-    plt.title(title)
-    plt.tight_layout()
     filename = plot_directory + "/{}_{}_all_mod.jpg".format(algorithm, ab_env)
     plt.savefig(filename, dpi=300)
     # Image.open(filename).convert("CMYK").save(filename)
-    # plt.show()
+    plt.show()
     plt.close()
 
 

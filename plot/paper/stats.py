@@ -394,16 +394,16 @@ def compute_earliest_adaptation_stats(dir_):
                     if algo.startswith("SAC"):
                         if rn and cs:
                             init = 24
-                            first = (14 * 60 + 26) - init
-                            second = (28 * 60 + 41) - init - first
-                            third = (42 * 60 + 58) - init - first - second
+                            first = (14 * 60 + 26) - init  # 842
+                            second = (28 * 60 + 41) - init - first  # 855
+                            third = (42 * 60 + 58) - init - first - second  # 857
                             real_time_per_eval = (first + second + third) / 3  # average (seconds)
                     else:
                         if rn and cs:
                             init = 2
-                            first = (30 * 60 + 4) - init
-                            second = (59 * 60 + 53) - init - first
-                            third = (89 * 60 + 31) - init - first - second
+                            first = (30 * 60 + 4) - init  # 1802
+                            second = (59 * 60 + 53) - init - first  # 1789
+                            third = (89 * 60 + 31) - init - first - second  # 1788
                             real_time_per_eval = (first + second + third) / 3  # average (seconds)
                         elif rn and not cs:
                             init = 2
@@ -453,6 +453,9 @@ def compute_earliest_adaptation_stats(dir_):
                         real_time_per_eval = 0
                     else:
                         real_time_per_eval = 0
+
+            # sac in FetchReachEnv-v4 (eval feq 10000): 10, 1:48 (98), 3:29 (101), 5:09 (100)
+            # ppo in FetchReachEnv-v4 (eval feq 30000): 1, 3:14 (193), 6:07 (173), 9:13 (186)
 
             real_time = real_time_per_eval * (interval_max - nt) / tef
             real_time = real_time / (60 * 60)  # hours

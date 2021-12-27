@@ -1082,7 +1082,7 @@ def draw_histogram():
         elif env_name == "FetchReachEnv-v4":
             name = "Post-Fault Policy"
 
-        print(name)
+        print(env_name)
 
         if collect_data:
             collect_fetchreach_data()

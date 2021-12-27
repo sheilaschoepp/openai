@@ -747,7 +747,7 @@ def plot_fetchreach_heatmap(ranges):
     elif algorithm == "SAC":
         algorithm_ = "Soft Actor-Critic (SAC)"
 
-    # heatmap.set_title("{}".format(algorithm_))
+    heatmap.set_title("{}".format(name))
     plt.xticks(rotation=45)
     plt.yticks(rotation=0)
     plt.xlabel("joint")
@@ -1072,7 +1072,7 @@ def draw_histogram():
         # name for plotting
         name = ""
         if env_name == "FetchReachEnv-v0":
-            name = "No Fault"
+            name = "Pre-Fault Policy"
         elif env_name == "FetchReachEnvGE-v0":
             name = "No Fault (with Goal Elimination)"
         elif env_name == "FetchReachEnv-v1":
@@ -1080,7 +1080,7 @@ def draw_histogram():
         elif env_name == "FetchReachEnvGE-v1":
             name = "Shoulder Lift Reduced ROM Fault (with Goal Elimination)"
         elif env_name == "FetchReachEnv-v4":
-            name = "Shoulder Lift Sensor Fault"
+            name = "Post-Fault Policy"
 
         if collect_data:
             collect_fetchreach_data()

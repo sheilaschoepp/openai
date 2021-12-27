@@ -1081,8 +1081,8 @@ def draw_histogram():
             name = "Shoulder Lift Reduced ROM Fault (with Goal Elimination)"
         elif env_name == "FetchReachEnv-v4":
             name = "Post-Fault Policy"
-
-        print(env_name)
+        elif env_name == "FetchReachEnv-v6":
+            name = "Post-Fault Policy"
 
         if collect_data:
             collect_fetchreach_data()

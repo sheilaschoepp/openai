@@ -1273,7 +1273,7 @@ if __name__ == "__main__":
 
     # SAC v4
 
-    ant_sac_v4 = True
+    ant_sac_v4 = False
 
     if ant_sac_v4:
 

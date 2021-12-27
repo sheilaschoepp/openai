@@ -958,13 +958,13 @@ def plot_postfault_performance_drop(interval):
                 plt.title("Soft Actor-Critic (SAC)")
 
             plt.xlabel("fault")
-            plt.ylabel("average drop in performance (30 seeds)")
+            plt.ylabel("average return (30 seeds)")
             plt.tight_layout()
 
             plot_directory = os.path.join(os.getcwd(), "plots", env.lower(), algo[:-2])
             os.makedirs(plot_directory, exist_ok=True)
 
-            filename = plot_directory + "/{}_{}_performance_drop_{}.jpg".format(algo[:-2].upper(), env, interval)
+            filename = plot_directory + "/{}_{}_average_return_after_fault_onset_{}.jpg".format(algo[:-2].upper(), env, interval)
             plt.savefig(filename, dpi=300)
             # Image.open(filename).convert("CMYK").save(filename)
 

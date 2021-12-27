@@ -741,6 +741,7 @@ def compute_postfault_performance_drop(dir_):
 
     pre = []
     post = []
+    asymp = []
 
     for seed in range(0, 30):
         dir1 = os.path.join(dir_, "seed" + str(seed))
@@ -749,14 +750,17 @@ def compute_postfault_performance_drop(dir_):
             eval_data = pd.read_csv(eval_data_dir)
             pre.append(eval_data[prefault_min:prefault_max]["average_return"].values.tolist())
             post.append(eval_data[postfault_min:postfault_max]["average_return"].values.tolist())
+            asymp.append(eval_data[-10:]["average_return"].values.tolist())
         else:
             print(colored("missing" + dir1, "red"))
 
     pre = np.array(pre).flatten()
     post = np.array(post).flatten()
+    asymp = np.array(asymp).flatten()
 
     pre_mean = np.mean(pre)
     post_mean = np.mean(post)
+    asymp_mean = np.mean(asymp)
 
     post_sem = sem(post)
 
@@ -774,7 +778,7 @@ def compute_postfault_performance_drop(dir_):
         post_ci = round(post_sem * CI_Z, 3)
 
     prefault_performance_data[algo + ", " + normal_env] = pre_mean
-    postfault_performance_data.append([algo, env, rn, cs, post_mean, post_ci])
+    postfault_performance_data.append([algo, env, rn, cs, post_mean, post_ci, asymp_mean])
 
 
 def plot_postfault_performance_drop(interval):
@@ -808,6 +812,7 @@ def plot_postfault_performance_drop(interval):
 
             CI_Z = 1.960
 
+            asymp_mean_baseline = None
             for entry in postfault_performance_data:
                 algo_ = entry[0]
                 env_ = entry[1]
@@ -816,6 +821,7 @@ def plot_postfault_performance_drop(interval):
                     cs = entry[3]
                     post_mean = entry[4]
                     post_ci = entry[5]
+                    asymp_mean = entry[6]
                     if not rn and not cs:
                         rnFcsF = post_mean
                         rnFcsF_ci = post_ci
@@ -828,8 +834,9 @@ def plot_postfault_performance_drop(interval):
                     elif rn and cs:
                         rnTcsT = post_mean
                         rnTcsT_ci = post_ci
+                        asymp_mean_baseline = asymp_mean
                     if rnFcsF and rnFcsT and rnTcsF and rnTcsT:
-                        data.append([algo_, env_, rnFcsF, rnFcsT, rnTcsF, rnTcsT, rnFcsF_ci, rnFcsT_ci, rnTcsF_ci, rnTcsT_ci])
+                        data.append([algo_, env_, rnFcsF, rnFcsT, rnTcsF, rnTcsT, rnFcsF_ci, rnFcsT_ci, rnTcsF_ci, rnTcsT_ci, asymp_mean_baseline])
 
                         rnFcsF = None
                         rnFcsT = None
@@ -845,7 +852,7 @@ def plot_postfault_performance_drop(interval):
 
                 # reorganize data to ["AntEnv-v2", "AntEnv-v3", "AntEnv-v1", "AntEnv-v4"]
                 data_ = [data[1], data[2], data[0], data[3]]
-                labels = ["hip 4 ROM\nrestriction", "ankle 4 ROM\nrestriction", "broken,\nsevered limb", "broken,\nunsevered limb"]
+                labels = ["hip ROM\nrestriction", "ankle ROM\nrestriction", "broken,\nsevered limb", "broken,\nunsevered limb"]
 
                 # reorganize the data
                 # labels = []
@@ -857,6 +864,7 @@ def plot_postfault_performance_drop(interval):
                 rnFcsTs_sem = []
                 rnTcsFs_sem = []
                 rnTcsTs_sem = []
+                asymp_mean_baselines = []
                 for entry in data_:
                     # labels.append(entry[1])
                     rnFcsFs.append(entry[2])
@@ -867,6 +875,7 @@ def plot_postfault_performance_drop(interval):
                     rnFcsTs_sem.append(entry[7])
                     rnTcsFs_sem.append(entry[8])
                     rnTcsTs_sem.append(entry[9])
+                    asymp_mean_baselines.append(entry[10])
 
                 bar_width = 0.2
                 br1 = np.arange(len(labels))
@@ -874,12 +883,17 @@ def plot_postfault_performance_drop(interval):
                 br3 = [x + bar_width for x in br2]
                 br4 = [x + bar_width for x in br3]
 
-                plt.bar(br1, np.array(rnFcsFs) - pre, yerr=rnFcsFs_sem, color=palette_colours[1], width=bar_width, bottom=pre)
-                plt.bar(br2, np.array(rnFcsTs) - pre, yerr=rnFcsTs_sem, color=palette_colours[2], width=bar_width, bottom=pre)
-                plt.bar(br3, np.array(rnTcsFs) - pre, yerr=rnTcsFs_sem, color=palette_colours[3], width=bar_width, bottom=pre)
-                plt.bar(br4, np.array(rnTcsTs) - pre, yerr=rnTcsTs_sem, color=palette_colours[4], width=bar_width, bottom=pre)
+                # plt.axhline(y=0, color=palette_colours[4], linewidth=1)
 
-                plt.axhline(y=pre, color=palette_colours[0], linestyle="dashed", linewidth=1)
+                plt.bar(br1, np.array(rnFcsFs), yerr=rnFcsFs_sem, color=palette_colours[1], width=bar_width)
+                plt.bar(br2, np.array(rnFcsTs), yerr=rnFcsTs_sem, color=palette_colours[2], width=bar_width)
+                plt.bar(br3, np.array(rnTcsFs), yerr=rnTcsFs_sem, color=palette_colours[3], width=bar_width)
+                plt.bar(br4, np.array(rnTcsTs), yerr=rnTcsTs_sem, color=palette_colours[4], width=bar_width)
+
+                plt.axhline(xmin=0.05, xmax=0.23, y=asymp_mean_baselines[0], color=palette_colours[4], linestyle="dashed", linewidth=1)
+                plt.axhline(xmin=0.29, xmax=0.47, y=asymp_mean_baselines[1], color=palette_colours[4], linestyle="dashed", linewidth=1)
+                plt.axhline(xmin=0.53, xmax=0.71, y=asymp_mean_baselines[2], color=palette_colours[4], linestyle="dashed", linewidth=1)
+                plt.axhline(xmin=0.77, xmax=0.95, y=asymp_mean_baselines[3], color=palette_colours[4], linestyle="dashed", linewidth=1)
 
                 plt.axvline(x=0.3, color="black", ymax=0.025)
                 plt.axvline(x=1.3, color="black", ymax=0.025)
@@ -904,6 +918,7 @@ def plot_postfault_performance_drop(interval):
                 rnFcsTs_sem = []
                 rnTcsFs_sem = []
                 rnTcsTs_sem = []
+                asymp_mean_baselines = []
                 for entry in data_:
                     # labels.append(entry[1])
                     rnFcsFs.append(entry[2])
@@ -914,6 +929,7 @@ def plot_postfault_performance_drop(interval):
                     rnFcsTs_sem.append(entry[7])
                     rnTcsFs_sem.append(entry[8])
                     rnTcsTs_sem.append(entry[9])
+                    asymp_mean_baselines.append(entry[10])
 
                 bar_width = 0.2
                 br1 = np.arange(len(labels))
@@ -921,12 +937,13 @@ def plot_postfault_performance_drop(interval):
                 br3 = [x + bar_width for x in br2]
                 br4 = [x + bar_width for x in br3]
 
-                plt.bar(br1, np.array(rnFcsFs) - pre, yerr=rnFcsFs_sem, color=palette_colours[1], width=bar_width, bottom=pre)
-                plt.bar(br2, np.array(rnFcsTs) - pre, yerr=rnFcsTs_sem, color=palette_colours[2], width=bar_width, bottom=pre)
-                plt.bar(br3, np.array(rnTcsFs) - pre, yerr=rnTcsFs_sem, color=palette_colours[3], width=bar_width, bottom=pre)
-                plt.bar(br4, np.array(rnTcsTs) - pre, yerr=rnTcsTs_sem, color=palette_colours[4], width=bar_width, bottom=pre)
+                plt.bar(br1, np.array(rnFcsFs), yerr=rnFcsFs_sem, color=palette_colours[1], width=bar_width, bottom=asymp_mean_baselines)
+                plt.bar(br2, np.array(rnFcsTs), yerr=rnFcsTs_sem, color=palette_colours[2], width=bar_width, bottom=asymp_mean_baselines)
+                plt.bar(br3, np.array(rnTcsFs), yerr=rnTcsFs_sem, color=palette_colours[3], width=bar_width, bottom=asymp_mean_baselines)
+                plt.bar(br4, np.array(rnTcsTs), yerr=rnTcsTs_sem, color=palette_colours[4], width=bar_width, bottom=asymp_mean_baselines)
 
-                plt.axhline(y=pre, color=palette_colours[0], linestyle="dashed", linewidth=1)
+                plt.axhline(xmin=0.05, xmax=0.45, y=asymp_mean_baselines[0], color=palette_colours[4], linestyle="dashed", linewidth=1)
+                plt.axhline(xmin=0.555, xmax=0.955, y=asymp_mean_baselines[1], color=palette_colours[4], linestyle="dashed", linewidth=1)
 
                 plt.axvline(x=0.3, color="black", ymax=0.025)
                 plt.axvline(x=1.3, color="black", ymax=0.025)
@@ -951,7 +968,7 @@ def plot_postfault_performance_drop(interval):
             plt.savefig(filename, dpi=300)
             # Image.open(filename).convert("CMYK").save(filename)
 
-            plt.show()
+            # plt.show()
 
             plt.close()
 

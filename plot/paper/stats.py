@@ -719,7 +719,7 @@ def compute_performance_drop_comparison_stats():
                 compute_t_test(a_, b_)
 
 
-def compute_postfault_bar_plot(dir_):
+def compute_postfault_performance(dir_):
 
     # experiment info
     info = dir_.split("/")[-1].split("_")
@@ -781,7 +781,7 @@ def compute_postfault_bar_plot(dir_):
     postfault_performance_data.append([algo, env, rn, cs, post_mean, post_ci, asymp_mean])
 
 
-def plot_postfault_performance_drop(interval):
+def plot_postfault_performance_bar_plot(interval):
 
     interval_start = 201
     interval_end = int(interval[1:4])
@@ -982,7 +982,7 @@ def plot_postfault_performance_drop(interval):
             plt.savefig(filename, dpi=300)
             # Image.open(filename).convert("CMYK").save(filename)
 
-            plt.show()
+            # plt.show()
 
             plt.close()
 
@@ -1005,7 +1005,7 @@ if __name__ == "__main__":
     complete_adaptation = False
     earliest_adaptation = False
     bar_plot = False
-    plot_performance_drop = True
+    plot_bar = True
 
     if complete_adaptation:
 
@@ -1136,15 +1136,13 @@ if __name__ == "__main__":
 
             compute_performance_drop_comparison_stats()
 
-    if plot_performance_drop:
-
-        # 10 evals
+    if plot_bar:
 
         prefault_min = 191
         prefault_max = 201
 
-        postfault_min = 206
-        postfault_max = 207
+        postfault_min = 221
+        postfault_max = 222
 
         eval_interval = f"[{postfault_min}:{postfault_max}]"
 
@@ -1161,7 +1159,7 @@ if __name__ == "__main__":
                 dir2 = os.path.join(dir1, dir2)
                 for dir3 in os.listdir(dir2):
                     dir3 = os.path.join(dir2, dir3)
-                    compute_postfault_bar_plot(dir3)
+                    compute_postfault_performance(dir3)
 
         fetchreach_data_dir = os.path.join(data_dir, "fetchreach", "exps")
 
@@ -1171,83 +1169,7 @@ if __name__ == "__main__":
                 dir2 = os.path.join(dir1, dir2)
                 for dir3 in os.listdir(dir2):
                     dir3 = os.path.join(dir2, dir3)
-                    compute_postfault_bar_plot(dir3)
+                    compute_postfault_performance(dir3)
 
         postfault_performance_data.sort()
-        plot_postfault_performance_drop(eval_interval)
-
-        # no evals
-
-        prefault_min = 191
-        prefault_max = 201
-
-        postfault_min = 201
-        postfault_max = 202
-
-        eval_interval = f"[{postfault_min}:{postfault_max}]"
-
-        # dictionary: entries {"algo, env": mean}
-        prefault_performance_data = {}
-        # list of list: entries [algo, env, rn, cs, mean]
-        postfault_performance_data = []
-
-        ant_data_dir = os.path.join(data_dir, "ant", "exps")
-
-        for dir1 in os.listdir(ant_data_dir):
-            dir1 = os.path.join(ant_data_dir, dir1)
-            for dir2 in os.listdir(dir1):
-                dir2 = os.path.join(dir1, dir2)
-                for dir3 in os.listdir(dir2):
-                    dir3 = os.path.join(dir2, dir3)
-                    compute_postfault_bar_plot(dir3)
-
-        fetchreach_data_dir = os.path.join(data_dir, "fetchreach", "exps")
-
-        for dir1 in os.listdir(fetchreach_data_dir):
-            dir1 = os.path.join(fetchreach_data_dir, dir1)
-            for dir2 in os.listdir(dir1):
-                dir2 = os.path.join(dir1, dir2)
-                for dir3 in os.listdir(dir2):
-                    dir3 = os.path.join(dir2, dir3)
-                    compute_postfault_bar_plot(dir3)
-
-        postfault_performance_data.sort()
-        plot_postfault_performance_drop(eval_interval)
-
-        # one eval
-
-        prefault_min = 191
-        prefault_max = 201
-
-        postfault_min = 202
-        postfault_max = 203
-
-        eval_interval = f"[{postfault_min}:{postfault_max}]"
-
-        # dictionary: entries {"algo, env": mean}
-        prefault_performance_data = {}
-        # list of list: entries [algo, env, rn, cs, mean]
-        postfault_performance_data = []
-
-        ant_data_dir = os.path.join(data_dir, "ant", "exps")
-
-        for dir1 in os.listdir(ant_data_dir):
-            dir1 = os.path.join(ant_data_dir, dir1)
-            for dir2 in os.listdir(dir1):
-                dir2 = os.path.join(dir1, dir2)
-                for dir3 in os.listdir(dir2):
-                    dir3 = os.path.join(dir2, dir3)
-                    compute_postfault_bar_plot(dir3)
-
-        fetchreach_data_dir = os.path.join(data_dir, "fetchreach", "exps")
-
-        for dir1 in os.listdir(fetchreach_data_dir):
-            dir1 = os.path.join(fetchreach_data_dir, dir1)
-            for dir2 in os.listdir(dir1):
-                dir2 = os.path.join(dir1, dir2)
-                for dir3 in os.listdir(dir2):
-                    dir3 = os.path.join(dir2, dir3)
-                    compute_postfault_bar_plot(dir3)
-
-        postfault_performance_data.sort()
-        plot_postfault_performance_drop(eval_interval)
+        plot_postfault_performance_bar_plot(eval_interval)

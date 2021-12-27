@@ -747,7 +747,7 @@ def plot_fetchreach_heatmap(ranges):
     elif algorithm == "SAC":
         algorithm_ = "Soft Actor-Critic (SAC)"
 
-    heatmap.set_title("{}".format(algorithm_))
+    # heatmap.set_title("{}".format(algorithm_))
     plt.xticks(rotation=45)
     plt.yticks(rotation=0)
     plt.xlabel("joint")

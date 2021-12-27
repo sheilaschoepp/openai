@@ -546,7 +546,7 @@ def compute_performance_drop_stats(dir_):
         if os.path.exists(dir1):
             eval_data_dir = os.path.join(dir1, "csv", "eval_data.csv")
             eval_data = pd.read_csv(eval_data_dir)
-            pre.append(eval_data[prefault_min + 0:prefault_max]["average_return"].values.tolist())
+            pre.append(eval_data[prefault_min:prefault_max]["average_return"].values.tolist())
             post.append(eval_data[prefault_max:prefault_max + 10]["average_return"].values.tolist())
         else:
             print(colored("missing" + dir1, "red"))
@@ -559,7 +559,7 @@ def compute_performance_drop_stats(dir_):
         diff = post[i] - pre[i]
         drops.append(diff)
 
-    performance_drop_data.append([algo, env, rn, cs, drops])
+    bar_plot_data.append([algo, env, rn, cs, drops])
 
     drop_ci = st.t.interval(alpha=confidence_level, df=len(pre) - 1, loc=np.mean(drops), scale=st.sem(drops))
     if env.startswith("AntEnv"):
@@ -605,7 +605,7 @@ def compute_performance_drop_comparison_stats():
     algorithms = []
     envs = []
 
-    for entry in performance_drop_data:
+    for entry in bar_plot_data:
         algo = entry[0]
         env = entry[1]
         if algo not in algorithms:
@@ -624,7 +624,7 @@ def compute_performance_drop_comparison_stats():
 
             setting_data = []
 
-            for entry in performance_drop_data:
+            for entry in bar_plot_data:
                 algo_ = entry[0]
                 env_ = entry[1]
                 if algo == algo_ and env == env_:
@@ -719,7 +719,7 @@ def compute_performance_drop_comparison_stats():
                 compute_t_test(a_, b_)
 
 
-def compute_postfault_performance_drop(dir_):
+def compute_postfault_bar_plot(dir_):
 
     # experiment info
     info = dir_.split("/")[-1].split("_")
@@ -783,6 +783,10 @@ def compute_postfault_performance_drop(dir_):
 
 def plot_postfault_performance_drop(interval):
 
+    interval_start = 201
+    interval_end = int(interval[1:4])
+    interval_length = interval_end - interval_start
+
     algos = ["PPOv2", "SACv2"]
     envs = ["Ant", "FetchReach"]
 
@@ -796,10 +800,20 @@ def plot_postfault_performance_drop(interval):
 
             data = []
 
+            ts = 0
             if env == "Ant":
                 pre = prefault_performance_data[algo + ", " + "Ant-v2"]
+                if algo == "PPOv2":
+                    ts = interval_length * 3000000
+                elif algo == "SACv2":
+                    ts = interval_length * 100000
             elif env == "FetchReach":
                 pre = prefault_performance_data[algo + ", " + "FetchReach-v1"]
+                if algo == "PPOv2":
+                    ts = interval_length * 30000
+                elif algo == "SACv2":
+                    ts = interval_length * 10000
+            ts = f"{ts:,}"
 
             rnFcsF = None
             rnFcsT = None
@@ -953,9 +967,9 @@ def plot_postfault_performance_drop(interval):
                 plt.ylim((-30, 1.5))
 
             if algo.startswith("PPO"):
-                plt.title("Proximal Policy Optimization (PPO)")
+                plt.title("Proximal Policy Optimization: {} Time Steps".format(ts))
             elif algo.startswith("SAC"):
-                plt.title("Soft Actor-Critic (SAC)")
+                plt.title("Soft Actor-Critic: {} Time Steps".format(ts))
 
             plt.xlabel("fault")
             plt.ylabel("average return (30 seeds)")
@@ -968,7 +982,7 @@ def plot_postfault_performance_drop(interval):
             plt.savefig(filename, dpi=300)
             # Image.open(filename).convert("CMYK").save(filename)
 
-            # plt.show()
+            plt.show()
 
             plt.close()
 
@@ -990,7 +1004,7 @@ if __name__ == "__main__":
 
     complete_adaptation = False
     earliest_adaptation = False
-    performance_drop = False
+    bar_plot = False
     plot_performance_drop = True
 
     if complete_adaptation:
@@ -1074,12 +1088,12 @@ if __name__ == "__main__":
                         dir3 = os.path.join(dir2, dir3)
                         compute_earliest_adaptation_stats(dir3)
 
-    if performance_drop:
+    if bar_plot:
 
         # list of list: entries [algo, env, rn, cs, post]
-        performance_drop_data = []
+        bar_plot_data = []
 
-        with open("stats/performance_drop_stats.txt", "w") as f:
+        with open("stats/bar_plot_stats.txt", "w") as f:
 
             sys.stdout = f
 
@@ -1129,8 +1143,8 @@ if __name__ == "__main__":
         prefault_min = 191
         prefault_max = 201
 
-        postfault_min = 211
-        postfault_max = 212
+        postfault_min = 206
+        postfault_max = 207
 
         eval_interval = f"[{postfault_min}:{postfault_max}]"
 
@@ -1147,7 +1161,7 @@ if __name__ == "__main__":
                 dir2 = os.path.join(dir1, dir2)
                 for dir3 in os.listdir(dir2):
                     dir3 = os.path.join(dir2, dir3)
-                    compute_postfault_performance_drop(dir3)
+                    compute_postfault_bar_plot(dir3)
 
         fetchreach_data_dir = os.path.join(data_dir, "fetchreach", "exps")
 
@@ -1157,7 +1171,7 @@ if __name__ == "__main__":
                 dir2 = os.path.join(dir1, dir2)
                 for dir3 in os.listdir(dir2):
                     dir3 = os.path.join(dir2, dir3)
-                    compute_postfault_performance_drop(dir3)
+                    compute_postfault_bar_plot(dir3)
 
         postfault_performance_data.sort()
         plot_postfault_performance_drop(eval_interval)
@@ -1185,7 +1199,7 @@ if __name__ == "__main__":
                 dir2 = os.path.join(dir1, dir2)
                 for dir3 in os.listdir(dir2):
                     dir3 = os.path.join(dir2, dir3)
-                    compute_postfault_performance_drop(dir3)
+                    compute_postfault_bar_plot(dir3)
 
         fetchreach_data_dir = os.path.join(data_dir, "fetchreach", "exps")
 
@@ -1195,7 +1209,7 @@ if __name__ == "__main__":
                 dir2 = os.path.join(dir1, dir2)
                 for dir3 in os.listdir(dir2):
                     dir3 = os.path.join(dir2, dir3)
-                    compute_postfault_performance_drop(dir3)
+                    compute_postfault_bar_plot(dir3)
 
         postfault_performance_data.sort()
         plot_postfault_performance_drop(eval_interval)
@@ -1223,7 +1237,7 @@ if __name__ == "__main__":
                 dir2 = os.path.join(dir1, dir2)
                 for dir3 in os.listdir(dir2):
                     dir3 = os.path.join(dir2, dir3)
-                    compute_postfault_performance_drop(dir3)
+                    compute_postfault_bar_plot(dir3)
 
         fetchreach_data_dir = os.path.join(data_dir, "fetchreach", "exps")
 
@@ -1233,7 +1247,7 @@ if __name__ == "__main__":
                 dir2 = os.path.join(dir1, dir2)
                 for dir3 in os.listdir(dir2):
                     dir3 = os.path.join(dir2, dir3)
-                    compute_postfault_performance_drop(dir3)
+                    compute_postfault_bar_plot(dir3)
 
         postfault_performance_data.sort()
         plot_postfault_performance_drop(eval_interval)

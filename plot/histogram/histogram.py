@@ -1255,7 +1255,7 @@ if __name__ == "__main__":
 
     # SAC v3
 
-    ant_sac_v3 = True
+    ant_sac_v3 = False
 
     if ant_sac_v3:
 
@@ -1273,7 +1273,7 @@ if __name__ == "__main__":
 
     # SAC v4
 
-    ant_sac_v4 = False
+    ant_sac_v4 = True
 
     if ant_sac_v4:
 

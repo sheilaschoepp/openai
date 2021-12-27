@@ -287,7 +287,7 @@ def plot_ant_heatmap(ranges):
     elif algorithm == "SAC":
         algorithm_ = "Soft Actor-Critic (SAC)"
 
-    # heatmap.set_title("{}".format(algorithm_))
+    heatmap.set_title("{}".format(suffix_eval))
     plt.xticks(rotation=45)
     plt.yticks(rotation=0)
     plt.xlabel("joint")
@@ -747,7 +747,7 @@ def plot_fetchreach_heatmap(ranges):
     elif algorithm == "SAC":
         algorithm_ = "Soft Actor-Critic (SAC)"
 
-    heatmap.set_title("{}".format(name))
+    heatmap.set_title("{}".format(suffix_eval))
     plt.xticks(rotation=45)
     plt.yticks(rotation=0)
     plt.xlabel("joint")
@@ -996,13 +996,13 @@ def draw_histogram():
                 elif p.startswith("rn:"):
                     rn = eval(p.split(":")[1])
             if cm and rn:
-                suffix_eval = "retain no data"
+                suffix_eval = "Post-Fault Policy\n(discard NN params, discard storage)"
             elif cm and not rn:
-                suffix_eval = "retain network parameters"
+                suffix_eval = "Post-Fault Policy\n(retain NN params, discard storage)"
             elif not cm and rn:
-                suffix_eval = "retain memory"
+                suffix_eval = "Post-Fault Policy\n(discard NN params, retain storage)"
             else:
-                suffix_eval = "retain all data"
+                suffix_eval = "Post-Fault Policy\n(retain NN params, retain storage)"
         if algorithm == "SAC":
             for p in params[2:]:
                 if p.startswith("crb:"):
@@ -1010,13 +1010,15 @@ def draw_histogram():
                 elif p.startswith("rn:"):
                     rn = eval(p.split(":")[1])
             if crb and rn:
-                suffix_eval = "retain no data"
+                suffix_eval = "Post-Fault Policy\n(discard NN params, discard storage)"
             elif crb and not rn:
-                suffix_eval = "retain network parameters"
+                suffix_eval = "Post-Fault Policy\n(retain NN params, discard storage)"
             elif not crb and rn:
-                suffix_eval = "retain replay buffer"
+                suffix_eval = "Post-Fault Policy\n(discard NN params, retain storage)"
             else:
-                suffix_eval = "retain all data"
+                suffix_eval = "Post-Fault Policy\n(retain NN params, retain storage)"
+    else:
+        suffix_eval = "Pre-Fault Policy"
 
     if "Ant" in env_name:
         env_folder_name = "ant"
@@ -1128,16 +1130,16 @@ if __name__ == "__main__":
     ant_ppo_v0 = False
 
     if ant_ppo_v0:
-        
+
         file = "/media/sschoepp/easystore/shared/ant/combined/normal/PPOv2_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_d:cpu_ps:True_pss:33"
         draw_histogram()
 
     # SAC
-    
+
     ant_sac_v0 = False
 
     if ant_sac_v0:
-        
+
         file = "/media/sschoepp/easystore/shared/ant/combined/normal/SACv2_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_a:True_d:cuda_ps:True_pss:61"
         draw_histogram()
 
@@ -1146,36 +1148,36 @@ if __name__ == "__main__":
     # PPO v1
 
     ant_ppo_v1 = False
-    
+
     if ant_ppo_v1:
 
         file = "/media/sschoepp/easystore/shared/ant/combined/faulty/ppo/v1/PPOv2_AntEnv-v1:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:False_rn:False_d:cpu"
         draw_histogram()
-    
+
         file = "/media/sschoepp/easystore/shared/ant/combined/faulty/ppo/v1/PPOv2_AntEnv-v1:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:False_rn:True_d:cpu"
         draw_histogram()
-    
+
         file = "/media/sschoepp/easystore/shared/ant/combined/faulty/ppo/v1/PPOv2_AntEnv-v1:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:True_rn:False_d:cpu"
         draw_histogram()
-    
+
         file = "/media/sschoepp/easystore/shared/ant/combined/faulty/ppo/v1/PPOv2_AntEnv-v1:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:True_rn:True_d:cpu"
         draw_histogram()
 
     # PPO v2
 
     ant_ppo_v2 = False
-    
+
     if ant_ppo_v2:
 
         file = "/media/sschoepp/easystore/shared/ant/combined/faulty/ppo/v2/PPOv2_AntEnv-v2:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:False_rn:False_d:cpu"
         draw_histogram()
-    
+
         file = "/media/sschoepp/easystore/shared/ant/combined/faulty/ppo/v2/PPOv2_AntEnv-v2:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:False_rn:True_d:cpu"
         draw_histogram()
-    
+
         file = "/media/sschoepp/easystore/shared/ant/combined/faulty/ppo/v2/PPOv2_AntEnv-v2:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:True_rn:False_d:cpu"
         draw_histogram()
-    
+
         file = "/media/sschoepp/easystore/shared/ant/combined/faulty/ppo/v2/PPOv2_AntEnv-v2:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:True_rn:True_d:cpu"
         draw_histogram()
 
@@ -1187,92 +1189,92 @@ if __name__ == "__main__":
 
         file = "/media/sschoepp/easystore/shared/ant/combined/faulty/ppo/v3/PPOv2_AntEnv-v3:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:False_rn:False_d:cpu"
         draw_histogram()
-    
+
         file = "/media/sschoepp/easystore/shared/ant/combined/faulty/ppo/v3/PPOv2_AntEnv-v3:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:False_rn:True_d:cpu"
         draw_histogram()
-    
+
         file = "/media/sschoepp/easystore/shared/ant/combined/faulty/ppo/v3/PPOv2_AntEnv-v3:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:True_rn:False_d:cpu"
         draw_histogram()
-    
+
         file = "/media/sschoepp/easystore/shared/ant/combined/faulty/ppo/v3/PPOv2_AntEnv-v3:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:True_rn:True_d:cpu"
         draw_histogram()
 
     # PPO v4
 
     ant_ppo_v4 = False
-    
+
     if ant_ppo_v4:
 
         file = "/media/sschoepp/easystore/shared/ant/combined/faulty/ppo/v4/PPOv2_AntEnv-v4:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:False_rn:False_d:cpu"
         draw_histogram()
-    
+
         file = "/media/sschoepp/easystore/shared/ant/combined/faulty/ppo/v4/PPOv2_AntEnv-v4:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:False_rn:True_d:cpu"
         draw_histogram()
-    
+
         file = "/media/sschoepp/easystore/shared/ant/combined/faulty/ppo/v4/PPOv2_AntEnv-v4:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:True_rn:False_d:cpu"
         draw_histogram()
-    
+
         file = "/media/sschoepp/easystore/shared/ant/combined/faulty/ppo/v4/PPOv2_AntEnv-v4:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:True_rn:True_d:cpu"
         draw_histogram()
 
     # SAC v1
-    
+
     ant_sac_v1 = False
-    
+
     if ant_sac_v1:
 
         file = "/media/sschoepp/easystore/shared/ant/original/faulty/sac/v1/SACv2_AntEnv-v1:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:False_rn:False_a:True_d:cuda"
         draw_histogram()
-    
+
         file = "/media/sschoepp/easystore/shared/ant/original/faulty/sac/v1/SACv2_AntEnv-v1:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:False_rn:True_a:True_d:cuda"
         draw_histogram()
-    
+
         file = "/media/sschoepp/easystore/shared/ant/original/faulty/sac/v1/SACv2_AntEnv-v1:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:True_rn:False_a:True_d:cuda"
         draw_histogram()
-    
+
         file = "/media/sschoepp/easystore/shared/ant/original/faulty/sac/v1/SACv2_AntEnv-v1:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:True_rn:True_a:True_d:cuda"
         draw_histogram()
 
     # SAC v2
-    
+
     ant_sac_v2 = False
-    
+
     if ant_sac_v2:
 
         file = "/media/sschoepp/easystore/shared/ant/original/faulty/sac/v2/SACv2_AntEnv-v2:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:False_rn:False_a:True_d:cuda"
         draw_histogram()
-    
+
         file = "/media/sschoepp/easystore/shared/ant/original/faulty/sac/v2/SACv2_AntEnv-v2:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:False_rn:True_a:True_d:cuda"
         draw_histogram()
-    
+
         file = "/media/sschoepp/easystore/shared/ant/original/faulty/sac/v2/SACv2_AntEnv-v2:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:True_rn:False_a:True_d:cuda"
         draw_histogram()
-    
+
         file = "/media/sschoepp/easystore/shared/ant/original/faulty/sac/v2/SACv2_AntEnv-v2:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:True_rn:True_a:True_d:cuda"
         draw_histogram()
 
     # SAC v3
-    
+
     ant_sac_v3 = False
-    
+
     if ant_sac_v3:
 
         file = "/media/sschoepp/easystore/shared/ant/original/faulty/sac/v3/SACv2_AntEnv-v3:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:False_rn:False_a:True_d:cuda"
         draw_histogram()
-    
+
         file = "/media/sschoepp/easystore/shared/ant/original/faulty/sac/v3/SACv2_AntEnv-v3:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:False_rn:True_a:True_d:cuda"
         draw_histogram()
-    
+
         file = "/media/sschoepp/easystore/shared/ant/original/faulty/sac/v3/SACv2_AntEnv-v3:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:True_rn:False_a:True_d:cuda"
         draw_histogram()
-    
+
         file = "/media/sschoepp/easystore/shared/ant/original/faulty/sac/v3/SACv2_AntEnv-v3:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:True_rn:True_a:True_d:cuda"
         draw_histogram()
 
     # SAC v4
-    
+
     ant_sac_v4 = False
-    
+
     if ant_sac_v4:
 
         file = "/media/sschoepp/easystore/shared/ant/original/faulty/sac/v4/SACv2_AntEnv-v4:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:False_rn:False_a:True_d:cuda"

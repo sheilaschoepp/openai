@@ -377,9 +377,32 @@ def legend():
     plt.close()
 
 
+def legend2():
+    fig, ax = plt.subplots()
+    ax.axis("off")
+
+    f = lambda m, c: plt.plot([], [], marker=m, color=c, ls="none")[0]
+    palette_colours = ["#A63F93", "#027957", "#AD4B00", "#000000"]
+    handles = [f("s", palette_colours[i]) for i in range(4)]
+    labels = ["retain NN params,\nretain storage", "retain NN params,\ndiscard storage", "discard NN params,\nretain storage", "discard NN params,\ndiscard storage"]
+    legend = plt.legend(handles, labels, ncol=4, loc=1, framealpha=1, frameon=True, facecolor="#eaeaf4")
+
+    def export_legend(legend, filename="legend2.jpg"):
+        fig = legend.figure
+        fig.canvas.draw()
+        bbox = legend.get_window_extent().transformed(fig.dpi_scale_trans.inverted())
+        filename = "plots/{}".format(filename)
+        fig.savefig(filename, dpi=300, bbox_inches=bbox)
+        # # Image.open(filename).convert("CMYK").save(filename)
+
+    export_legend(legend)
+    plt.close()
+
+
 if __name__ == "__main__":
 
     legend()
+    legend2()
 
     PROJECT_PATH = pathlib.Path(os.getcwd()).parents[1]
     DATA_FOLDER_PATH = os.path.join(PROJECT_PATH, "data")

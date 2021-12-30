@@ -804,6 +804,8 @@ def plot_postfault_performance_bar_plot(interval):
             data = []
 
             ts = 0
+            if interval == "[392:402]":
+                interval_length = 200
             if env == "Ant":
                 pre = prefault_performance_data[algo + ", " + "Ant-v2"]
                 if algo == "PPOv2":
@@ -1144,8 +1146,8 @@ if __name__ == "__main__":
         prefault_min = 191
         prefault_max = 201
 
-        postfault_min = 221
-        postfault_max = 222
+        postfault_min = 392
+        postfault_max = 402
 
         eval_interval = f"[{postfault_min}:{postfault_max}]"
 

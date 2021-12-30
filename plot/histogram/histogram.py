@@ -1007,6 +1007,7 @@ def draw_histogram():
                 suffix_eval = "Post-Fault Policy\n(discard NN params, retain storage)"
             else:
                 suffix_eval = "Post-Fault Policy\n(retain NN params, retain storage)"
+                suffix_eval = "Post-Fault Policy"
         if algorithm == "SAC":
             for p in params[2:]:
                 if p.startswith("crb:"):
@@ -1020,8 +1021,7 @@ def draw_histogram():
             elif not crb and rn:
                 suffix_eval = "Post-Fault Policy\n(discard NN params, retain storage)"
             else:
-                # suffix_eval = "Post-Fault Policy\n(retain NN params, retain storage)"
-                suffix_eval = "Post-Fault Policy"
+                suffix_eval = "Post-Fault Policy\n(retain NN params, retain storage)"
     else:
         suffix_eval = "Pre-Fault Policy"
 

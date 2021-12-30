@@ -392,6 +392,8 @@ class AntHistogram:
         else:
             self.env_name = self.parameters["n_env_name"]
 
+        # self.env_name = "AntEnv-v2"  # TODO
+
         # seeds
 
         random.seed(seed)
@@ -851,6 +853,8 @@ class FetchReachHistogram:
         else:
             self.env_name = self.parameters["n_env_name"]
 
+        # self.env_name = "FetchReachEnv-v6"  # TODO
+
         # seeds
 
         random.seed(seed)
@@ -1016,7 +1020,8 @@ def draw_histogram():
             elif not crb and rn:
                 suffix_eval = "Post-Fault Policy\n(discard NN params, retain storage)"
             else:
-                suffix_eval = "Post-Fault Policy\n(retain NN params, retain storage)"
+                # suffix_eval = "Post-Fault Policy\n(retain NN params, retain storage)"
+                suffix_eval = "Post-Fault Policy"
     else:
         suffix_eval = "Pre-Fault Policy"
 
@@ -1165,7 +1170,7 @@ if __name__ == "__main__":
 
     # PPO v2
 
-    ant_ppo_v2 = False
+    ant_ppo_v2 = True
 
     if ant_ppo_v2:
 
@@ -1293,11 +1298,12 @@ if __name__ == "__main__":
 
     # PPO v0
 
-    fetchreach_ppo_v0 = True
+    fetchreach_ppo_v0 = False
 
     if fetchreach_ppo_v0:
 
-        file = "/media/sschoepp/easystore/shared/fetchreach/combined/normal/PPOv2_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_d:cpu_ps:True_pss:43"
+        # file = "/media/sschoepp/easystore/shared/fetchreach/combined/normal/PPOv2_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_d:cpu_ps:True_pss:43"
+        file = "/DATA/PPOv2_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_d:cpu_ps:True_pss:43"
         draw_histogram()
 
     # SAC v0
@@ -1349,7 +1355,7 @@ if __name__ == "__main__":
 
     # PPO v6
 
-    fetchreach_ppo_v6 = True
+    fetchreach_ppo_v6 = False
 
     if fetchreach_ppo_v6:
 

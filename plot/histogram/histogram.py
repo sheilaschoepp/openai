@@ -1006,7 +1006,7 @@ def draw_histogram():
             elif not cm and rn:
                 suffix_eval = "Post-Fault Policy\n(discard NN params, retain storage)"
             else:
-                suffix_eval = "Adapted Policy (at Convergence)"
+                suffix_eval = "Policy (After Adaptation)"
         if algorithm == "SAC":
             for p in params[2:]:
                 if p.startswith("crb:"):

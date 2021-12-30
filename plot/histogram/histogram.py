@@ -1006,7 +1006,7 @@ def draw_histogram():
             elif not cm and rn:
                 suffix_eval = "Post-Fault Policy\n(discard NN params, retain storage)"
             else:
-                suffix_eval = "Policy After Adaptation"
+                suffix_eval = "Adapted Policy (at Convergence)"
         if algorithm == "SAC":
             for p in params[2:]:
                 if p.startswith("crb:"):
@@ -1023,8 +1023,6 @@ def draw_histogram():
                 suffix_eval = "Post-Fault Policy\n(retain NN params, retain storage)"
     else:
         suffix_eval = "Pre-Fault Policy"
-
-    print(suffix_eval)
 
     if "Ant" in env_name:
         env_folder_name = "ant"

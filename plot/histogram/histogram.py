@@ -1020,7 +1020,8 @@ def draw_histogram():
             elif not crb and rn:
                 suffix_eval = "Post-Fault Policy\n(discard NN params, retain storage)"
             else:
-                suffix_eval = "Post-Fault Policy\n(retain NN params, retain storage)"
+                # suffix_eval = "Post-Fault Policy\n(retain NN params, retain storage)"
+                suffix_eval = "Post-Fault Policy"
     else:
         suffix_eval = "Pre-Fault Policy"
 
@@ -1131,12 +1132,11 @@ if __name__ == "__main__":
 
     # PPO
 
-    ant_ppo_v0 = True
+    ant_ppo_v0 = False
 
     if ant_ppo_v0:
 
-        # file = "/media/sschoepp/easystore/shared/ant/combined/normal/PPOv2_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_d:cpu_ps:True_pss:33"
-        file = "/DATA/PPOv2_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_d:cpu_ps:True_pss:33"
+        file = "/media/sschoepp/easystore/shared/ant/combined/normal/PPOv2_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_d:cpu_ps:True_pss:33"
         draw_histogram()
 
     # SAC
@@ -1170,7 +1170,7 @@ if __name__ == "__main__":
 
     # PPO v2
 
-    ant_ppo_v2 = False
+    ant_ppo_v2 = True
 
     if ant_ppo_v2:
 

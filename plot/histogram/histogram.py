@@ -1025,6 +1025,8 @@ def draw_histogram():
     else:
         suffix_eval = "Pre-Fault Policy"
 
+    print(suffix_eval)
+
     if "Ant" in env_name:
         env_folder_name = "ant"
     else:

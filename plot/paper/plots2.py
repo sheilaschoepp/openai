@@ -362,7 +362,7 @@ def legend():
     f = lambda m, c: plt.plot([], [], marker=m, color=c, ls="none")[0]
     palette_colours = ["#0173b2", "#A63F93", "#027957", "#AD4B00", "#000000"]
     handles = [f("s", palette_colours[i]) for i in range(5)]
-    labels = ["pre-fault", "retain NN params,\nretain storage", "retain NN params,\ndiscard storage", "discard NN params,\nretain storage", "discard NN params,\ndiscard storage"]
+    labels = ["pre-fault", "retain models,\nretain storage", "retain models,\ndiscard storage", "discard models,\nretain storage", "discard models,\ndiscard storage"]
     legend = plt.legend(handles, labels, ncol=5, loc=1, framealpha=1, frameon=True, facecolor="inherit", prop={'size': 6})
 
     def export_legend(legend, filename="legend.jpg"):
@@ -384,7 +384,7 @@ def legend2():
     f = lambda m, c: plt.plot([], [], marker=m, color=c, ls="none")[0]
     palette_colours = ["#A63F93", "#027957", "#AD4B00", "#000000"]
     handles = [f("s", palette_colours[i]) for i in range(4)]
-    labels = ["retain NN params,\nretain storage", "retain NN params,\ndiscard storage", "discard NN params,\nretain storage", "discard NN params,\ndiscard storage"]
+    labels = ["retain models,\nretain storage", "retain models,\ndiscard storage", "discard models,\nretain storage", "discard models,\ndiscard storage"]
     legend = plt.legend(handles, labels, ncol=4, loc=1, framealpha=1, frameon=True, facecolor="inherit", prop={'size': 6})
 
     def export_legend(legend, filename="legend2.jpg"):

@@ -1006,7 +1006,7 @@ def draw_histogram():
             elif not cm and rn:
                 suffix_eval = "Post-Fault Policy\n(discard NN params, retain storage)"
             else:
-                suffix_eval = "Policy (After Adaptation)"
+                suffix_eval = "Post-Fault Policy\n(retain NN params, retain storage)"
         if algorithm == "SAC":
             for p in params[2:]:
                 if p.startswith("crb:"):
@@ -1169,7 +1169,7 @@ if __name__ == "__main__":
 
     # PPO v2
 
-    ant_ppo_v2 = True
+    ant_ppo_v2 = False
 
     if ant_ppo_v2:
 

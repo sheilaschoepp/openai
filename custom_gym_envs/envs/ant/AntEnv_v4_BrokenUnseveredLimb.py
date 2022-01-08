@@ -19,7 +19,7 @@ class AntEnvV4(mujoco_env.MujocoEnv, utils.EzPickle):  # modification here
 
         # modification here: start
         self.hostname = os.uname()[1]
-        self.localhosts = ["melco", "Legion", "amii", "remaining20seeds"]
+        self.localhosts = ["melco", "Legion", "amii", "mehran", "Sheila"]
         self.computecanada = not any(host in self.hostname for host in self.localhosts)
         home = str(Path.home())
         if self.computecanada:
@@ -76,3 +76,8 @@ class AntEnvV4(mujoco_env.MujocoEnv, utils.EzPickle):  # modification here
         # self.viewer.cam.distance = self.model.stat.extent * 2.0
         # self.viewer.cam.lookat[2] += .8
         # self.viewer.cam.elevation = -20
+
+        # self.viewer.cam.trackbodyid = 1
+        # self.viewer.cam.distance = self.model.stat.extent * 2
+        # self.viewer.cam.lookat[2] += .8
+        # self.viewer.cam.elevation = -90

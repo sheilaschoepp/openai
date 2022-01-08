@@ -17,7 +17,9 @@ sns.set_theme()
 #                   blue       orange      green       red      purple      brown      pink       grey       green      aqua
 # palette_colours = ["#0173b2", "#875603", "#027957", "#AD4B00", "#A63F93", "#915C30", "#C3098E", "#696969", "#70680A", "#156FA2"]
 #                   blue        green  magneta/purple  black     red
-palette_colours = ["#0173b2", "#027957", "#A63F93", "#000000", "#AD4B00"]
+palette_colours = ["#0173b2", "#027957", "#A63F93", "#AD4B00", "#000000"]
+#                   blue        black      orange      green    pink
+palette_colours = ["#0173b2", "#000000", "#AD4B00", "#027957", "#A63F93"]
 
 LARGE = 16
 MEDIUM = 14
@@ -141,6 +143,8 @@ def plot_experiment(directory):
                 if do[0] == s[1] and do[1] == s[2]:
                     ordered_settings.append(s)
 
+        ordered_settings.sort(reverse=True)
+
     get_data()
 
     # plot settings
@@ -238,7 +242,7 @@ def plot_experiment(directory):
         plt.tight_layout()
         filename = plot_directory + "/{}_{}_sub.jpg".format(algorithm, ab_env)
         plt.savefig(filename, dpi=300)
-        Image.open(filename).convert("CMYK").save(filename)
+        # Image.open(filename).convert("CMYK").save(filename)
         # plt.show()
         plt.close()
 
@@ -310,7 +314,7 @@ def plot_experiment(directory):
         fig.canvas.draw()
         filename = plot_directory + "/{}_{}_sub.jpg".format(algorithm, ab_env)
         plt.savefig(filename, bbox_inches="tight", dpi=300)
-        Image.open(filename).convert("CMYK").save(filename)
+        # Image.open(filename).convert("CMYK").save(filename)
         # plt.show()
         plt.close()
 
@@ -375,7 +379,7 @@ def plot_experiment(directory):
         plt.tight_layout()
         filename = plot_directory + "/{}_{}_all.jpg".format(algorithm, ab_env)
         plt.savefig(filename, dpi=300)
-        Image.open(filename).convert("CMYK").save(filename)
+        # Image.open(filename).convert("CMYK").save(filename)
         # plt.show()
         plt.close()
 
@@ -447,7 +451,7 @@ def plot_experiment(directory):
             plt.tight_layout()
             filename = plot_directory + "/{}_{}{}.jpg".format(algorithm, ab_env, subscript)
             plt.savefig(filename, dpi=300)
-            Image.open(filename).convert("CMYK").save(filename)
+            # Image.open(filename).convert("CMYK").save(filename)
             # plt.show()
             plt.close()
 
@@ -461,7 +465,7 @@ def legend():
 
     f = lambda m, c: plt.plot([], [], marker=m, color=c, ls="none")[0]
     handles = [f("s", palette_colours[i]) for i in range(5)]
-    labels = ["normal\nenvironment", "retain networks,\nretain storage", "retain networks,\ndiscard storage", "discard networks,\nretain storage", "discard networks,\ndiscard storage"]
+    labels = ["pre-fault\ntask", "post-fault task:\nretain NN params,\nretain storage", "post-fault task:\nretain NN params,\ndiscard storage", "post-fault task:\ndiscard NN params,\nretain storage", "post-fault task:\ndiscard NN params,\ndiscard storage"]
     legend = plt.legend(handles, labels, ncol=5, loc=1, framealpha=1, frameon=False)
 
     def export_legend(legend, filename="legend.jpg"):
@@ -470,7 +474,32 @@ def legend():
         bbox = legend.get_window_extent().transformed(fig.dpi_scale_trans.inverted())
         filename = "plots/{}".format(filename)
         fig.savefig(filename, dpi=300, bbox_inches=bbox)
-        Image.open(filename).convert("CMYK").save(filename)
+        # Image.open(filename).convert("CMYK").save(filename)
+
+    export_legend(legend)
+    plt.close()
+
+
+def legend2():
+
+    fig, ax = plt.subplots()
+    ax.axis("off")
+
+    e = lambda: plt.plot([], [], ls="--", color=palette_colours[0])[0]
+    f = lambda m, c: plt.plot([], [], marker=m, color=c, ls="none")[0]
+    handles_ = [e()]
+    handles = [f("s", palette_colours[i]) for i in range(1, 5)]
+    handles.insert(0, handles_[0])
+    labels = ["pre-fault\ntask", "post-fault task:\nretain NN params,\nretain storage", "post-fault task:\nretain NN params,\ndiscard storage", "post-fault task:\ndiscard NN params,\nretain storage", "post-fault task:\ndiscard NN params,\ndiscard storage"]
+    legend = plt.legend(handles, labels, ncol=5, loc=1, framealpha=1, frameon=False)
+
+    def export_legend(legend, filename="legend2.jpg"):
+        fig = legend.figure
+        fig.canvas.draw()
+        bbox = legend.get_window_extent().transformed(fig.dpi_scale_trans.inverted())
+        filename = "plots/{}".format(filename)
+        fig.savefig(filename, dpi=300, bbox_inches=bbox)
+        # Image.open(filename).convert("CMYK").save(filename)
 
     export_legend(legend)
     plt.close()
@@ -478,7 +507,8 @@ def legend():
 
 if __name__ == "__main__":
 
-    legend()
+    # legend()
+    # legend2()
 
     PROJECT_PATH = pathlib.Path(os.getcwd()).parents[1]
     DATA_FOLDER_PATH = os.path.join(PROJECT_PATH, "data")

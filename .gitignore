@@ -1,6 +1,9 @@
 # ignore data folder
 # data/**
 
+# ignore histogram data
+**/plot/histogram/data/*
+
 # ingore workspace data points
 **/plot/workspace/data/*
 

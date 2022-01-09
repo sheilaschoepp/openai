@@ -108,6 +108,9 @@ class AbnormalController:
             self.parameters["resume_file"] = args.resume_file  # update
             self.parameters["complete"] = False  # update
 
+            self.parameters["time_step_eval_frequency"] = 1000
+            self.parameters["time_step_model_save_frequency"] = 1000
+
         else:
 
             self.load_data_dir = args.resume_file

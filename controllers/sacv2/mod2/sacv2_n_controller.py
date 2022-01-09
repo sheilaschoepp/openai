@@ -30,21 +30,48 @@ import custom_gym_envs  # do not delete; required for custom gym environments
 
 parser = argparse.ArgumentParser(description="PyTorch Soft Actor-Critic Arguments")
 
-parser.add_argument("-e", "--ab_env_name", default="Ant-v2",
-                    help="name of abnormal (malfunctioning) MuJoCo Gym environment (default: Ant-v2)")
-parser.add_argument("-t", "--ab_time_steps", type=int, default=20000000, metavar="N",
-                    help="number of time steps in abnormal (malfunctioning) MuJoCo Gym environment (default: 20000000)")
+parser.add_argument("-e", "--n_env_name", default="Ant-v2",
+                    help="name of normal (non-malfunctioning) MuJoCo Gym environment (default: Ant-v2)")
+parser.add_argument("-t", "--n_time_steps", type=int, default=20000000, metavar="N",
+                    help="number of time steps in normal (non-malfunctioning) MuJoCo Gym environment (default: 20000000)")
 
-parser.add_argument("-crb", "--clear_replay_buffer", default=False, action="store_true",
-                    help="if true, clear the replay buffer (default: False)")
-parser.add_argument("-rn", "--reinitialize_networks", default=False, action="store_true",
-                    help="if true, randomly reinitialize the networks (default: False)")
+parser.add_argument("--gamma", type=float, default=0.99, metavar="G",
+                    help="discount factor (default: 0.99)")
+parser.add_argument("--tau", type=float, default=0.01, metavar="G",
+                    help="target smoothing coefficient (default: 0.01)")
+parser.add_argument("--alpha", type=float, default=0.2, metavar="G",
+                    help="temperature parameter that determines the relative importance of the entropy term against the reward (default: 0.2)")
+parser.add_argument("--lr", type=float, default=0.0003, metavar="G",
+                    help="learning rate (default: 0.0003)")
+
+parser.add_argument("--hidden_dim", type=int, default=256, metavar="N",
+                    help="hidden dimension (default: 256)")
+
+parser.add_argument("-rbs", "--replay_buffer_size", type=int, default=1000000, metavar="N",
+                    help="size of replay buffer (default: 1000000)")
+parser.add_argument("--batch_size", type=int, default=256, metavar="N",
+                    help="number of samples per batch (default: 256)")
+
+parser.add_argument("--model_updates_per_step", type=int, default=1, metavar="N",
+                    help="number of model updates per simulator step (default: 1)")
+parser.add_argument("--target_update_interval", type=int, default=1, metavar="N",
+                    help="number of target value network updates per number of gradient steps (network updates) (default: 1)")
+
+parser.add_argument("-tef", "--time_step_eval_frequency", type=int, default=100000, metavar="N",
+                    help="frequency of policy evaluation during learning (default: 100000)")
+parser.add_argument("-ee", "--eval_episodes", type=int, default=10, metavar="N",
+                    help="number of episodes in policy evaluation roll-out (default: 10)")
+parser.add_argument("-tmsf", "--time_step_model_save_frequency", type=int, default=200000, metavar="N",
+                    help="frequency of saving models during learning (default: 200000)")
+
+parser.add_argument("-a", "--automatic_entropy_tuning", default=False, action="store_true",
+                    help="if true, automatically tune the temperature (default: False)")
 
 parser.add_argument("-c", "--cuda", default=False, action="store_true",
                     help="if true, run on GPU (default: False)")
 
-parser.add_argument("-f", "--file",
-                    help="absolute path of the seedX folder containing data from normal MuJoCo environment")
+parser.add_argument("-s", "--seed", type=int, default=0, metavar="N",
+                    help="random seed (default: 0)")
 
 parser.add_argument("-d", "--delete", default=False, action="store_true",
                     help="if true, delete previously saved data and restart training (default: False)")
@@ -61,12 +88,18 @@ parser.add_argument("-rf", "--resume_file", default="",
 parser.add_argument("-tl", "--time_limit", type=float, default=100000000000.0, metavar="N",
                     help="run time limit for use on Compute Canada (units: days)")
 
+parser.add_argument("-ps", "--param_search", default=False, action="store_true",
+                    help="if true, run a parameter search")
+
+parser.add_argument("-pss", "--param_search_seed", type=int, default=0, metavar="N",
+                    help="random seed for parameter search (default: 0)")
+
 args = parser.parse_args()
 
 
-class AbnormalController:
+class NormalController:
     """
-    Controller for learning in the abnormal environment.
+    Controller for learning in the normal environment.
 
     The experiment program directs the experiment's execution, including the sequence of agent-environment interactions
     and agent performance evaluation.  -Brian Tanner & Adam White
@@ -80,7 +113,7 @@ class AbnormalController:
 
         self.start = time.time()
 
-        # hostname
+        # machines
 
         self.hostname = os.uname()[1]
         self.localhosts = ["melco", "Legion", "amii", "remaining20seeds"]
@@ -92,21 +125,30 @@ class AbnormalController:
 
         if not args.resume:
 
-            self.load_data_dir = args.file
-
-            self.load_parameters()
-            self.parameters["ab_env_name"] = args.ab_env_name  # addition
-            self.parameters["ab_time_steps"] = args.ab_time_steps  # addition
-            self.parameters["clear_replay_buffer"] = args.clear_replay_buffer  # addition
-            self.parameters["reinitialize_networks"] = args.reinitialize_networks  # addition
-            self.parameters["cuda"] = args.cuda  # update
-            self.parameters["file"] = args.file  # addition
-            self.parameters["device"] = "cuda" if args.cuda and torch.cuda.is_available() else "cpu"  # update
-
-            self.parameters["resumable"] = args.resumable  # update
-            self.parameters["resume"] = args.resume  # update
-            self.parameters["resume_file"] = args.resume_file  # update
-            self.parameters["complete"] = False  # update
+            self.parameters = {"n_env_name": args.n_env_name,
+                               "n_time_steps": args.n_time_steps,
+                               "gamma": args.gamma,
+                               "tau": args.tau,
+                               "alpha": args.alpha,
+                               "lr": args.lr,
+                               "hidden_dim": args.hidden_dim,
+                               "replay_buffer_size": args.replay_buffer_size,
+                               "batch_size": args.batch_size,
+                               "model_updates_per_step": args.model_updates_per_step,
+                               "target_update_interval": args.target_update_interval,
+                               "time_step_eval_frequency": args.time_step_eval_frequency,
+                               "eval_episodes": args.eval_episodes,
+                               "time_step_model_save_frequency": args.time_step_model_save_frequency,
+                               "automatic_entropy_tuning": args.automatic_entropy_tuning,
+                               "cuda": args.cuda,
+                               "device": "cuda" if args.cuda and torch.cuda.is_available() else "cpu",
+                               "seed": args.seed,
+                               "resumable": args.resumable,
+                               "resume": args.resume,
+                               "resume_file": args.resume_file,
+                               "complete": False,
+                               "param_search": args.param_search,
+                               "param_search_seed": args.param_search_seed}
 
         else:
 
@@ -116,7 +158,7 @@ class AbnormalController:
             self.load_parameters()
 
             # overwrite parameters that need to be updated
-            self.parameters["ab_time_steps"] = args.ab_time_steps  # overwrite
+            self.parameters["n_time_steps"] = args.n_time_steps  # overwrite
             self.parameters["cuda"] = args.cuda  # update
             self.parameters["device"] = "cuda" if args.cuda and torch.cuda.is_available() else "cpu"  # update
 
@@ -127,8 +169,7 @@ class AbnormalController:
 
         # experiment data directory
 
-        suffix = self.parameters["ab_env_name"] + ":" + str(self.parameters["ab_time_steps"]) \
-                 + "_" + self.parameters["n_env_name"] + ":" + str(self.parameters["n_time_steps"]) \
+        suffix = self.parameters["n_env_name"] + ":" + str(self.parameters["n_time_steps"]) \
                  + "_g:" + str(self.parameters["gamma"]) \
                  + "_t:" + str(self.parameters["tau"]) \
                  + "_a:" + str(self.parameters["alpha"]) \
@@ -141,10 +182,10 @@ class AbnormalController:
                  + "_tef:" + str(self.parameters["time_step_eval_frequency"]) \
                  + "_ee:" + str(self.parameters["eval_episodes"]) \
                  + "_tmsf:" + str(self.parameters["time_step_model_save_frequency"]) \
-                 + "_crb:" + str(self.parameters["clear_replay_buffer"]) \
-                 + "_rn:" + str(self.parameters["reinitialize_networks"]) \
                  + "_a:" + str(self.parameters["automatic_entropy_tuning"]) \
                  + "_d:" + str(self.parameters["device"]) \
+                 + (("_ps:" + str(self.parameters["param_search"])) if self.parameters["param_search"] else "") \
+                 + (("_pss:" + str(self.parameters["param_search_seed"])) if self.parameters["param_search"] else "") \
                  + ("_r" if self.parameters["resumable"] else "") \
                  + ("_resumed" if self.parameters["resume"] else "") \
                  + "_mod"
@@ -189,25 +230,34 @@ class AbnormalController:
                         print(self.LINE)
                         sys.exit("\nexiting...")
 
-        # data
+        # new data
 
-        # data is loaded in call to self.load(), after rl problem is initialized
-        self.eval_data = None
-        self.train_data = None
-        self.loss_data = None
+        num_rows = int(self.parameters["n_time_steps"] / self.parameters["time_step_eval_frequency"]) + 1  # add 1 for evaluation before any learning (0th entry)
+        num_columns = 5
+        self.eval_data = np.zeros((num_rows, num_columns))
+
+        num_rows = self.parameters["n_time_steps"]  # larger than needed; will remove extra entries later
+        num_columns = 3
+        self.train_data = np.zeros((num_rows, num_columns))
+
+        num_rows = (self.parameters["n_time_steps"] - self.parameters["batch_size"]) * self.parameters["model_updates_per_step"]
+        num_columns = 7
+        self.loss_data = np.zeros((num_rows, num_columns))
 
         # seeds
 
-        # seeds loaded in call to self.load(), after rl problem is initialized
-        # Note: we load the seeds after all rl problem elements are created because the creation of the agent
-        # network(s) uses xavier initialization, thereby altering the torch seed state
+        random.seed(self.parameters["seed"])
+        np.random.seed(self.parameters["seed"])
+        torch.manual_seed(self.parameters["seed"])
+        if self.parameters["device"] == "cuda":
+            torch.cuda.manual_seed(self.parameters["seed"])
 
         # env is seeded in Environment __init__() method
 
         # rl problem
 
-        # abnormal environment used for training
-        self.env = Environment(self.parameters["ab_env_name"],
+        # normal environment used for training
+        self.env = Environment(self.parameters["n_env_name"],
                                self.parameters["seed"])
 
         # agent
@@ -228,18 +278,13 @@ class AbnormalController:
 
         # RLGlue used for training
         self.rlg = RLGlue(self.env, self.agent)
-        self.rlg_statistics = None
+        self.rlg_statistics = {"num_episodes": 0, "num_steps": 0, "total_reward": 0}
 
         # resume experiment - load data, seed state, env, agent, and rlg
-        self.load()
 
-        # clear the replay buffer if indicated by argument
-        if not self.parameters["resume"] and self.parameters["clear_replay_buffer"]:
-            self.rlg.rl_agent_message("clear_replay_buffer")
+        if args.resume:
 
-        # reinitialize the networks if indicated by argument
-        if not self.parameters["resume"] and self.parameters["reinitialize_networks"]:
-            self.rlg.rl_agent_message("reinitialize_networks")
+            self.load()
 
         # print summary info
 
@@ -274,25 +319,21 @@ class AbnormalController:
             else:
                 return self.parameters[argument]
 
-        print("abnormal environment name:", highlight_non_default_values("ab_env_name"))
-        print("abnormal time steps:", highlight_non_default_values("ab_time_steps"))
-        print("normal environment name:", self.parameters["n_env_name"])
-        print("normal time steps:", self.parameters["n_time_steps"])
-        print("gamma:", self.parameters["gamma"])
-        print("tau:", self.parameters["tau"])
-        print("alpha:", self.parameters["alpha"])
-        print("learning rate:", self.parameters["lr"])
-        print("hidden dimension:", self.parameters["hidden_dim"])
-        print("replay buffer size:", self.parameters["replay_buffer_size"])
-        print("batch size:", self.parameters["batch_size"])
-        print("model updates per step:", self.parameters["model_updates_per_step"])
-        print("target updates interval:", self.parameters["target_update_interval"])
-        print("time step evaluation frequency:", self.parameters["time_step_eval_frequency"])
-        print("evaluation episodes:", self.parameters["eval_episodes"])
-        print("time step model save frequency:", self.parameters["time_step_model_save_frequency"])
-        print("automatic entropy tuning:", self.parameters["automatic_entropy_tuning"])
-        print("clear replay buffer:", highlight_non_default_values("clear_replay_buffer"))
-        print("reinitialize networks:", highlight_non_default_values("reinitialize_networks"))
+        print("normal environment name:", highlight_non_default_values("n_env_name"))
+        print("normal time steps:", highlight_non_default_values("n_time_steps"))
+        print("gamma:", highlight_non_default_values("gamma"))
+        print("tau:", highlight_non_default_values("tau"))
+        print("alpha:", highlight_non_default_values("alpha"))
+        print("learning rate:", highlight_non_default_values("lr"))
+        print("hidden dimension:", highlight_non_default_values("hidden_dim"))
+        print("replay buffer size:", highlight_non_default_values("replay_buffer_size"))
+        print("batch size:", highlight_non_default_values("batch_size"))
+        print("model updates per step:", highlight_non_default_values("model_updates_per_step"))
+        print("target updates interval:", highlight_non_default_values("target_update_interval"))
+        print("time step evaluation frequency:", highlight_non_default_values("time_step_eval_frequency"))
+        print("evaluation episodes:", highlight_non_default_values("eval_episodes"))
+        print("time step model save frequency:", highlight_non_default_values("time_step_model_save_frequency"))
+        print("automatic entropy tuning:", highlight_non_default_values("automatic_entropy_tuning"))
         if self.parameters["device"] == "cuda":
             print("device:", self.parameters["device"])
             if "CUDA_VISIBLE_DEVICES" in os.environ:
@@ -302,6 +343,9 @@ class AbnormalController:
         else:
             print("device:", colored(self.parameters["device"], "red"))
         print("seed:", colored(self.parameters["seed"], "red"))
+        if self.parameters["param_search"]:
+            print("param search:", colored(self.parameters["param_search"], "red"))
+            print("param search seed:", colored(self.parameters["param_search_seed"], "red"))
         print("resumable:", highlight_non_default_values("resumable"))
 
         print(self.LINE)
@@ -318,7 +362,7 @@ class AbnormalController:
 
         # save the agent model and evaluate the model before any learning
         if not args.resume:
-            self.rlg.rl_agent_message("save_model, {}, {}".format(self.data_dir, self.parameters["n_time_steps"]))  # not needed as we already have this model saved
+            self.rlg.rl_agent_message("save_model, {}, {}".format(self.data_dir, 0))
             self.evaluate_model(self.rlg.num_steps())
 
         for _ in itertools.count(1):
@@ -335,8 +379,8 @@ class AbnormalController:
                 break
 
             # episode time steps are limited to 1000 (set below)
-            # this is used to ensure that once self.parameters["n_time_steps"] + self.parameters["ab_time_steps"] is reached, the experiment is terminated
-            max_steps_this_episode = min(1000, self.parameters["n_time_steps"] + self.parameters["ab_time_steps"] - self.rlg.num_steps())
+            # this is used to ensure that once self.parameters["n_time_steps"] is reached, the experiment is terminated
+            max_steps_this_episode = min(1000, self.parameters["n_time_steps"] - self.rlg.num_steps())
 
             # if we want to make an experiment resumable, we must save after the last possible episode
             # since episodes are limited to be a maximum of 1000 time steps, we can save when the max_steps_this_episode is less than 1000
@@ -365,7 +409,7 @@ class AbnormalController:
             self.train_data[index] = [self.rlg.num_episodes(), self.rlg.num_steps(), self.rlg.episode_reward()]
 
             # learning complete
-            if self.rlg.num_steps() == self.parameters["n_time_steps"] + self.parameters["ab_time_steps"]:
+            if self.rlg.num_steps() == self.parameters["n_time_steps"]:
                 if self.parameters["resumable"]:
                     self.parameters["completed_time_steps"] = self.rlg.num_steps()
                 else:
@@ -443,20 +487,15 @@ class AbnormalController:
 
             average_return = np.average(returns)
 
-            if self.parameters["clear_replay_buffer"] and self.parameters["reinitialize_networks"]:
-                num_updates = max((num_time_steps - self.parameters["n_time_steps"] - self.parameters["batch_size"]), 0) * self.parameters["model_updates_per_step"]
-            elif not self.parameters["clear_replay_buffer"] and self.parameters["reinitialize_networks"]:
-                num_updates = (num_time_steps - self.parameters["n_time_steps"]) * self.parameters["model_updates_per_step"]
-            elif self.parameters["clear_replay_buffer"] and not self.parameters["reinitialize_networks"]:
-                num_updates = (max((num_time_steps - self.parameters["n_time_steps"] - self.parameters["batch_size"]), 0) + (self.parameters["n_time_steps"] - self.parameters["batch_size"])) * self.parameters["model_updates_per_step"]
+            if num_time_steps == 0:
+                num_updates = 0
             else:
                 num_updates = (num_time_steps - self.parameters["batch_size"]) * self.parameters["model_updates_per_step"]
-
             num_samples = num_updates * self.parameters["batch_size"]
 
             real_time = int(time.time() - self.start)
 
-            index = int(num_time_steps / self.parameters["time_step_eval_frequency"]) + 1  # add 1 because we evaluate policy before learning
+            index = num_time_steps // self.parameters["time_step_eval_frequency"]
             self.eval_data[index] = [num_time_steps, num_updates, num_samples, average_return, real_time]
 
             print("evaluation at {} time steps: {}".format(num_time_steps, average_return))
@@ -481,10 +520,7 @@ class AbnormalController:
 
         self.rlg.rl_env_message("load, {}".format(self.load_data_dir))  # load environment data
 
-        if not self.parameters["resume"]:
-            self.rlg.rl_agent_message("load, {}, {}".format(self.load_data_dir, self.parameters["n_time_steps"]))  # load agent data
-        else:
-            self.rlg.rl_agent_message("load, {}, {}".format(self.load_data_dir, self.parameters["completed_time_steps"]))
+        self.rlg.rl_agent_message("load, {}, {}".format(self.load_data_dir, self.parameters["completed_time_steps"]))  # load agent data
         self.agent.loss_data = self.loss_data
 
         self.load_rlg_statistics()  # load rlg data
@@ -498,48 +534,23 @@ class AbnormalController:
 
         csv_foldername = self.load_data_dir + "/csv"
 
-        if not args.resume:
-
-            num_rows = int(self.parameters["ab_time_steps"] / self.parameters["time_step_eval_frequency"]) + 1  # add 1 for evaluation before any learning (0th entry)
-            num_columns = 5
-            self.eval_data = pd.read_csv(csv_foldername + "/eval_data.csv").to_numpy().copy()[:, 1:]
+        self.eval_data = pd.read_csv(csv_foldername + "/eval_data.csv").to_numpy().copy()[:, 1:]
+        num_rows = (self.parameters["n_time_steps"] // self.parameters["time_step_eval_frequency"]) + 1 - self.eval_data.shape[0]
+        num_columns = self.eval_data.shape[1]
+        if num_rows > 0:
             self.eval_data = np.append(self.eval_data, np.zeros((num_rows, num_columns)), axis=0)
 
-            num_rows = self.parameters["ab_time_steps"]  # always larger than needed; will remove extra entries later
-            num_columns = 3
-            self.train_data = pd.read_csv(csv_foldername + "/train_data.csv").to_numpy().copy()[:, 1:]
+        self.train_data = pd.read_csv(csv_foldername + "/train_data.csv").to_numpy().copy()[:, 1:]
+        num_rows = self.parameters["n_time_steps"] - self.train_data.shape[0]  # always larger than needed; will remove extra entries later
+        num_columns = self.train_data.shape[1]
+        if num_rows > 0:
             self.train_data = np.append(self.train_data, np.zeros((num_rows, num_columns)), axis=0)
 
-            if self.parameters["clear_replay_buffer"]:
-                num_rows = (self.parameters["ab_time_steps"] - self.parameters["batch_size"]) * self.parameters["model_updates_per_step"]
-            else:
-                num_rows = self.parameters["ab_time_steps"] * self.parameters["model_updates_per_step"]
-            num_columns = 7
-            self.loss_data = pd.read_csv(csv_foldername + "/loss_data.csv").to_numpy().copy()[:, 1:]
+        self.loss_data = pd.read_csv(csv_foldername + "/loss_data.csv").to_numpy().copy()[:, 1:]
+        num_rows = ((self.parameters["n_time_steps"] - self.parameters["batch_size"]) * self.parameters["model_updates_per_step"]) - self.loss_data.shape[0]
+        num_columns = self.loss_data.shape[1]
+        if num_rows > 0:
             self.loss_data = np.append(self.loss_data, np.zeros((num_rows, num_columns)), axis=0)
-
-        else:
-
-            self.eval_data = pd.read_csv(csv_foldername + "/eval_data.csv").to_numpy().copy()[:, 1:]
-            num_rows = ((self.parameters["n_time_steps"] + self.parameters["ab_time_steps"]) // self.parameters["time_step_eval_frequency"]) + 2 - self.eval_data.shape[0]
-            num_columns = self.eval_data.shape[1]
-            if num_rows > 0:
-                self.eval_data = np.append(self.eval_data, np.zeros((num_rows, num_columns)), axis=0)
-
-            self.train_data = pd.read_csv(csv_foldername + "/train_data.csv").to_numpy().copy()[:, 1:]
-            num_rows = (self.parameters["n_time_steps"] + self.parameters["ab_time_steps"]) - self.train_data.shape[0]  # always larger than needed; will remove extra entries later
-            num_columns = self.train_data.shape[1]
-            if num_rows > 0:
-                self.train_data = np.append(self.train_data, np.zeros((num_rows, num_columns)), axis=0)
-
-            self.loss_data = pd.read_csv(csv_foldername + "/loss_data.csv").to_numpy().copy()[:, 1:]
-            if self.parameters["clear_replay_buffer"]:
-                num_rows = (((self.parameters["n_time_steps"] + self.parameters["ab_time_steps"]) - 2 * self.parameters["batch_size"]) * self.parameters["model_updates_per_step"]) - self.loss_data.shape[0]
-            else:
-                num_rows = (((self.parameters["n_time_steps"] + self.parameters["ab_time_steps"]) - self.parameters["batch_size"]) * self.parameters["model_updates_per_step"]) - self.loss_data.shape[0]
-            num_columns = self.loss_data.shape[1]
-            if num_rows > 0:
-                self.loss_data = np.append(self.loss_data, np.zeros((num_rows, num_columns)), axis=0)
 
     def load_parameters(self):
         """
@@ -613,7 +624,6 @@ class AbnormalController:
 
         # evaluation: average_return vs num_time_steps
         df.plot(x="num_time_steps", y="average_return", color="blue", legend=False)
-        plt.axvline(x=self.parameters["n_time_steps"], ymin=0, ymax=1, color="red", linewidth=2, alpha=0.3)  # malfunction marker
         plt.xlabel("time_steps")
         plt.ylabel("average\nreturn", rotation="horizontal", labelpad=30)
         plt.title("Policy Evaluation")
@@ -623,7 +633,6 @@ class AbnormalController:
 
         # evaluation: average_return vs num_updates
         df.plot(x="num_updates", y="average_return", color="blue", legend=False)
-        plt.axvline(x=(self.parameters["n_time_steps"] - self.parameters["batch_size"]) * self.parameters["model_updates_per_step"], ymin=0, ymax=1, color="red", linewidth=2, alpha=0.3)  # malfunction marker
         plt.xlabel("updates")
         plt.ylabel("average\nreturn", rotation="horizontal", labelpad=30)
         plt.title("Policy Evaluation")
@@ -633,7 +642,6 @@ class AbnormalController:
 
         # evaluation: average_return vs num_samples
         df.plot(x="num_samples", y="average_return", color="blue", legend=False)
-        plt.axvline(x=(self.parameters["n_time_steps"] - self.parameters["batch_size"]) * self.parameters["model_updates_per_step"] * self.parameters["batch_size"], ymin=0, ymax=1, color="red", linewidth=2, alpha=0.3)  # malfunction marker
         plt.xlabel("samples")
         plt.ylabel("average\nreturn", rotation="horizontal", labelpad=30)
         plt.title("Policy Evaluation")
@@ -656,7 +664,6 @@ class AbnormalController:
 
         # training: q_value_loss_1 vs num_updates
         df.plot(x="num_updates", y="q_value_loss_1", color="blue", legend=False)
-        plt.axvline(x=(self.parameters["n_time_steps"] - self.parameters["batch_size"]) * self.parameters["model_updates_per_step"], ymin=0, ymax=1, color="red", linewidth=2, alpha=0.3)  # malfunction marker
         plt.xlabel("updates")
         plt.ylabel("loss", rotation="horizontal", labelpad=30)
         plt.title("Q Value Loss 1")
@@ -666,7 +673,6 @@ class AbnormalController:
 
         # training: q_value_loss_2 vs num_updates
         df.plot(x="num_updates", y="q_value_loss_2", color="blue", legend=False)
-        plt.axvline(x=(self.parameters["n_time_steps"] - self.parameters["batch_size"]) * self.parameters["model_updates_per_step"], ymin=0, ymax=1, color="red", linewidth=2, alpha=0.3)  # malfunction marker
         plt.xlabel("updates")
         plt.ylabel("loss", rotation="horizontal", labelpad=30)
         plt.title("Q Value Loss 2")
@@ -676,7 +682,6 @@ class AbnormalController:
 
         # training: policy_loss vs num_updates
         df.plot(x="num_updates", y="policy_loss", color="blue", legend=False)
-        plt.axvline(x=(self.parameters["n_time_steps"] - self.parameters["batch_size"]) * self.parameters["model_updates_per_step"], ymin=0, ymax=1, color="red", linewidth=2, alpha=0.3)  # malfunction marker
         plt.xlabel("updates")
         plt.ylabel("loss", rotation="horizontal", labelpad=30)
         plt.title("Policy Loss")
@@ -686,7 +691,6 @@ class AbnormalController:
 
         # training: alpha_loss vs num_updates
         df.plot(x="num_updates", y="alpha_loss", color="blue", legend=False)
-        plt.axvline(x=(self.parameters["n_time_steps"] - self.parameters["batch_size"]) * self.parameters["model_updates_per_step"], ymin=0, ymax=1, color="red", linewidth=2, alpha=0.3)  # malfunction marker
         plt.xlabel("updates")
         plt.ylabel("loss", rotation="horizontal", labelpad=30)
         plt.title("Alpha Loss")
@@ -696,7 +700,6 @@ class AbnormalController:
 
         # training: alpha_value vs num_updates
         df.plot(x="num_updates", y="alpha_value", color="blue", legend=False)
-        plt.axvline(x=(self.parameters["n_time_steps"] - self.parameters["batch_size"]) * self.parameters["model_updates_per_step"], ymin=0, ymax=1, color="red", linewidth=2, alpha=0.3)  # malfunction marker
         plt.xlabel("updates")
         plt.ylabel("alpha", rotation="horizontal", labelpad=30)
         plt.title("Alpha Value")
@@ -706,7 +709,6 @@ class AbnormalController:
 
         # training: entropy vs num_updates
         df.plot(x="num_updates", y="entropy", color="blue", legend=False)
-        plt.axvline(x=(self.parameters["n_time_steps"] - self.parameters["batch_size"]) * self.parameters["model_updates_per_step"], ymin=0, ymax=1, color="red", linewidth=2, alpha=0.3)  # malfunction marker
         plt.xlabel("updates")
         plt.ylabel("entropy", rotation="horizontal", labelpad=30)
         plt.title("Entropy")
@@ -888,15 +890,36 @@ class AbnormalController:
 
 def main():
 
-    ac = AbnormalController()
+    if args.param_search:
+        param_search()
+
+    nc = NormalController()
 
     try:
 
-        ac.run()
+        nc.run()
 
     except KeyboardInterrupt as e:
 
         print("keyboard interrupt")
+
+
+def param_search():
+    """
+    Conduct a random parameter search for SACv2 using parameter ranges.
+    """
+
+    np.random.seed(args.param_search_seed)
+
+    args.gamma = round(np.random.uniform(0.8, 0.9997), 4)
+
+    args.lr = round(np.random.uniform(0.000005, 0.006), 6)
+
+    args.tau = round(np.random.uniform(0.0001, 0.1), 4)
+
+    args.replay_buffer_size = int(np.random.choice([10000, 100000, 500000, 1000000]))
+
+    args.batch_size = int(np.random.choice([16, 64, 256, 512]))
 
 
 if __name__ == "__main__":

@@ -1,10 +1,8 @@
-SAC_AB_CONTROLLER_ABSOLUTE_PATH="/home/sschoepp/Documents/openai/controllers/sacv2/mod/sacv2_ab_controller.py"
+PPO_AB_CONTROLLER_ABSOLUTE_PATH="/home/sschoepp/Documents/openai/controllers/ppov2/mod2/ppov2_ab_controller.py"
+FILE="/home/sschoepp/Documents/openai/data/PPOv2_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_d:cpu_ps:True_pss:33_resumed"
 
-FILE="/local/melco2-1/shared/ant/seeds/faulty/sac/v4/new/SACv2_AntEnv-v4:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:100000_crb:False_rn:False_a:True_d:cuda_r_mod"
-FILE2="/local/melco2-1/shared/ant/seeds/faulty/sac/v4/new/SACv2_AntEnv-v4:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:100000_crb:False_rn:True_a:True_d:cuda_r_mod"
-tmux new-session -d -s sac1 "CUDA_VISIBLE_DEVICES=0 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -c --resume -rf $FILE/seed15; CUDA_VISIBLE_DEVICES=0 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -c --resume -rf $FILE/seed16; CUDA_VISIBLE_DEVICES=0 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -c --resume -rf $FILE2/seed15; CUDA_VISIBLE_DEVICES=0 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -c --resume -rf $FILE2/seed16"
-
-
-FILE="/local/melco2-1/shared/ant/seeds/faulty/sac/v4/new/SACv2_AntEnv-v4:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:100000_crb:True_rn:False_a:True_d:cuda_r_mod"
-FILE="/local/melco2-1/shared/ant/seeds/faulty/sac/v4/new/SACv2_AntEnv-v4:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:100000_crb:True_rn:True_a:True_d:cuda_r_mod"
-tmux new-session -d -s sac2 "CUDA_VISIBLE_DEVICES=1 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -c --resume -rf $FILE/seed15; CUDA_VISIBLE_DEVICES=1 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -c --resume -rf $FILE/seed16; CUDA_VISIBLE_DEVICES=1 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -c --resume -rf $FILE2/seed15; CUDA_VISIBLE_DEVICES=1 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -c --resume -rf $FILE2/seed16"
+for s in 0..29
+do
+  tmux new-session -d -s ppov1$s "python $PPO_AB_CONTROLLER_ABSOLUTE_PATH -e AntEnv-v1 -t 3000000 -f $FILE/seed$s; python $PPO_AB_CONTROLLER_ABSOLUTE_PATH -e AntEnv-v3 -t 3000000 -f $FILE/seed$s"
+  tmux new-session -d -s ppov2$s "python $PPO_AB_CONTROLLER_ABSOLUTE_PATH -e AntEnv-v2 -t 3000000 -f $FILE/seed$s; python $PPO_AB_CONTROLLER_ABSOLUTE_PATH -e AntEnv-v4 -t 3000000 -f $FILE/seed$s"
+done

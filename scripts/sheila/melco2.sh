@@ -3,6 +3,6 @@ FILE="/home/sschoepp/Documents/openai/data/PPOv2_Ant-v2:600000000_lr:0.000123_lr
 
 for s in 0 .. 29
 do
-  tmux new-session -d -s ppov1$s "python $PPO_AB_CONTROLLER_ABSOLUTE_PATH -e AntEnv-v1 -t 3000000 -f $FILE/seed$s; python $PPO_AB_CONTROLLER_ABSOLUTE_PATH -e AntEnv-v3 -t 3000000 -f $FILE/seed$s"
-  tmux new-session -d -s ppov2$s "python $PPO_AB_CONTROLLER_ABSOLUTE_PATH -e AntEnv-v2 -t 3000000 -f $FILE/seed$s; python $PPO_AB_CONTROLLER_ABSOLUTE_PATH -e AntEnv-v4 -t 3000000 -f $FILE/seed$s"
+  tmux new-session -d -s ppov1-$s "python $PPO_AB_CONTROLLER_ABSOLUTE_PATH -e AntEnv-v1 -t 3000000 -f $FILE/seed$s; python $PPO_AB_CONTROLLER_ABSOLUTE_PATH -e AntEnv-v3 -t 3000000 -f $FILE/seed$s"
+  tmux new-session -d -s ppov2-$s "python $PPO_AB_CONTROLLER_ABSOLUTE_PATH -e AntEnv-v2 -t 3000000 -f $FILE/seed$s; python $PPO_AB_CONTROLLER_ABSOLUTE_PATH -e AntEnv-v4 -t 3000000 -f $FILE/seed$s"
 done

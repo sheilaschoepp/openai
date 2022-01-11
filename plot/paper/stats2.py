@@ -1157,8 +1157,8 @@ if __name__ == "__main__":
         prefault_min = 191
         prefault_max = 201
 
-        postfault_min = 211
-        postfault_max = 212
+        postfault_min = 261
+        postfault_max = 262
 
         eval_interval = f"[{postfault_min}:{postfault_max}]"
 

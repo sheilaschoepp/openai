@@ -809,15 +809,15 @@ def plot_postfault_performance_bar_plot(interval):
             if env == "Ant":
                 pre = prefault_performance_data[algo + ", " + "Ant-v2"]
                 if algo == "PPOv2":
-                    ts = interval_length * 3000000
+                    ts = interval_length * 5000
                 elif algo == "SACv2":
                     ts = interval_length * 100000
-            elif env == "FetchReach":
-                pre = prefault_performance_data[algo + ", " + "FetchReach-v1"]
-                if algo == "PPOv2":
-                    ts = interval_length * 30000
-                elif algo == "SACv2":
-                    ts = interval_length * 10000
+            # elif env == "FetchReach":
+            #     pre = prefault_performance_data[algo + ", " + "FetchReach-v1"]
+            #     if algo == "PPOv2":
+            #         ts = interval_length * 30000
+            #     elif algo == "SACv2":
+            #         ts = interval_length * 10000
             ts = f"{ts:,}"
 
             rnFcsF = None
@@ -854,7 +854,7 @@ def plot_postfault_performance_bar_plot(interval):
                         rnTcsT = post_mean
                         rnTcsT_ci = post_ci
                         asymp_mean_baseline = asymp_mean
-                    if rnFcsF and rnFcsT and rnTcsF and rnTcsT:
+                    if rnFcsF is not None and rnFcsT is not None and rnTcsF is not None and rnTcsT is not None:
                         data.append([algo_, env_, rnFcsF, rnFcsT, rnTcsF, rnTcsT, rnFcsF_ci, rnFcsT_ci, rnTcsF_ci, rnTcsT_ci, asymp_mean_baseline])
 
                         rnFcsF = None
@@ -870,7 +870,15 @@ def plot_postfault_performance_bar_plot(interval):
             if env == "Ant":
 
                 for d in data:
-                    print(d)
+                    if d[0] == "PPOv2":
+                        if d[1] == "AntEnv-v1":
+                            d[-1] = 6902.083108676667
+                        elif d[1] == "AntEnv-v2":
+                            d[-1] = 6308.4662153399995
+                        elif d[1] == "AntEnv-v3":
+                            d[-1] = 5838.8326488
+                        elif d[1] == "AntEnv-v4":
+                            d[-1] = 6730.192732856666
 
                 # reorganize data to ["AntEnv-v2", "AntEnv-v3", "AntEnv-v1", "AntEnv-v4"]
                 data_ = [data[1], data[2], data[0], data[3]]
@@ -925,54 +933,54 @@ def plot_postfault_performance_bar_plot(interval):
                 plt.xticks([r + 0.3 for r in range(len(labels))],  labels)
                 plt.yticks([-2000, -1000, 0, 1000, 2000, 3000, 4000, 5000, 6000, 7000])
 
-            elif env == "FetchReach":
-
-                data_ = data
-                labels = ["frozen shoulder lift\nposition sensor", "elbow flex\nposition slippage"]
-
-                # reorganize the data
-                # labels = []
-                rnFcsFs = []
-                rnFcsTs = []
-                rnTcsFs = []
-                rnTcsTs = []
-                rnFcsFs_sem = []
-                rnFcsTs_sem = []
-                rnTcsFs_sem = []
-                rnTcsTs_sem = []
-                asymp_mean_baselines = []
-                for entry in data_:
-                    # labels.append(entry[1])
-                    rnFcsFs.append(entry[2])
-                    rnFcsTs.append(entry[3])
-                    rnTcsFs.append(entry[4])
-                    rnTcsTs.append(entry[5])
-                    rnFcsFs_sem.append(entry[6])
-                    rnFcsTs_sem.append(entry[7])
-                    rnTcsFs_sem.append(entry[8])
-                    rnTcsTs_sem.append(entry[9])
-                    asymp_mean_baselines.append(entry[10])
-
-                bar_width = 0.2
-                br1 = np.arange(len(labels))
-                br2 = [x + bar_width for x in br1]
-                br3 = [x + bar_width for x in br2]
-                br4 = [x + bar_width for x in br3]
-
-                plt.bar(br1, np.array(rnFcsFs), yerr=rnFcsFs_sem, color=palette_colours[1], width=bar_width, bottom=asymp_mean_baselines)
-                plt.bar(br2, np.array(rnFcsTs), yerr=rnFcsTs_sem, color=palette_colours[2], width=bar_width, bottom=asymp_mean_baselines)
-                plt.bar(br3, np.array(rnTcsFs), yerr=rnTcsFs_sem, color=palette_colours[3], width=bar_width, bottom=asymp_mean_baselines)
-                plt.bar(br4, np.array(rnTcsTs), yerr=rnTcsTs_sem, color=palette_colours[4], width=bar_width, bottom=asymp_mean_baselines)
-
-                plt.axhline(xmin=0.05, xmax=0.45, y=asymp_mean_baselines[0], color=palette_colours[4], linestyle="dashed", linewidth=1)
-                plt.axhline(xmin=0.555, xmax=0.955, y=asymp_mean_baselines[1], color=palette_colours[4], linestyle="dashed", linewidth=1)
-
-                plt.axvline(x=0.3, color="black", ymax=0.025)
-                plt.axvline(x=1.3, color="black", ymax=0.025)
-
-                plt.xticks([r + 0.3 for r in range(len(labels))], labels)
-                plt.yticks(np.arange(-30, 1, 5))
-                plt.ylim((-30, 1.5))
+            # elif env == "FetchReach":
+            #
+            #     data_ = data
+            #     labels = ["frozen shoulder lift\nposition sensor", "elbow flex\nposition slippage"]
+            #
+            #     # reorganize the data
+            #     # labels = []
+            #     rnFcsFs = []
+            #     rnFcsTs = []
+            #     rnTcsFs = []
+            #     rnTcsTs = []
+            #     rnFcsFs_sem = []
+            #     rnFcsTs_sem = []
+            #     rnTcsFs_sem = []
+            #     rnTcsTs_sem = []
+            #     asymp_mean_baselines = []
+            #     for entry in data_:
+            #         # labels.append(entry[1])
+            #         rnFcsFs.append(entry[2])
+            #         rnFcsTs.append(entry[3])
+            #         rnTcsFs.append(entry[4])
+            #         rnTcsTs.append(entry[5])
+            #         rnFcsFs_sem.append(entry[6])
+            #         rnFcsTs_sem.append(entry[7])
+            #         rnTcsFs_sem.append(entry[8])
+            #         rnTcsTs_sem.append(entry[9])
+            #         asymp_mean_baselines.append(entry[10])
+            #
+            #     bar_width = 0.2
+            #     br1 = np.arange(len(labels))
+            #     br2 = [x + bar_width for x in br1]
+            #     br3 = [x + bar_width for x in br2]
+            #     br4 = [x + bar_width for x in br3]
+            #
+            #     plt.bar(br1, np.array(rnFcsFs), yerr=rnFcsFs_sem, color=palette_colours[1], width=bar_width, bottom=asymp_mean_baselines)
+            #     plt.bar(br2, np.array(rnFcsTs), yerr=rnFcsTs_sem, color=palette_colours[2], width=bar_width, bottom=asymp_mean_baselines)
+            #     plt.bar(br3, np.array(rnTcsFs), yerr=rnTcsFs_sem, color=palette_colours[3], width=bar_width, bottom=asymp_mean_baselines)
+            #     plt.bar(br4, np.array(rnTcsTs), yerr=rnTcsTs_sem, color=palette_colours[4], width=bar_width, bottom=asymp_mean_baselines)
+            #
+            #     plt.axhline(xmin=0.05, xmax=0.45, y=asymp_mean_baselines[0], color=palette_colours[4], linestyle="dashed", linewidth=1)
+            #     plt.axhline(xmin=0.555, xmax=0.955, y=asymp_mean_baselines[1], color=palette_colours[4], linestyle="dashed", linewidth=1)
+            #
+            #     plt.axvline(x=0.3, color="black", ymax=0.025)
+            #     plt.axvline(x=1.3, color="black", ymax=0.025)
+            #
+            #     plt.xticks([r + 0.3 for r in range(len(labels))], labels)
+            #     plt.yticks(np.arange(-30, 1, 5))
+            #     plt.ylim((-30, 1.5))
 
             if algo.startswith("PPO"):
                 plt.title("Proximal Policy Optimization: {} Time Steps".format(ts))
@@ -986,11 +994,11 @@ def plot_postfault_performance_bar_plot(interval):
             plot_directory = os.path.join(os.getcwd(), "plots", env.lower(), algo[:-2])
             os.makedirs(plot_directory, exist_ok=True)
 
-            filename = plot_directory + "/{}_{}_average_return_after_fault_onset_{}.jpg".format(algo[:-2].upper(), env, interval)
+            filename = plot_directory + "/{}_{}_average_return_after_fault_onset_{}b.jpg".format(algo[:-2].upper(), env, interval)
             plt.savefig(filename, dpi=300)
             # Image.open(filename).convert("CMYK").save(filename)
 
-            # plt.show()
+            plt.show()
 
             plt.close()
 
@@ -1149,8 +1157,8 @@ if __name__ == "__main__":
         prefault_min = 191
         prefault_max = 201
 
-        postfault_min = 203
-        postfault_max = 204
+        postfault_min = 211
+        postfault_max = 212
 
         eval_interval = f"[{postfault_min}:{postfault_max}]"
 
@@ -1159,7 +1167,8 @@ if __name__ == "__main__":
         # list of list: entries [algo, env, rn, cs, mean]
         postfault_performance_data = []
 
-        ant_data_dir = os.path.join(data_dir, "ant", "exps")
+        # ant_data_dir = os.path.join(data_dir, "ant", "exps")
+        ant_data_dir = "/Users/sheilaannschoepp/Documents/data/"
 
         for dir1 in os.listdir(ant_data_dir):
             dir1 = os.path.join(ant_data_dir, dir1)
@@ -1169,15 +1178,15 @@ if __name__ == "__main__":
                     dir3 = os.path.join(dir2, dir3)
                     compute_postfault_performance(dir3)
 
-        fetchreach_data_dir = os.path.join(data_dir, "fetchreach", "exps")
-
-        for dir1 in os.listdir(fetchreach_data_dir):
-            dir1 = os.path.join(fetchreach_data_dir, dir1)
-            for dir2 in os.listdir(dir1):
-                dir2 = os.path.join(dir1, dir2)
-                for dir3 in os.listdir(dir2):
-                    dir3 = os.path.join(dir2, dir3)
-                    compute_postfault_performance(dir3)
+        # fetchreach_data_dir = os.path.join(data_dir, "fetchreach", "exps")
+        #
+        # for dir1 in os.listdir(fetchreach_data_dir):
+        #     dir1 = os.path.join(fetchreach_data_dir, dir1)
+        #     for dir2 in os.listdir(dir1):
+        #         dir2 = os.path.join(dir1, dir2)
+        #         for dir3 in os.listdir(dir2):
+        #             dir3 = os.path.join(dir2, dir3)
+        #             compute_postfault_performance(dir3)
 
         postfault_performance_data.sort()
         plot_postfault_performance_bar_plot(eval_interval)

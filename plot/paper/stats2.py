@@ -870,6 +870,9 @@ def plot_postfault_performance_bar_plot(interval):
             if env == "Ant":
 
                 for d in data:
+                    print(d)
+
+                for d in data:
                     if d[0] == "PPOv2":
                         if d[1] == "AntEnv-v1":
                             d[-1] = 6902.083108676667

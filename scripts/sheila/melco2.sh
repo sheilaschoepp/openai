@@ -14,8 +14,8 @@ FILE="/local/melco2-1/shared/fetchreach/seeds/normal/SACv2_FetchReachEnv-v0:2000
 
 for s in {0..1}
 do
-  tmux new-session -d -s sacv1crbrn-$s "CUDA_VISIBLE_DEVICES=0 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -e FetchReachEnv-v4 -t 50000 -f $FILE/seed$s -cm -rn"
-  tmux new-session -d -s sacv1-$s "CUDA_VISIBLE_DEVICES=0 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -e FetchReachEnv-v4 -t 50000 -f $FILE/seed$s"
-  tmux new-session -d -s sacv2crbrn-$s "CUDA_VISIBLE_DEVICES=1 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -e FetchReachEnv-v6 -t 50000 -f $FILE/seed$s -cm -rn"
-  tmux new-session -d -s sacv2-$s "CUDA_VISIBLE_DEVICES=1 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -e FetchReachEnv-v6 -t 50000 -f $FILE/seed$s"
+  tmux new-session -d -s sacv1crbrn-$s "CUDA_VISIBLE_DEVICES=0 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -e FetchReachEnv-v4 -t 50000 -f $FILE/seed$s -c -crb -rn"
+  tmux new-session -d -s sacv1-$s "CUDA_VISIBLE_DEVICES=0 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -e FetchReachEnv-v4 -t 50000 -f $FILE/seed$s -c"
+  tmux new-session -d -s sacv2crbrn-$s "CUDA_VISIBLE_DEVICES=1 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -e FetchReachEnv-v6 -t 50000 -f $FILE/seed$s -c -crb -rn"
+  tmux new-session -d -s sacv2-$s "CUDA_VISIBLE_DEVICES=1 python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -e FetchReachEnv-v6 -t 50000 -f $FILE/seed$s -c"
 done

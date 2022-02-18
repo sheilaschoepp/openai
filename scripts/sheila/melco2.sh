@@ -3,12 +3,8 @@ FILE="/local/melco2-1/shared/fetchreach/seeds/normal/PPOv2_FetchReachEnv-v0:6000
 
 for s in {0..5}
 do
-  tmux new-session -d -s ppov1cmrn-$s "python $PPO_AB_CONTROLLER_ABSOLUTE_PATH -e AntEnv-v1 -t 100000 -f $FILE/seed$s -cm -rn"
-  tmux new-session -d -s ppov1-$s "python $PPO_AB_CONTROLLER_ABSOLUTE_PATH -e AntEnv-v1 -t 100000 -f $FILE/seed$s"
-  tmux new-session -d -s ppov2cmrn-$s "python $PPO_AB_CONTROLLER_ABSOLUTE_PATH -e AntEnv-v2 -t 100000 -f $FILE/seed$s -cm -rn"
-  tmux new-session -d -s ppov2-$s "python $PPO_AB_CONTROLLER_ABSOLUTE_PATH -e AntEnv-v2 -t 100000 -f $FILE/seed$s"
-  tmux new-session -d -s ppov3cmrn-$s "python $PPO_AB_CONTROLLER_ABSOLUTE_PATH -e AntEnv-v3 -t 100000 -f $FILE/seed$s -cm -rn"
-  tmux new-session -d -s ppov3-$s "python $PPO_AB_CONTROLLER_ABSOLUTE_PATH -e AntEnv-v3 -t 100000 -f $FILE/seed$s"
-  tmux new-session -d -s ppov4cmrn-$s "python $PPO_AB_CONTROLLER_ABSOLUTE_PATH -e AntEnv-v4 -t 100000 -f $FILE/seed$s -cm -rn"
-  tmux new-session -d -s ppov4-$s "python $PPO_AB_CONTROLLER_ABSOLUTE_PATH -e AntEnv-v4 -t 100000 -f $FILE/seed$s"
+  tmux new-session -d -s ppov1cmrn-$s "python $PPO_AB_CONTROLLER_ABSOLUTE_PATH -e FetchReachEnv-v4 -t 100000 -f $FILE/seed$s -cm -rn"
+  tmux new-session -d -s ppov1-$s "python $PPO_AB_CONTROLLER_ABSOLUTE_PATH -e FetchReachEnv-v4 -t 100000 -f $FILE/seed$s"
+  tmux new-session -d -s ppov2cmrn-$s "python $PPO_AB_CONTROLLER_ABSOLUTE_PATH -e FetchReachEnv-v6 -t 100000 -f $FILE/seed$s -cm -rn"
+  tmux new-session -d -s ppov2-$s "python $PPO_AB_CONTROLLER_ABSOLUTE_PATH -e FetchReachEnv-v6 -t 100000 -f $FILE/seed$s"
 done

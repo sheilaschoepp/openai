@@ -3,7 +3,7 @@ FILE="/local/melco2-1/shared/fetchreach/seeds/normal/PPOv2_FetchReachEnv-v0:6000
 
 for s in {0..5}
 do
-  tmux new-session -d -s ppov1cmrn-$s "python $PPO_AB_CONTROLLER_ABSOLUTE_PATH -e FetchReachEnv-v4 -t 100000 -f $FILE/seed$s -cm -rn"
+  tmux new-session -d -s ppov1cmrn-$s "python $PPO_AB_CONTROLLER_ABSOLUTE_PATH -e FetchReachEnv-v4 -t 100000 -f $FILE/seed$s -cm -rn; python test.py"
   tmux new-session -d -s ppov1-$s "python $PPO_AB_CONTROLLER_ABSOLUTE_PATH -e FetchReachEnv-v4 -t 100000 -f $FILE/seed$s"
   tmux new-session -d -s ppov2cmrn-$s "python $PPO_AB_CONTROLLER_ABSOLUTE_PATH -e FetchReachEnv-v6 -t 100000 -f $FILE/seed$s -cm -rn"
   tmux new-session -d -s ppov2-$s "python $PPO_AB_CONTROLLER_ABSOLUTE_PATH -e FetchReachEnv-v6 -t 100000 -f $FILE/seed$s"

@@ -345,7 +345,7 @@ class PPOv2(BaseAgent):
         else:
 
             # send to CPU
-            checkpoint = torch.load(tar_foldername + "/{}.tar".format(t), map_location=self.device)
+            checkpoint = torch.load(tar_foldername + "/{}.tar".format(t), map_location=torch.device(self.device))
 
             # load neural network(s)
             self.actor_critic_network.load_state_dict(checkpoint["actor_critic_network_state_dict"])

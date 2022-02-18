@@ -302,8 +302,8 @@ class SACv2(BaseAgent):
 
             pt_foldername = dir_ + "/pt"
 
-            self.target_entropy = torch.load(pt_foldername + "/target_entropy.pt", map_location=self.device)
-            self.log_alpha = torch.load(pt_foldername + "/log_alpha.pt", map_location=self.device)
+            self.target_entropy = torch.load(pt_foldername + "/target_entropy.pt", map_location=torch.device(self.device))
+            self.log_alpha = torch.load(pt_foldername + "/log_alpha.pt", map_location=torch.device(self.device))
             self.alpha = torch.load(pt_foldername + "/alpha.pt")
             self.alpha_optimizer = Adam([self.log_alpha], lr=self.lr)
 
@@ -341,7 +341,7 @@ class SACv2(BaseAgent):
         else:
 
             # send to CPU
-            checkpoint = torch.load(tar_foldername + "/{}.tar".format(t), map_location=self.device)
+            checkpoint = torch.load(tar_foldername + "/{}.tar".format(t), map_location=torch.device(self.device))
 
             # load neural network(s)
             self.q_network.load_state_dict(checkpoint["q_network_state_dict"])

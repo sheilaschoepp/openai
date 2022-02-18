@@ -148,7 +148,7 @@ class Simulate:
                          num_steps=self.rlg_statistics["num_steps"],
                          num_episodes=self.rlg_statistics["num_episodes"])
 
-        for _ in range(10):
+        for _ in range(100):
 
             self.rlg.rl_start()
 
@@ -160,7 +160,7 @@ class Simulate:
 
                 # time.sleep(0.1)
 
-            # print(self.rlg.episode_reward())
+            print(self.rlg.episode_reward())
 
 
 if __name__ == "__main__":

@@ -5,14 +5,13 @@ https://github.com/openai/gym/issues/1503
 
 In fetch_env.py _get_obs() method:
 
-grip_pos is the position of the gripper, with the first 3 elements being the (x,y,z) position and the final four elements
-being the gripper's orientation (quaternion x,y,z,w)
+grip_pos is the (x,y,z) position of the gripper
 
-gripper_state is a measure of the gripper's opening
+gripper_state includes two measures of the gripper's opening
 
 grip_velp is the (x,y,z) velocity of the gripper
 
-gripper_vel is the velocity of the gripper's opening/closing
+gripper_vel includes two measures of the velocity of the gripper's opening/closing
 
 In fetchreach_observation_wrapper.py:
 

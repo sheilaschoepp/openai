@@ -1,3 +1,9 @@
+"""
+modifications:
+modified step() method - obtain the starting joint position (before executing an action) and ending joint position
+(after executing an action), and compute the change (delta).  If delta is not zero (indicating that the robot is moving),
+then we add a slippage constant c to the joint position.  c=0.05 radians.
+"""
 import os
 import copy
 import numpy as np

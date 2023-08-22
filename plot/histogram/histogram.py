@@ -280,23 +280,22 @@ def plot_ant_heatmap(ranges):
     y_labels = ["1.0", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "0.5", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "0.0"]
     heatmap = sns.heatmap(data=df[::-1], cmap=cmap, yticklabels=y_labels, vmin=0, vmax=1, cbar_kws={"pad": 0.01})
 
-<<<<<<< HEAD
-    algorithm_ = None
-
-    if algorithm == "PPO":
-        algorithm_ = "Proximal Policy Optimization (PPO)"
-    elif algorithm == "SAC":
-        algorithm_ = "Soft Actor-Critic (SAC)"
-
-    heatmap.set_title("{}".format(suffix_eval))
-=======
     if suffix == "":
         # heatmap.set_title("{}\n{}".format(algorithm, name))
         heatmap.set_title(f"{algorithm} Policy (Transferred, No Adaptation)")
     else:
         # heatmap.set_title("{} ({})\n{}".format(algorithm, suffix_eval, name))
         heatmap.set_title(f"{algorithm} Policy (After Adaptation)")
->>>>>>> main
+
+    # algorithm_ = None
+    #
+    # if algorithm == "PPO":
+    #     algorithm_ = "Proximal Policy Optimization (PPO)"
+    # elif algorithm == "SAC":
+    #     algorithm_ = "Soft Actor-Critic (SAC)"
+    #
+    # heatmap.set_title("{}".format(suffix_eval))
+
     plt.xticks(rotation=45)
     plt.yticks(rotation=0)
     plt.xlabel("joint")
@@ -400,8 +399,6 @@ class AntHistogram:
             self.env_name = self.parameters["ab_env_name"]
         else:
             self.env_name = self.parameters["n_env_name"]
-
-        # self.env_name = "AntEnv-v2"  # TODO
 
         # seeds
 
@@ -751,23 +748,22 @@ def plot_fetchreach_heatmap(ranges):
     y_labels = ["1.0", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "0.5", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "0.0"]
     heatmap = sns.heatmap(data=df[::-1], cmap=cmap, yticklabels=y_labels, vmin=0, vmax=1, cbar_kws={"pad": 0.01})
 
-<<<<<<< HEAD
-    algorithm_ = None
-
-    if algorithm == "PPO":
-        algorithm_ = "Proximal Policy Optimization (PPO)"
-    elif algorithm == "SAC":
-        algorithm_ = "Soft Actor-Critic (SAC)"
-
-    heatmap.set_title("{}".format(suffix_eval))
-=======
     if suffix == "":
         # heatmap.set_title("{}\n{}".format(algorithm, name))
         heatmap.set_title(f"{algorithm} Policy (Transferred, No Adaptation)")
     else:
         # heatmap.set_title("{} ({})\n{}".format(algorithm, suffix_eval, name))
         heatmap.set_title(f"{algorithm} Policy (After Adaptation)")
->>>>>>> main
+
+    # algorithm_ = None
+    #
+    # if algorithm == "PPO":
+    #     algorithm_ = "Proximal Policy Optimization (PPO)"
+    # elif algorithm == "SAC":
+    #     algorithm_ = "Soft Actor-Critic (SAC)"
+    #
+    # heatmap.set_title("{}".format(suffix_eval))
+
     plt.xticks(rotation=45)
     plt.yticks(rotation=0)
     plt.xlabel("joint")
@@ -870,8 +866,6 @@ class FetchReachHistogram:
             self.env_name = self.parameters["ab_env_name"]
         else:
             self.env_name = self.parameters["n_env_name"]
-
-        # self.env_name = "FetchReachEnv-v6"  # TODO
 
         # seeds
 
@@ -1104,7 +1098,7 @@ def draw_histogram():
         elif env_name == "FetchReachEnvGE-v1":
             name = "Shoulder Lift Reduced ROM Fault (with Goal Elimination)"
         elif env_name == "FetchReachEnv-v4":
-            name = "Post-Fault Policy"
+            name = "Shoulder Lift Position Sensor Fault"
         elif env_name == "FetchReachEnv-v6":
             name = "Post-Fault Policy"
 
@@ -1153,6 +1147,7 @@ if __name__ == "__main__":
 
     if ant_ppo_v0:
 
+        # todo
         file = "/media/sschoepp/easystore/shared/ant/combined/normal/PPOv2_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_d:cpu_ps:True_pss:33"
         draw_histogram()
 
@@ -1319,8 +1314,8 @@ if __name__ == "__main__":
 
     if fetchreach_ppo_v0:
 
-        # file = "/media/sschoepp/easystore/shared/fetchreach/combined/normal/PPOv2_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_d:cpu_ps:True_pss:43"
-        file = "/DATA/PPOv2_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_d:cpu_ps:True_pss:43"
+        file = "/media/sschoepp/easystore/shared/fetchreach/combined/normal/PPOv2_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_d:cpu_ps:True_pss:43"
+        # file = "/DATA/PPOv2_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_d:cpu_ps:True_pss:43"
         draw_histogram()
 
     # SAC v0

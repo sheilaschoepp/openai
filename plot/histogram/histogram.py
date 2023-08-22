@@ -247,15 +247,17 @@ def plot_ant_heatmap(ranges):
         counts = counts / np.sum(counts)  # probability
         ant_histogram_count_data.append(counts)
 
-    df = pd.DataFrame(np.array(ant_histogram_count_data).T, index=bins[:-1], columns=["hip 1", "ankle 1", "hip 2", "ankle 2", "hip 3", "ankle 3", "hip 4", "ankle 4"])
+    df = pd.DataFrame(np.array(ant_histogram_count_data).T, index=bins[:-1], columns=["hip_1", "ankle_1", "hip_2", "ankle_2", "hip_3", "ankle_3", "hip_4", "ankle_4"])
 
-    y_labels = ["1.0", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "0.5", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "0.0"]
-    heatmap = sns.heatmap(data=df[::-1], cmap=cmap, yticklabels=y_labels)
+    y_labels = ["1.0", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "0.5", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "0.0"]
+    heatmap = sns.heatmap(data=df[::-1], cmap=cmap, yticklabels=y_labels, vmin=0, vmax=1, cbar_kws={"pad": 0.01})
 
     if suffix == "":
-        heatmap.set_title("{}\n{}".format(algorithm, name))
+        # heatmap.set_title("{}\n{}".format(algorithm, name))
+        heatmap.set_title(f"{algorithm} Policy (Transferred, No Adaptation)")
     else:
-        heatmap.set_title("{} ({})\n{}".format(algorithm, suffix_eval, name))
+        # heatmap.set_title("{} ({})\n{}".format(algorithm, suffix_eval, name))
+        heatmap.set_title(f"{algorithm} Policy (After Adaptation)")
     plt.xticks(rotation=45)
     plt.yticks(rotation=0)
     plt.xlabel("joint")
@@ -280,7 +282,7 @@ def save_ant_histogram_data():
 
     np.save(experiment_data_directory + "/{}_histogram_data_{}.npy".format(experiment_name, num_seeds), ant_histogram_data)
 
-    df = pd.DataFrame(np.array(ant_histogram_data).T, columns=["hip_1", "ankle_1",  "hip_2", "ankle_2", "hip_3", "ankle_3", "hip_4" ,"ankle_4"])
+    df = pd.DataFrame(np.array(ant_histogram_data).T, columns=["hip_1", "ankle_1",  "hip_2", "ankle_2", "hip_3", "ankle_3", "hip_4", "ankle_4"])
     df.to_pickle(experiment_data_directory + "/{}_histogram_data_{}.pkl".format(experiment_name, num_seeds))
 
 
@@ -688,13 +690,15 @@ def plot_fetchreach_heatmap(ranges):
 
     df = pd.DataFrame(np.array(fetchreach_histogram_count_data).T, index=np.flip(bins[:-1]), columns=["shoulder pan", "shoulder lift", "upperarm roll", "elbow flex", "forearm roll", "wrist flex", "wrist roll"])
 
-    y_labels = ["1.0", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "0.5", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "0.0"]
-    heatmap = sns.heatmap(data=df[::-1], cmap=cmap, yticklabels=y_labels)
+    y_labels = ["1.0", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "0.5", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "0.0"]
+    heatmap = sns.heatmap(data=df[::-1], cmap=cmap, yticklabels=y_labels, vmin=0, vmax=1, cbar_kws={"pad": 0.01})
 
     if suffix == "":
-        heatmap.set_title("{}\n{}".format(algorithm, name))
+        # heatmap.set_title("{}\n{}".format(algorithm, name))
+        heatmap.set_title(f"{algorithm} Policy (Transferred, No Adaptation)")
     else:
-        heatmap.set_title("{} ({})\n{}".format(algorithm, suffix_eval, name))
+        # heatmap.set_title("{} ({})\n{}".format(algorithm, suffix_eval, name))
+        heatmap.set_title(f"{algorithm} Policy (After Adaptation)")
     plt.xticks(rotation=45)
     plt.yticks(rotation=0)
     plt.xlabel("joint")

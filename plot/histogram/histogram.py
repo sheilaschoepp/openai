@@ -67,7 +67,7 @@ def get_ant_xml_data():
     #     model_xml = str(Path.home()) + "/Documents/openai/custom_gym_envs/envs/ant/xml/AntEnv_v4_BrokenUnseveredLimb.xml"
 
     # use normal xml to define the ranges for plotting
-    model_xml = anaconda_path + "/envs/openai3.7/lib/python3.7/site-packages/gym/envs/mujoco/assets/ant.xml"
+    model_xml = anaconda_path + "/envs/openai3.9/lib/python3.9/site-packages/gym/envs/mujoco/assets/ant.xml"
 
     tree = ET.parse(model_xml)
     root = tree.getroot()
@@ -1143,11 +1143,10 @@ if __name__ == "__main__":
 
     # PPO
 
-    ant_ppo_v0 = False
+    ant_ppo_v0 = True
 
     if ant_ppo_v0:
 
-        # todo
         file = "/media/sschoepp/easystore/shared/ant/combined/normal/PPOv2_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_d:cpu_ps:True_pss:33"
         draw_histogram()
 

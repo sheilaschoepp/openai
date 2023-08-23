@@ -1156,7 +1156,7 @@ if __name__ == "__main__":
 
     if ant_sac_v0:
 
-        file = "/media/sschoepp/easystore/shared/ant/combined/normal/SACv2_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_a:True_d:cuda_ps:True_pss:61"
+        file = "/media/sschoepp/easystore/ant/combined/normal/SACv2_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_a:True_d:cuda_ps:True_pss:61"
         draw_histogram()
 
     """ant faulty"""

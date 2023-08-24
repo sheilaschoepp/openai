@@ -248,7 +248,7 @@ def plot_ant_heatmap(ranges):
     @param ranges: tuple of numpy arrays
         joint ranges
     """
-    global ant_histogram_data
+    global ant_histogram_data, algorithm
 
     ant_histogram_data = np.load(experiment_data_directory + "/{}_histogram_data_{}.npy".format(experiment_name, num_seeds))
 
@@ -280,12 +280,22 @@ def plot_ant_heatmap(ranges):
     y_labels = ["1.0", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "0.5", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "0.0"]
     heatmap = sns.heatmap(data=df[::-1], cmap=cmap, yticklabels=y_labels, vmin=0, vmax=1, cbar_kws={"pad": 0.01})
 
+    if algorithm == "PPO":
+        algorithm = "Proximal Policy Optimization"
+    else:
+        algorithm = "Soft Actor-Critic"
+
     if suffix == "":
         # heatmap.set_title("{}\n{}".format(algorithm, name))
-        heatmap.set_title(f"{algorithm} Policy (Transferred, No Adaptation)")
+        heatmap.set_title(f"{algorithm}: Transferred Policy, No Adaptation", pad=20)
     else:
         # heatmap.set_title("{} ({})\n{}".format(algorithm, suffix_eval, name))
-        heatmap.set_title(f"{algorithm} Policy (After Adaptation)")
+        heatmap.set_title(f"{algorithm}: Adapted Policy", pad=20)
+
+    if algorithm == "Proximal Policy Optimization":
+        algorithm = "PPO"
+    else:
+        algorithm = "SAC"
 
     # algorithm_ = None
     #
@@ -750,10 +760,10 @@ def plot_fetchreach_heatmap(ranges):
 
     if suffix == "":
         # heatmap.set_title("{}\n{}".format(algorithm, name))
-        heatmap.set_title(f"{algorithm} Policy (Transferred, No Adaptation)")
+        heatmap.set_title(f"{algorithm}: Transferred Policy, No Adaptation")
     else:
         # heatmap.set_title("{} ({})\n{}".format(algorithm, suffix_eval, name))
-        heatmap.set_title(f"{algorithm} Policy (After Adaptation)")
+        heatmap.set_title(f"{algorithm}: Adapted Policy")
 
     # algorithm_ = None
     #
@@ -1143,7 +1153,7 @@ if __name__ == "__main__":
 
     # PPO
 
-    ant_ppo_v0 = True
+    ant_ppo_v0 = False
 
     if ant_ppo_v0:
 
@@ -1152,7 +1162,7 @@ if __name__ == "__main__":
 
     # SAC
 
-    ant_sac_v0 = True
+    ant_sac_v0 = False
 
     if ant_sac_v0:
 
@@ -1181,7 +1191,7 @@ if __name__ == "__main__":
 
     # PPO v2
 
-    ant_ppo_v2 = False
+    ant_ppo_v2 = True
 
     if ant_ppo_v2:
 
@@ -1253,7 +1263,7 @@ if __name__ == "__main__":
 
     # SAC v2
 
-    ant_sac_v2 = False
+    ant_sac_v2 = True
 
     if ant_sac_v2:
 

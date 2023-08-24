@@ -530,7 +530,7 @@ def get_fetchrach_xml_data():
     #     model_xml = str(Path.home()) + "/Documents/openai/custom_gym_envs/envs/fetchreach/FetchReachEnv_v4_BrokenShoulderLiftSensor/assets/fetch/reach.xml"
     # elif "v5" in env_name:
     #     model_xml = str(Path.home()) + "/Documents/openai/custom_gym_envs/envs/fetchreach/FetchReachEnv_v5_BrokenJointsTBD/assets/fetch/reach.xml"4
-    model_xml = anaconda_path + "/envs/openai3.7/lib/python3.7/site-packages/gym/envs/robotics/assets/fetch/reach.xml"
+    model_xml = anaconda_path + "/envs/openai3.9/lib/python3.9/site-packages/gym/envs/robotics/assets/fetch/reach.xml"
 
     robot_xml = model_xml[:-9] + "robot.xml"
     tree = ET.parse(robot_xml)
@@ -1143,7 +1143,7 @@ if __name__ == "__main__":
 
     # PPO
 
-    ant_ppo_v0 = False
+    ant_ppo_v0 = True
 
     if ant_ppo_v0:
 
@@ -1152,7 +1152,7 @@ if __name__ == "__main__":
 
     # SAC
 
-    ant_sac_v0 = False
+    ant_sac_v0 = True
 
     if ant_sac_v0:
 
@@ -1163,7 +1163,7 @@ if __name__ == "__main__":
 
     # PPO v1
 
-    ant_ppo_v1 = False
+    ant_ppo_v1 = True
 
     if ant_ppo_v1:
 
@@ -1181,7 +1181,7 @@ if __name__ == "__main__":
 
     # PPO v2
 
-    ant_ppo_v2 = False
+    ant_ppo_v2 = True
 
     if ant_ppo_v2:
 
@@ -1199,7 +1199,7 @@ if __name__ == "__main__":
 
     # PPO v3
 
-    ant_ppo_v3 = False
+    ant_ppo_v3 = True
 
     if ant_ppo_v3:
 
@@ -1217,7 +1217,7 @@ if __name__ == "__main__":
 
     # PPO v4
 
-    ant_ppo_v4 = False
+    ant_ppo_v4 = True
 
     if ant_ppo_v4:
 
@@ -1235,7 +1235,7 @@ if __name__ == "__main__":
 
     # SAC v1
 
-    ant_sac_v1 = False
+    ant_sac_v1 = True
 
     if ant_sac_v1:
 
@@ -1253,7 +1253,7 @@ if __name__ == "__main__":
 
     # SAC v2
 
-    ant_sac_v2 = False
+    ant_sac_v2 = True
 
     if ant_sac_v2:
 
@@ -1271,7 +1271,7 @@ if __name__ == "__main__":
 
     # SAC v3
 
-    ant_sac_v3 = False
+    ant_sac_v3 = True
 
     if ant_sac_v3:
 
@@ -1289,7 +1289,7 @@ if __name__ == "__main__":
 
     # SAC v4
 
-    ant_sac_v4 = False
+    ant_sac_v4 = True
 
     if ant_sac_v4:
 

@@ -287,10 +287,10 @@ def plot_ant_heatmap(ranges):
 
     if suffix == "":
         # heatmap.set_title("{}\n{}".format(algorithm, name))
-        heatmap.set_title(f"{algorithm}:\nTransferred Policy, No Adaptation", pad=20)
+        heatmap.set_title(f"{algorithm}")
     else:
         # heatmap.set_title("{} ({})\n{}".format(algorithm, suffix_eval, name))
-        heatmap.set_title(f"{algorithm}:\nAdapted Policy", pad=20)
+        heatmap.set_title(f"{algorithm}")
 
     if algorithm == "Proximal Policy Optimization":
         algorithm = "PPO"

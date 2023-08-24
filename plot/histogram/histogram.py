@@ -413,7 +413,7 @@ class AntHistogram:
         # rl problem
 
         # normal environment used for training
-        self.env = Environment("AntEnv-v2",
+        self.env = Environment("AntEnv-v2", #todo
                                seed,
                                render=False)
 

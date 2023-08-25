@@ -133,10 +133,11 @@ def plot_ant_histograms(ranges):
         ant_histogram_data_clipped.append(clipped)
 
     def title():
-        if suffix == "":
-            title = "{}\n{}\n{}".format(algorithm, name, joint_name)  # todo
-        else:
-            title = "{} ({})\n{}\n{}".format(algorithm, suffix_eval, name, joint_name)
+        title = "Proximity Policy Optimization" if algorithm == "PPO" else "Soft Actor-Critic"
+        # if suffix == "":
+        #     title = "{}\n{}\n{}".format(algorithm, name, joint_name)  # todo
+        # else:
+        #     title = "{} ({})\n{}\n{}".format(algorithm, suffix_eval, name, joint_name)
         return title
 
     index = 0  # hip_1
@@ -146,6 +147,7 @@ def plot_ant_histograms(ranges):
     plot.set_title(title())
     plt.ylim(0, 1)
     plt.ylabel("probability")
+    plt.tight_layout()
     filename = experiment_plot_directory + "/{}_hip_1_joint_{}.jpg".format(experiment_name, num_seeds)
     plt.savefig(filename, dpi=300)
     # Image.open(filename).convert("CMYK").save(filename)

@@ -174,9 +174,9 @@ def plot_early_adaptation(directory):
     plt.ylabel("average return ({} seeds)".format(num_seeds))
 
     if algorithm == "SAC":
-        title = "Soft Actor-Critic (SAC)"
+        title = "Soft Actor-Critic"
     else:
-        title = "Proximal Policy Optimization (PPO)"
+        title = "Proximal Policy Optimization"
 
     plt.title(title)
 
@@ -336,9 +336,9 @@ def plot_complete_adaptation(directory):
     plt.ylabel("average return ({} seeds)".format(num_seeds))
 
     if algorithm == "SAC":
-        title = "Soft Actor-Critic (SAC)"
+        title = "Soft Actor-Critic"
     else:
-        title = "Proximal Policy Optimization (PPO)"
+        title = "Proximal Policy Optimization"
 
     plt.title(title)
 

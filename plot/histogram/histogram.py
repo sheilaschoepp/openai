@@ -145,6 +145,7 @@ def plot_ant_histograms(ranges):
     df = pd.DataFrame(ant_histogram_data_clipped[index], columns=["radians"])
     plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1] + 0.02, 0.02), element="step")
     plot.set_title(title())
+    plt.xlabel("range (radians)")
     plt.ylim(0, 1)
     plt.ylabel("probability")
     plt.tight_layout()
@@ -158,8 +159,10 @@ def plot_ant_histograms(ranges):
     df = pd.DataFrame(ant_histogram_data_clipped[index], columns=["radians"])
     plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1] + 0.015, 0.015), element="step")
     plot.set_title(title())
+    plt.xlabel("range (radians)")
     plt.ylim(0, 1)
     plt.ylabel("probability")
+    plt.tight_layout()
     filename = experiment_plot_directory + "/{}_ankle_1_joint_{}.jpg".format(experiment_name, num_seeds)
     plt.savefig(filename, dpi=300)
     # Image.open(filename).convert("CMYK").save(filename)
@@ -170,8 +173,10 @@ def plot_ant_histograms(ranges):
     df = pd.DataFrame(ant_histogram_data_clipped[index], columns=["radians"])
     plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1] + 0.02, 0.02), element="step")
     plot.set_title(title())
+    plt.xlabel("range (radians)")
     plt.ylim(0, 1)
     plt.ylabel("probability")
+    plt.tight_layout()
     filename = experiment_plot_directory + "/{}_hip_2_joint_{}.jpg".format(experiment_name, num_seeds)
     plt.savefig(filename, dpi=300)
     # Image.open(filename).convert("CMYK").save(filename)
@@ -182,8 +187,10 @@ def plot_ant_histograms(ranges):
     df = pd.DataFrame(ant_histogram_data_clipped[index], columns=["radians"])
     plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1] + 0.015, 0.015), element="step")
     plot.set_title(title())
+    plt.xlabel("range (radians)")
     plt.ylim(0, 1)
     plt.ylabel("probability")
+    plt.tight_layout()
     filename = experiment_plot_directory + "/{}_ankle_2_joint_{}.jpg".format(experiment_name, num_seeds)
     plt.savefig(filename, dpi=300)
     # Image.open(filename).convert("CMYK").save(filename)
@@ -194,8 +201,10 @@ def plot_ant_histograms(ranges):
     df = pd.DataFrame(ant_histogram_data_clipped[index], columns=["radians"])
     plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1] + 0.02, 0.02), element="step")
     plot.set_title(title())
+    plt.xlabel("range (radians)")
     plt.ylim(0, 1)
     plt.ylabel("probability")
+    plt.tight_layout()
     filename = experiment_plot_directory + "/{}_hip_3_joint_{}.jpg".format(experiment_name, num_seeds)
     plt.savefig(filename, dpi=300)
     # Image.open(filename).convert("CMYK").save(filename)
@@ -206,8 +215,10 @@ def plot_ant_histograms(ranges):
     df = pd.DataFrame(ant_histogram_data_clipped[index], columns=["radians"])
     plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1] + 0.015, 0.015), element="step")
     plot.set_title(title())
+    plt.xlabel("range (radians)")
     plt.ylim(0, 1)
     plt.ylabel("probability")
+    plt.tight_layout()
     filename = experiment_plot_directory + "/{}_ankle_3_joint_{}.jpg".format(experiment_name, num_seeds)
     plt.savefig(filename, dpi=300)
     # Image.open(filename).convert("CMYK").save(filename)
@@ -218,8 +229,10 @@ def plot_ant_histograms(ranges):
     df = pd.DataFrame(ant_histogram_data_clipped[index], columns=["radians"])
     plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1] + 0.02, 0.02), element="step")
     plot.set_title(title())
+    plt.xlabel("range (radians)")
     plt.ylim(0, 1)
     plt.ylabel("probability")
+    plt.tight_layout()
     filename = experiment_plot_directory + "/{}_hip_4_joint_{}.jpg".format(experiment_name, num_seeds)
     plt.savefig(filename, dpi=300)
     # Image.open(filename).convert("CMYK").save(filename)
@@ -230,8 +243,10 @@ def plot_ant_histograms(ranges):
     df = pd.DataFrame(ant_histogram_data_clipped[index], columns=["radians"])
     plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.015), element="step")
     plot.set_title(title())
+    plt.xlabel("range (radians)")
     plt.ylim(0, 1)
     plt.ylabel("probability")
+    plt.tight_layout()
     filename = experiment_plot_directory + "/{}_ankle_4_joint_{}.jpg".format(experiment_name, num_seeds)
     plt.savefig(filename, dpi=300)
     # Image.open(filename).convert("CMYK").save(filename)
@@ -636,6 +651,7 @@ def plot_fetchreach_histograms(ranges):
     df = pd.DataFrame(fetchreach_histogram_data_clipped[index], columns=["radians"])
     plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1] + 0.05, 0.05), element="step")
     plot.set_title(title())
+    plt.xlabel("range (radians)")
     plt.ylim(0, 1)
     plt.ylabel("probability")
     filename = experiment_plot_directory + "/{}_shoulder_pan_joint_{}.jpg".format(experiment_name, num_seeds)
@@ -648,6 +664,7 @@ def plot_fetchreach_histograms(ranges):
     df = pd.DataFrame(fetchreach_histogram_data_clipped[index], columns=["radians"])
     plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1] + 0.05, 0.05), element="step")
     plot.set_title(title())
+    plt.xlabel("range (radians)")
     plt.ylim(0, 1)
     plt.ylabel("probability")
     filename = experiment_plot_directory + "/{}_shoulder_lift_joint_{}.jpg".format(experiment_name, num_seeds)
@@ -660,6 +677,7 @@ def plot_fetchreach_histograms(ranges):
     df = pd.DataFrame(fetchreach_histogram_data_clipped[index], columns=["radians"])
     plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1] + 0.1, 0.1), element="step")
     plot.set_title(title())
+    plt.xlabel("range (radians)")
     plt.ylim(0, 1)
     plt.ylabel("probability")
     filename = experiment_plot_directory + "/{}_upperarm_roll_joint_{}.jpg".format(experiment_name, num_seeds)
@@ -672,6 +690,7 @@ def plot_fetchreach_histograms(ranges):
     df = pd.DataFrame(fetchreach_histogram_data_clipped[index], columns=["radians"])
     plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1] + 0.1, 0.1), element="step")
     plot.set_title(title())
+    plt.xlabel("range (radians)")
     plt.ylim(0, 1)
     plt.ylabel("probability")
     filename = experiment_plot_directory + "/{}_elbow_flex_joint_{}.jpg".format(experiment_name, num_seeds)
@@ -684,6 +703,7 @@ def plot_fetchreach_histograms(ranges):
     df = pd.DataFrame(fetchreach_histogram_data_clipped[index], columns=["radians"])
     plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1] + 0.1, 0.1), element="step")
     plot.set_title(title())
+    plt.xlabel("range (radians)")
     plt.ylim(0, 1)
     plt.ylabel("probability")
     filename = experiment_plot_directory + "/{}_forearm_roll_joint_{}.jpg".format(experiment_name, num_seeds)
@@ -696,6 +716,7 @@ def plot_fetchreach_histograms(ranges):
     df = pd.DataFrame(fetchreach_histogram_data_clipped[index], columns=["radians"])
     plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1] + 0.05, 0.05), element="step")
     plot.set_title(title())
+    plt.xlabel("range (radians)")
     plt.ylim(0, 1)
     plt.ylabel("probability")
     filename = experiment_plot_directory + "/{}_wrist_flex_joint_{}.jpg".format(experiment_name, num_seeds)
@@ -708,6 +729,7 @@ def plot_fetchreach_histograms(ranges):
     df = pd.DataFrame(fetchreach_histogram_data_clipped[index], columns=["radians"])
     plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1] + 0.1, 0.1), element="step")
     plot.set_title(title())
+    plt.xlabel("range (radians)")
     plt.ylim(0, 1)
     plt.ylabel("probability")
     filename = experiment_plot_directory + "/{}_wrist_roll_joint_{}.jpg".format(experiment_name, num_seeds)
@@ -1175,7 +1197,7 @@ if __name__ == "__main__":
 
     # PPO v1
 
-    ant_ppo_v1 = False
+    ant_ppo_v1 = True
 
     if ant_ppo_v1:
 
@@ -1211,7 +1233,7 @@ if __name__ == "__main__":
 
     # PPO v3
 
-    ant_ppo_v3 = False
+    ant_ppo_v3 = True
 
     if ant_ppo_v3:
 
@@ -1229,7 +1251,7 @@ if __name__ == "__main__":
 
     # PPO v4
 
-    ant_ppo_v4 = False
+    ant_ppo_v4 = True
 
     if ant_ppo_v4:
 
@@ -1247,7 +1269,7 @@ if __name__ == "__main__":
 
     # SAC v1
 
-    ant_sac_v1 = False
+    ant_sac_v1 = True
 
     if ant_sac_v1:
 
@@ -1283,7 +1305,7 @@ if __name__ == "__main__":
 
     # SAC v3
 
-    ant_sac_v3 = False
+    ant_sac_v3 = True
 
     if ant_sac_v3:
 
@@ -1301,7 +1323,7 @@ if __name__ == "__main__":
 
     # SAC v4
 
-    ant_sac_v4 = False
+    ant_sac_v4 = True
 
     if ant_sac_v4:
 
@@ -1321,7 +1343,7 @@ if __name__ == "__main__":
 
     # PPO v0
 
-    fetchreach_ppo_v0 = False
+    fetchreach_ppo_v0 = True
 
     if fetchreach_ppo_v0:
 
@@ -1331,7 +1353,7 @@ if __name__ == "__main__":
 
     # SAC v0
 
-    fetchreach_sac_v0 = False
+    fetchreach_sac_v0 = True
 
     if fetchreach_sac_v0:
 
@@ -1360,7 +1382,7 @@ if __name__ == "__main__":
 
     # PPO v4
 
-    fetchreach_ppo_v4 = False
+    fetchreach_ppo_v4 = True
 
     if fetchreach_ppo_v4:
 
@@ -1378,7 +1400,7 @@ if __name__ == "__main__":
 
     # PPO v6
 
-    fetchreach_ppo_v6 = False
+    fetchreach_ppo_v6 = True
 
     if fetchreach_ppo_v6:
 
@@ -1414,7 +1436,7 @@ if __name__ == "__main__":
 
     # SAC v4
 
-    fetchreach_sac_v4 = False
+    fetchreach_sac_v4 = True
 
     if fetchreach_sac_v4:
 
@@ -1432,7 +1454,7 @@ if __name__ == "__main__":
 
     # SAC v6
 
-    fetchreach_sac_v6 = False
+    fetchreach_sac_v6 = True
 
     if fetchreach_sac_v6:
 

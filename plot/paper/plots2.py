@@ -171,7 +171,7 @@ def plot_early_adaptation(directory):
     plt.xlim(xmin - (ts_fault_onset / x_divisor), xmax - (ts_fault_onset / x_divisor))
     plt.ylim(ymin, ymax)
     plt.xlabel("million steps")
-    plt.ylabel("average return ({} seeds)".format(num_seeds))
+    plt.ylabel("average return")
 
     if algorithm == "SAC":
         title = "Soft Actor-Critic"
@@ -333,7 +333,7 @@ def plot_complete_adaptation(directory):
     plt.xlim(xmin, xmax)
     plt.ylim(ymin, ymax)
     plt.xlabel("million steps")
-    plt.ylabel("average return ({} seeds)".format(num_seeds))
+    plt.ylabel("average return")
 
     if algorithm == "SAC":
         title = "Soft Actor-Critic"

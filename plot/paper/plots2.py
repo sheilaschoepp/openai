@@ -113,6 +113,9 @@ def plot_early_adaptation(directory):
         df_mean = df.mean()
         df_sem = df.sem()
 
+        mean = df['average_return'].iloc[-1]
+        sem = df['average_return'].sem()
+
         ordered_settings.append((algorithm, rn, cs, label, df_mean, df_sem))  # TODO
 
     assert len(ordered_settings) == 4, "plot_experiment: not four settings"

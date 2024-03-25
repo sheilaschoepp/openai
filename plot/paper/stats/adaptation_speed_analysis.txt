@@ -8,4 +8,5 @@ interval are represented with a dashed line.
 
 ---------------------------------------------------------
 
+Baseline Confidence Interval:  (6756.528696898462, 7011.440303901538)
 2

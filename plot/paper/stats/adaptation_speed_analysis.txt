@@ -7,7 +7,43 @@ is reached. Methods that fail to reach this confidence
 interval are represented with a dashed line.
 
 ---------------------------------------------------------
-
+PPO
+---------------------------------------------------------
+AntEnv-v1: Broken, Severed Limb
 Baseline Confidence Interval:  (6756.528696898462, 7011.440303901538)
 cmF_rnT: t=891000000.0 mean=6783.0371864
+---------------------------------------------------------
+AntEnv-v2: Hip 4 ROM
+Baseline Confidence Interval:  (6206.485984908998, 6597.987898957667)
+cmF_rnT: t=891000000.0 mean=6208.985102566667
+---------------------------------------------------------
+AntEnv-v3: Ankle 4 ROM
+Baseline Confidence Interval:  (5651.797459211881, 6112.543287321452)
+cmF_rnF:  669000000.0
+cmF_rnT: t=846000000.0 mean=5665.171553666666
+cmT_rnF: t=681000000.0 mean=5656.510378033333
+---------------------------------------------------------
+AntEnv-v4: Broken, Unsevered Limb
+Baseline Confidence Interval:  (6655.661065762695, 6925.009825437304)
+cmF_rnT: t=1041000000.0 mean=6670.663199166666
+---------------------------------------------------------
+SAC
+---------------------------------------------------------
+AntEnv-v1: Broken, Severed Limb
+Baseline Confidence Interval:  (5707.243726896486, 6942.981978636848)
+---------------------------------------------------------
+AntEnv-v2: Hip 4 ROM
+Baseline Confidence Interval:  (4215.533391719966, 6018.173592013367)
+crbF_rnF:  20600000.0
+---------------------------------------------------------
+AntEnv-v3: Ankle 4 ROM
+Baseline Confidence Interval:  (3157.6451468177074, 4947.912368582292)
+crbF_rnF:  21200000.0
+---------------------------------------------------------
+AntEnv-v4: Broken, Unsevered Limb
+Baseline Confidence Interval:  (1502.5650692482393, 3961.867206018427)
+crbF_rnF:  20700000.0
+crbF_rnT: t=20600000.0 mean=1599.5727330666666
+crbT_rnF: t=22800000.0 mean=1751.3986077666668
+---------------------------------------------------------
 done

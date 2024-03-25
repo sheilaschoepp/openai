@@ -101,7 +101,9 @@ if __name__ == "__main__":
 
                 mean = cmF_rnF_df_mean["average_return"].iloc[i]
                 if baseline_cmT_rnT_ci_min <= mean <= baseline_cmT_rnT_ci_max:
-                    print("cmF_rnF: ", cmF_rnF_df_mean["num_time_steps"].iloc[i])
+                    print(f"cmF_rnF: "
+                          f"t={cmF_rnF_df_mean['num_time_steps'].iloc[i]} "
+                          f"mean={mean}")
                     break
 
             # cmF_rnT
@@ -251,8 +253,9 @@ if __name__ == "__main__":
 
                 mean = crbF_rnF_df_mean["average_return"].iloc[i]
                 if baseline_crbT_rnT_ci_min <= mean <= baseline_crbT_rnT_ci_max:
-                    print("crbF_rnF: ",
-                          crbF_rnF_df_mean["num_time_steps"].iloc[i])
+                    print(f"crbF_rnF: "
+                          f"t={crbF_rnF_df_mean['num_time_steps'].iloc[i]} "
+                          f"mean={mean}")
                     break
 
             # crbF_rnT

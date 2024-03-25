@@ -108,6 +108,36 @@ if __name__ == "__main__":
                           f"mean={mean}")
                     break
 
+            # cmT_rnF
+
+            cmT_rnF_dfs = []
+
+            for seed in range(0, 30):
+                dir = os.path.join(cmT_rnF_path, "seed" + str(seed))
+                if os.path.exists(dir):
+                    eval_data_dir = os.path.join(dir, "csv",
+                                                 "eval_data.csv")
+                    eval_data_df = pd.read_csv(eval_data_dir)
+                    eval_data_df = eval_data_df[["num_time_steps",
+                                                 "average_return"]]
+                    cmT_rnF_dfs.append(eval_data_df)
+                else:
+                    print(colored("missing" + dir, "red"))
+
+            cmT_rnF_df = pd.concat(cmT_rnF_dfs)
+            cmT_rnF_df = cmT_rnF_df.groupby(cmT_rnF_df.index)
+
+            cmT_rnF_df_mean = cmT_rnF_df.mean()
+
+            for i in range(201, 402):
+
+                mean = cmT_rnF_df_mean["average_return"].iloc[i]
+                if baseline_cmT_rnT_ci_min <= mean <= baseline_cmT_rnT_ci_max:
+                    print(f"cmT_rnF: "
+                          f"t={cmT_rnF_df_mean['num_time_steps'].iloc[i]} "
+                          f"mean={mean}")
+                    break
+
             # cmF_rnT
 
             cmF_rnT_dfs = []
@@ -138,33 +168,33 @@ if __name__ == "__main__":
                           f"mean={mean}")
                     break
 
-            # cmT_rnF
+            # cmT_rnT
 
-            cmT_rnF_dfs = []
+            cmT_rnT_dfs = []
 
             for seed in range(0, 30):
-                dir = os.path.join(cmT_rnF_path, "seed" + str(seed))
+                dir = os.path.join(baseline_cmT_rnT_path, "seed" + str(seed))
                 if os.path.exists(dir):
                     eval_data_dir = os.path.join(dir, "csv",
                                                  "eval_data.csv")
                     eval_data_df = pd.read_csv(eval_data_dir)
                     eval_data_df = eval_data_df[["num_time_steps",
                                                  "average_return"]]
-                    cmT_rnF_dfs.append(eval_data_df)
+                    cmT_rnT_dfs.append(eval_data_df)
                 else:
                     print(colored("missing" + dir, "red"))
 
-            cmT_rnF_df = pd.concat(cmT_rnF_dfs)
-            cmT_rnF_df = cmT_rnF_df.groupby(cmT_rnF_df.index)
+            cmT_rnT_df = pd.concat(cmT_rnT_dfs)
+            cmT_rnT_df = cmT_rnT_df.groupby(cmT_rnT_df.index)
 
-            cmT_rnF_df_mean = cmT_rnF_df.mean()
+            cmT_rnT_df_mean = cmT_rnT_df.mean()
 
             for i in range(201, 402):
 
-                mean = cmT_rnF_df_mean["average_return"].iloc[i]
+                mean = cmT_rnT_df_mean["average_return"].iloc[i]
                 if baseline_cmT_rnT_ci_min <= mean <= baseline_cmT_rnT_ci_max:
-                    print(f"cmT_rnF: "
-                          f"t={cmT_rnF_df_mean['num_time_steps'].iloc[i]} "
+                    print(f"cmT_rnT: "
+                          f"t={cmT_rnT_df_mean['num_time_steps'].iloc[i]} "
                           f"mean={mean}")
                     break
             print("---------------------------------------------------------")
@@ -263,6 +293,36 @@ if __name__ == "__main__":
                           f"mean={mean}")
                     break
 
+            # crbT_rnF
+
+            crbT_rnF_dfs = []
+
+            for seed in range(0, 30):
+                dir = os.path.join(crbT_rnF_path, "seed" + str(seed))
+                if os.path.exists(dir):
+                    eval_data_dir = os.path.join(dir, "csv",
+                                                 "eval_data.csv")
+                    eval_data_df = pd.read_csv(eval_data_dir)
+                    eval_data_df = eval_data_df[["num_time_steps",
+                                                 "average_return"]]
+                    crbT_rnF_dfs.append(eval_data_df)
+                else:
+                    print(colored("missing" + dir, "red"))
+
+            crbT_rnF_df = pd.concat(crbT_rnF_dfs)
+            crbT_rnF_df = crbT_rnF_df.groupby(crbT_rnF_df.index)
+
+            crbT_rnF_df_mean = crbT_rnF_df.mean()
+
+            for i in range(201, 402):
+
+                mean = crbT_rnF_df_mean["average_return"].iloc[i]
+                if baseline_crbT_rnT_ci_min <= mean <= baseline_crbT_rnT_ci_max:
+                    print(f"crbT_rnF: "
+                          f"t={crbT_rnF_df_mean['num_time_steps'].iloc[i]} "
+                          f"mean={mean}")
+                    break
+
             # crbF_rnT
 
             crbF_rnT_dfs = []
@@ -293,33 +353,33 @@ if __name__ == "__main__":
                           f"mean={mean}")
                     break
 
-            # crbT_rnF
+            # crbT_rnT
 
-            crbT_rnF_dfs = []
+            crbT_rnT_dfs = []
 
             for seed in range(0, 30):
-                dir = os.path.join(crbT_rnF_path, "seed" + str(seed))
+                dir = os.path.join(baseline_crbT_rnT_path, "seed" + str(seed))
                 if os.path.exists(dir):
                     eval_data_dir = os.path.join(dir, "csv",
                                                  "eval_data.csv")
                     eval_data_df = pd.read_csv(eval_data_dir)
                     eval_data_df = eval_data_df[["num_time_steps",
                                                  "average_return"]]
-                    crbT_rnF_dfs.append(eval_data_df)
+                    crbT_rnT_dfs.append(eval_data_df)
                 else:
                     print(colored("missing" + dir, "red"))
 
-            crbT_rnF_df = pd.concat(crbT_rnF_dfs)
-            crbT_rnF_df = crbT_rnF_df.groupby(crbT_rnF_df.index)
+            crbT_rnT_df = pd.concat(crbT_rnT_dfs)
+            crbT_rnT_df = crbT_rnT_df.groupby(crbT_rnT_df.index)
 
-            crbT_rnF_df_mean = crbT_rnF_df.mean()
+            crbT_rnT_df_mean = crbT_rnT_df.mean()
 
             for i in range(201, 402):
 
-                mean = crbT_rnF_df_mean["average_return"].iloc[i]
+                mean = crbT_rnT_df_mean["average_return"].iloc[i]
                 if baseline_crbT_rnT_ci_min <= mean <= baseline_crbT_rnT_ci_max:
-                    print(f"crbT_rnF: "
-                          f"t={crbT_rnF_df_mean['num_time_steps'].iloc[i]} "
+                    print(f"crbT_rnT: "
+                          f"t={crbT_rnT_df_mean['num_time_steps'].iloc[i]} "
                           f"mean={mean}")
                     break
             print("---------------------------------------------------------")
@@ -345,7 +405,7 @@ if __name__ == "__main__":
 
             cmF_rnF_path = f"{base_path}_cm:False_rn:False_d:cpu"
             cmF_rnT_path = f"{base_path}_cm:False_rn:True_d:cpu"
-            cmT_rnF_path = f"{base_path}_cm:True_rn:False_d:cpu"
+            cmT_rnT_path = f"{base_path}_cm:True_rn:False_d:cpu"
             baseline_cmT_rnT_path = f"{base_path}_cm:True_rn:True_d:cpu"
 
             # BASELINE cmT_rnT
@@ -410,6 +470,36 @@ if __name__ == "__main__":
                           f"mean={mean}")
                     break
 
+            # cmT_rnF
+
+            cmT_rnF_dfs = []
+
+            for seed in range(0, 30):
+                dir = os.path.join(cmT_rnF_path, "seed" + str(seed))
+                if os.path.exists(dir):
+                    eval_data_dir = os.path.join(dir, "csv",
+                                                 "eval_data.csv")
+                    eval_data_df = pd.read_csv(eval_data_dir)
+                    eval_data_df = eval_data_df[["num_time_steps",
+                                                 "average_return"]]
+                    cmT_rnF_dfs.append(eval_data_df)
+                else:
+                    print(colored("missing" + dir, "red"))
+
+            cmT_rnF_df = pd.concat(cmT_rnF_dfs)
+            cmT_rnF_df = cmT_rnF_df.groupby(cmT_rnF_df.index)
+
+            cmT_rnF_df_mean = cmT_rnF_df.mean()
+
+            for i in range(201, 402):
+
+                mean = cmT_rnF_df_mean["average_return"].iloc[i]
+                if baseline_cmT_rnT_ci_min <= mean <= baseline_cmT_rnT_ci_max:
+                    print(f"cmT_rnF: "
+                          f"t={cmT_rnF_df_mean['num_time_steps'].iloc[i]} "
+                          f"mean={mean}")
+                    break
+
             # cmF_rnT
 
             cmF_rnT_dfs = []
@@ -440,33 +530,33 @@ if __name__ == "__main__":
                           f"mean={mean}")
                     break
 
-            # cmT_rnF
+            # cmT_rnT
 
-            cmT_rnF_dfs = []
+            cmT_rnT_dfs = []
 
             for seed in range(0, 30):
-                dir = os.path.join(cmT_rnF_path, "seed" + str(seed))
+                dir = os.path.join(cmT_rnT_path, "seed" + str(seed))
                 if os.path.exists(dir):
                     eval_data_dir = os.path.join(dir, "csv",
                                                  "eval_data.csv")
                     eval_data_df = pd.read_csv(eval_data_dir)
                     eval_data_df = eval_data_df[["num_time_steps",
                                                  "average_return"]]
-                    cmT_rnF_dfs.append(eval_data_df)
+                    cmT_rnT_dfs.append(eval_data_df)
                 else:
                     print(colored("missing" + dir, "red"))
 
-            cmT_rnF_df = pd.concat(cmT_rnF_dfs)
-            cmT_rnF_df = cmT_rnF_df.groupby(cmT_rnF_df.index)
+            cmT_rnT_df = pd.concat(cmT_rnT_dfs)
+            cmT_rnT_df = cmT_rnT_df.groupby(cmT_rnT_df.index)
 
-            cmT_rnF_df_mean = cmT_rnF_df.mean()
+            cmT_rnT_df_mean = cmT_rnT_df.mean()
 
             for i in range(201, 402):
 
-                mean = cmT_rnF_df_mean["average_return"].iloc[i]
+                mean = cmT_rnT_df_mean["average_return"].iloc[i]
                 if baseline_cmT_rnT_ci_min <= mean <= baseline_cmT_rnT_ci_max:
-                    print(f"cmT_rnF: "
-                          f"t={cmT_rnF_df_mean['num_time_steps'].iloc[i]} "
+                    print(f"cmT_rnT: "
+                          f"t={cmT_rnT_df_mean['num_time_steps'].iloc[i]} "
                           f"mean={mean}")
                     break
             print("---------------------------------------------------------")
@@ -561,6 +651,36 @@ if __name__ == "__main__":
                           f"mean={mean}")
                     break
 
+            # crbT_rnF
+
+            crbT_rnF_dfs = []
+
+            for seed in range(0, 30):
+                dir = os.path.join(crbT_rnF_path, "seed" + str(seed))
+                if os.path.exists(dir):
+                    eval_data_dir = os.path.join(dir, "csv",
+                                                 "eval_data.csv")
+                    eval_data_df = pd.read_csv(eval_data_dir)
+                    eval_data_df = eval_data_df[["num_time_steps",
+                                                 "average_return"]]
+                    crbT_rnF_dfs.append(eval_data_df)
+                else:
+                    print(colored("missing" + dir, "red"))
+
+            crbT_rnF_df = pd.concat(crbT_rnF_dfs)
+            crbT_rnF_df = crbT_rnF_df.groupby(crbT_rnF_df.index)
+
+            crbT_rnF_df_mean = crbT_rnF_df.mean()
+
+            for i in range(201, 402):
+
+                mean = crbT_rnF_df_mean["average_return"].iloc[i]
+                if baseline_crbT_rnT_ci_min <= mean <= baseline_crbT_rnT_ci_max:
+                    print(f"crbT_rnF: "
+                          f"t={crbT_rnF_df_mean['num_time_steps'].iloc[i]} "
+                          f"mean={mean}")
+                    break
+
             # crbF_rnT
 
             crbF_rnT_dfs = []
@@ -591,33 +711,34 @@ if __name__ == "__main__":
                           f"mean={mean}")
                     break
 
-            # crbT_rnF
+            # crbT_rnT
 
-            crbT_rnF_dfs = []
+            crbT_rnT_dfs = []
 
             for seed in range(0, 30):
-                dir = os.path.join(crbT_rnF_path, "seed" + str(seed))
+                dir = os.path.join(baseline_crbT_rnT_path, "seed" + str(seed))
                 if os.path.exists(dir):
                     eval_data_dir = os.path.join(dir, "csv",
                                                  "eval_data.csv")
                     eval_data_df = pd.read_csv(eval_data_dir)
                     eval_data_df = eval_data_df[["num_time_steps",
                                                  "average_return"]]
-                    crbT_rnF_dfs.append(eval_data_df)
+                    crbT_rnT_dfs.append(eval_data_df)
                 else:
                     print(colored("missing" + dir, "red"))
 
-            crbT_rnF_df = pd.concat(crbT_rnF_dfs)
-            crbT_rnF_df = crbT_rnF_df.groupby(crbT_rnF_df.index)
+            crbT_rnT_df = pd.concat(crbT_rnT_dfs)
+            crbT_rnT_df = crbT_rnT_df.groupby(crbT_rnT_df.index)
 
-            crbT_rnF_df_mean = crbT_rnF_df.mean()
+            crbT_rnT_df_mean = crbT_rnT_df.mean()
 
             for i in range(201, 402):
 
-                mean = crbT_rnF_df_mean["average_return"].iloc[i]
+                mean = crbT_rnT_df_mean["average_return"].iloc[i]
                 if baseline_crbT_rnT_ci_min <= mean <= baseline_crbT_rnT_ci_max:
-                    print(f"crbT_rnF: "
-                          f"t={crbT_rnF_df_mean['num_time_steps'].iloc[i]} "
+                    print(f"crbT_rnT: "
+                          f"t={crbT_rnT_df_mean['num_time_steps'].iloc[i]} "
                           f"mean={mean}")
                     break
             print("---------------------------------------------------------")
+        print("done")

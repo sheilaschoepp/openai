@@ -39,6 +39,9 @@ if __name__ == "__main__":
 
             base_path = f"/home/sschoepp/Documents/openai/data/ant/exps/complete/ppo/{version}/PPOv2_AntEnv-{version}:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000"
 
+            # cm = clear memory
+            # rn = reinitialize networks
+
             cmF_rnF_path = f"{base_path}_cm:False_rn:False_d:cpu"
             cmF_rnT_path = f"{base_path}_cm:False_rn:True_d:cpu"
             cmT_rnF_path = f"{base_path}_cm:True_rn:False_d:cpu"

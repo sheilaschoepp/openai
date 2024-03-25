@@ -9,4 +9,5 @@ interval are represented with a dashed line.
 ---------------------------------------------------------
 
 Baseline Confidence Interval:  (6756.528696898462, 7011.440303901538)
-2
+cmF_rnT: t=891000000.0 mean=6783.0371864
+done

@@ -23,7 +23,8 @@ if __name__ == "__main__":
 
         # AntEnv-v1: Broken, Severed Limb
 
-        base_path = f"/home/sschoepp/Documents/openai/data/ant/exps/complete/ppo/v1/PPOv2_AntEnv-v1:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000"
+        version = "v1"
+        base_path = f"/home/sschoepp/Documents/openai/data/ant/exps/complete/ppo/{version}/PPOv2_AntEnv-{version}:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000"
 
         cmF_rnF_path = f"{base_path}_cm:False_rn:False_d:cpu"
         cmF_rnT_path = f"{base_path}_cm:False_rn:True_d:cpu"
@@ -89,7 +90,35 @@ if __name__ == "__main__":
             if baseline_cmT_rnT_ci_min <= mean <= baseline_cmT_rnT_ci_max:
                 print("cmF_rnF: ", cmF_rnF_df_mean["num_time_steps"].iloc[i])
                 break
+
+        # cmF_rnT
+
+        cmF_rnT_dfs = []
+
+        for seed in range(0, 30):
+            dir = os.path.join(cmF_rnT_path, "seed" + str(seed))
+            if os.path.exists(dir):
+                eval_data_dir = os.path.join(dir, "csv",
+                                             "eval_data.csv")
+                eval_data_df = pd.read_csv(eval_data_dir)
+                eval_data_df = eval_data_df[["num_time_steps",
+                                             "average_return"]]
+                cmF_rnT_dfs.append(eval_data_df)
             else:
-                print("cmF_rnF: ", "----")
+                print(colored("missing" + dir, "red"))
+
+        cmF_rnT_df = pd.concat(cmF_rnT_dfs)
+        cmF_rnT_df = cmF_rnT_df.groupby(cmF_rnT_df.index)
+
+        cmF_rnT_df_mean = cmF_rnT_df.mean()
+
+        for i in range(201, 402):
+
+            mean = cmF_rnT_df_mean["average_return"].iloc[i]
+            if baseline_cmT_rnT_ci_min <= mean <= baseline_cmT_rnT_ci_max:
+                print(f"cmF_rnT: "
+                      f"t={cmF_rnT_df_mean['num_time_steps'].iloc[i]} "
+                      f"mean={mean}")
+                break
 
         print("done")

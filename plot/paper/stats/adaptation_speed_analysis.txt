@@ -59,12 +59,13 @@ PPO
 FetchReachEnv-v4: Frozen Shoulder Lift Position Sensor
 Baseline Confidence Interval:  (-0.43744068133940295, -0.31494818532726376)
 cmF_rnT: t=11610000.0 mean=-0.43531366666666665
+cmT_rnT: t=11520000.0 mean=-0.43313023333333334
 ---------------------------------------------------------
 FetchReachEnv-v6: Elbow Flex Position Slippage
 Baseline Confidence Interval:  (-1.0098445670905993, -0.5494658995760673)
 cmF_rnF: t=6780000.0 mean=-1.0081422
 cmF_rnT: t=6540000.0 mean=-0.9971013666666667
-cmT_rnT: t=6750000.0 mean=-0.9879808333333333
+cmT_rnT: t=6510000.0 mean=-0.9971636333333334
 ---------------------------------------------------------
 SAC
 ---------------------------------------------------------

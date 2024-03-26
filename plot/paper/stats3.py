@@ -535,7 +535,7 @@ if __name__ == "__main__":
             cmT_rnT_dfs = []
 
             for seed in range(0, 30):
-                dir = os.path.join(cmT_rnT_path, "seed" + str(seed))
+                dir = os.path.join(baseline_cmT_rnT_path, "seed" + str(seed))
                 if os.path.exists(dir):
                     eval_data_dir = os.path.join(dir, "csv",
                                                  "eval_data.csv")

@@ -5,7 +5,7 @@ import torch
 import torch.nn as nn
 from torch.optim import Adam
 
-from controllers.sacv2.original.sacv2_networks import TwinnedQNetwork, GaussianPolicyNetwork
+from controllers.sacv2.sacv2_networks import TwinnedQNetwork, GaussianPolicyNetwork
 from utils.replay_buffer import ReplayBuffer
 from utils.rl_glue import BaseAgent
 
@@ -535,9 +535,9 @@ class SACv2(BaseAgent):
         state = torch.from_numpy(state).float().to(device=self.device).unsqueeze(0)
 
         if self.mode == "train":
-            action, _, _ = self.policy_network.sample(state)
+            action, _, _, _ = self.policy_network.sample(state)
         else:
-            _, _, mean = self.policy_network.sample(state)
+            _, _, _, mean = self.policy_network.sample(state)
             action = torch.tanh(mean)
 
         action = action.detach().cpu().numpy()[0].astype("float64")
@@ -603,7 +603,7 @@ class SACv2(BaseAgent):
 
         with torch.no_grad():
 
-            next_state_sampled_action, next_state_log_prob, _ = self.policy_network.sample(next_state)
+            next_state_sampled_action, next_state_log_prob, _, _ = self.policy_network.sample(next_state)
 
             predicted_target_q_value_1, predicted_target_q_value_2 = self.target_q_network(next_state, next_state_sampled_action)
             estimated_value = torch.min(predicted_target_q_value_1, predicted_target_q_value_2) - self.alpha * next_state_log_prob
@@ -621,7 +621,9 @@ class SACv2(BaseAgent):
         self.q_optimizer_2.step()
 
         # policy network
-        sampled_action, log_prob, _ = self.policy_network.sample(state)
+        sampled_action, log_prob, entropy, _ = self.policy_network.sample(state)
+
+        entropy = entropy.mean()
 
         sampled_q_value_1, sampled_q_value_2 = self.q_network(state, sampled_action)
         sampled_q_value = torch.min(sampled_q_value_1, sampled_q_value_2)
@@ -648,5 +650,5 @@ class SACv2(BaseAgent):
             for target_param, param in zip(self.target_q_network.parameters(), self.q_network.parameters()):
                 target_param.data.copy_(self.tau * param.data + (1.0 - self.tau) * target_param.data)
 
-        self.loss_data[self.loss_index] = [self.num_updates, q_value_loss_1.item(), q_value_loss_2.item(), policy_loss.item(), alpha_loss.item(), self.alpha.item()]
+        self.loss_data[self.loss_index] = [self.num_updates, q_value_loss_1.item(), q_value_loss_2.item(), policy_loss.item(), alpha_loss.item(), self.alpha.item(), entropy.item()]
         self.loss_index += 1

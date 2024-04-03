@@ -22,11 +22,9 @@ import torch
 from termcolor import colored
 
 import utils.plot_style_settings as pss
-from controllers.sacv2.modified.sacv2_agent import SACv2
+from controllers.sacv2.sacv2_agent import SACv2
 from environment.environment import Environment
 from utils.rl_glue import RLGlue
-
-import custom_gym_envs  # do not delete; required for custom gym environments
 
 parser = argparse.ArgumentParser(description="PyTorch Soft Actor-Critic Arguments")
 

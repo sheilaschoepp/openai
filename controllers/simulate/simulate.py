@@ -6,7 +6,7 @@ import numpy as np
 import pickle5 as pickle
 import torch
 
-from controllers.ppov2.ppov2_agent import PPOv2
+from controllers.ppov2.original.ppov2_agent import PPOv2
 from controllers.sacv2.sacv2_agent import SACv2
 from environment.environment import Environment
 from utils.rl_glue import RLGlue

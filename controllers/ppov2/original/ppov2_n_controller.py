@@ -22,7 +22,7 @@ import torch
 from termcolor import colored
 
 import utils.plot_style_settings as pss
-from controllers.ppov2.ppov2_agent import PPOv2
+from controllers.ppov2.original.ppov2_agent import PPOv2
 from environment.environment import Environment
 from utils.rl_glue import RLGlue
 

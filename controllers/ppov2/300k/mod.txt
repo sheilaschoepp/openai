@@ -1,3 +1,0 @@
-modifications:
-(1) removed train_data.csv
-(2) added slrd argument

@@ -22,7 +22,7 @@ import torch
 from termcolor import colored
 
 import utils.plot_style_settings as pss
-from controllers.sacv2.mod.sacv2_agent import SACv2
+from controllers.sacv2.modified.sacv2_agent import SACv2
 from environment.environment import Environment
 from utils.rl_glue import RLGlue
 
@@ -188,7 +188,7 @@ class NormalController:
                  + (("_pss:" + str(self.parameters["param_search_seed"])) if self.parameters["param_search"] else "") \
                  + ("_r" if self.parameters["resumable"] else "") \
                  + ("_resumed" if self.parameters["resume"] else "") \
-                 + "_mod"
+                 + "_modified"
 
         self.experiment = "SACv2_" + suffix
 
@@ -419,7 +419,7 @@ class NormalController:
                 break
 
         self.save()
-        # self.plot()
+        self.plot()
         self.cleanup()
 
     def cleanup(self):

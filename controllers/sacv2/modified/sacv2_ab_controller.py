@@ -22,7 +22,7 @@ import torch
 from termcolor import colored
 
 import utils.plot_style_settings as pss
-from controllers.sacv2.mod.sacv2_agent import SACv2
+from controllers.sacv2.modified.sacv2_agent import SACv2
 from environment.environment import Environment
 from utils.rl_glue import RLGlue
 
@@ -147,7 +147,7 @@ class AbnormalController:
                  + "_d:" + str(self.parameters["device"]) \
                  + ("_r" if self.parameters["resumable"] else "") \
                  + ("_resumed" if self.parameters["resume"] else "") \
-                 + "_mod"
+                 + "_modified"
 
         self.experiment = "SACv2_" + suffix
 
@@ -375,7 +375,7 @@ class AbnormalController:
                 break
 
         self.save()
-        # self.plot()
+        self.plot()
         self.cleanup()
 
     def cleanup(self):

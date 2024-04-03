@@ -13,8 +13,8 @@ import torch
 from termcolor import colored
 from tqdm import tqdm
 
-from controllers.ppov2.ppov2_agent import PPOv2
-from controllers.sacv2.sacv2_agent import SACv2
+from controllers.ppov2.original.ppov2_agent import PPOv2
+from controllers.sacv2.original.sacv2_agent import SACv2
 from environment.environment import Environment
 from PIL import Image
 from utils.rl_glue import RLGlue

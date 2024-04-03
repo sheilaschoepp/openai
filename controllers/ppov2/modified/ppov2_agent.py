@@ -5,7 +5,7 @@ import torch
 import torch.nn as nn
 from torch.optim import Adam
 
-from controllers.ppov2.ppov2_networks import ActorCriticNetwork
+from controllers.ppov2.original.ppov2_networks import ActorCriticNetwork
 from utils.memory import Memory
 from utils.rl_glue import BaseAgent
 
@@ -24,6 +24,7 @@ class PPOv2(BaseAgent):
                  log_std,
                  lr,
                  linear_lr_decay,
+                 slow_lrd,
                  gamma,
                  time_steps,
                  num_samples,
@@ -55,6 +56,8 @@ class PPOv2(BaseAgent):
             learning rate
         @param linear_lr_decay: bool
             if true, decrease the learning rate linearly
+        @param slow_lrd: float
+            slow the linear learning rate decay by this percentage
         @param gamma: float
             discount factor
         @param time_steps: int
@@ -97,6 +100,7 @@ class PPOv2(BaseAgent):
         self.log_std = log_std
         self.lr = lr
         self.linear_lr_decay = linear_lr_decay
+        self.slow_lrd = slow_lrd
 
         self.time_steps = time_steps
         self.num_samples = num_samples
@@ -641,7 +645,7 @@ class PPOv2(BaseAgent):
 
         if self.linear_lr_decay:
 
-            lr = self.lr - (self.lr * ((self.num_updates - self.num_old_updates) / self.total_num_updates))  # self.num_old_updates is > 0 only if we loaded data from normal environment
+            lr = self.lr - (self.lr * ((self.num_updates - self.num_old_updates) / self.total_num_updates) * self.slow_lrd)  # self.num_old_updates is > 0 only if we loaded data from normal environment
 
             for param_group in self.actor_critic_optimizer.param_groups:
                 param_group["lr"] = lr

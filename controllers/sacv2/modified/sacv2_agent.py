@@ -5,7 +5,7 @@ import torch
 import torch.nn as nn
 from torch.optim import Adam
 
-from controllers.sacv2.mod.sacv2_networks import TwinnedQNetwork, GaussianPolicyNetwork
+from controllers.sacv2.modified.sacv2_networks import TwinnedQNetwork, GaussianPolicyNetwork
 from utils.replay_buffer import ReplayBuffer
 from utils.rl_glue import BaseAgent
 

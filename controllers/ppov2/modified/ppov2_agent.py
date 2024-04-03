@@ -5,7 +5,7 @@ import torch
 import torch.nn as nn
 from torch.optim import Adam
 
-from controllers.ppov2.original.ppov2_networks import ActorCriticNetwork
+from controllers.ppov2.modified.ppov2_networks import ActorCriticNetwork
 from utils.memory import Memory
 from utils.rl_glue import BaseAgent
 

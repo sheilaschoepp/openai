@@ -237,7 +237,7 @@ def plot_experiment(directory):
         main.set_ylim(ymin, ymax)
         zoom.set_ylim(zoom_init_ymin, zoom_init_ymax)
         main.set_xlabel("million steps")
-        main.set_ylabel("average return\n({} seeds)".format(num_seeds))
+        main.set_ylabel("average return")
         main.set_title(title)
         plt.tight_layout()
         filename = plot_directory + "/{}_{}_sub.jpg".format(algorithm, ab_env)
@@ -309,7 +309,7 @@ def plot_experiment(directory):
         main.set_ylim(ymin, ymax)
         zoom.set_ylim(zoom_init_ymin, zoom_init_ymax)
         main.set_xlabel("million steps")
-        main.set_ylabel("average return ({} seeds)".format(num_seeds))
+        main.set_ylabel("average return")
         main.set_title(title)
         fig.canvas.draw()
         filename = plot_directory + "/{}_{}_sub.jpg".format(algorithm, ab_env)
@@ -373,7 +373,7 @@ def plot_experiment(directory):
         plt.xlim(xmin, xmax)
         plt.ylim(ymin, ymax)
         plt.xlabel("million steps")
-        plt.ylabel("average return ({} seeds)".format(num_seeds))
+        plt.ylabel("average return")
         # plt.legend(bbox_to_anchor=[0.465, 0.35], loc=0)
         plt.title(title)
         plt.tight_layout()
@@ -445,7 +445,7 @@ def plot_experiment(directory):
             plt.xlim(xmin, xmax)
             plt.ylim(ymin, ymax)
             plt.xlabel("million steps")
-            plt.ylabel("average return ({} seeds)".format(num_seeds))
+            plt.ylabel("average return")
             # plt.legend(loc=0)
             plt.title(title)
             plt.tight_layout()
@@ -538,7 +538,7 @@ if __name__ == "__main__":
     xmax = 1200
 
     # local for Ant PPO
-    ppo_data_dir = DATA_FOLDER_PATH + "/ant/exps/ppo"
+    ppo_data_dir = DATA_FOLDER_PATH + "/ant/exps/complete/ppo"
 
     # v1
 
@@ -583,7 +583,7 @@ if __name__ == "__main__":
     xmax = 40
 
     # local for Ant SAC
-    sac_data_dir = DATA_FOLDER_PATH + "/ant/exps/sac"
+    sac_data_dir = DATA_FOLDER_PATH + "/ant/exps/complete/sac"
 
     # v1
 
@@ -637,7 +637,7 @@ if __name__ == "__main__":
     xmax = 12
 
     # local for FetchReach PPO
-    ppo_data_dir = DATA_FOLDER_PATH + "/fetchreach/exps/ppo"
+    ppo_data_dir = DATA_FOLDER_PATH + "/fetchreach/exps/complete/ppo"
 
     # v4
 
@@ -664,7 +664,7 @@ if __name__ == "__main__":
     xmax = 4
 
     # local for FetchReach SAC
-    sac_data_dir = DATA_FOLDER_PATH + "/fetchreach/exps/sac"
+    sac_data_dir = DATA_FOLDER_PATH + "/fetchreach/exps/complete/sac"
 
     # v4
 

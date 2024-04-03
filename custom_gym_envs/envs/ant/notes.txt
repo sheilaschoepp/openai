@@ -15,7 +15,7 @@ the agent's torso.
 7 + 8 - 2 = 13
 
 self.sim.data.qvel are the velocities, with the first 6 elements the 3D velocity (x,y,z) and 3D
-angular velocity (x,y,z) and the remaining 8 are the joint velocities.
+angular velocity (x,y,z) of the torso, and the remaining 8 are the joint velocities.
 
 6 + 8 = 14
 

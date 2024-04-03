@@ -67,7 +67,7 @@ def get_ant_xml_data():
     #     model_xml = str(Path.home()) + "/Documents/openai/custom_gym_envs/envs/ant/xml/AntEnv_v4_BrokenUnseveredLimb.xml"
 
     # use normal xml to define the ranges for plotting
-    model_xml = anaconda_path + "/envs/openai3.7/lib/python3.7/site-packages/gym/envs/mujoco/assets/ant.xml"
+    model_xml = anaconda_path + "/envs/openai3.9/lib/python3.9/site-packages/gym/envs/mujoco/assets/ant.xml"
 
     tree = ET.parse(model_xml)
     root = tree.getroot()
@@ -133,10 +133,11 @@ def plot_ant_histograms(ranges):
         ant_histogram_data_clipped.append(clipped)
 
     def title():
-        if suffix == "":
-            title = "{}\n{}\n{}".format(algorithm, name, joint_name)  # todo
-        else:
-            title = "{} ({})\n{}\n{}".format(algorithm, suffix_eval, name, joint_name)
+        title = "Proximity Policy Optimization" if algorithm == "PPO" else "Soft Actor-Critic"
+        # if suffix == "":
+        #     title = "{}\n{}\n{}".format(algorithm, name, joint_name)  # todo
+        # else:
+        #     title = "{} ({})\n{}\n{}".format(algorithm, suffix_eval, name, joint_name)
         return title
 
     index = 0  # hip_1
@@ -144,8 +145,10 @@ def plot_ant_histograms(ranges):
     df = pd.DataFrame(ant_histogram_data_clipped[index], columns=["radians"])
     plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1] + 0.02, 0.02), element="step")
     plot.set_title(title())
+    plt.xlabel("range (radians)")
     plt.ylim(0, 1)
     plt.ylabel("probability")
+    plt.tight_layout()
     filename = experiment_plot_directory + "/{}_hip_1_joint_{}.jpg".format(experiment_name, num_seeds)
     plt.savefig(filename, dpi=300)
     # Image.open(filename).convert("CMYK").save(filename)
@@ -156,8 +159,10 @@ def plot_ant_histograms(ranges):
     df = pd.DataFrame(ant_histogram_data_clipped[index], columns=["radians"])
     plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1] + 0.015, 0.015), element="step")
     plot.set_title(title())
+    plt.xlabel("range (radians)")
     plt.ylim(0, 1)
     plt.ylabel("probability")
+    plt.tight_layout()
     filename = experiment_plot_directory + "/{}_ankle_1_joint_{}.jpg".format(experiment_name, num_seeds)
     plt.savefig(filename, dpi=300)
     # Image.open(filename).convert("CMYK").save(filename)
@@ -168,8 +173,10 @@ def plot_ant_histograms(ranges):
     df = pd.DataFrame(ant_histogram_data_clipped[index], columns=["radians"])
     plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1] + 0.02, 0.02), element="step")
     plot.set_title(title())
+    plt.xlabel("range (radians)")
     plt.ylim(0, 1)
     plt.ylabel("probability")
+    plt.tight_layout()
     filename = experiment_plot_directory + "/{}_hip_2_joint_{}.jpg".format(experiment_name, num_seeds)
     plt.savefig(filename, dpi=300)
     # Image.open(filename).convert("CMYK").save(filename)
@@ -180,8 +187,10 @@ def plot_ant_histograms(ranges):
     df = pd.DataFrame(ant_histogram_data_clipped[index], columns=["radians"])
     plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1] + 0.015, 0.015), element="step")
     plot.set_title(title())
+    plt.xlabel("range (radians)")
     plt.ylim(0, 1)
     plt.ylabel("probability")
+    plt.tight_layout()
     filename = experiment_plot_directory + "/{}_ankle_2_joint_{}.jpg".format(experiment_name, num_seeds)
     plt.savefig(filename, dpi=300)
     # Image.open(filename).convert("CMYK").save(filename)
@@ -192,8 +201,10 @@ def plot_ant_histograms(ranges):
     df = pd.DataFrame(ant_histogram_data_clipped[index], columns=["radians"])
     plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1] + 0.02, 0.02), element="step")
     plot.set_title(title())
+    plt.xlabel("range (radians)")
     plt.ylim(0, 1)
     plt.ylabel("probability")
+    plt.tight_layout()
     filename = experiment_plot_directory + "/{}_hip_3_joint_{}.jpg".format(experiment_name, num_seeds)
     plt.savefig(filename, dpi=300)
     # Image.open(filename).convert("CMYK").save(filename)
@@ -204,8 +215,10 @@ def plot_ant_histograms(ranges):
     df = pd.DataFrame(ant_histogram_data_clipped[index], columns=["radians"])
     plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1] + 0.015, 0.015), element="step")
     plot.set_title(title())
+    plt.xlabel("range (radians)")
     plt.ylim(0, 1)
     plt.ylabel("probability")
+    plt.tight_layout()
     filename = experiment_plot_directory + "/{}_ankle_3_joint_{}.jpg".format(experiment_name, num_seeds)
     plt.savefig(filename, dpi=300)
     # Image.open(filename).convert("CMYK").save(filename)
@@ -216,8 +229,10 @@ def plot_ant_histograms(ranges):
     df = pd.DataFrame(ant_histogram_data_clipped[index], columns=["radians"])
     plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1] + 0.02, 0.02), element="step")
     plot.set_title(title())
+    plt.xlabel("range (radians)")
     plt.ylim(0, 1)
     plt.ylabel("probability")
+    plt.tight_layout()
     filename = experiment_plot_directory + "/{}_hip_4_joint_{}.jpg".format(experiment_name, num_seeds)
     plt.savefig(filename, dpi=300)
     # Image.open(filename).convert("CMYK").save(filename)
@@ -228,8 +243,10 @@ def plot_ant_histograms(ranges):
     df = pd.DataFrame(ant_histogram_data_clipped[index], columns=["radians"])
     plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1], 0.015), element="step")
     plot.set_title(title())
+    plt.xlabel("range (radians)")
     plt.ylim(0, 1)
     plt.ylabel("probability")
+    plt.tight_layout()
     filename = experiment_plot_directory + "/{}_ankle_4_joint_{}.jpg".format(experiment_name, num_seeds)
     plt.savefig(filename, dpi=300)
     # Image.open(filename).convert("CMYK").save(filename)
@@ -248,7 +265,7 @@ def plot_ant_heatmap(ranges):
     @param ranges: tuple of numpy arrays
         joint ranges
     """
-    global ant_histogram_data
+    global ant_histogram_data, algorithm
 
     ant_histogram_data = np.load(experiment_data_directory + "/{}_histogram_data_{}.npy".format(experiment_name, num_seeds))
 
@@ -275,19 +292,37 @@ def plot_ant_heatmap(ranges):
         counts = counts / np.sum(counts)  # probability
         ant_histogram_count_data.append(counts)
 
-    df = pd.DataFrame(np.array(ant_histogram_count_data).T, index=bins[:-1], columns=["hip 1", "ankle 1", "hip 2", "ankle 2", "hip 3", "ankle 3", "hip 4", "ankle 4"])
+    df = pd.DataFrame(np.array(ant_histogram_count_data).T, index=bins[:-1], columns=["hip_1", "ankle_1", "hip_2", "ankle_2", "hip_3", "ankle_3", "hip_4", "ankle_4"])
 
-    y_labels = ["1.0", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "0.5", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "0.0"]
-    heatmap = sns.heatmap(data=df[::-1], cmap=cmap, yticklabels=y_labels)
-
-    algorithm_ = None
+    y_labels = ["1.0", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "0.5", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "0.0"]
+    heatmap = sns.heatmap(data=df[::-1], cmap=cmap, yticklabels=y_labels, vmin=0, vmax=1, cbar_kws={"pad": 0.01})
 
     if algorithm == "PPO":
-        algorithm_ = "Proximal Policy Optimization (PPO)"
-    elif algorithm == "SAC":
-        algorithm_ = "Soft Actor-Critic (SAC)"
+        algorithm = "Proximal Policy Optimization"
+    else:
+        algorithm = "Soft Actor-Critic"
 
-    heatmap.set_title("{}".format(suffix_eval))
+    if suffix == "":
+        # heatmap.set_title("{}\n{}".format(algorithm, name))
+        heatmap.set_title(f"{algorithm}")
+    else:
+        # heatmap.set_title("{} ({})\n{}".format(algorithm, suffix_eval, name))
+        heatmap.set_title(f"{algorithm}")
+
+    if algorithm == "Proximal Policy Optimization":
+        algorithm = "PPO"
+    else:
+        algorithm = "SAC"
+
+    # algorithm_ = None
+    #
+    # if algorithm == "PPO":
+    #     algorithm_ = "Proximal Policy Optimization (PPO)"
+    # elif algorithm == "SAC":
+    #     algorithm_ = "Soft Actor-Critic (SAC)"
+    #
+    # heatmap.set_title("{}".format(suffix_eval))
+
     plt.xticks(rotation=45)
     plt.yticks(rotation=0)
     plt.xlabel("joint")
@@ -315,7 +350,7 @@ def save_ant_histogram_data():
     os.makedirs(experiment_data_directory, exist_ok=True)
     np.save(experiment_data_directory + "/{}_histogram_data_{}.npy".format(experiment_name, num_seeds), ant_histogram_data)
 
-    df = pd.DataFrame(np.array(ant_histogram_data).T, columns=["hip_1", "ankle_1",  "hip_2", "ankle_2", "hip_3", "ankle_3", "hip_4" ,"ankle_4"])
+    df = pd.DataFrame(np.array(ant_histogram_data).T, columns=["hip_1", "ankle_1",  "hip_2", "ankle_2", "hip_3", "ankle_3", "hip_4", "ankle_4"])
     df.to_pickle(experiment_data_directory + "/{}_histogram_data_{}.pkl".format(experiment_name, num_seeds))
 
 
@@ -392,8 +427,6 @@ class AntHistogram:
         else:
             self.env_name = self.parameters["n_env_name"]
 
-        # self.env_name = "AntEnv-v2"  # TODO
-
         # seeds
 
         random.seed(seed)
@@ -407,7 +440,7 @@ class AntHistogram:
         # rl problem
 
         # normal environment used for training
-        self.env = Environment(self.env_name,
+        self.env = Environment("AntEnv-v2", #todo
                                seed,
                                render=False)
 
@@ -524,7 +557,7 @@ def get_fetchrach_xml_data():
     #     model_xml = str(Path.home()) + "/Documents/openai/custom_gym_envs/envs/fetchreach/FetchReachEnv_v4_BrokenShoulderLiftSensor/assets/fetch/reach.xml"
     # elif "v5" in env_name:
     #     model_xml = str(Path.home()) + "/Documents/openai/custom_gym_envs/envs/fetchreach/FetchReachEnv_v5_BrokenJointsTBD/assets/fetch/reach.xml"4
-    model_xml = anaconda_path + "/envs/openai3.7/lib/python3.7/site-packages/gym/envs/robotics/assets/fetch/reach.xml"
+    model_xml = anaconda_path + "/envs/openai3.9/lib/python3.9/site-packages/gym/envs/robotics/assets/fetch/reach.xml"
 
     robot_xml = model_xml[:-9] + "robot.xml"
     tree = ET.parse(robot_xml)
@@ -618,6 +651,7 @@ def plot_fetchreach_histograms(ranges):
     df = pd.DataFrame(fetchreach_histogram_data_clipped[index], columns=["radians"])
     plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1] + 0.05, 0.05), element="step")
     plot.set_title(title())
+    plt.xlabel("range (radians)")
     plt.ylim(0, 1)
     plt.ylabel("probability")
     filename = experiment_plot_directory + "/{}_shoulder_pan_joint_{}.jpg".format(experiment_name, num_seeds)
@@ -630,6 +664,7 @@ def plot_fetchreach_histograms(ranges):
     df = pd.DataFrame(fetchreach_histogram_data_clipped[index], columns=["radians"])
     plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1] + 0.05, 0.05), element="step")
     plot.set_title(title())
+    plt.xlabel("range (radians)")
     plt.ylim(0, 1)
     plt.ylabel("probability")
     filename = experiment_plot_directory + "/{}_shoulder_lift_joint_{}.jpg".format(experiment_name, num_seeds)
@@ -642,6 +677,7 @@ def plot_fetchreach_histograms(ranges):
     df = pd.DataFrame(fetchreach_histogram_data_clipped[index], columns=["radians"])
     plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1] + 0.1, 0.1), element="step")
     plot.set_title(title())
+    plt.xlabel("range (radians)")
     plt.ylim(0, 1)
     plt.ylabel("probability")
     filename = experiment_plot_directory + "/{}_upperarm_roll_joint_{}.jpg".format(experiment_name, num_seeds)
@@ -654,6 +690,7 @@ def plot_fetchreach_histograms(ranges):
     df = pd.DataFrame(fetchreach_histogram_data_clipped[index], columns=["radians"])
     plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1] + 0.1, 0.1), element="step")
     plot.set_title(title())
+    plt.xlabel("range (radians)")
     plt.ylim(0, 1)
     plt.ylabel("probability")
     filename = experiment_plot_directory + "/{}_elbow_flex_joint_{}.jpg".format(experiment_name, num_seeds)
@@ -666,6 +703,7 @@ def plot_fetchreach_histograms(ranges):
     df = pd.DataFrame(fetchreach_histogram_data_clipped[index], columns=["radians"])
     plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1] + 0.1, 0.1), element="step")
     plot.set_title(title())
+    plt.xlabel("range (radians)")
     plt.ylim(0, 1)
     plt.ylabel("probability")
     filename = experiment_plot_directory + "/{}_forearm_roll_joint_{}.jpg".format(experiment_name, num_seeds)
@@ -678,6 +716,7 @@ def plot_fetchreach_histograms(ranges):
     df = pd.DataFrame(fetchreach_histogram_data_clipped[index], columns=["radians"])
     plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1] + 0.05, 0.05), element="step")
     plot.set_title(title())
+    plt.xlabel("range (radians)")
     plt.ylim(0, 1)
     plt.ylabel("probability")
     filename = experiment_plot_directory + "/{}_wrist_flex_joint_{}.jpg".format(experiment_name, num_seeds)
@@ -690,6 +729,7 @@ def plot_fetchreach_histograms(ranges):
     df = pd.DataFrame(fetchreach_histogram_data_clipped[index], columns=["radians"])
     plot = sns.histplot(data=df, x="radians", color="tab:blue", stat="probability", bins=np.arange(ranges[index][0], ranges[index][1] + 0.1, 0.1), element="step")
     plot.set_title(title())
+    plt.xlabel("range (radians)")
     plt.ylim(0, 1)
     plt.ylabel("probability")
     filename = experiment_plot_directory + "/{}_wrist_roll_joint_{}.jpg".format(experiment_name, num_seeds)
@@ -739,17 +779,25 @@ def plot_fetchreach_heatmap(ranges):
 
     df = pd.DataFrame(np.array(fetchreach_histogram_count_data).T, index=np.flip(bins[:-1]), columns=["shoulder pan", "shoulder lift", "upperarm roll", "elbow flex", "forearm roll", "wrist flex", "wrist roll"])
 
-    y_labels = ["1.0", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "0.5", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "0.0"]
-    heatmap = sns.heatmap(data=df[::-1], cmap=cmap, yticklabels=y_labels)
+    y_labels = ["1.0", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "0.5", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "0.0"]
+    heatmap = sns.heatmap(data=df[::-1], cmap=cmap, yticklabels=y_labels, vmin=0, vmax=1, cbar_kws={"pad": 0.01})
 
-    algorithm_ = None
+    if suffix == "":
+        # heatmap.set_title("{}\n{}".format(algorithm, name))
+        heatmap.set_title(f"{algorithm}: Transferred Policy, No Adaptation")
+    else:
+        # heatmap.set_title("{} ({})\n{}".format(algorithm, suffix_eval, name))
+        heatmap.set_title(f"{algorithm}: Adapted Policy")
 
-    if algorithm == "PPO":
-        algorithm_ = "Proximal Policy Optimization (PPO)"
-    elif algorithm == "SAC":
-        algorithm_ = "Soft Actor-Critic (SAC)"
+    # algorithm_ = None
+    #
+    # if algorithm == "PPO":
+    #     algorithm_ = "Proximal Policy Optimization (PPO)"
+    # elif algorithm == "SAC":
+    #     algorithm_ = "Soft Actor-Critic (SAC)"
+    #
+    # heatmap.set_title("{}".format(suffix_eval))
 
-    heatmap.set_title("{}".format(suffix_eval))
     plt.xticks(rotation=45)
     plt.yticks(rotation=0)
     plt.xlabel("joint")
@@ -852,8 +900,6 @@ class FetchReachHistogram:
             self.env_name = self.parameters["ab_env_name"]
         else:
             self.env_name = self.parameters["n_env_name"]
-
-        # self.env_name = "FetchReachEnv-v6"  # TODO
 
         # seeds
 
@@ -1086,7 +1132,7 @@ def draw_histogram():
         elif env_name == "FetchReachEnvGE-v1":
             name = "Shoulder Lift Reduced ROM Fault (with Goal Elimination)"
         elif env_name == "FetchReachEnv-v4":
-            name = "Post-Fault Policy"
+            name = "Shoulder Lift Position Sensor Fault"
         elif env_name == "FetchReachEnv-v6":
             name = "Post-Fault Policy"
 
@@ -1131,187 +1177,187 @@ if __name__ == "__main__":
 
     # PPO
 
-    ant_ppo_v0 = False
+    ant_ppo_v0 = True
 
     if ant_ppo_v0:
 
-        file = "/media/sschoepp/easystore/shared/ant/combined/normal/PPOv2_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_d:cpu_ps:True_pss:33"
+        file = "/media/sschoepp/easystore/ant/combined/normal/PPOv2_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_d:cpu_ps:True_pss:33"
         draw_histogram()
 
     # SAC
 
-    ant_sac_v0 = False
+    ant_sac_v0 = True
 
     if ant_sac_v0:
 
-        file = "/media/sschoepp/easystore/shared/ant/combined/normal/SACv2_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_a:True_d:cuda_ps:True_pss:61"
+        file = "/media/sschoepp/easystore/ant/combined/normal/SACv2_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_a:True_d:cuda_ps:True_pss:61"
         draw_histogram()
 
     """ant faulty"""
 
     # PPO v1
 
-    ant_ppo_v1 = False
+    ant_ppo_v1 = True
 
     if ant_ppo_v1:
 
-        file = "/media/sschoepp/easystore/shared/ant/combined/faulty/ppo/v1/PPOv2_AntEnv-v1:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:False_rn:False_d:cpu"
+        file = "/media/sschoepp/easystore/ant/combined/faulty/ppo/v1/PPOv2_AntEnv-v1:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:False_rn:False_d:cpu"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/shared/ant/combined/faulty/ppo/v1/PPOv2_AntEnv-v1:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:False_rn:True_d:cpu"
+        file = "/media/sschoepp/easystore/ant/combined/faulty/ppo/v1/PPOv2_AntEnv-v1:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:False_rn:True_d:cpu"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/shared/ant/combined/faulty/ppo/v1/PPOv2_AntEnv-v1:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:True_rn:False_d:cpu"
+        file = "/media/sschoepp/easystore/ant/combined/faulty/ppo/v1/PPOv2_AntEnv-v1:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:True_rn:False_d:cpu"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/shared/ant/combined/faulty/ppo/v1/PPOv2_AntEnv-v1:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:True_rn:True_d:cpu"
+        file = "/media/sschoepp/easystore/ant/combined/faulty/ppo/v1/PPOv2_AntEnv-v1:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:True_rn:True_d:cpu"
         draw_histogram()
 
     # PPO v2
 
-    ant_ppo_v2 = False
+    ant_ppo_v2 = True
 
     if ant_ppo_v2:
 
-        file = "/media/sschoepp/easystore/shared/ant/combined/faulty/ppo/v2/PPOv2_AntEnv-v2:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:False_rn:False_d:cpu"
+        file = "/media/sschoepp/easystore/ant/combined/faulty/ppo/v2/PPOv2_AntEnv-v2:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:False_rn:False_d:cpu"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/shared/ant/combined/faulty/ppo/v2/PPOv2_AntEnv-v2:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:False_rn:True_d:cpu"
+        file = "/media/sschoepp/easystore/ant/combined/faulty/ppo/v2/PPOv2_AntEnv-v2:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:False_rn:True_d:cpu"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/shared/ant/combined/faulty/ppo/v2/PPOv2_AntEnv-v2:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:True_rn:False_d:cpu"
+        file = "/media/sschoepp/easystore/ant/combined/faulty/ppo/v2/PPOv2_AntEnv-v2:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:True_rn:False_d:cpu"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/shared/ant/combined/faulty/ppo/v2/PPOv2_AntEnv-v2:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:True_rn:True_d:cpu"
+        file = "/media/sschoepp/easystore/ant/combined/faulty/ppo/v2/PPOv2_AntEnv-v2:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:True_rn:True_d:cpu"
         draw_histogram()
 
     # PPO v3
 
-    ant_ppo_v3 = False
+    ant_ppo_v3 = True
 
     if ant_ppo_v3:
 
-        file = "/media/sschoepp/easystore/shared/ant/combined/faulty/ppo/v3/PPOv2_AntEnv-v3:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:False_rn:False_d:cpu"
+        file = "/media/sschoepp/easystore/ant/combined/faulty/ppo/v3/PPOv2_AntEnv-v3:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:False_rn:False_d:cpu"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/shared/ant/combined/faulty/ppo/v3/PPOv2_AntEnv-v3:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:False_rn:True_d:cpu"
+        file = "/media/sschoepp/easystore/ant/combined/faulty/ppo/v3/PPOv2_AntEnv-v3:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:False_rn:True_d:cpu"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/shared/ant/combined/faulty/ppo/v3/PPOv2_AntEnv-v3:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:True_rn:False_d:cpu"
+        file = "/media/sschoepp/easystore/ant/combined/faulty/ppo/v3/PPOv2_AntEnv-v3:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:True_rn:False_d:cpu"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/shared/ant/combined/faulty/ppo/v3/PPOv2_AntEnv-v3:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:True_rn:True_d:cpu"
+        file = "/media/sschoepp/easystore/ant/combined/faulty/ppo/v3/PPOv2_AntEnv-v3:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:True_rn:True_d:cpu"
         draw_histogram()
 
     # PPO v4
 
-    ant_ppo_v4 = False
+    ant_ppo_v4 = True
 
     if ant_ppo_v4:
 
-        file = "/media/sschoepp/easystore/shared/ant/combined/faulty/ppo/v4/PPOv2_AntEnv-v4:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:False_rn:False_d:cpu"
+        file = "/media/sschoepp/easystore/ant/combined/faulty/ppo/v4/PPOv2_AntEnv-v4:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:False_rn:False_d:cpu"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/shared/ant/combined/faulty/ppo/v4/PPOv2_AntEnv-v4:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:False_rn:True_d:cpu"
+        file = "/media/sschoepp/easystore/ant/combined/faulty/ppo/v4/PPOv2_AntEnv-v4:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:False_rn:True_d:cpu"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/shared/ant/combined/faulty/ppo/v4/PPOv2_AntEnv-v4:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:True_rn:False_d:cpu"
+        file = "/media/sschoepp/easystore/ant/combined/faulty/ppo/v4/PPOv2_AntEnv-v4:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:True_rn:False_d:cpu"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/shared/ant/combined/faulty/ppo/v4/PPOv2_AntEnv-v4:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:True_rn:True_d:cpu"
+        file = "/media/sschoepp/easystore/ant/combined/faulty/ppo/v4/PPOv2_AntEnv-v4:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:True_rn:True_d:cpu"
         draw_histogram()
 
     # SAC v1
 
-    ant_sac_v1 = False
+    ant_sac_v1 = True
 
     if ant_sac_v1:
 
-        file = "/media/sschoepp/easystore/shared/ant/combined/faulty/sac/v1/SACv2_AntEnv-v1:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:False_rn:False_a:True_d:cuda"
+        file = "/media/sschoepp/easystore/ant/combined/faulty/sac/v1/SACv2_AntEnv-v1:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:False_rn:False_a:True_d:cuda"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/shared/ant/combined/faulty/sac/v1/SACv2_AntEnv-v1:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:False_rn:True_a:True_d:cuda"
+        file = "/media/sschoepp/easystore/ant/combined/faulty/sac/v1/SACv2_AntEnv-v1:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:False_rn:True_a:True_d:cuda"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/shared/ant/combined/faulty/sac/v1/SACv2_AntEnv-v1:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:True_rn:False_a:True_d:cuda"
+        file = "/media/sschoepp/easystore/ant/combined/faulty/sac/v1/SACv2_AntEnv-v1:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:True_rn:False_a:True_d:cuda"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/shared/ant/combined/faulty/sac/v1/SACv2_AntEnv-v1:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:True_rn:True_a:True_d:cuda"
+        file = "/media/sschoepp/easystore/ant/combined/faulty/sac/v1/SACv2_AntEnv-v1:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:True_rn:True_a:True_d:cuda"
         draw_histogram()
 
     # SAC v2
 
-    ant_sac_v2 = False
+    ant_sac_v2 = True
 
     if ant_sac_v2:
 
-        file = "/media/sschoepp/easystore/shared/ant/combined/faulty/sac/v2/SACv2_AntEnv-v2:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:False_rn:False_a:True_d:cuda"
+        file = "/media/sschoepp/easystore/ant/combined/faulty/sac/v2/SACv2_AntEnv-v2:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:False_rn:False_a:True_d:cuda"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/shared/ant/combined/faulty/sac/v2/SACv2_AntEnv-v2:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:False_rn:True_a:True_d:cuda"
+        file = "/media/sschoepp/easystore/ant/combined/faulty/sac/v2/SACv2_AntEnv-v2:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:False_rn:True_a:True_d:cuda"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/shared/ant/combined/faulty/sac/v2/SACv2_AntEnv-v2:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:True_rn:False_a:True_d:cuda"
+        file = "/media/sschoepp/easystore/ant/combined/faulty/sac/v2/SACv2_AntEnv-v2:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:True_rn:False_a:True_d:cuda"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/shared/ant/combined/faulty/sac/v2/SACv2_AntEnv-v2:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:True_rn:True_a:True_d:cuda"
+        file = "/media/sschoepp/easystore/ant/combined/faulty/sac/v2/SACv2_AntEnv-v2:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:True_rn:True_a:True_d:cuda"
         draw_histogram()
 
     # SAC v3
 
-    ant_sac_v3 = False
+    ant_sac_v3 = True
 
     if ant_sac_v3:
 
-        file = "/media/sschoepp/easystore/shared/ant/combined/faulty/sac/v3/SACv2_AntEnv-v3:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:False_rn:False_a:True_d:cuda"
+        file = "/media/sschoepp/easystore/ant/combined/faulty/sac/v3/SACv2_AntEnv-v3:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:False_rn:False_a:True_d:cuda"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/shared/ant/combined/faulty/sac/v3/SACv2_AntEnv-v3:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:False_rn:True_a:True_d:cuda"
+        file = "/media/sschoepp/easystore/ant/combined/faulty/sac/v3/SACv2_AntEnv-v3:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:False_rn:True_a:True_d:cuda"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/shared/ant/combined/faulty/sac/v3/SACv2_AntEnv-v3:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:True_rn:False_a:True_d:cuda"
+        file = "/media/sschoepp/easystore/ant/combined/faulty/sac/v3/SACv2_AntEnv-v3:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:True_rn:False_a:True_d:cuda"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/shared/ant/combined/faulty/sac/v3/SACv2_AntEnv-v3:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:True_rn:True_a:True_d:cuda"
+        file = "/media/sschoepp/easystore/ant/combined/faulty/sac/v3/SACv2_AntEnv-v3:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:True_rn:True_a:True_d:cuda"
         draw_histogram()
 
     # SAC v4
 
-    ant_sac_v4 = False
+    ant_sac_v4 = True
 
     if ant_sac_v4:
 
-        file = "/media/sschoepp/easystore/shared/ant/combined/faulty/sac/v4/SACv2_AntEnv-v4:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:False_rn:False_a:True_d:cuda"
+        file = "/media/sschoepp/easystore/ant/combined/faulty/sac/v4/SACv2_AntEnv-v4:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:False_rn:False_a:True_d:cuda"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/shared/ant/combined/faulty/sac/v4/SACv2_AntEnv-v4:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:False_rn:True_a:True_d:cuda"
+        file = "/media/sschoepp/easystore/ant/combined/faulty/sac/v4/SACv2_AntEnv-v4:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:False_rn:True_a:True_d:cuda"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/shared/ant/combined/faulty/sac/v4/SACv2_AntEnv-v4:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:True_rn:False_a:True_d:cuda"
+        file = "/media/sschoepp/easystore/ant/combined/faulty/sac/v4/SACv2_AntEnv-v4:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:True_rn:False_a:True_d:cuda"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/shared/ant/combined/faulty/sac/v4/SACv2_AntEnv-v4:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:True_rn:True_a:True_d:cuda"
+        file = "/media/sschoepp/easystore/ant/combined/faulty/sac/v4/SACv2_AntEnv-v4:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:True_rn:True_a:True_d:cuda"
         draw_histogram()
 
     """fetchreach normal"""
 
     # PPO v0
 
-    fetchreach_ppo_v0 = False
+    fetchreach_ppo_v0 = True
 
     if fetchreach_ppo_v0:
 
-        # file = "/media/sschoepp/easystore/shared/fetchreach/combined/normal/PPOv2_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_d:cpu_ps:True_pss:43"
-        file = "/DATA/PPOv2_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_d:cpu_ps:True_pss:43"
+        file = "/media/sschoepp/easystore/fetchreach/combined/normal/PPOv2_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_d:cpu_ps:True_pss:43"
+        # file = "/DATA/PPOv2_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_d:cpu_ps:True_pss:43"
         draw_histogram()
 
     # SAC v0
 
-    fetchreach_sac_v0 = False
+    fetchreach_sac_v0 = True
 
     if fetchreach_sac_v0:
 
-        file = "/media/sschoepp/easystore/shared/fetchreach/combined/normal/SACv2_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_a:True_d:cuda_ps:True_pss:21"
+        file = "/media/sschoepp/easystore/fetchreach/combined/normal/SACv2_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_a:True_d:cuda_ps:True_pss:21"
         draw_histogram()
 
     """fetchreach faulty"""
@@ -1322,52 +1368,52 @@ if __name__ == "__main__":
 
     if fetchreach_ppo_v1:
 
-        file = "/media/sschoepp/easystore/shared/fetchreach/original/faulty/ppo/v1/PPOv2_FetchReachEnv-v1:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:False_rn:False_d:cpu"
+        file = "/media/sschoepp/easystore/fetchreach/original/faulty/ppo/v1/PPOv2_FetchReachEnv-v1:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:False_rn:False_d:cpu"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/shared/fetchreach/original/faulty/ppo/v1/PPOv2_FetchReachEnv-v1:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:False_rn:True_d:cpu"
+        file = "/media/sschoepp/easystore/fetchreach/original/faulty/ppo/v1/PPOv2_FetchReachEnv-v1:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:False_rn:True_d:cpu"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/shared/fetchreach/original/faulty/ppo/v1/PPOv2_FetchReachEnv-v1:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:True_rn:False_d:cpu"
+        file = "/media/sschoepp/easystore/fetchreach/original/faulty/ppo/v1/PPOv2_FetchReachEnv-v1:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:True_rn:False_d:cpu"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/shared/fetchreach/original/faulty/ppo/v1/PPOv2_FetchReachEnv-v1:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:True_rn:True_d:cpu"
+        file = "/media/sschoepp/easystore/fetchreach/original/faulty/ppo/v1/PPOv2_FetchReachEnv-v1:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:True_rn:True_d:cpu"
         draw_histogram()
 
     # PPO v4
 
-    fetchreach_ppo_v4 = False
+    fetchreach_ppo_v4 = True
 
     if fetchreach_ppo_v4:
 
-        file = "/media/sschoepp/easystore/shared/fetchreach/original/seeds/faulty/ppo/v4/PPOv2_FetchReachEnv-v4:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:False_rn:False_d:cpu"
+        file = "/media/sschoepp/easystore/fetchreach/original/seeds/faulty/ppo/v4/PPOv2_FetchReachEnv-v4:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:False_rn:False_d:cpu"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/shared/fetchreach/original/seeds/faulty/ppo/v4/PPOv2_FetchReachEnv-v4:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:False_rn:True_d:cpu"
+        file = "/media/sschoepp/easystore/fetchreach/original/seeds/faulty/ppo/v4/PPOv2_FetchReachEnv-v4:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:False_rn:True_d:cpu"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/shared/fetchreach/original/seeds/faulty/ppo/v4/PPOv2_FetchReachEnv-v4:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:True_rn:False_d:cpu"
+        file = "/media/sschoepp/easystore/fetchreach/original/seeds/faulty/ppo/v4/PPOv2_FetchReachEnv-v4:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:True_rn:False_d:cpu"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/shared/fetchreach/original/seeds/faulty/ppo/v4/PPOv2_FetchReachEnv-v4:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:True_rn:True_d:cpu"
+        file = "/media/sschoepp/easystore/fetchreach/original/seeds/faulty/ppo/v4/PPOv2_FetchReachEnv-v4:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:True_rn:True_d:cpu"
         draw_histogram()
 
     # PPO v6
 
-    fetchreach_ppo_v6 = False
+    fetchreach_ppo_v6 = True
 
     if fetchreach_ppo_v6:
 
-        file = "/media/sschoepp/easystore/shared/fetchreach/original/seeds/faulty/ppo/v6/PPOv2_FetchReachEnv-v6:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:False_rn:False_d:cpu"
+        file = "/media/sschoepp/easystore/fetchreach/original/seeds/faulty/ppo/v6/PPOv2_FetchReachEnv-v6:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:False_rn:False_d:cpu"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/shared/fetchreach/original/seeds/faulty/ppo/v6/PPOv2_FetchReachEnv-v6:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:False_rn:True_d:cpu"
+        file = "/media/sschoepp/easystore/fetchreach/original/seeds/faulty/ppo/v6/PPOv2_FetchReachEnv-v6:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:False_rn:True_d:cpu"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/shared/fetchreach/original/seeds/faulty/ppo/v6/PPOv2_FetchReachEnv-v6:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:True_rn:False_d:cpu"
+        file = "/media/sschoepp/easystore/fetchreach/original/seeds/faulty/ppo/v6/PPOv2_FetchReachEnv-v6:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:True_rn:False_d:cpu"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/shared/fetchreach/original/seeds/faulty/ppo/v6/PPOv2_FetchReachEnv-v6:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:True_rn:True_d:cpu"
+        file = "/media/sschoepp/easystore/fetchreach/original/seeds/faulty/ppo/v6/PPOv2_FetchReachEnv-v6:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:True_rn:True_d:cpu"
         draw_histogram()
 
     # SAC v1
@@ -1376,50 +1422,50 @@ if __name__ == "__main__":
 
     if fetchreach_sac_v1:
 
-        file = "/media/sschoepp/easystore/shared/fetchreach/original/faulty/sac/v1/SACv2_FetchReachEnv-v1:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:False_rn:False_a:True_d:cuda"
+        file = "/media/sschoepp/easystore/fetchreach/original/faulty/sac/v1/SACv2_FetchReachEnv-v1:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:False_rn:False_a:True_d:cuda"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/shared/fetchreach/original/faulty/sac/v1/SACv2_FetchReachEnv-v1:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:False_rn:True_a:True_d:cuda"
+        file = "/media/sschoepp/easystore/fetchreach/original/faulty/sac/v1/SACv2_FetchReachEnv-v1:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:False_rn:True_a:True_d:cuda"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/shared/fetchreach/original/faulty/sac/v1/SACv2_FetchReachEnv-v1:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:True_rn:False_a:True_d:cuda"
+        file = "/media/sschoepp/easystore/fetchreach/original/faulty/sac/v1/SACv2_FetchReachEnv-v1:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:True_rn:False_a:True_d:cuda"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/shared/fetchreach/original/faulty/sac/v1/SACv2_FetchReachEnv-v1:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:True_rn:True_a:True_d:cuda"
+        file = "/media/sschoepp/easystore/fetchreach/original/faulty/sac/v1/SACv2_FetchReachEnv-v1:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:True_rn:True_a:True_d:cuda"
         draw_histogram()
 
     # SAC v4
 
-    fetchreach_sac_v4 = False
+    fetchreach_sac_v4 = True
 
     if fetchreach_sac_v4:
 
-        file = "/media/sschoepp/easystore/shared/fetchreach/original/seeds/faulty/sac/v4/SACv2_FetchReachEnv-v4:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:False_rn:False_a:True_d:cuda_mod"
+        file = "/media/sschoepp/easystore/fetchreach/original/seeds/faulty/sac/v4/SACv2_FetchReachEnv-v4:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:False_rn:False_a:True_d:cuda_mod"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/shared/fetchreach/original/seeds/faulty/sac/v4/SACv2_FetchReachEnv-v4:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:False_rn:True_a:True_d:cuda_mod"
+        file = "/media/sschoepp/easystore/fetchreach/original/seeds/faulty/sac/v4/SACv2_FetchReachEnv-v4:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:False_rn:True_a:True_d:cuda_mod"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/shared/fetchreach/original/seeds/faulty/sac/v4/SACv2_FetchReachEnv-v4:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:True_rn:False_a:True_d:cuda_mod"
+        file = "/media/sschoepp/easystore/fetchreach/original/seeds/faulty/sac/v4/SACv2_FetchReachEnv-v4:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:True_rn:False_a:True_d:cuda_mod"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/shared/fetchreach/original/seeds/faulty/sac/v4/SACv2_FetchReachEnv-v4:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:True_rn:True_a:True_d:cuda_mod"
+        file = "/media/sschoepp/easystore/fetchreach/original/seeds/faulty/sac/v4/SACv2_FetchReachEnv-v4:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:True_rn:True_a:True_d:cuda_mod"
         draw_histogram()
 
     # SAC v6
 
-    fetchreach_sac_v6 = False
+    fetchreach_sac_v6 = True
 
     if fetchreach_sac_v6:
 
-        file = "/media/sschoepp/easystore/shared/fetchreach/original/seeds/faulty/sac/v6/SACv2_FetchReachEnv-v6:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:False_rn:False_a:True_d:cuda_mod"
+        file = "/media/sschoepp/easystore/fetchreach/original/seeds/faulty/sac/v6/SACv2_FetchReachEnv-v6:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:False_rn:False_a:True_d:cuda_mod"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/shared/fetchreach/original/seeds/faulty/sac/v6/SACv2_FetchReachEnv-v6:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:False_rn:True_a:True_d:cuda_mod"
+        file = "/media/sschoepp/easystore/fetchreach/original/seeds/faulty/sac/v6/SACv2_FetchReachEnv-v6:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:False_rn:True_a:True_d:cuda_mod"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/shared/fetchreach/original/seeds/faulty/sac/v6/SACv2_FetchReachEnv-v6:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:True_rn:False_a:True_d:cuda_mod"
+        file = "/media/sschoepp/easystore/fetchreach/original/seeds/faulty/sac/v6/SACv2_FetchReachEnv-v6:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:True_rn:False_a:True_d:cuda_mod"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/shared/fetchreach/original/seeds/faulty/sac/v6/SACv2_FetchReachEnv-v6:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:True_rn:True_a:True_d:cuda_mod"
+        file = "/media/sschoepp/easystore/fetchreach/original/seeds/faulty/sac/v6/SACv2_FetchReachEnv-v6:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:True_rn:True_a:True_d:cuda_mod"
         draw_histogram()

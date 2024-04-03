@@ -113,6 +113,9 @@ def plot_early_adaptation(directory):
         df_mean = df.mean()
         df_sem = df.sem()
 
+        mean = df['average_return'].iloc[-1]
+        sem = df['average_return'].sem()
+
         ordered_settings.append((algorithm, rn, cs, label, df_mean, df_sem))  # TODO
 
     assert len(ordered_settings) == 4, "plot_experiment: not four settings"
@@ -171,12 +174,12 @@ def plot_early_adaptation(directory):
     plt.xlim(xmin - (ts_fault_onset / x_divisor), xmax - (ts_fault_onset / x_divisor))
     plt.ylim(ymin, ymax)
     plt.xlabel("million steps")
-    plt.ylabel("average return ({} seeds)".format(num_seeds))
+    plt.ylabel("average return")
 
     if algorithm == "SAC":
-        title = "Soft Actor-Critic (SAC)"
+        title = "Soft Actor-Critic"
     else:
-        title = "Proximal Policy Optimization (PPO)"
+        title = "Proximal Policy Optimization"
 
     plt.title(title)
 
@@ -333,12 +336,12 @@ def plot_complete_adaptation(directory):
     plt.xlim(xmin, xmax)
     plt.ylim(ymin, ymax)
     plt.xlabel("million steps")
-    plt.ylabel("average return ({} seeds)".format(num_seeds))
+    plt.ylabel("average return")
 
     if algorithm == "SAC":
-        title = "Soft Actor-Critic (SAC)"
+        title = "Soft Actor-Critic"
     else:
-        title = "Proximal Policy Optimization (PPO)"
+        title = "Proximal Policy Optimization"
 
     plt.title(title)
 
@@ -425,7 +428,7 @@ if __name__ == "__main__":
     """ant PPO"""
 
     # local for Ant PPO
-    ppo_data_dir = DATA_FOLDER_PATH + "/ant/exps/ppo"
+    ppo_data_dir = DATA_FOLDER_PATH + "/ant/exps/complete/ppo"
 
     # local for Ant PPO
     xmin = 600
@@ -470,7 +473,7 @@ if __name__ == "__main__":
     """ant SAC"""
 
     # local for Ant SAC
-    sac_data_dir = DATA_FOLDER_PATH + "/ant/exps/sac"
+    sac_data_dir = DATA_FOLDER_PATH + "/ant/exps/complete/sac"
 
     # local for Ant SAC
     xmin = 20
@@ -524,7 +527,7 @@ if __name__ == "__main__":
     # PPO
 
     # local for FetchReach PPO
-    ppo_data_dir = DATA_FOLDER_PATH + "/fetchreach/exps/ppo"
+    ppo_data_dir = DATA_FOLDER_PATH + "/fetchreach/exps/complete/ppo"
 
     # local for FetchReach PPO
     xmin = 6
@@ -553,7 +556,7 @@ if __name__ == "__main__":
     # SAC
 
     # local for FetchReach SAC
-    sac_data_dir = DATA_FOLDER_PATH + "/fetchreach/exps/sac"
+    sac_data_dir = DATA_FOLDER_PATH + "/fetchreach/exps/complete/sac"
 
     # local for FetchReach SAC
     xmin = 2

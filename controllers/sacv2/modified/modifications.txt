@@ -1,2 +1,2 @@
 modifications:
-(1) added entropy to loss_data.csv
+* added entropy to loss_data.csv

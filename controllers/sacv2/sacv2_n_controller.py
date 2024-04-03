@@ -185,8 +185,7 @@ class NormalController:
                  + (("_ps:" + str(self.parameters["param_search"])) if self.parameters["param_search"] else "") \
                  + (("_pss:" + str(self.parameters["param_search_seed"])) if self.parameters["param_search"] else "") \
                  + ("_r" if self.parameters["resumable"] else "") \
-                 + ("_resumed" if self.parameters["resume"] else "") \
-                 + "_modified"
+                 + ("_resumed" if self.parameters["resume"] else "")
 
         self.experiment = "SACv2_" + suffix
 
@@ -434,8 +433,8 @@ class NormalController:
         print("time to complete one run:", run_time, "h:m:s")
         print(self.LINE)
 
-        if not self.computecanada:
-            self.send_email(run_time)
+        # if not self.computecanada:
+        #     self.send_email(run_time)
 
         text_file = open(self.data_dir + "/run_summary.txt", "w")
         text_file.write(date.today().strftime("%m/%d/%y"))

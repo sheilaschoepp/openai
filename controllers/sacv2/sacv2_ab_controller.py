@@ -26,6 +26,8 @@ from controllers.sacv2.sacv2_agent import SACv2
 from environment.environment import Environment
 from utils.rl_glue import RLGlue
 
+import custom_gym_envs
+
 parser = argparse.ArgumentParser(description="PyTorch Soft Actor-Critic Arguments")
 
 parser.add_argument("-e", "--ab_env_name", default="Ant-v2",
@@ -390,8 +392,8 @@ class AbnormalController:
         print("time to complete one run:", run_time, "h:m:s")
         print(self.LINE)
 
-        if not self.computecanada:
-            self.send_email(run_time)
+        # if not self.computecanada:
+        #     self.send_email(run_time)
 
         text_file = open(self.data_dir + "/run_summary.txt", "w")
         text_file.write(date.today().strftime("%m/%d/%y"))

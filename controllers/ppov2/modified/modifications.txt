@@ -1,3 +1,0 @@
-modifications:
-* removed train_data.csv
-* added slrd argument for ant experiments

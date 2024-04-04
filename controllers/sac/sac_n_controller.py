@@ -22,7 +22,7 @@ import torch
 from termcolor import colored
 
 import utils.plot_style_settings as pss
-from controllers.sacv2.sacv2_agent import SACv2
+from controllers.sac.sac_agent import SAC
 from environment.environment import Environment
 from utils.rl_glue import RLGlue
 
@@ -187,7 +187,7 @@ class NormalController:
                  + ("_r" if self.parameters["resumable"] else "") \
                  + ("_resumed" if self.parameters["resume"] else "")
 
-        self.experiment = "SACv2_" + suffix
+        self.experiment = "SAC_" + suffix
 
         if self.computecanada:
             # path for compute canada
@@ -258,20 +258,20 @@ class NormalController:
                                self.parameters["seed"])
 
         # agent
-        self.agent = SACv2(self.env.env_state_dim(),
-                           self.env.env_action_dim(),
-                           self.parameters["gamma"],
-                           self.parameters["tau"],
-                           self.parameters["alpha"],
-                           self.parameters["lr"],
-                           self.parameters["hidden_dim"],
-                           self.parameters["replay_buffer_size"],
-                           self.parameters["batch_size"],
-                           self.parameters["model_updates_per_step"],
-                           self.parameters["target_update_interval"],
-                           self.parameters["automatic_entropy_tuning"],
-                           self.parameters["device"],
-                           self.loss_data)
+        self.agent = SAC(self.env.env_state_dim(),
+                         self.env.env_action_dim(),
+                         self.parameters["gamma"],
+                         self.parameters["tau"],
+                         self.parameters["alpha"],
+                         self.parameters["lr"],
+                         self.parameters["hidden_dim"],
+                         self.parameters["replay_buffer_size"],
+                         self.parameters["batch_size"],
+                         self.parameters["model_updates_per_step"],
+                         self.parameters["target_update_interval"],
+                         self.parameters["automatic_entropy_tuning"],
+                         self.parameters["device"],
+                         self.loss_data)
 
         # RLGlue used for training
         self.rlg = RLGlue(self.env, self.agent)
@@ -903,7 +903,7 @@ def main():
 
 def param_search():
     """
-    Conduct a random parameter search for SACv2 using parameter ranges.
+    Conduct a random parameter search for SAC using parameter ranges.
     """
 
     np.random.seed(args.param_search_seed)

@@ -5,12 +5,12 @@ import torch
 import torch.nn as nn
 from torch.optim import Adam
 
-from controllers.sacv2.sacv2_networks import TwinnedQNetwork, GaussianPolicyNetwork
+from controllers.sac.sac_networks import TwinnedQNetwork, GaussianPolicyNetwork
 from utils.replay_buffer import ReplayBuffer
 from utils.rl_glue import BaseAgent
 
 
-class SACv2(BaseAgent):
+class SAC(BaseAgent):
     """
     Soft Actor Critic (SAC) Agent (based on the paper at https://arxiv.org/abs/1812.05905).
 
@@ -71,7 +71,7 @@ class SACv2(BaseAgent):
             numpy array to store agent loss data
         """
 
-        super(SACv2, self).__init__()
+        super(SAC, self).__init__()
 
         self.state_dim = state_dim
         self.action_dim = action_dim
@@ -568,7 +568,7 @@ class SACv2(BaseAgent):
             mode: training mode ('train') during learning, evaluation mode ('eval') during inference
         """
 
-        assert (mode == "train" or mode == "eval"), "sacv2_agent.agent_set_policy_mode: mode must be either 'train' or 'eval'"
+        assert (mode == "train" or mode == "eval"), "sac_agent.agent_set_policy_mode: mode must be either 'train' or 'eval'"
 
         if mode == "train":
             self.mode = "train"

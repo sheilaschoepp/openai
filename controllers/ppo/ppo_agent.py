@@ -5,12 +5,12 @@ import torch
 import torch.nn as nn
 from torch.optim import Adam
 
-from controllers.ppov2.ppov2_networks import ActorCriticNetwork
+from controllers.ppo.ppo_networks import ActorCriticNetwork
 from utils.memory import Memory
 from utils.rl_glue import BaseAgent
 
 
-class PPOv2(BaseAgent):
+class PPO(BaseAgent):
     """
     Proximal Policy Optimization (PPO) Agent (based on the paper at https://arxiv.org/abs/1707.06347).
 
@@ -90,7 +90,7 @@ class PPOv2(BaseAgent):
             if true, we are resuming the experiment
         """
 
-        super(PPOv2, self).__init__()
+        super(PPO, self).__init__()
 
         assert num_samples >= mini_batch_size, "agent.__init__: the number of samples must be greater than or equal to the mini-batch size"
 

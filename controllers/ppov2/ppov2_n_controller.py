@@ -39,6 +39,8 @@ parser.add_argument("--lr", type=float, default=0.00025, metavar="G",
                     help="learning rate (default: 0.0003)")
 parser.add_argument("-lrd", "--linear_lr_decay", default=False, action="store_true",
                     help="if true, decrease learning rate linearly (default: False)")
+parser.add_argument("-slrd", "--slow_lrd", type=float, default=0.25, metavar="G",
+                    help="slow linear learning rate decay by this percentage (default: 0.25)")
 parser.add_argument("--gamma", type=float, default=0.98, metavar="G",
                     help="discount factor (default: 0.99)")
 
@@ -139,6 +141,7 @@ class NormalController:
                                "n_time_steps": args.n_time_steps,
                                "lr": args.lr,
                                "linear_lr_decay": args.linear_lr_decay,
+                               "slow_lrd": args.slow_lrd,
                                "gamma": args.gamma,
                                "num_samples": args.num_samples,
                                "mini_batch_size": args.mini_batch_size,
@@ -188,6 +191,7 @@ class NormalController:
         suffix = self.parameters["n_env_name"] + ":" + str(self.parameters["n_time_steps"]) \
                  + "_lr:" + str(self.parameters["lr"]) \
                  + "_lrd:" + str(self.parameters["linear_lr_decay"]) \
+                 + "_slrd:" + str(self.parameters["slow_lrd"]) \
                  + "_g:" + str(self.parameters["gamma"]) \
                  + "_ns:" + str(self.parameters["num_samples"]) \
                  + "_mbs:" + str(self.parameters["mini_batch_size"]) \
@@ -256,9 +260,9 @@ class NormalController:
         num_columns = 7
         self.eval_data = np.zeros((num_rows, num_columns))
 
-        num_rows = self.parameters["n_time_steps"]  # larger than needed; will remove extra entries later
-        num_columns = 3
-        self.train_data = np.zeros((num_rows, num_columns))
+        # num_rows = self.parameters["n_time_steps"]  # larger than needed; will remove extra entries later
+        # num_columns = 3
+        # self.train_data = np.zeros((num_rows, num_columns))
 
         num_rows = (self.parameters["n_time_steps"] // self.parameters["num_samples"])
         num_columns = 8
@@ -287,6 +291,7 @@ class NormalController:
                            self.parameters["log_std"],
                            self.parameters["lr"],
                            self.parameters["linear_lr_decay"],
+                           self.parameters["slow_lrd"],
                            self.parameters["gamma"],
                            self.parameters["n_time_steps"],
                            self.parameters["num_samples"],
@@ -350,6 +355,7 @@ class NormalController:
         print("normal time steps:", highlight_non_default_values("n_time_steps"))
         print("lr:", highlight_non_default_values("lr"))
         print("linear lr decay:", highlight_non_default_values("linear_lr_decay"))
+        print("slow linear lr decay:", highlight_non_default_values("slow_lrd"))
         print("gamma:", highlight_non_default_values("gamma"))
         print("number of samples:", highlight_non_default_values("num_samples"))
         print("mini-batch size:", highlight_non_default_values("mini_batch_size"))
@@ -437,8 +443,8 @@ class NormalController:
                 if self.rlg.num_steps() % self.parameters["time_step_eval_frequency"] == 0:
                     self.evaluate_model(self.rlg.num_steps())
 
-            index = self.rlg.num_episodes() - 1
-            self.train_data[index] = [self.rlg.num_episodes(), self.rlg.num_steps(), self.rlg.episode_reward()]
+            # index = self.rlg.num_episodes() - 1
+            # self.train_data[index] = [self.rlg.num_episodes(), self.rlg.num_steps(), self.rlg.episode_reward()]
 
             # learning complete
             if self.rlg.num_steps() == self.parameters["n_time_steps"]:
@@ -468,8 +474,8 @@ class NormalController:
         print("time to complete one run:", run_time, "h:m:s")
         print(self.LINE)
 
-        if not self.computecanada:
-            self.send_email(run_time)
+        # if not self.computecanada:
+        #     self.send_email(run_time)
 
         text_file = open(self.data_dir + "/run_summary.txt", "w")
         text_file.write(date.today().strftime("%m/%d/%y"))
@@ -572,11 +578,11 @@ class NormalController:
         if num_rows > 0:
             self.eval_data = np.append(self.eval_data, np.zeros((num_rows, num_columns)), axis=0)
 
-        self.train_data = pd.read_csv(csv_foldername + "/train_data.csv").to_numpy().copy()[:, 1:]
-        num_rows = self.parameters["n_time_steps"] - self.train_data.shape[0]  # always larger than needed; will remove extra entries later
-        num_columns = self.train_data.shape[1]
-        if num_rows > 0:
-            self.train_data = np.append(self.train_data, np.zeros((num_rows, num_columns)), axis=0)
+        # self.train_data = pd.read_csv(csv_foldername + "/train_data.csv").to_numpy().copy()[:, 1:]
+        # num_rows = self.parameters["n_time_steps"] - self.train_data.shape[0]  # always larger than needed; will remove extra entries later
+        # num_columns = self.train_data.shape[1]
+        # if num_rows > 0:
+        #     self.train_data = np.append(self.train_data, np.zeros((num_rows, num_columns)), axis=0)
 
         self.loss_data = pd.read_csv(csv_foldername + "/loss_data.csv").to_numpy().copy()[:, 1:]
         num_rows = (self.parameters["n_time_steps"] // self.parameters["num_samples"]) - self.loss_data.shape[0]
@@ -681,16 +687,16 @@ class NormalController:
         plt.savefig(jpg_foldername + "/evaluation_samples.jpg")
         plt.close()
 
-        df = pd.read_csv(csv_foldername + "/train_data.csv")
-
-        # training: episode_return vs num_episodes
-        df.plot(x="num_episodes", y="episode_return", color="blue", legend=False)
-        plt.xlabel("episodes")
-        plt.ylabel("episode\nreturn", rotation="horizontal", labelpad=30)
-        plt.title("Training")
-        pss.plot_settings()
-        plt.savefig(jpg_foldername + "/train_episodes.jpg")
-        plt.close()
+        # df = pd.read_csv(csv_foldername + "/train_data.csv")
+        #
+        # # training: episode_return vs num_episodes
+        # df.plot(x="num_episodes", y="episode_return", color="blue", legend=False)
+        # plt.xlabel("episodes")
+        # plt.ylabel("episode\nreturn", rotation="horizontal", labelpad=30)
+        # plt.title("Training")
+        # pss.plot_settings()
+        # plt.savefig(jpg_foldername + "/train_episodes.jpg")
+        # plt.close()
 
         df = pd.read_csv(csv_foldername + "/loss_data.csv")
 
@@ -792,17 +798,17 @@ class NormalController:
                                      "real_time": self.eval_data[:, 6]})
         eval_data_df.to_csv(csv_foldername + "/eval_data.csv", float_format="%f")
 
-        # remove zero entries
-        index = None
-        for i in range(self.train_data.shape[0]):
-            if (self.train_data[i] == np.zeros(3)).all() and (self.train_data[i+1] == np.zeros(3)).all():
-                index = i
-                break
-        self.train_data = self.train_data[:index]
-        train_data_df = pd.DataFrame({"num_episodes": self.train_data[:, 0],
-                                      "num_time_steps": self.train_data[:, 1],
-                                      "episode_return": self.train_data[:, 2]})
-        train_data_df.to_csv(csv_foldername + "/train_data.csv", float_format="%f")
+        # # remove zero entries
+        # index = None
+        # for i in range(self.train_data.shape[0]):
+        #     if (self.train_data[i] == np.zeros(3)).all() and (self.train_data[i+1] == np.zeros(3)).all():
+        #         index = i
+        #         break
+        # self.train_data = self.train_data[:index]
+        # train_data_df = pd.DataFrame({"num_episodes": self.train_data[:, 0],
+        #                               "num_time_steps": self.train_data[:, 1],
+        #                               "episode_return": self.train_data[:, 2]})
+        # train_data_df.to_csv(csv_foldername + "/train_data.csv", float_format="%f")
 
         loss_data_df = pd.DataFrame({"num_updates": self.loss_data[:, 0],
                                      "num_epoch_updates": self.loss_data[:, 1],

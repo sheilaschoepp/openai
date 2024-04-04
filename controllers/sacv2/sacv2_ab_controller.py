@@ -193,7 +193,7 @@ class AbnormalController:
 
         # data is loaded in call to self.load(), after rl problem is initialized
         self.eval_data = None
-        self.train_data = None
+        # self.train_data = None
         self.loss_data = None
 
         # seeds
@@ -361,8 +361,8 @@ class AbnormalController:
                 if self.rlg.num_steps() % self.parameters["time_step_eval_frequency"] == 0:
                     self.evaluate_model(self.rlg.num_steps())
 
-            index = self.rlg.num_episodes() - 1
-            self.train_data[index] = [self.rlg.num_episodes(), self.rlg.num_steps(), self.rlg.episode_reward()]
+            # index = self.rlg.num_episodes() - 1
+            # self.train_data[index] = [self.rlg.num_episodes(), self.rlg.num_steps(), self.rlg.episode_reward()]
 
             # learning complete
             if self.rlg.num_steps() == self.parameters["n_time_steps"] + self.parameters["ab_time_steps"]:
@@ -505,10 +505,10 @@ class AbnormalController:
             self.eval_data = pd.read_csv(csv_foldername + "/eval_data.csv").to_numpy().copy()[:, 1:]
             self.eval_data = np.append(self.eval_data, np.zeros((num_rows, num_columns)), axis=0)
 
-            num_rows = self.parameters["ab_time_steps"]  # always larger than needed; will remove extra entries later
-            num_columns = 3
-            self.train_data = pd.read_csv(csv_foldername + "/train_data.csv").to_numpy().copy()[:, 1:]
-            self.train_data = np.append(self.train_data, np.zeros((num_rows, num_columns)), axis=0)
+            # num_rows = self.parameters["ab_time_steps"]  # always larger than needed; will remove extra entries later
+            # num_columns = 3
+            # self.train_data = pd.read_csv(csv_foldername + "/train_data.csv").to_numpy().copy()[:, 1:]
+            # self.train_data = np.append(self.train_data, np.zeros((num_rows, num_columns)), axis=0)
 
             if self.parameters["clear_replay_buffer"]:
                 num_rows = (self.parameters["ab_time_steps"] - self.parameters["batch_size"]) * self.parameters["model_updates_per_step"]
@@ -526,11 +526,11 @@ class AbnormalController:
             if num_rows > 0:
                 self.eval_data = np.append(self.eval_data, np.zeros((num_rows, num_columns)), axis=0)
 
-            self.train_data = pd.read_csv(csv_foldername + "/train_data.csv").to_numpy().copy()[:, 1:]
-            num_rows = (self.parameters["n_time_steps"] + self.parameters["ab_time_steps"]) - self.train_data.shape[0]  # always larger than needed; will remove extra entries later
-            num_columns = self.train_data.shape[1]
-            if num_rows > 0:
-                self.train_data = np.append(self.train_data, np.zeros((num_rows, num_columns)), axis=0)
+            # self.train_data = pd.read_csv(csv_foldername + "/train_data.csv").to_numpy().copy()[:, 1:]
+            # num_rows = (self.parameters["n_time_steps"] + self.parameters["ab_time_steps"]) - self.train_data.shape[0]  # always larger than needed; will remove extra entries later
+            # num_columns = self.train_data.shape[1]
+            # if num_rows > 0:
+            #     self.train_data = np.append(self.train_data, np.zeros((num_rows, num_columns)), axis=0)
 
             self.loss_data = pd.read_csv(csv_foldername + "/loss_data.csv").to_numpy().copy()[:, 1:]
             if self.parameters["clear_replay_buffer"]:
@@ -641,16 +641,16 @@ class AbnormalController:
         plt.savefig(jpg_foldername + "/evaluation_samples.jpg")
         plt.close()
 
-        df = pd.read_csv(csv_foldername + "/train_data.csv")
-
-        # training: episode_return vs num_episodes
-        df.plot(x="num_episodes", y="episode_return", color="blue", legend=False)
-        plt.xlabel("episodes")
-        plt.ylabel("episode\nreturn", rotation="horizontal", labelpad=30)
-        plt.title("Training")
-        pss.plot_settings()
-        plt.savefig(jpg_foldername + "/train_episodes.jpg")
-        plt.close()
+        # df = pd.read_csv(csv_foldername + "/train_data.csv")
+        #
+        # # training: episode_return vs num_episodes
+        # df.plot(x="num_episodes", y="episode_return", color="blue", legend=False)
+        # plt.xlabel("episodes")
+        # plt.ylabel("episode\nreturn", rotation="horizontal", labelpad=30)
+        # plt.title("Training")
+        # pss.plot_settings()
+        # plt.savefig(jpg_foldername + "/train_episodes.jpg")
+        # plt.close()
 
         df = pd.read_csv(csv_foldername + "/loss_data.csv")
 
@@ -765,17 +765,17 @@ class AbnormalController:
                                      "real_time": self.eval_data[:, 4]})
         eval_data_df.to_csv(csv_foldername + "/eval_data.csv", float_format="%f")
 
-        # remove zero entries
-        index = None
-        for i in range(self.train_data.shape[0]):
-            if (self.train_data[i] == np.zeros(3)).all() and (self.train_data[i+1] == np.zeros(3)).all():
-                index = i
-                break
-        self.train_data = self.train_data[:index]
-        train_data_df = pd.DataFrame({"num_episodes": self.train_data[:, 0],
-                                      "num_time_steps": self.train_data[:, 1],
-                                      "episode_return": self.train_data[:, 2]})
-        train_data_df.to_csv(csv_foldername + "/train_data.csv", float_format="%f")
+        # # remove zero entries
+        # index = None
+        # for i in range(self.train_data.shape[0]):
+        #     if (self.train_data[i] == np.zeros(3)).all() and (self.train_data[i+1] == np.zeros(3)).all():
+        #         index = i
+        #         break
+        # self.train_data = self.train_data[:index]
+        # train_data_df = pd.DataFrame({"num_episodes": self.train_data[:, 0],
+        #                               "num_time_steps": self.train_data[:, 1],
+        #                               "episode_return": self.train_data[:, 2]})
+        # train_data_df.to_csv(csv_foldername + "/train_data.csv", float_format="%f")
 
         loss_data_df = pd.DataFrame({"num_updates": self.loss_data[:, 0],
                                      "q_value_loss_1": self.loss_data[:, 1],

@@ -1,5 +1,5 @@
 # ignore data folder
-# data/**
+data/**
 
 # ignore histogram data
 **/plot/histogram/data/*

@@ -1,6 +1,9 @@
 # ignore data folder
 data/**
 
+# ignore conda tar file
+openai3.9.tar.gz
+
 # ignore histogram data
 **/plot/histogram/data/*
 

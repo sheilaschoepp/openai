@@ -2,10 +2,10 @@
 
 # Paths and environment setup
 SAC_CONTROLLER_ABSOLUTE_PATH="/home/sschoepp/Documents/openai/controllers/sac/sac_n_controller.py"
-LOG_DIR="/home/sschoepp/logs"
+#LOG_DIR="/home/sschoepp/logs"
 
 # Make sure the log directory exists
-mkdir -p $LOG_DIR
+#mkdir -p $LOG_DIR
 
 # Number of GPUs and maximum tmux sessions per GPU at any given time
 num_gpus=6
@@ -26,10 +26,10 @@ while [ $session_count -lt $total_tmux ]; do
     for ((gpu=0; gpu<num_gpus && session_count<total_tmux; gpu++)); do
         if [ ${gpu_usage[$gpu]} -lt $max_tmux_per_gpu ]; then
             session_name="gpu${gpu}_process${gpu_usage[$gpu]}"
-            log_file="${LOG_DIR}/${session_name}.log"
+#            log_file="${LOG_DIR}/${session_name}.log"
             seed=$session_count  # Assigning seed based on session_count
-            tmux new-session -d -s "$session_name" "CUDA_VISIBLE_DEVICES=$gpu python $SAC_CONTROLLER_ABSOLUTE_PATH -e FetchReachEnv-v0 -t 2000000 -tef 10000 -tmsf 10000 -a -c -ps -pss 21 -s $seed -d 2>&1 | tee $log_file"
-            echo "Session $session_name started with seed $seed, logging to $log_file."
+            tmux new-session -d -s "$session_name" "CUDA_VISIBLE_DEVICES=$gpu python $SAC_CONTROLLER_ABSOLUTE_PATH -e FetchReachEnv-v0 -t 2000000 -tef 10000 -tmsf 10000 -a -c -ps -pss 21 -s $seed"
+            echo "Session $session_name started with seed $seed."
             gpu_usage[$gpu]=$((gpu_usage[$gpu]+1))
             session_count=$((session_count+1))
         fi

@@ -13,8 +13,8 @@ import torch
 from termcolor import colored
 from tqdm import tqdm
 
-from controllers.ppov2.ppov2_agent import PPOv2
-from controllers.sacv2.sacv2_agent import SACv2
+from controllers.ppo.ppo_agent import PPO
+from controllers.sac.sac_agent import SAC
 from environment.environment import Environment
 from PIL import Image
 from utils.rl_glue import RLGlue
@@ -447,7 +447,7 @@ class AntHistogram:
         # agent
         if "SAC" in self.load_data_dir:
 
-            self.agent = SACv2(self.env.env_state_dim(),
+            self.agent = SAC(self.env.env_state_dim(),
                                self.env.env_action_dim(),
                                self.parameters["gamma"],
                                self.parameters["tau"],
@@ -464,7 +464,7 @@ class AntHistogram:
 
         elif "PPO" in self.load_data_dir:
 
-            self.agent = PPOv2(self.env.env_state_dim(),
+            self.agent = PPO(self.env.env_state_dim(),
                                self.env.env_action_dim(),
                                self.parameters["hidden_dim"],
                                self.parameters["log_std"],
@@ -921,7 +921,7 @@ class FetchReachHistogram:
         # agent
         if "SAC" in self.load_data_dir:
 
-            self.agent = SACv2(self.env.env_state_dim(),
+            self.agent = SAC(self.env.env_state_dim(),
                                self.env.env_action_dim(),
                                self.parameters["gamma"],
                                self.parameters["tau"],
@@ -938,7 +938,7 @@ class FetchReachHistogram:
 
         elif "PPO" in self.load_data_dir:
 
-            self.agent = PPOv2(self.env.env_state_dim(),
+            self.agent = PPO(self.env.env_state_dim(),
                                self.env.env_action_dim(),
                                self.parameters["hidden_dim"],
                                self.parameters["log_std"],

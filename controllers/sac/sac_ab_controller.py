@@ -22,21 +22,21 @@ import torch
 from termcolor import colored
 
 import utils.plot_style_settings as pss
-from controllers.ppov2.ppov2_agent import PPOv2
+from controllers.sac.sac_agent import SAC
 from environment.environment import Environment
 from utils.rl_glue import RLGlue
 
-import custom_gym_envs  # do not delete; required for custom gym environments
+import custom_gym_envs
 
-parser = argparse.ArgumentParser(description="PyTorch Proximal Policy Optimization Arguments")
+parser = argparse.ArgumentParser(description="PyTorch Soft Actor-Critic Arguments")
 
 parser.add_argument("-e", "--ab_env_name", default="Ant-v2",
                     help="name of abnormal (malfunctioning) MuJoCo Gym environment (default: Ant-v2)")
-parser.add_argument("-t", "--ab_time_steps", type=int, default=400000000, metavar="N",
-                    help="number of time steps in abnormal (malfunctioning) MuJoCo Gym environment (default: 400000000)")
+parser.add_argument("-t", "--ab_time_steps", type=int, default=20000000, metavar="N",
+                    help="number of time steps in abnormal (malfunctioning) MuJoCo Gym environment (default: 20000000)")
 
-parser.add_argument("-cm", "--clear_memory", default=False, action="store_true",
-                    help="if true, clear the memory (default: False)")
+parser.add_argument("-crb", "--clear_replay_buffer", default=False, action="store_true",
+                    help="if true, clear the replay buffer (default: False)")
 parser.add_argument("-rn", "--reinitialize_networks", default=False, action="store_true",
                     help="if true, randomly reinitialize the networks (default: False)")
 
@@ -97,7 +97,7 @@ class AbnormalController:
             self.load_parameters()
             self.parameters["ab_env_name"] = args.ab_env_name  # addition
             self.parameters["ab_time_steps"] = args.ab_time_steps  # addition
-            self.parameters["clear_memory"] = args.clear_memory  # addition
+            self.parameters["clear_replay_buffer"] = args.clear_replay_buffer  # addition
             self.parameters["reinitialize_networks"] = args.reinitialize_networks  # addition
             self.parameters["cuda"] = args.cuda  # update
             self.parameters["file"] = args.file  # addition
@@ -116,8 +116,7 @@ class AbnormalController:
             self.load_parameters()
 
             # overwrite parameters that need to be updated
-            if not self.parameters["linear_lr_decay"]:  # ONLY experiments with no linear lr decay are properly resumable for a longer number of time steps than originally passed
-                self.parameters["ab_time_steps"] = args.ab_time_steps  # overwrite
+            self.parameters["ab_time_steps"] = args.ab_time_steps  # overwrite
             self.parameters["cuda"] = args.cuda  # update
             self.parameters["device"] = "cuda" if args.cuda and torch.cuda.is_available() else "cpu"  # update
 
@@ -130,32 +129,27 @@ class AbnormalController:
 
         suffix = self.parameters["ab_env_name"] + ":" + str(self.parameters["ab_time_steps"]) \
                  + "_" + self.parameters["n_env_name"] + ":" + str(self.parameters["n_time_steps"]) \
-                 + "_lr:" + str(self.parameters["lr"]) \
-                 + "_lrd:" + str(self.parameters["linear_lr_decay"]) \
-                 + "_slrd:" + str(self.parameters["slow_lrd"]) \
                  + "_g:" + str(self.parameters["gamma"]) \
-                 + "_ns:" + str(self.parameters["num_samples"]) \
-                 + "_mbs:" + str(self.parameters["mini_batch_size"]) \
-                 + "_epo:" + str(self.parameters["epochs"]) \
-                 + "_eps:" + str(self.parameters["epsilon"]) \
-                 + "_c1:" + str(self.parameters["vf_loss_coef"]) \
-                 + "_c2:" + str(self.parameters["policy_entropy_coef"]) \
-                 + "_cvl:" + str(self.parameters["clipped_value_fn"]) \
-                 + "_mgn:" + str(self.parameters["max_grad_norm"]) \
-                 + "_gae:" + str(self.parameters["use_gae"]) \
-                 + "_lam:" + str(self.parameters["gae_lambda"]) \
+                 + "_t:" + str(self.parameters["tau"]) \
+                 + "_a:" + str(self.parameters["alpha"]) \
+                 + "_lr:" + str(self.parameters["lr"]) \
                  + "_hd:" + str(self.parameters["hidden_dim"]) \
-                 + "_lstd:" + str(self.parameters["log_std"]) \
+                 + "_rbs:" + str(self.parameters["replay_buffer_size"]) \
+                 + "_bs:" + str(self.parameters["batch_size"]) \
+                 + "_mups:" + str(self.parameters["model_updates_per_step"]) \
+                 + "_tui:" + str(self.parameters["target_update_interval"]) \
                  + "_tef:" + str(self.parameters["time_step_eval_frequency"]) \
                  + "_ee:" + str(self.parameters["eval_episodes"]) \
                  + "_tmsf:" + str(self.parameters["time_step_model_save_frequency"]) \
-                 + "_cm:" + str(self.parameters["clear_memory"]) \
+                 + "_crb:" + str(self.parameters["clear_replay_buffer"]) \
                  + "_rn:" + str(self.parameters["reinitialize_networks"]) \
+                 + "_a:" + str(self.parameters["automatic_entropy_tuning"]) \
                  + "_d:" + str(self.parameters["device"]) \
                  + ("_r" if self.parameters["resumable"] else "") \
-                 + ("_resumed" if self.parameters["resume"] else "")
+                 + ("_resumed" if self.parameters["resume"] else "") \
+                 + "_modified"
 
-        self.experiment = "PPOv2_" + suffix
+        self.experiment = "SAC_" + suffix
 
         if self.computecanada:
             # path for compute canada
@@ -217,28 +211,20 @@ class AbnormalController:
                                self.parameters["seed"])
 
         # agent
-        self.agent = PPOv2(self.env.env_state_dim(),
-                           self.env.env_action_dim(),
-                           self.parameters["hidden_dim"],
-                           self.parameters["log_std"],
-                           self.parameters["lr"],
-                           self.parameters["linear_lr_decay"],
-                           self.parameters["slow_lrd"],
-                           self.parameters["gamma"],
-                           self.parameters["ab_time_steps"],
-                           self.parameters["num_samples"],
-                           self.parameters["mini_batch_size"],
-                           self.parameters["epochs"],
-                           self.parameters["epsilon"],
-                           self.parameters["vf_loss_coef"],
-                           self.parameters["policy_entropy_coef"],
-                           self.parameters["clipped_value_fn"],
-                           self.parameters["max_grad_norm"],
-                           self.parameters["use_gae"],
-                           self.parameters["gae_lambda"],
-                           self.parameters["device"],
-                           self.loss_data,
-                           self.parameters["resume"])
+        self.agent = SAC(self.env.env_state_dim(),
+                         self.env.env_action_dim(),
+                         self.parameters["gamma"],
+                         self.parameters["tau"],
+                         self.parameters["alpha"],
+                         self.parameters["lr"],
+                         self.parameters["hidden_dim"],
+                         self.parameters["replay_buffer_size"],
+                         self.parameters["batch_size"],
+                         self.parameters["model_updates_per_step"],
+                         self.parameters["target_update_interval"],
+                         self.parameters["automatic_entropy_tuning"],
+                         self.parameters["device"],
+                         self.loss_data)
 
         # RLGlue used for training
         self.rlg = RLGlue(self.env, self.agent)
@@ -247,9 +233,9 @@ class AbnormalController:
         # resume experiment - load data, seed state, env, agent, and rlg
         self.load()
 
-        # clear the memory if indicated by argument
-        if not self.parameters["resume"] and self.parameters["clear_memory"]:
-            self.rlg.rl_agent_message("clear_memory")
+        # clear the replay buffer if indicated by argument
+        if not self.parameters["resume"] and self.parameters["clear_replay_buffer"]:
+            self.rlg.rl_agent_message("clear_replay_buffer")
 
         # reinitialize the networks if indicated by argument
         if not self.parameters["resume"] and self.parameters["reinitialize_networks"]:
@@ -292,26 +278,20 @@ class AbnormalController:
         print("abnormal time steps:", highlight_non_default_values("ab_time_steps"))
         print("normal environment name:", self.parameters["n_env_name"])
         print("normal time steps:", self.parameters["n_time_steps"])
-        print("lr:", self.parameters["lr"])
-        print("linear lr decay:", self.parameters["linear_lr_decay"])
-        print("slow linear lr decay:", self.parameters["slow_lrd"])
         print("gamma:", self.parameters["gamma"])
-        print("number of samples:", self.parameters["num_samples"])
-        print("mini-batch size:", self.parameters["mini_batch_size"])
-        print("epochs:", self.parameters["epochs"])
-        print("epsilon:", self.parameters["epsilon"])
-        print("value function loss coefficient:", self.parameters["vf_loss_coef"])
-        print("policy entropy coefficient:", self.parameters["policy_entropy_coef"])
-        print("clipped value function:", self.parameters["clipped_value_fn"])
-        print("max norm of gradients:", self.parameters["max_grad_norm"])
-        print("use generalized advantage estimation:", self.parameters["use_gae"])
-        print("gae smoothing coefficient (lambda):", self.parameters["gae_lambda"])
+        print("tau:", self.parameters["tau"])
+        print("alpha:", self.parameters["alpha"])
+        print("learning rate:", self.parameters["lr"])
         print("hidden dimension:", self.parameters["hidden_dim"])
-        print("log_std:", self.parameters["log_std"])
+        print("replay buffer size:", self.parameters["replay_buffer_size"])
+        print("batch size:", self.parameters["batch_size"])
+        print("model updates per step:", self.parameters["model_updates_per_step"])
+        print("target updates interval:", self.parameters["target_update_interval"])
         print("time step evaluation frequency:", self.parameters["time_step_eval_frequency"])
         print("evaluation episodes:", self.parameters["eval_episodes"])
         print("time step model save frequency:", self.parameters["time_step_model_save_frequency"])
-        print("clear memory:", highlight_non_default_values("clear_memory"))
+        print("automatic entropy tuning:", self.parameters["automatic_entropy_tuning"])
+        print("clear replay buffer:", highlight_non_default_values("clear_replay_buffer"))
         print("reinitialize networks:", highlight_non_default_values("reinitialize_networks"))
         if self.parameters["device"] == "cuda":
             print("device:", self.parameters["device"])
@@ -463,24 +443,21 @@ class AbnormalController:
 
             average_return = np.average(returns)
 
-            if self.parameters["clear_memory"] and self.parameters["reinitialize_networks"]:
-                num_updates = ((num_time_steps - self.parameters["n_time_steps"]) // self.parameters["num_samples"])
-            elif not self.parameters["clear_memory"] and self.parameters["reinitialize_networks"]:
-                num_updates = (num_time_steps - self.parameters["n_time_steps"] + self.agent.memory_init_samples) // self.parameters["num_samples"]
-            elif self.parameters["clear_memory"] and not self.parameters["reinitialize_networks"]:
-                num_updates = ((num_time_steps - self.parameters["n_time_steps"]) // self.parameters["num_samples"]) + (self.parameters["n_time_steps"] // self.parameters["num_samples"])
+            if self.parameters["clear_replay_buffer"] and self.parameters["reinitialize_networks"]:
+                num_updates = max((num_time_steps - self.parameters["n_time_steps"] - self.parameters["batch_size"]), 0) * self.parameters["model_updates_per_step"]
+            elif not self.parameters["clear_replay_buffer"] and self.parameters["reinitialize_networks"]:
+                num_updates = (num_time_steps - self.parameters["n_time_steps"]) * self.parameters["model_updates_per_step"]
+            elif self.parameters["clear_replay_buffer"] and not self.parameters["reinitialize_networks"]:
+                num_updates = (max((num_time_steps - self.parameters["n_time_steps"] - self.parameters["batch_size"]), 0) + (self.parameters["n_time_steps"] - self.parameters["batch_size"])) * self.parameters["model_updates_per_step"]
             else:
-                num_updates = num_time_steps // self.parameters["num_samples"]
+                num_updates = (num_time_steps - self.parameters["batch_size"]) * self.parameters["model_updates_per_step"]
 
-            num_epoch_updates = num_updates * self.parameters["epochs"]
-            num_mini_batch_updates = num_epoch_updates * (self.parameters["num_samples"] // self.parameters["mini_batch_size"])
-
-            num_samples = num_mini_batch_updates * self.parameters["mini_batch_size"]
+            num_samples = num_updates * self.parameters["batch_size"]
 
             real_time = int(time.time() - self.start)
 
-            index = (num_time_steps // self.parameters["time_step_eval_frequency"]) + 1  # add 1 because we evaluate policy before learning
-            self.eval_data[index] = [num_time_steps, num_updates, num_epoch_updates, num_mini_batch_updates, num_samples, average_return, real_time]
+            index = int(num_time_steps / self.parameters["time_step_eval_frequency"]) + 1  # add 1 because we evaluate policy before learning
+            self.eval_data[index] = [num_time_steps, num_updates, num_samples, average_return, real_time]
 
             print("evaluation at {} time steps: {}".format(num_time_steps, average_return))
 
@@ -494,7 +471,7 @@ class AbnormalController:
         Load seed state: random, torch, and numpy seed states.
         Load experiment data.
         Load environment data: OpenAI seed states.
-        Load agent data: models, number of updates of models, and memory.
+        Load agent data: models, number of updates of models, and replay buffer.
         Load rlg statistics: num_episodes, num_steps, and total_reward.
         """
 
@@ -506,7 +483,6 @@ class AbnormalController:
 
         if not self.parameters["resume"]:
             self.rlg.rl_agent_message("load, {}, {}".format(self.load_data_dir, self.parameters["n_time_steps"]))  # load agent data
-            self.rlg.rl_agent_message("reset_lr")  # reset learning rate to its full value
         else:
             self.rlg.rl_agent_message("load, {}, {}".format(self.load_data_dir, self.parameters["completed_time_steps"]))
         self.agent.loss_data = self.loss_data
@@ -525,7 +501,7 @@ class AbnormalController:
         if not args.resume:
 
             num_rows = int(self.parameters["ab_time_steps"] / self.parameters["time_step_eval_frequency"]) + 1  # add 1 for evaluation before any learning (0th entry)
-            num_columns = 7
+            num_columns = 5
             self.eval_data = pd.read_csv(csv_foldername + "/eval_data.csv").to_numpy().copy()[:, 1:]
             self.eval_data = np.append(self.eval_data, np.zeros((num_rows, num_columns)), axis=0)
 
@@ -534,11 +510,11 @@ class AbnormalController:
             # self.train_data = pd.read_csv(csv_foldername + "/train_data.csv").to_numpy().copy()[:, 1:]
             # self.train_data = np.append(self.train_data, np.zeros((num_rows, num_columns)), axis=0)
 
-            if self.parameters["clear_memory"]:
-                num_rows = self.parameters["ab_time_steps"] // self.parameters["num_samples"]
+            if self.parameters["clear_replay_buffer"]:
+                num_rows = (self.parameters["ab_time_steps"] - self.parameters["batch_size"]) * self.parameters["model_updates_per_step"]
             else:
-                num_rows = ((self.parameters["n_time_steps"] + self.parameters["ab_time_steps"]) // self.parameters["num_samples"]) - (self.parameters["n_time_steps"] // self.parameters["num_samples"])
-            num_columns = 8
+                num_rows = self.parameters["ab_time_steps"] * self.parameters["model_updates_per_step"]
+            num_columns = 7
             self.loss_data = pd.read_csv(csv_foldername + "/loss_data.csv").to_numpy().copy()[:, 1:]
             self.loss_data = np.append(self.loss_data, np.zeros((num_rows, num_columns)), axis=0)
 
@@ -557,10 +533,10 @@ class AbnormalController:
             #     self.train_data = np.append(self.train_data, np.zeros((num_rows, num_columns)), axis=0)
 
             self.loss_data = pd.read_csv(csv_foldername + "/loss_data.csv").to_numpy().copy()[:, 1:]
-            if self.parameters["clear_memory"]:
-                num_rows = (self.parameters["n_time_steps"] // self.parameters["num_samples"]) + (self.parameters["ab_time_steps"] // self.parameters["num_samples"]) - self.loss_data.shape[0]
+            if self.parameters["clear_replay_buffer"]:
+                num_rows = (((self.parameters["n_time_steps"] + self.parameters["ab_time_steps"]) - 2 * self.parameters["batch_size"]) * self.parameters["model_updates_per_step"]) - self.loss_data.shape[0]
             else:
-                num_rows = ((self.parameters["n_time_steps"] + self.parameters["ab_time_steps"]) // self.parameters["num_samples"]) - self.loss_data.shape[0]
+                num_rows = (((self.parameters["n_time_steps"] + self.parameters["ab_time_steps"]) - self.parameters["batch_size"]) * self.parameters["model_updates_per_step"]) - self.loss_data.shape[0]
             num_columns = self.loss_data.shape[1]
             if num_rows > 0:
                 self.loss_data = np.append(self.loss_data, np.zeros((num_rows, num_columns)), axis=0)
@@ -647,7 +623,7 @@ class AbnormalController:
 
         # evaluation: average_return vs num_updates
         df.plot(x="num_updates", y="average_return", color="blue", legend=False)
-        plt.axvline(x=(self.parameters["n_time_steps"] // self.parameters["num_samples"]), ymin=0, ymax=1, color="red", linewidth=2, alpha=0.3)  # malfunction marker
+        plt.axvline(x=(self.parameters["n_time_steps"] - self.parameters["batch_size"]) * self.parameters["model_updates_per_step"], ymin=0, ymax=1, color="red", linewidth=2, alpha=0.3)  # malfunction marker
         plt.xlabel("updates")
         plt.ylabel("average\nreturn", rotation="horizontal", labelpad=30)
         plt.title("Policy Evaluation")
@@ -657,7 +633,7 @@ class AbnormalController:
 
         # evaluation: average_return vs num_samples
         df.plot(x="num_samples", y="average_return", color="blue", legend=False)
-        plt.axvline(x=((self.parameters["n_time_steps"] // self.parameters["num_samples"]) * self.parameters["epochs"] * (self.parameters["num_samples"] // self.parameters["mini_batch_size"]) * self.parameters["mini_batch_size"]), ymin=0, ymax=1, color="red", linewidth=2, alpha=0.3)  # malfunction marker
+        plt.axvline(x=(self.parameters["n_time_steps"] - self.parameters["batch_size"]) * self.parameters["model_updates_per_step"] * self.parameters["batch_size"], ymin=0, ymax=1, color="red", linewidth=2, alpha=0.3)  # malfunction marker
         plt.xlabel("samples")
         plt.ylabel("average\nreturn", rotation="horizontal", labelpad=30)
         plt.title("Policy Evaluation")
@@ -678,54 +654,64 @@ class AbnormalController:
 
         df = pd.read_csv(csv_foldername + "/loss_data.csv")
 
-        # training: clip_loss vs num_updates
-        df.plot(x="num_updates", y="clip_loss", color="blue", legend=False)
-        plt.axvline(x=(self.parameters["n_time_steps"] // self.parameters["num_samples"]), ymin=0, ymax=1, color="red", linewidth=2, alpha=0.3)  # malfunction marker
+        # training: q_value_loss_1 vs num_updates
+        df.plot(x="num_updates", y="q_value_loss_1", color="blue", legend=False)
+        plt.axvline(x=(self.parameters["n_time_steps"] - self.parameters["batch_size"]) * self.parameters["model_updates_per_step"], ymin=0, ymax=1, color="red", linewidth=2, alpha=0.3)  # malfunction marker
         plt.xlabel("updates")
         plt.ylabel("loss", rotation="horizontal", labelpad=30)
-        plt.title("CLIP Loss")
+        plt.title("Q Value Loss 1")
         pss.plot_settings()
-        plt.savefig(jpg_foldername + "/clip_loss_updates.jpg")
+        plt.savefig(jpg_foldername + "/q_value_loss_1.jpg")
         plt.close()
 
-        # training: vf_loss vs num_updates
-        df.plot(x="num_updates", y="vf_loss", color="blue", legend=False)
-        plt.axvline(x=(self.parameters["n_time_steps"] // self.parameters["num_samples"]), ymin=0, ymax=1, color="red", linewidth=2, alpha=0.3)  # malfunction marker
+        # training: q_value_loss_2 vs num_updates
+        df.plot(x="num_updates", y="q_value_loss_2", color="blue", legend=False)
+        plt.axvline(x=(self.parameters["n_time_steps"] - self.parameters["batch_size"]) * self.parameters["model_updates_per_step"], ymin=0, ymax=1, color="red", linewidth=2, alpha=0.3)  # malfunction marker
         plt.xlabel("updates")
         plt.ylabel("loss", rotation="horizontal", labelpad=30)
-        plt.title("VF Loss")
+        plt.title("Q Value Loss 2")
         pss.plot_settings()
-        plt.savefig(jpg_foldername + "/vf_loss_updates.jpg")
+        plt.savefig(jpg_foldername + "/q_value_loss_2.jpg")
+        plt.close()
+
+        # training: policy_loss vs num_updates
+        df.plot(x="num_updates", y="policy_loss", color="blue", legend=False)
+        plt.axvline(x=(self.parameters["n_time_steps"] - self.parameters["batch_size"]) * self.parameters["model_updates_per_step"], ymin=0, ymax=1, color="red", linewidth=2, alpha=0.3)  # malfunction marker
+        plt.xlabel("updates")
+        plt.ylabel("loss", rotation="horizontal", labelpad=30)
+        plt.title("Policy Loss")
+        pss.plot_settings()
+        plt.savefig(jpg_foldername + "/policy_loss.jpg")
+        plt.close()
+
+        # training: alpha_loss vs num_updates
+        df.plot(x="num_updates", y="alpha_loss", color="blue", legend=False)
+        plt.axvline(x=(self.parameters["n_time_steps"] - self.parameters["batch_size"]) * self.parameters["model_updates_per_step"], ymin=0, ymax=1, color="red", linewidth=2, alpha=0.3)  # malfunction marker
+        plt.xlabel("updates")
+        plt.ylabel("loss", rotation="horizontal", labelpad=30)
+        plt.title("Alpha Loss")
+        pss.plot_settings()
+        plt.savefig(jpg_foldername + "/alpha_loss.jpg")
+        plt.close()
+
+        # training: alpha_value vs num_updates
+        df.plot(x="num_updates", y="alpha_value", color="blue", legend=False)
+        plt.axvline(x=(self.parameters["n_time_steps"] - self.parameters["batch_size"]) * self.parameters["model_updates_per_step"], ymin=0, ymax=1, color="red", linewidth=2, alpha=0.3)  # malfunction marker
+        plt.xlabel("updates")
+        plt.ylabel("alpha", rotation="horizontal", labelpad=30)
+        plt.title("Alpha Value")
+        pss.plot_settings()
+        plt.savefig(jpg_foldername + "/alpha_value.jpg")
         plt.close()
 
         # training: entropy vs num_updates
         df.plot(x="num_updates", y="entropy", color="blue", legend=False)
-        plt.axvline(x=(self.parameters["n_time_steps"] // self.parameters["num_samples"]), ymin=0, ymax=1, color="red", linewidth=2, alpha=0.3)  # malfunction marker
+        plt.axvline(x=(self.parameters["n_time_steps"] - self.parameters["batch_size"]) * self.parameters["model_updates_per_step"], ymin=0, ymax=1, color="red", linewidth=2, alpha=0.3)  # malfunction marker
         plt.xlabel("updates")
         plt.ylabel("entropy", rotation="horizontal", labelpad=30)
         plt.title("Entropy")
         pss.plot_settings()
         plt.savefig(jpg_foldername + "/entropy_updates.jpg")
-        plt.close()
-
-        # training: clip_vf_s_loss vs num_updates
-        df.plot(x="num_updates", y="clip_vf_s_loss", color="blue", legend=False)
-        plt.axvline(x=(self.parameters["n_time_steps"] // self.parameters["num_samples"]), ymin=0, ymax=1, color="red", linewidth=2, alpha=0.3)  # malfunction marker
-        plt.xlabel("updates")
-        plt.ylabel("loss", rotation="horizontal", labelpad=30)
-        plt.title("CLIP+VF+S Loss")
-        pss.plot_settings()
-        plt.savefig(jpg_foldername + "/clip_vf_s_loss_updates.jpg")
-        plt.close()
-
-        # training: clip_fraction vs num_updates
-        df.plot(x="num_updates", y="clip_fraction", color="blue", legend=False)
-        plt.axvline(x=(self.parameters["n_time_steps"] // self.parameters["num_samples"]), ymin=0, ymax=1, color="red", linewidth=2, alpha=0.3)  # malfunction marker
-        plt.xlabel("updates")
-        plt.ylabel("clip fraction", rotation="horizontal", labelpad=30)
-        plt.title("Clip Fraction")
-        pss.plot_settings()
-        plt.savefig(jpg_foldername + "/clip_fraction_updates.jpg")
         plt.close()
 
         print("plotting complete")
@@ -741,7 +727,7 @@ class AbnormalController:
         Save seed state: random, torch, and numpy seed states.
         Save rlg statistics: num_episodes, num_steps, and total_reward.
         Save environment data: OpenAI seed states.
-        Save agent data: models, number of updates of models, and memory.
+        Save agent data: models, number of updates of models, and replay buffer.
         """
 
         print("saving...")
@@ -774,11 +760,9 @@ class AbnormalController:
 
         eval_data_df = pd.DataFrame({"num_time_steps": self.eval_data[:, 0],
                                      "num_updates": self.eval_data[:, 1],
-                                     "num_epoch_updates": self.eval_data[:, 2],
-                                     "num_mini_batch_updates": self.eval_data[:, 3],
-                                     "num_samples": self.eval_data[:, 4],
-                                     "average_return": self.eval_data[:, 5],
-                                     "real_time": self.eval_data[:, 6]})
+                                     "num_samples": self.eval_data[:, 2],
+                                     "average_return": self.eval_data[:, 3],
+                                     "real_time": self.eval_data[:, 4]})
         eval_data_df.to_csv(csv_foldername + "/eval_data.csv", float_format="%f")
 
         # # remove zero entries
@@ -794,13 +778,12 @@ class AbnormalController:
         # train_data_df.to_csv(csv_foldername + "/train_data.csv", float_format="%f")
 
         loss_data_df = pd.DataFrame({"num_updates": self.loss_data[:, 0],
-                                     "num_epoch_updates": self.loss_data[:, 1],
-                                     "num_mini_batch_updates": self.loss_data[:, 2],
-                                     "clip_loss": self.loss_data[:, 3],
-                                     "vf_loss": self.loss_data[:, 4],
-                                     "entropy": self.loss_data[:, 5],
-                                     "clip_vf_s_loss": self.loss_data[:, 6],
-                                     "clip_fraction": self.loss_data[:, 7]})
+                                     "q_value_loss_1": self.loss_data[:, 1],
+                                     "q_value_loss_2": self.loss_data[:, 2],
+                                     "policy_loss": self.loss_data[:, 3],
+                                     "alpha_loss": self.loss_data[:, 4],
+                                     "alpha_value": self.loss_data[:, 5],
+                                     "entropy": self.loss_data[:, 6]})
         loss_data_df.to_csv(csv_foldername + "/loss_data.csv", float_format="%f")
 
     def save_parameters(self):

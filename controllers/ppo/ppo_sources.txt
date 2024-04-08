@@ -1,4 +1,4 @@
-ppov2 sources:
+ppo sources:
 https://arxiv.org/abs/1707.06347
 https://sites.ualberta.ca/~amw8/rlglue.pdf
 https://spinningup.openai.com/en/latest/algorithms/ppo.html

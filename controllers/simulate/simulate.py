@@ -6,8 +6,8 @@ import numpy as np
 import pickle5 as pickle
 import torch
 
-from controllers.ppov2.ppov2_agent import PPOv2
-from controllers.sacv2.sacv2_agent import SACv2
+from controllers.ppo.ppo_agent import PPO
+from controllers.sac.sac_agent import SAC
 from environment.environment import Environment
 from utils.rl_glue import RLGlue
 
@@ -75,44 +75,44 @@ class Simulate:
         # agent
         if "SAC" in self.load_data_dir:
 
-            self.agent = SACv2(self.env.env_state_dim(),
-                               self.env.env_action_dim(),
-                               self.parameters["gamma"],
-                               self.parameters["tau"],
-                               self.parameters["alpha"],
-                               self.parameters["lr"],
-                               self.parameters["hidden_dim"],
-                               self.parameters["replay_buffer_size"],
-                               self.parameters["batch_size"],
-                               self.parameters["model_updates_per_step"],
-                               self.parameters["target_update_interval"],
-                               self.parameters["automatic_entropy_tuning"],
-                               self.parameters["device"],
-                               None)
+            self.agent = SAC(self.env.env_state_dim(),
+                             self.env.env_action_dim(),
+                             self.parameters["gamma"],
+                             self.parameters["tau"],
+                             self.parameters["alpha"],
+                             self.parameters["lr"],
+                             self.parameters["hidden_dim"],
+                             self.parameters["replay_buffer_size"],
+                             self.parameters["batch_size"],
+                             self.parameters["model_updates_per_step"],
+                             self.parameters["target_update_interval"],
+                             self.parameters["automatic_entropy_tuning"],
+                             self.parameters["device"],
+                             None)
 
         elif "PPO" in self.load_data_dir:
 
-            self.agent = PPOv2(self.env.env_state_dim(),
-                               self.env.env_action_dim(),
-                               self.parameters["hidden_dim"],
-                               self.parameters["log_std"],
-                               self.parameters["lr"],
-                               self.parameters["linear_lr_decay"],
-                               self.parameters["gamma"],
-                               self.parameters["n_time_steps"],
-                               self.parameters["num_samples"],
-                               self.parameters["mini_batch_size"],
-                               self.parameters["epochs"],
-                               self.parameters["epsilon"],
-                               self.parameters["vf_loss_coef"],
-                               self.parameters["policy_entropy_coef"],
-                               self.parameters["clipped_value_fn"],
-                               self.parameters["max_grad_norm"],
-                               self.parameters["use_gae"],
-                               self.parameters["gae_lambda"],
-                               self.parameters["device"],
-                               None,
-                               False)
+            self.agent = PPO(self.env.env_state_dim(),
+                             self.env.env_action_dim(),
+                             self.parameters["hidden_dim"],
+                             self.parameters["log_std"],
+                             self.parameters["lr"],
+                             self.parameters["linear_lr_decay"],
+                             self.parameters["gamma"],
+                             self.parameters["n_time_steps"],
+                             self.parameters["num_samples"],
+                             self.parameters["mini_batch_size"],
+                             self.parameters["epochs"],
+                             self.parameters["epsilon"],
+                             self.parameters["vf_loss_coef"],
+                             self.parameters["policy_entropy_coef"],
+                             self.parameters["clipped_value_fn"],
+                             self.parameters["max_grad_norm"],
+                             self.parameters["use_gae"],
+                             self.parameters["gae_lambda"],
+                             self.parameters["device"],
+                             None,
+                             False)
 
         # RLGlue used for training
         self.rlg = RLGlue(self.env, self.agent)

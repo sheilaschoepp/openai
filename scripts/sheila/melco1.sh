@@ -12,7 +12,7 @@ num_gpus=6
 max_tmux_per_gpu=4
 
 # Total number of tmux processes to be launched
-total_tmux=30
+total_tmux=24
 
 # Initialize GPU usage count
 declare -A gpu_usage
@@ -37,3 +37,4 @@ while [ $session_count -lt $total_tmux ]; do
 done
 
 echo "All tmux processes launched."
+

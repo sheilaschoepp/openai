@@ -126,6 +126,8 @@ class AbnormalController:
             self.parameters["resume_file"] = args.resume_file  # update
             self.parameters["complete"] = False  # update
 
+        self.parameters["slow_lrd"] = 1.0  # todo
+
         # experiment data directory
 
         suffix = self.parameters["ab_env_name"] + ":" + str(self.parameters["ab_time_steps"]) \

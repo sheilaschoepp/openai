@@ -356,7 +356,7 @@ class AbnormalController:
 
             # episode time steps are limited to 1000 (set below)
             # this is used to ensure that once self.parameters["n_time_steps"] + self.parameters["ab_time_steps"] is reached, the experiment is terminated
-            max_steps_this_episode = min(1000, self.parameters["n_time_steps"] + self.parameters["ab_time_steps"] - self.rlg.num_steps())
+            max_steps_this_episode = min(1000, self.parameters["n_time_steps"] + 300000 - self.rlg.num_steps())  # todo
 
             # if we want to make an experiment resumable, we must save after the last possible episode
             # since episodes are limited to be a maximum of 1000 time steps, we can save when the max_steps_this_episode is less than 1000
@@ -378,14 +378,16 @@ class AbnormalController:
                     self.rlg.rl_agent_message("save_model, {}, {}".format(self.data_dir, self.rlg.num_steps()))
 
                 # evaluate the model every 'self.parameters["time_step_eval_frequency"]' time steps
-                if self.rlg.num_steps() % self.parameters["time_step_eval_frequency"] == 0:
+                # if self.rlg.num_steps() % self.parameters["time_step_eval_frequency"] == 0:
+                if self.rlg.num_steps() % 100000 == 0:  # todo
                     self.evaluate_model(self.rlg.num_steps())
 
             # index = self.rlg.num_episodes() - 1
             # self.train_data[index] = [self.rlg.num_episodes(), self.rlg.num_steps(), self.rlg.episode_reward()]
 
             # learning complete
-            if self.rlg.num_steps() == self.parameters["n_time_steps"] + self.parameters["ab_time_steps"]:
+            # if self.rlg.num_steps() == self.parameters["n_time_steps"] + self.parameters["ab_time_steps"]:
+            if self.rlg.num_steps() == self.parameters["n_time_steps"] + 300000:  # todo
                 if self.parameters["resumable"]:
                     self.parameters["completed_time_steps"] = self.rlg.num_steps()
                 else:

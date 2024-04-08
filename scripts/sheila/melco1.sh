@@ -9,7 +9,7 @@ mkdir -p $LOG_DIR
 
 # Number of GPUs and maximum tmux sessions per GPU at any given time
 num_gpus=6
-max_tmux_per_gpu=2
+max_tmux_per_gpu=4
 
 # Total number of tmux processes to be launched
 total_tmux=30
@@ -27,8 +27,9 @@ while [ $session_count -lt $total_tmux ]; do
         if [ ${gpu_usage[$gpu]} -lt $max_tmux_per_gpu ]; then
             session_name="gpu${gpu}_process${gpu_usage[$gpu]}"
             log_file="${LOG_DIR}/${session_name}.log"
-            tmux new-session -d -s "$session_name" "CUDA_VISIBLE_DEVICES=$gpu python $SAC_CONTROLLER_ABSOLUTE_PATH -e FetchReachEnv-v0 -t 2000000 -tef 10000 -tmsf 10000 -a -c -ps -pss 61 -d 2>&1 | tee $log_file"
-            echo "Session $session_name started, logging to $log_file."
+            seed=$session_count  # Assigning seed based on session_count
+            tmux new-session -d -s "$session_name" "CUDA_VISIBLE_DEVICES=$gpu python $SAC_CONTROLLER_ABSOLUTE_PATH -e FetchReachEnv-v0 -t 2000000 -tef 10000 -tmsf 10000 -a -c -ps -pss 61 -seed $seed -d 2>&1 | tee $log_file"
+            echo "Session $session_name started with seed $seed, logging to $log_file."
             gpu_usage[$gpu]=$((gpu_usage[$gpu]+1))
             session_count=$((session_count+1))
         fi

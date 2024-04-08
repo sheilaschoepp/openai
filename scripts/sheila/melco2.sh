@@ -1,39 +1,48 @@
 #!/bin/bash
 
 # Paths and environment setup
-PPO_CONTROLLER_ABSOLUTE_PATH="/home/sschoepp/Documents/openai/controllers/ppo/ppo_n_controller.py"
+SAC_CONTROLLER_ABSOLUTE_PATH="/home/sschoepp/Documents/openai/controllers/sac/sac_n_controller.py"
 LOG_DIR="/home/sschoepp/logs"
 
 # Make sure the log directory exists
 mkdir -p $LOG_DIR
 
-# Number of GPUs and maximum tmux sessions per GPU at any given time
-num_gpus=7
-max_tmux_per_gpu=4
+# Define the specific GPUs to use (0-indexed as 5 and 6 for the sixth and seventh GPUs)
+gpus=(5 6)  # Assuming numbering starts at 0, and these are GPU indices.
+num_gpus=${#gpus[@]}  # The number of GPUs being used.
 
-# Total number of tmux processes to be launched
-total_tmux=30
+# Number of tmux sessions to be launched, one for each seed 24 to 29.
+total_tmux=6
 
-# Initialize GPU usage count
+# Seed range.
+start_seed=24
+end_seed=29
+
+# Initialize GPU usage count.
 declare -A gpu_usage
-for ((gpu=0; gpu<num_gpus; gpu++)); do
+for gpu in ${gpus[@]}; do
     gpu_usage[$gpu]=0
 done
 
-# Launching tmux sessions
+# Launching tmux sessions.
 session_count=0
+seed=$start_seed
 while [ $session_count -lt $total_tmux ]; do
-    for ((gpu=0; gpu<num_gpus && session_count<total_tmux; gpu++)); do
-        if [ ${gpu_usage[$gpu]} -lt $max_tmux_per_gpu ]; then
-            session_name="gpu${gpu}_process${gpu_usage[$gpu]}"
+    for gpu in ${gpus[@]}; do
+        if [ ${gpu_usage[$gpu]} -lt 3 ] && [ $seed -le $end_seed ]; then
+            session_name="gpu${gpu}_seed${seed}"
             log_file="${LOG_DIR}/${session_name}.log"
-            seed=$session_count  # Assigning seed based on session_count
-            tmux new-session -d -s "$session_name" "CUDA_VISIBLE_DEVICES=$gpu python $SAC_CONTROLLER_ABSOLUTE_PATH -e FetchReachEnv-v0 -t 2000000 -tef 10000 -tmsf 10000 -a -c -ps -pss 61 -s $seed -d 2>&1 | tee $log_file"
-            echo "Session $session_name started with seed $seed, logging to $log_file."
+            tmux new-session -d -s "$session_name" "CUDA_VISIBLE_DEVICES=$gpu python $SAC_CONTROLLER_ABSOLUTE_PATH -e FetchReachEnv-v0 -t 2000000 -tef 10000 -tmsf 10000 -a -c -ps -pss 21 -s $seed -d 2>&1 | tee $log_file"
+            echo "Session $session_name started with seed $seed on GPU $gpu, logging to $log_file."
             gpu_usage[$gpu]=$((gpu_usage[$gpu]+1))
             session_count=$((session_count+1))
+            seed=$((seed+1))
         fi
     done
+    # Check if all seeds have been assigned.
+    if [ $seed -gt $end_seed ]; then
+        break
+    fi
 done
 
 echo "All tmux processes launched."

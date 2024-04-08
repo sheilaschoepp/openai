@@ -24,6 +24,9 @@ for gpu in ${gpus[@]}; do
     gpu_usage[$gpu]=0
 done
 
+# SACv2_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_a:True_d:cuda_ps:True_pss:21
+#
+
 # Launching tmux sessions.
 session_count=0
 seed=$start_seed

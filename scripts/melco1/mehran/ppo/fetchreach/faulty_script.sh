@@ -1,6 +1,0 @@
-PPO_AB_CONTROLLER_ABSOLUTE_PATH="/home/taghianj/Documents/openai/controllers/ppov2/ppov2_ab_controller.py"
-tmux new-session -d -s ppoab10 "python $PPO_AB_CONTROLLER_ABSOLUTE_PATH -e FetchReachEnvDense-v1 -t 2000000 --resumable -rf "
-tmux new-session -d -s ppoab11 "python $PPO_AB_CONTROLLER_ABSOLUTE_PATH -e FetchReachEnvDense-v1 -t 2000000 --resumable -rf "
-tmux new-session -d -s ppoab12 "python $PPO_AB_CONTROLLER_ABSOLUTE_PATH -e FetchReachEnvDense-v1 -t 2000000 --resumable -rf "
-tmux new-session -d -s ppoab13 "python $PPO_AB_CONTROLLER_ABSOLUTE_PATH -e FetchReachEnvDense-v1 -t 2000000 --resumable -rf "
-tmux new-session -d -s ppoab14 "python $PPO_AB_CONTROLLER_ABSOLUTE_PATH -e FetchReachEnvDense-v1 -t 2000000 --resumable -rf "

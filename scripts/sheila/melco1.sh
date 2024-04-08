@@ -18,7 +18,7 @@ for ((gpu=0; gpu<num_gpus; gpu++)); do
 
     # Loop to launch tmux processes
     for ((i=0; i<num_tmux_per_gpu; i++)); do
-        tmux new-session -d -s "gpu${gpu_id}_process$i" "CUDA_VISIBLE_DEVICES=$gpu_id python $SAC_CONTROLLER_ABSOLUTE_PATH -e FetchReachEnv-v0 -t 2000000 -tef 10000 -tmsf 10000 -a -c -ps -pss 61"
+        tmux new-session -d -s "gpu${gpu_id}_process$i" "CUDA_VISIBLE_DEVICES=$gpu_id python $SAC_CONTROLLER_ABSOLUTE_PATH -e FetchReachEnv-v0 -t 2000000 -tef 10000 -tmsf 10000 -a -c -ps -pss 61 -d"
     done
 done
 

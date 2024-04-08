@@ -9,7 +9,7 @@ mkdir -p $LOG_DIR
 
 # Number of GPUs and maximum tmux sessions per GPU at any given time
 num_gpus=6
-max_tmux_per_gpu=4
+max_tmux_per_gpu=2
 
 # Total number of tmux processes to be launched
 total_tmux=30

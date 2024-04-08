@@ -26,7 +26,7 @@ from controllers.sac.sac_agent import SAC
 from environment.environment import Environment
 from utils.rl_glue import RLGlue
 
-import custom_gym_envs
+import custom_gym_envs  # do not delete; required for custom gym environments
 
 parser = argparse.ArgumentParser(description="PyTorch Soft Actor-Critic Arguments")
 

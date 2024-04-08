@@ -7,6 +7,10 @@ ENVIRONMENTS=("FetchReachEnv-v4" "FetchReachEnv-v6")
 COMMANDS=("-crb -rn" "-crb" "-rn" "")
 GPUS=(0 1 2 3 4 5)
 MAX_SESSIONS_PER_GPU=4
+LOG_DIR="/home/sschoepp/logs"
+
+# Ensure the log directory exists
+mkdir -p $LOG_DIR
 
 # Function to check and maintain tmux session limits
 check_and_wait_for_session_availability() {
@@ -34,11 +38,12 @@ launch_sessions() {
         # Define session specifics
         session_name="gpu${gpu}_env_${env}_seed_${seed}_cmd_${cmd// /_}"
         folder_path="${FOLDER_PATH}/seed${seed}"
-        full_command="CUDA_VISIBLE_DEVICES=$gpu python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -e $env -t 300000 $cmd -c -f $folder_path -d"
+        log_file="${LOG_DIR}/${session_name}.log"
+        full_command="CUDA_VISIBLE_DEVICES=$gpu python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -e $env -t 300000 $cmd -c -f $folder_path -d 2>&1 | tee $log_file"
 
         # Start tmux session
         tmux new-session -d -s "$session_name" "$full_command"
-        echo "Launched tmux session: $session_name on GPU $gpu with command $cmd"
+        echo "Launched tmux session: $session_name on GPU $gpu with command $cmd, logging to $log_file"
     done
 }
 

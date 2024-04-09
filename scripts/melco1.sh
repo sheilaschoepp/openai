@@ -34,7 +34,7 @@ launch_sessions() {
         # Define session specifics
         session_name="gpu${gpu}_env_${env}_seed_${seed}_cmd_${cmd// /_}"
         folder_path="${FOLDER_PATH}/seed${seed}"
-        full_command="CUDA_VISIBLE_DEVICES=$gpu python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -e $env -t 300000 $cmd -c -f $folder_path -d"
+        full_command="CUDA_VISIBLE_DEVICES=$gpu python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -e $env -t 300000 $cmd -c -f $folder_path -d 2>&1"
 
         # Start tmux session
         tmux new-session -d -s "$session_name" "$full_command"
@@ -46,9 +46,11 @@ launch_sessions() {
 for env in "${ENVIRONMENTS[@]}"; do
     for seed in {0..29}; do
         for gpu in "${GPUS[@]}"; do
-            current_gpu_sessions=$(tmux ls | grep "gpu${gpu}_" | wc -l)
+            current_gpu_sessions=$(tmux ls | grep -c "gpu${gpu}_")
             if [ "$current_gpu_sessions" -lt "$MAX_SESSIONS_PER_GPU" ]; then
                 launch_sessions "$env" "$seed" "$gpu"
+            else
+                echo "GPU $gpu has reached the max session limit of $MAX_SESSIONS_PER_GPU."
             fi
         done
     done

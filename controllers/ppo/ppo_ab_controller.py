@@ -484,7 +484,6 @@ class AbnormalController:
             real_time = int(time.time() - self.start)
 
             index = (num_time_steps // self.parameters["time_step_eval_frequency"]) + 1  # add 1 because we evaluate policy before learning
-            index = (num_time_steps // 10000) + 1  # add 1 because we evaluate policy before learning todo
             self.eval_data[index] = [num_time_steps, num_updates, num_epoch_updates, num_mini_batch_updates, num_samples, average_return, real_time]
 
             print("evaluation at {} time steps: {}".format(num_time_steps, average_return))

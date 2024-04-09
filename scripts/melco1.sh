@@ -9,45 +9,55 @@ GPUS=(0 1 2 3 4 5)
 MAX_SESSIONS_PER_GPU=4
 MAX_TOTAL_SESSIONS=24
 
-# Function to launch tmux sessions
-launch_sessions() {
-    local env=$1
-    local seed=$2
-    local gpu=$3
-    local cmd=$4
-    local session_name="gpu${gpu}_env_${env}_seed_${seed}_cmd_${cmd// /_}"
-    local folder_path="${FOLDER_PATH}/seed${seed}"
-    local full_command="CUDA_VISIBLE_DEVICES=$gpu python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -e $env -t 300000 $cmd -c -f $folder_path -d 2>&1"
+# Function to check and wait for available session slots
+function check_sessions {
+    while true; do
+        total_sessions=$(tmux ls 2>/dev/null | wc -l)
+        if [ "$total_sessions" -lt "$MAX_TOTAL_SESSIONS" ]; then
+            break
+        fi
+        echo "Maximum sessions reached. Waiting..."
+        sleep 10
+    done
+}
 
-    # Start tmux session
-    tmux new-session -d -s "$session_name" "$full_command"
-    echo "Launched: $session_name"
+# Function to find an available GPU
+function find_available_gpu {
+    for gpu in "${GPUS[@]}"; do
+        gpu_sessions=$(tmux ls 2>/dev/null | grep -c "gpu${gpu}_")
+        if [ "$gpu_sessions" -lt "$MAX_SESSIONS_PER_GPU" ]; then
+            echo $gpu
+            return
+        fi
+    done
+    echo "-1"
 }
 
 # Main execution loop
 for env in "${ENVIRONMENTS[@]}"; do
     for seed in {0..29}; do
-        for gpu in "${GPUS[@]}"; do
-            for cmd in "${COMMANDS[@]}"; do
-                current_sessions=$(tmux ls 2>/dev/null | wc -l)
-                if [ "$current_sessions" -ge "$MAX_TOTAL_SESSIONS" ]; then
-                    echo "Reached max total sessions limit. Waiting..."
-                    while [ $(tmux ls 2>/dev/null | wc -l) -ge "$MAX_TOTAL_SESSIONS" ]; do
-                        sleep 10
-                    done
-                fi
+        for cmd in "${COMMANDS[@]}"; do
+            check_sessions
+            available_gpu=$(find_available_gpu)
+            if [ "$available_gpu" -eq "-1" ]; then
+                echo "No GPUs available currently. Waiting..."
+                while [ $(find_available_gpu) -eq "-1" ]; do
+                    sleep 10
+                done
+                available_gpu=$(find_available_gpu)
+            fi
 
-                current_gpu_sessions=$(tmux ls | grep -c "gpu${gpu}_")
-                if [ "$current_gpu_sessions" -lt "$MAX_SESSIONS_PER_GPU" ]; then
-                    launch_sessions "$env" "$seed" "$gpu" "$cmd"
-                else
-                    echo "GPU $gpu full with $current_gpu_sessions sessions."
-                fi
-            done
+            # Prepare session details
+            session_name="gpu${available_gpu}_env_${env}_seed_${seed}_cmd_${cmd// /_}"
+            log_file="$FOLDER_PATH/logs/${session_name}.log"
+            full_command="CUDA_VISIBLE_DEVICES=$available_gpu python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -e $env -t 300000 $cmd -c -f $FOLDER_PATH/seed${seed} -d 2>&1 | tee $log_file"
+
+            # Launch tmux session
+            tmux new-session -d -s "$session_name" "$full_command"
+            echo "Launched $session_name on GPU $available_gpu."
         done
-        echo "Completed all commands for seed $seed in environment $env."
     done
     echo "Completed all seeds for environment $env."
 done
 
-echo "All scheduled sessions are launched."
+echo "All sessions scheduled."

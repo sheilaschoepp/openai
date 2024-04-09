@@ -18,7 +18,7 @@ launch_session() {
     local session_name="env_${env}_seed_${seed}_cmd_${cmd_option// /_}"
     local folder="${FOLDER_PATH}/seed${seed}"
     local log_file="${LOG_DIR}/${session_name}.log"
-    local full_command="python $PPO_AB_CONTROLLER_ABSOLUTE_PATH -e $env -t 6000000 $cmd_option -f $folder -ps -pss 43 -d 2>&1 | tee $log_file"
+    local full_command="python $PPO_AB_CONTROLLER_ABSOLUTE_PATH -e $env -t 6000000 $cmd_option -f $folder -d 2>&1 | tee $log_file"
 
     tmux new-session -d -s "$session_name" "$full_command"
     echo "Launched tmux session: $session_name, logging to $log_file"

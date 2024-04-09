@@ -39,7 +39,7 @@ launch_sessions() {
         session_name="gpu${gpu}_env_${env}_seed_${seed}_cmd_${cmd// /_}"
         folder_path="${FOLDER_PATH}/seed${seed}"
         log_file="${LOG_DIR}/${session_name}.log"
-        full_command="CUDA_VISIBLE_DEVICES=$gpu python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -e $env -t 300000 $cmd -c -f $folder_path -ps -pss 21 -d 2>&1 | tee $log_file"
+        full_command="CUDA_VISIBLE_DEVICES=$gpu python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -e $env -t 300000 $cmd -c -f $folder_path -d 2>&1 | tee $log_file"
 
         # Start tmux session
         tmux new-session -d -s "$session_name" "$full_command"

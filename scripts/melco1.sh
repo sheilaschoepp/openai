@@ -7,56 +7,56 @@ ENVIRONMENTS=("FetchReachEnv-v4" "FetchReachEnv-v6")
 COMMANDS=("-crb -rn" "-crb" "-rn" "")
 GPUS=(0 1 2 3 4 5)
 MAX_SESSIONS_PER_GPU=4
-LOG_DIR="/home/sschoepp/logs"
+MAX_TOTAL_SESSIONS=24
 
-# Ensure the log directory exists
-mkdir -p $LOG_DIR
-
-# Function to check and maintain tmux session limits
-check_and_wait_for_session_availability() {
-    while : ; do
-        current_sessions=$(tmux ls 2>/dev/null | wc -l)
-        if [ "$current_sessions" -lt 24 ]; then
+# Function to check and wait for available session slots
+function check_sessions {
+    while true; do
+        total_sessions=$(tmux ls 2>/dev/null | wc -l)
+        if [ "$total_sessions" -lt "$MAX_TOTAL_SESSIONS" ]; then
             break
         fi
-        echo "Waiting for available tmux session slots..."
-        sleep 60
+        echo "Maximum sessions reached. Waiting..."
+        sleep 10
     done
 }
 
-# Launch tmux sessions for the given environment and seed
-launch_sessions() {
-    local env=$1
-    local seed=$2
-    local gpu=$3
-
-    # Iterate over each command modification
-    for cmd in "${COMMANDS[@]}"; do
-        # Check for total tmux sessions cap
-        check_and_wait_for_session_availability
-
-        # Define session specifics
-        session_name="gpu${gpu}_env_${env}_seed_${seed}_cmd_${cmd// /_}"
-        folder_path="${FOLDER_PATH}/seed${seed}"
-        log_file="${LOG_DIR}/${session_name}.log"
-        full_command="CUDA_VISIBLE_DEVICES=$gpu python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -e $env -t 300000 $cmd -c -f $folder_path -d 2>&1 | tee $log_file"
-
-        # Start tmux session
-        tmux new-session -d -s "$session_name" "$full_command"
-        echo "Launched tmux session: $session_name on GPU $gpu with command $cmd, logging to $log_file"
+# Function to find an available GPU
+function find_available_gpu {
+    for gpu in "${GPUS[@]}"; do
+        gpu_sessions=$(tmux ls 2>/dev/null | grep -c "gpu${gpu}_")
+        if [ "$gpu_sessions" -lt "$MAX_SESSIONS_PER_GPU" ]; then
+            echo $gpu
+            return
+        fi
     done
+    echo "-1"
 }
 
 # Main execution loop
 for env in "${ENVIRONMENTS[@]}"; do
     for seed in {0..29}; do
-        for gpu in "${GPUS[@]}"; do
-            current_gpu_sessions=$(tmux ls | grep "gpu${gpu}_" | wc -l)
-            if [ "$current_gpu_sessions" -lt "$MAX_SESSIONS_PER_GPU" ]; then
-                launch_sessions "$env" "$seed" "$gpu"
+        for cmd in "${COMMANDS[@]}"; do
+            check_sessions
+            available_gpu=$(find_available_gpu)
+            if [ "$available_gpu" -eq "-1" ]; then
+                echo "No GPUs available currently. Waiting..."
+                while [ $(find_available_gpu) -eq "-1" ]; do
+                    sleep 10
+                done
+                available_gpu=$(find_available_gpu)
             fi
+
+            # Prepare session details
+            session_name="gpu${available_gpu}_env_${env}_seed_${seed}_cmd_${cmd// /_}"
+            full_command="CUDA_VISIBLE_DEVICES=$available_gpu python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -e $env -t 300000 $cmd -c -f $FOLDER_PATH/seed${seed} -d"
+
+            # Launch tmux session
+            tmux new-session -d -s "$session_name" "$full_command"
+            echo "Launched $session_name on GPU $available_gpu."
         done
     done
+    echo "Completed all seeds for environment $env."
 done
 
-echo "All scheduled sessions are launched."
+echo "All sessions scheduled."

@@ -381,7 +381,7 @@ class AbnormalController:
 
                 # evaluate the model every 'self.parameters["time_step_eval_frequency"]' time steps
                 # if self.rlg.num_steps() % self.parameters["time_step_eval_frequency"] == 0:
-                if self.rlg.num_steps() % 100000 == 0:  # todo
+                if self.rlg.num_steps() % 10000 == 0:  # todo
                     self.evaluate_model(self.rlg.num_steps())
 
             # index = self.rlg.num_episodes() - 1

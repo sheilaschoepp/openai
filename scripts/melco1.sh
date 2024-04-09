@@ -49,8 +49,7 @@ for env in "${ENVIRONMENTS[@]}"; do
 
             # Prepare session details
             session_name="gpu${available_gpu}_env_${env}_seed_${seed}_cmd_${cmd// /_}"
-            log_file="$FOLDER_PATH/logs/${session_name}.log"
-            full_command="CUDA_VISIBLE_DEVICES=$available_gpu python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -e $env -t 300000 $cmd -c -f $FOLDER_PATH/seed${seed} -d 2>&1 | tee $log_file"
+            full_command="CUDA_VISIBLE_DEVICES=$available_gpu python $SAC_AB_CONTROLLER_ABSOLUTE_PATH -e $env -t 300000 $cmd -c -f $FOLDER_PATH/seed${seed} -d"
 
             # Launch tmux session
             tmux new-session -d -s "$session_name" "$full_command"

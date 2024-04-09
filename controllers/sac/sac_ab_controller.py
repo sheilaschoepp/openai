@@ -146,8 +146,7 @@ class AbnormalController:
                  + "_a:" + str(self.parameters["automatic_entropy_tuning"]) \
                  + "_d:" + str(self.parameters["device"]) \
                  + ("_r" if self.parameters["resumable"] else "") \
-                 + ("_resumed" if self.parameters["resume"] else "") \
-                 + "_modified"
+                 + ("_resumed" if self.parameters["resume"] else "")
 
         self.experiment = "SAC_" + suffix
 

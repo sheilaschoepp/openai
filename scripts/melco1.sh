@@ -13,9 +13,10 @@ check_and_wait_for_session_availability() {
     while : ; do
         current_sessions=$(tmux ls 2>/dev/null | wc -l)
         if [ "$current_sessions" -lt 24 ]; then
+            echo "Current sessions: $current_sessions - Continuing to launch new sessions."
             break
         fi
-        echo "Waiting for available tmux session slots..."
+        echo "Waiting for available tmux session slots... Current sessions: $current_sessions"
         sleep 60
     done
 }
@@ -28,7 +29,6 @@ launch_sessions() {
 
     # Iterate over each command modification
     for cmd in "${COMMANDS[@]}"; do
-        # Check for total tmux sessions cap
         check_and_wait_for_session_availability
 
         # Define session specifics
@@ -47,6 +47,7 @@ for env in "${ENVIRONMENTS[@]}"; do
     for seed in {0..29}; do
         for gpu in "${GPUS[@]}"; do
             current_gpu_sessions=$(tmux ls | grep -c "gpu${gpu}_")
+            echo "Checking GPU $gpu: $current_gpu_sessions sessions running."
             if [ "$current_gpu_sessions" -lt "$MAX_SESSIONS_PER_GPU" ]; then
                 launch_sessions "$env" "$seed" "$gpu"
             else

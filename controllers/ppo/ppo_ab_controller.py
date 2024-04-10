@@ -83,7 +83,7 @@ class AbnormalController:
         # hostname
 
         self.hostname = os.uname()[1]
-        self.localhosts = ["melco", "Legion", "amii", "mehran"]
+        self.localhosts = ["melco", "Legion", "amii", "remaining20seeds"]
         self.computecanada = not any(host in self.hostname for host in self.localhosts)
 
         # experiment parameters

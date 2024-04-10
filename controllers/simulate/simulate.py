@@ -60,6 +60,7 @@ class Simulate:
         np.random.seed(self.parameters["seed"])
         torch.manual_seed(self.parameters["seed"])
         if self.parameters["device"] == "cuda":
+            self.parameters["device"] = "cpu"
             torch.cuda.manual_seed(self.parameters["seed"])
 
         # env is seeded in Environment __init__() method
@@ -147,7 +148,7 @@ class Simulate:
                          num_steps=self.rlg_statistics["num_steps"],
                          num_episodes=self.rlg_statistics["num_episodes"])
 
-        for _ in range(10):
+        for _ in range(100):
 
             self.rlg.rl_start()
 
@@ -157,9 +158,9 @@ class Simulate:
             while not terminal and ((max_steps_this_episode <= 0) or (self.rlg.num_ep_steps() < max_steps_this_episode)):
                 reward, _, terminal, _ = self.rlg.rl_step()
 
-                time.sleep(0.1)
+                # time.sleep(0.1)
 
-            # print(self.rlg.episode_reward())
+            print(self.rlg.episode_reward())
 
 
 if __name__ == "__main__":

@@ -67,16 +67,20 @@ class AntEnvV3(mujoco_env.MujocoEnv, utils.EzPickle):  # modification here
     def viewer_setup(self):
         self.viewer.cam.distance = self.model.stat.extent * 0.5
 
+        change_cam = False
+
         # modification here
-        self.viewer.cam.type = const.CAMERA_FIXED
-        self.viewer.cam.fixedcamid = 0
+        if change_cam:
+            self.viewer.cam.type = const.CAMERA_FIXED
+            self.viewer.cam.fixedcamid = 0
 
         # self.viewer.cam.trackbodyid = 1
         # self.viewer.cam.distance = self.model.stat.extent * 2.0
         # self.viewer.cam.lookat[2] += .8
         # self.viewer.cam.elevation = -20
 
-        # self.viewer.cam.trackbodyid = 1
-        # self.viewer.cam.distance = self.model.stat.extent * 2
-        # self.viewer.cam.lookat[2] += .8
-        # self.viewer.cam.elevation = -90
+        if not change_cam:
+            self.viewer.cam.trackbodyid = 1
+            self.viewer.cam.distance = self.model.stat.extent * 2
+            self.viewer.cam.lookat[2] += .8
+            self.viewer.cam.elevation = -90

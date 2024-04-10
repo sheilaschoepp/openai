@@ -26,7 +26,7 @@ from controllers.sac.sac_agent import SAC
 from environment.environment import Environment
 from utils.rl_glue import RLGlue
 
-import custom_gym_envs
+import custom_gym_envs  # do not delete; required for custom gym environments
 
 parser = argparse.ArgumentParser(description="PyTorch Soft Actor-Critic Arguments")
 
@@ -83,7 +83,7 @@ class AbnormalController:
         # hostname
 
         self.hostname = os.uname()[1]
-        self.localhosts = ["melco", "Legion", "amii", "mehran"]
+        self.localhosts = ["melco", "Legion", "amii", "remaining20seeds"]
         self.computecanada = not any(host in self.hostname for host in self.localhosts)
 
         # experiment parameters

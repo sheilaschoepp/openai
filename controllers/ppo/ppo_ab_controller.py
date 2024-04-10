@@ -484,7 +484,7 @@ class AbnormalController:
             real_time = int(time.time() - self.start)
 
             # index = (num_time_steps // self.parameters["time_step_eval_frequency"]) + 1  # add 1 because we evaluate policy before learning
-            index = ((num_time_steps - self.parameters["n_time_steps"] // 10000) + 201)  # add 1 because we evaluate policy before learning  todo
+            index = (((num_time_steps - self.parameters["n_time_steps"]) // 10000) + 201)  # add 1 because we evaluate policy before learning  todo
             print("num_time_steps: ", num_time_steps)
             print("self.parameters('n_time_steps'):", self.parameters["n_time_steps"])
             print("index", index)

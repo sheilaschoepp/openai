@@ -485,6 +485,8 @@ class AbnormalController:
 
             # index = (num_time_steps // self.parameters["time_step_eval_frequency"]) + 1  # add 1 because we evaluate policy before learning
             index = ((num_time_steps - self.parameters["n_time_steps"] // 10000) + 201)  # add 1 because we evaluate policy before learning  todo
+            print("num_time_steps: ", num_time_steps)
+            print("self.parameters('n_time_steps'):", self.parameters["n_time_steps"])
             print("index", index)
             self.eval_data[index] = [num_time_steps, num_updates, num_epoch_updates, num_mini_batch_updates, num_samples, average_return, real_time]
 

@@ -439,6 +439,9 @@ class AbnormalController:
         as state and action.
         """
 
+        print(num_time_steps)
+        print(self.parameters["n_time_steps"])
+
         if self.parameters["eval_episodes"] != 0:
 
             agent_eval = copy(self.agent)

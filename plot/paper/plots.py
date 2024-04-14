@@ -156,7 +156,7 @@ def plot_experiment(directory):
         title = "Proximal Policy Optimization (PPO)"
         labels = ["retain all data", "retain network params", "retain memory", "retain no data"]
 
-    plot_directory = os.path.join(os.getcwd(), "plots", env_name, algorithm, ab_env)
+    plot_directory = os.path.join(os.getcwd(), "plots", env_name, algorithm, "standard plot", ab_env)
     os.makedirs(plot_directory, exist_ok=True)
 
     x_divisor = 1000000

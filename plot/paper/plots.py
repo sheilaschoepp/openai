@@ -16,10 +16,12 @@ sns.set_theme()
 # converted above colour pallet to WACG 2.0 compliant colors using https://webaim.org/resources/contrastchecker/
 #                   blue       orange      green       red      purple      brown      pink       grey       green      aqua
 # palette_colours = ["#0173b2", "#875603", "#027957", "#AD4B00", "#A63F93", "#915C30", "#C3098E", "#696969", "#70680A", "#156FA2"]
-#                   blue        green  magneta/purple  black     red
-palette_colours = ["#0173b2", "#027957", "#A63F93", "#AD4B00", "#000000"]
-#                   blue        black      orange      green    pink
-palette_colours = ["#0173b2", "#000000", "#AD4B00", "#027957", "#A63F93"]
+# #                   blue        green  magneta/purple  black     red
+# palette_colours = ["#0173b2", "#027957", "#A63F93", "#AD4B00", "#000000"]
+# #                   blue        black      orange      green    pink
+# palette_colours = ["#0173b2", "#000000", "#AD4B00", "#027957", "#A63F93"]
+#                    blue       orange      green      red     purple
+palette_colours = ["#1F77B4", "#FF7F0E", "#2CA02C", "#D62728", "#9467BD"]
 
 LARGE = 16
 MEDIUM = 14

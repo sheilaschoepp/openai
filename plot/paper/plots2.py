@@ -9,8 +9,10 @@ from termcolor import colored
 from PIL import Image
 
 sns.set_theme()
-#                    blue       black      orange      green     pink
-palette_colours = ["#0173b2", "#000000", "#AD4B00", "#027957", "#A63F93"]
+# #                    blue       black      orange      green     pink
+# palette_colours = ["#0173b2", "#000000", "#AD4B00", "#027957", "#A63F93"]
+#                    blue       orange      green      red     purple
+palette_colours = ["#1F77B4", "#FF7F0E", "#2CA02C", "#D62728", "#9467BD"]
 
 LARGE = 16
 MEDIUM = 14
@@ -113,8 +115,8 @@ def plot_early_adaptation(directory):
         df_mean = df.mean()
         df_sem = df.sem()
 
-        mean = df['average_return'].iloc[-1]
-        sem = df['average_return'].sem()
+        # mean = df['average_return'].iloc[-1]
+        # sem = df['average_return'].sem()
 
         ordered_settings.append((algorithm, rn, cs, label, df_mean, df_sem))  # TODO
 
@@ -133,28 +135,28 @@ def plot_early_adaptation(directory):
 
     x_fault_onset = ordered_settings[0][4].iloc[eval_fault_onset, 0] - ts_fault_onset
 
-    # plot normal asymptotic performance
-
-    x = (ordered_settings[0][4].iloc[eval_fault_onset:, 0] - ts_fault_onset) / x_divisor
-    normal_asymp = ordered_settings[0][4].iloc[eval_fault_onset - 10:eval_fault_onset, 1].mean()
-
-    plt.axhline(y=normal_asymp, color=palette_colours[0], linestyle="dashed", linewidth=1)
+    # # plot normal asymptotic performance
+    #
+    # x = (ordered_settings[0][4].iloc[eval_fault_onset:, 0] - ts_fault_onset) / x_divisor
+    # normal_asymp = ordered_settings[0][4].iloc[eval_fault_onset - 10:eval_fault_onset, 1].mean()
+    #
+    # plt.axhline(y=normal_asymp, color=palette_colours[0], linestyle="dashed", linewidth=1)
 
     # plot fault performance
 
     for i in range(4):
 
-        # asymptotic performance
-        x_asymp = ordered_settings[i][4].iloc[eval_fault_onset:, 0] - ts_fault_onset
-        y_asymp = ordered_settings[i][4].iloc[-10:, 1].mean()
-
-        # cut plots when asymptotic performance is reached
-        y_array = ordered_settings[i][4].iloc[eval_fault_onset:, 1].to_numpy()
+        # # asymptotic performance
+        # x_asymp = ordered_settings[i][4].iloc[eval_fault_onset:, 0] - ts_fault_onset
+        # y_asymp = ordered_settings[i][4].iloc[-10:, 1].mean()
+        #
+        # # cut plots when asymptotic performance is reached
+        # y_array = ordered_settings[i][4].iloc[eval_fault_onset:, 1].to_numpy()
         eval_fault_stop = 402
-        for j in range(len(y_array)):
-            if y_array[j] >= y_asymp:
-                eval_fault_stop = j + 1 + eval_fault_onset
-                break
+        # for j in range(len(y_array)):
+        #     if y_array[j] >= y_asymp:
+        #         eval_fault_stop = j + 1 + eval_fault_onset
+        #         break
 
         # data
         x = (ordered_settings[i][4].iloc[eval_fault_onset:eval_fault_stop, 0] - ts_fault_onset) / x_divisor
@@ -168,9 +170,9 @@ def plot_early_adaptation(directory):
 
         plt.plot(x, y, color=palette_colours[i + 1], label=label_)
         plt.fill_between(x, lb, ub, color=palette_colours[i + 1], alpha=0.2)
-        plt.axhline(y=y_asymp, color=palette_colours[i + 1], linestyle="dashed", linewidth=1)
+        # plt.axhline(y=y_asymp, color=palette_colours[i + 1], linestyle="dashed", linewidth=1)
 
-    plt.axvline(x=x_fault_onset, color="red", ymin=0.95, linewidth=4)
+    # plt.axvline(x=x_fault_onset, color="red", ymin=0.95, linewidth=4)
     plt.xlim(xmin - (ts_fault_onset / x_divisor), xmax - (ts_fault_onset / x_divisor))
     plt.ylim(ymin, ymax)
     plt.xlabel("million steps")
@@ -187,7 +189,7 @@ def plot_early_adaptation(directory):
 
     plt.tight_layout()
 
-    plot_directory = os.path.join(os.getcwd(), "plots", env_name, algorithm, ab_env)
+    plot_directory = os.path.join(os.getcwd(), "plots", env_name, algorithm, "standard plot", ab_env)
     os.makedirs(plot_directory, exist_ok=True)
     filename = plot_directory + "/{}_{}_all_mod.jpg".format(algorithm, ab_env)
     plt.savefig(filename, dpi=300)
@@ -349,7 +351,7 @@ def plot_complete_adaptation(directory):
 
     plt.tight_layout()
 
-    plot_directory = os.path.join(os.getcwd(), "plots", env_name, algorithm, ab_env)
+    plot_directory = os.path.join(os.getcwd(), "plots", env_name, algorithm, "standard plot", ab_env)
     os.makedirs(plot_directory, exist_ok=True)
     filename = plot_directory + "/{}_{}_all.jpg".format(algorithm, ab_env)
     plt.savefig(filename, dpi=300)
@@ -363,8 +365,11 @@ def legend():
     ax.axis("off")
 
     f = lambda m, c: plt.plot([], [], marker=m, color=c, ls="none")[0]
-    palette_colours = ["#0173b2", "#A63F93", "#027957", "#AD4B00", "#000000"]
-    handles = [f("s", palette_colours[i]) for i in range(5)]
+    # palette_colours = ["#0173b2", "#A63F93", "#027957", "#AD4B00", "#000000"]
+    # #                    blue       black      orange      green     pink
+    # palette_colours = ["#0173b2", "#000000", "#AD4B00", "#027957", "#A63F93"]
+    palette_colours_ = [palette_colours[0], palette_colours[4], palette_colours[3], palette_colours[2], palette_colours[1]]
+    handles = [f("s", palette_colours_[i]) for i in range(5)]
     labels = ["pre-fault", "retain models,\nretain storage", "retain models,\ndiscard storage", "discard models,\nretain storage", "discard models,\ndiscard storage"]
     legend = plt.legend(handles, labels, ncol=5, loc=1, framealpha=1, frameon=True, facecolor="inherit", prop={'size': 6})
 
@@ -385,8 +390,9 @@ def legend2():
     ax.axis("off")
 
     f = lambda m, c: plt.plot([], [], marker=m, color=c, ls="none")[0]
-    palette_colours = ["#A63F93", "#027957", "#AD4B00", "#000000"]
-    handles = [f("s", palette_colours[i]) for i in range(4)]
+    # palette_colours = ["#A63F93", "#027957", "#AD4B00", "#000000"]
+    palette_colours_ = [palette_colours[4], palette_colours[3], palette_colours[2], palette_colours[1]]
+    handles = [f("s", palette_colours_[i]) for i in range(4)]
     labels = ["retain models,\nretain storage", "retain models,\ndiscard storage", "discard models,\nretain storage", "discard models,\ndiscard storage"]
     legend = plt.legend(handles, labels, ncol=4, loc=1, framealpha=1, frameon=True, facecolor="inherit", prop={'size': 6})
 

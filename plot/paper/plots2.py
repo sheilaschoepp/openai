@@ -438,7 +438,7 @@ if __name__ == "__main__":
 
     # local for Ant PPO
     xmin = 600
-    xmax = 630  # 660
+    xmax = 660
 
     # v1
 

@@ -8,7 +8,7 @@ from termcolor import colored
 
 if __name__ == "__main__":
 
-    with open("stats/adaptation_speed_analysis.txt", "w") as f:
+    with open("../paper/stats/adaptation_speed_analysis.txt", "w") as f:
 
         sys.stdout = f
 

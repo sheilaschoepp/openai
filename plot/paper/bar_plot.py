@@ -309,6 +309,59 @@ def plot_bar_plots():
             plt.close()
 
 
+# plt.bar(br1, np.array(rnFcsFs), yerr=rnFcsFs_sem, color=palette_colours[1],
+#         width=bar_width, bottom=asymp_mean_baselines)
+# plt.bar(br2, np.array(rnFcsTs), yerr=rnFcsTs_sem, color=palette_colours[2],
+#         width=bar_width, bottom=asymp_mean_baselines)
+# plt.bar(br3, np.array(rnTcsFs), yerr=rnTcsFs_sem, color=palette_colours[3],
+#         width=bar_width, bottom=asymp_mean_baselines)
+# plt.bar(br4, np.array(rnTcsTs), yerr=rnTcsTs_sem, color=palette_colours[4],
+#         width=bar_width, bottom=asymp_mean_baselines)
+
+
+def legend():
+    fig, ax = plt.subplots()
+    ax.axis("off")
+
+    f = lambda m, c: plt.plot([], [], marker=m, color=c, ls="none")[0]
+    handles = [f("s", palette_colours[i]) for i in range(5)]
+    labels = ["pre-fault", "retain models,\nretain storage", "retain models,\ndiscard storage", "discard models,\nretain storage", "discard models,\ndiscard storage"]
+    legend = plt.legend(handles, labels, ncol=5, loc=1, framealpha=1, frameon=True, facecolor="inherit", prop={'size': 6})
+
+    def export_legend(legend, filename="legend.jpg"):
+        fig = legend.figure
+        fig.canvas.draw()
+        bbox = legend.get_window_extent().transformed(fig.dpi_scale_trans.inverted())
+        filename = "plots/{}".format(filename)
+        fig.savefig(filename, dpi=300, bbox_inches=bbox)
+        # # Image.open(filename).convert("CMYK").save(filename)
+
+    export_legend(legend)
+    plt.close()
+
+
+def legend2():
+    fig, ax = plt.subplots()
+    ax.axis("off")
+
+    f = lambda m, c: plt.plot([], [], marker=m, color=c, ls="none")[0]
+    palette_colours_ = palette_colours[1:]
+    handles = [f("s", palette_colours_[i]) for i in range(4)]
+    labels = ["retain models,\nretain storage", "retain models,\ndiscard storage", "discard models,\nretain storage", "discard models,\ndiscard storage"]
+    legend = plt.legend(handles, labels, ncol=4, loc=1, framealpha=1, frameon=True, facecolor="inherit", prop={'size': 6})
+
+    def export_legend(legend, filename="legend2.jpg"):
+        fig = legend.figure
+        fig.canvas.draw()
+        bbox = legend.get_window_extent().transformed(fig.dpi_scale_trans.inverted())
+        filename = "plots/{}".format(filename)
+        fig.savefig(filename, dpi=300, bbox_inches=bbox)
+        # # Image.open(filename).convert("CMYK").save(filename)
+
+    export_legend(legend)
+    plt.close()
+
+
 """
 Main Function (Entry Point)
 """
@@ -415,4 +468,7 @@ if __name__ == "__main__":
                                           fetchreach_fault_time_steps,
                                           partial_post_performances)
 
-    plot_bar_plots()
+    # plot_bar_plots()
+
+    legend()
+    legend2()

@@ -103,10 +103,11 @@ def compute_post_performances(directory, fault_time_steps, performances_data):
 
 def plot_bar_plots():
 
-    algorithms = ["PPOv2", "SACv2"]
+    algorithms = ["PPO", "SAC"]
     environments = ["Ant", "FetchReach"]
 
     for algorithm in algorithms:
+
         for environment in environments:
 
             data = []
@@ -130,6 +131,15 @@ def plot_bar_plots():
                     cs = entry[3]
                     post_mean = entry[4]
                     post_ci = entry[5]
+
+                    # list of list: entries [algo, env, rn, cs, mean, ci]
+                    post_asym = [entry[4]
+                                 for entry in complete_post_performances
+                                 if entry[0] == algo
+                                 and entry[1] == env
+                                 and entry[2] is True
+                                 and entry[3] is True][0]
+
                     if not rn and not cs:
                         rnFcsF = post_mean
                         rnFcsF_ci = post_ci
@@ -143,7 +153,17 @@ def plot_bar_plots():
                         rnTcsT = post_mean
                         rnTcsT_ci = post_ci
                     if rnFcsF is not None and rnFcsT is not None and rnTcsF is not None and rnTcsT is not None:
-                        data.append([algo, env, rnFcsF, rnFcsT, rnTcsF, rnTcsT, rnFcsF_ci, rnFcsT_ci, rnTcsF_ci, rnTcsT_ci])
+                        data.append([algo,
+                                     env,
+                                     rnFcsF,
+                                     rnFcsT,
+                                     rnTcsF,
+                                     rnTcsT,
+                                     rnFcsF_ci,
+                                     rnFcsT_ci,
+                                     rnTcsF_ci,
+                                     rnTcsT_ci,
+                                     post_asym])
 
                         rnFcsF = None
                         rnFcsT = None
@@ -157,23 +177,69 @@ def plot_bar_plots():
             # plot
             if environment == "Ant":
 
-                for d in data:
-                    print(d)
+                ts = "300,000"  # todo
 
-                for d in data:
-                    if d[0] == "PPOv2":
-                        if d[1] == "AntEnv-v1":
-                            d[-1] = 6902.083108676667
-                        elif d[1] == "AntEnv-v2":
-                            d[-1] = 6308.4662153399995
-                        elif d[1] == "AntEnv-v3":
-                            d[-1] = 5838.8326488
-                        elif d[1] == "AntEnv-v4":
-                            d[-1] = 6730.192732856666
-
-                # reorganize data to ["AntEnv-v2", "AntEnv-v3", "AntEnv-v1", "AntEnv-v4"]
+                # sort data by env name
+                data.sort()
+                # reorganize data to
+                # ["AntEnv-v2", "AntEnv-v3", "AntEnv-v1", "AntEnv-v4"]
                 data_ = [data[1], data[2], data[0], data[3]]
-                labels = ["hip ROM\nrestriction", "ankle ROM\nrestriction", "broken,\nsevered limb", "broken,\nunsevered limb"]
+                labels = ["hip ROM\nrestriction",
+                          "ankle ROM\nrestriction",
+                          "broken,\nsevered limb",
+                          "broken,\nunsevered limb"]
+
+                # reorganize the data
+                rnFcsFs = []
+                rnFcsTs = []
+                rnTcsFs = []
+                rnTcsTs = []
+                rnFcsFs_sem = []
+                rnFcsTs_sem = []
+                rnTcsFs_sem = []
+                rnTcsTs_sem = []
+                asymp_mean_baselines = []
+                for entry in data_:
+                    rnFcsFs.append(entry[2])
+                    rnFcsTs.append(entry[3])
+                    rnTcsFs.append(entry[4])
+                    rnTcsTs.append(entry[5])
+                    rnFcsFs_sem.append(entry[6])
+                    rnFcsTs_sem.append(entry[7])
+                    rnTcsFs_sem.append(entry[8])
+                    rnTcsTs_sem.append(entry[9])
+                    asymp_mean_baselines.append(entry[10])
+
+                bar_width = 0.2
+                br1 = np.arange(len(labels))
+                br2 = [x + bar_width for x in br1]
+                br3 = [x + bar_width for x in br2]
+                br4 = [x + bar_width for x in br3]
+
+                plt.bar(br1, np.array(rnFcsFs), yerr=rnFcsFs_sem, color=palette_colours[1], width=bar_width)
+                plt.bar(br2, np.array(rnFcsTs), yerr=rnFcsTs_sem, color=palette_colours[2], width=bar_width)
+                plt.bar(br3, np.array(rnTcsFs), yerr=rnTcsFs_sem, color=palette_colours[3], width=bar_width)
+                plt.bar(br4, np.array(rnTcsTs), yerr=rnTcsTs_sem, color=palette_colours[4], width=bar_width)
+
+                plt.axhline(xmin=0.05, xmax=0.23, y=asymp_mean_baselines[0], color=palette_colours[4], linestyle="dashed", linewidth=1)
+                plt.axhline(xmin=0.29, xmax=0.47, y=asymp_mean_baselines[1], color=palette_colours[4], linestyle="dashed", linewidth=1)
+                plt.axhline(xmin=0.53, xmax=0.71, y=asymp_mean_baselines[2], color=palette_colours[4], linestyle="dashed", linewidth=1)
+                plt.axhline(xmin=0.77, xmax=0.95, y=asymp_mean_baselines[3], color=palette_colours[4], linestyle="dashed", linewidth=1)
+
+                plt.axvline(x=0.3, color="black", ymax=0.025)
+                plt.axvline(x=1.3, color="black", ymax=0.025)
+                plt.axvline(x=2.3, color="black", ymax=0.025)
+                plt.axvline(x=3.3, color="black", ymax=0.025)
+
+                plt.xticks([r + 0.3 for r in range(len(labels))],  labels)
+                plt.yticks([-2000, -1000, 0, 1000, 2000, 3000, 4000, 5000, 6000, 7000])
+
+            elif env == "FetchReach":
+
+                ts = "300,000"  # todo
+
+                data_ = data
+                labels = ["frozen shoulder lift\nposition sensor", "elbow flex\nposition slippage"]
 
                 # reorganize the data
                 # labels = []
@@ -204,74 +270,20 @@ def plot_bar_plots():
                 br3 = [x + bar_width for x in br2]
                 br4 = [x + bar_width for x in br3]
 
-                # plt.axhline(y=0, color=palette_colours[4], linewidth=1)
+                plt.bar(br1, np.array(rnFcsFs), yerr=rnFcsFs_sem, color=palette_colours[1], width=bar_width, bottom=asymp_mean_baselines)
+                plt.bar(br2, np.array(rnFcsTs), yerr=rnFcsTs_sem, color=palette_colours[2], width=bar_width, bottom=asymp_mean_baselines)
+                plt.bar(br3, np.array(rnTcsFs), yerr=rnTcsFs_sem, color=palette_colours[3], width=bar_width, bottom=asymp_mean_baselines)
+                plt.bar(br4, np.array(rnTcsTs), yerr=rnTcsTs_sem, color=palette_colours[4], width=bar_width, bottom=asymp_mean_baselines)
 
-                plt.bar(br1, np.array(rnFcsFs), yerr=rnFcsFs_sem, color=palette_colours[1], width=bar_width)
-                plt.bar(br2, np.array(rnFcsTs), yerr=rnFcsTs_sem, color=palette_colours[2], width=bar_width)
-                plt.bar(br3, np.array(rnTcsFs), yerr=rnTcsFs_sem, color=palette_colours[3], width=bar_width)
-                plt.bar(br4, np.array(rnTcsTs), yerr=rnTcsTs_sem, color=palette_colours[4], width=bar_width)
-
-                plt.axhline(xmin=0.05, xmax=0.23, y=asymp_mean_baselines[0], color=palette_colours[4], linestyle="dashed", linewidth=1)
-                plt.axhline(xmin=0.29, xmax=0.47, y=asymp_mean_baselines[1], color=palette_colours[4], linestyle="dashed", linewidth=1)
-                plt.axhline(xmin=0.53, xmax=0.71, y=asymp_mean_baselines[2], color=palette_colours[4], linestyle="dashed", linewidth=1)
-                plt.axhline(xmin=0.77, xmax=0.95, y=asymp_mean_baselines[3], color=palette_colours[4], linestyle="dashed", linewidth=1)
+                plt.axhline(xmin=0.05, xmax=0.45, y=asymp_mean_baselines[0], color=palette_colours[4], linestyle="dashed", linewidth=1)
+                plt.axhline(xmin=0.555, xmax=0.955, y=asymp_mean_baselines[1], color=palette_colours[4], linestyle="dashed", linewidth=1)
 
                 plt.axvline(x=0.3, color="black", ymax=0.025)
                 plt.axvline(x=1.3, color="black", ymax=0.025)
-                plt.axvline(x=2.3, color="black", ymax=0.025)
-                plt.axvline(x=3.3, color="black", ymax=0.025)
 
-                plt.xticks([r + 0.3 for r in range(len(labels))],  labels)
-                plt.yticks([-2000, -1000, 0, 1000, 2000, 3000, 4000, 5000, 6000, 7000])
-
-            # elif env == "FetchReach":
-            #
-            #     data_ = data
-            #     labels = ["frozen shoulder lift\nposition sensor", "elbow flex\nposition slippage"]
-            #
-            #     # reorganize the data
-            #     # labels = []
-            #     rnFcsFs = []
-            #     rnFcsTs = []
-            #     rnTcsFs = []
-            #     rnTcsTs = []
-            #     rnFcsFs_sem = []
-            #     rnFcsTs_sem = []
-            #     rnTcsFs_sem = []
-            #     rnTcsTs_sem = []
-            #     asymp_mean_baselines = []
-            #     for entry in data_:
-            #         # labels.append(entry[1])
-            #         rnFcsFs.append(entry[2])
-            #         rnFcsTs.append(entry[3])
-            #         rnTcsFs.append(entry[4])
-            #         rnTcsTs.append(entry[5])
-            #         rnFcsFs_sem.append(entry[6])
-            #         rnFcsTs_sem.append(entry[7])
-            #         rnTcsFs_sem.append(entry[8])
-            #         rnTcsTs_sem.append(entry[9])
-            #         asymp_mean_baselines.append(entry[10])
-            #
-            #     bar_width = 0.2
-            #     br1 = np.arange(len(labels))
-            #     br2 = [x + bar_width for x in br1]
-            #     br3 = [x + bar_width for x in br2]
-            #     br4 = [x + bar_width for x in br3]
-            #
-            #     plt.bar(br1, np.array(rnFcsFs), yerr=rnFcsFs_sem, color=palette_colours[1], width=bar_width, bottom=asymp_mean_baselines)
-            #     plt.bar(br2, np.array(rnFcsTs), yerr=rnFcsTs_sem, color=palette_colours[2], width=bar_width, bottom=asymp_mean_baselines)
-            #     plt.bar(br3, np.array(rnTcsFs), yerr=rnTcsFs_sem, color=palette_colours[3], width=bar_width, bottom=asymp_mean_baselines)
-            #     plt.bar(br4, np.array(rnTcsTs), yerr=rnTcsTs_sem, color=palette_colours[4], width=bar_width, bottom=asymp_mean_baselines)
-            #
-            #     plt.axhline(xmin=0.05, xmax=0.45, y=asymp_mean_baselines[0], color=palette_colours[4], linestyle="dashed", linewidth=1)
-            #     plt.axhline(xmin=0.555, xmax=0.955, y=asymp_mean_baselines[1], color=palette_colours[4], linestyle="dashed", linewidth=1)
-            #
-            #     plt.axvline(x=0.3, color="black", ymax=0.025)
-            #     plt.axvline(x=1.3, color="black", ymax=0.025)
-            #
-            #     plt.xticks([r + 0.3 for r in range(len(labels))], labels)
-            #     plt.yticks(np.arange(-30, 1, 5))
-            #     plt.ylim((-30, 1.5))
+                plt.xticks([r + 0.3 for r in range(len(labels))], labels)
+                plt.yticks(np.arange(-30, 1, 5))
+                plt.ylim((-30, 1.5))
 
             if algorithm.startswith("PPO"):
                 plt.title("Proximal Policy Optimization: {} Time Steps".format(ts))
@@ -285,7 +297,7 @@ def plot_bar_plots():
             plot_directory = os.path.join(os.getcwd(), "plots", environment.lower(), algorithm[:-2])
             os.makedirs(plot_directory, exist_ok=True)
 
-            filename = plot_directory + "/{}_{}_average_return_after_fault_onset_{}b.jpg".format(algorithm[:-2].upper(), environment, interval)
+            filename = plot_directory + "/{}_{}_average_return_after_fault_onset_{}.jpg".format(algorithm[:-2].upper(), environment, ts)
             plt.savefig(filename, dpi=300)
             # Image.open(filename).convert("CMYK").save(filename)
 
@@ -313,7 +325,7 @@ if __name__ == "__main__":
 
     # For comparison, the number of time steps in the Ant fault
     # environment.
-    ant_fault_time_steps = 300000
+    ant_fault_time_steps = 300000  # todo
 
     # Cycle through ppo/sac and v1/v2/v3/v4 to compute post-fault
     # performances.
@@ -361,7 +373,7 @@ if __name__ == "__main__":
 
     # For comparison, the number of time steps in the FetchReach fault
     # environment.
-    fetchreach_fault_time_steps = 300000
+    fetchreach_fault_time_steps = 300000   # todo
 
     # Cycle through ppo/sac and v1/v2/v3/v4 to compute post-fault
     # performances.

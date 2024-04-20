@@ -401,7 +401,7 @@ if __name__ == "__main__":
 
     # For comparison, the number of time steps in the FetchReach fault
     # environment.
-    fetchreach_fault_time_steps = 0  # todo
+    fetchreach_fault_time_steps = 200000  # todo
 
     # Cycle through ppo/sac and v1/v2/v3/v4 to compute post-fault
     # performances.

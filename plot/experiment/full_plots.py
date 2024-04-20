@@ -6,21 +6,8 @@ import pandas as pd
 import seaborn as sns
 from matplotlib.patches import ConnectionPatch
 from termcolor import colored
-from PIL import Image
 
 sns.set_theme()
-# sns.set_palette("colorblind", color_codes=True)
-# print(sns.color_palette("colorblind").as_hex())
-# [blue, orange, green, red, purple, brown, pink, grey, green, aqua]
-# ["#0173b2", "#de8f05", "#029e73", "#d55e00", "#cc78bc", "#ca9161", "#fbafe4", "#949494", "#ece133", "#56b4e9"]
-# converted above colour pallet to WACG 2.0 compliant colors using https://webaim.org/resources/contrastchecker/
-#                   blue       orange      green       red      purple      brown      pink       grey       green      aqua
-# palette_colours = ["#0173b2", "#875603", "#027957", "#AD4B00", "#A63F93", "#915C30", "#C3098E", "#696969", "#70680A", "#156FA2"]
-# #                   blue        green  magneta/purple  black     red
-# palette_colours = ["#0173b2", "#027957", "#A63F93", "#AD4B00", "#000000"]
-# #                   blue        black      orange      green    pink
-# palette_colours = ["#0173b2", "#000000", "#AD4B00", "#027957", "#A63F93"]
-#                    blue       orange      green      red     purple
 palette_colours = ["#1F77B4", "#FF7F0E", "#2CA02C", "#D62728", "#9467BD"]
 
 LARGE = 16
@@ -158,7 +145,7 @@ def plot_experiment(directory):
         title = "Proximal Policy Optimization (PPO)"
         labels = ["retain all data", "retain network params", "retain memory", "retain no data"]
 
-    plot_directory = os.path.join(os.getcwd(), "plots", env_name, algorithm, "standard plot", ab_env)
+    plot_directory = os.path.join(os.getcwd(), "full_plots", env_name, algorithm, ab_env)
     os.makedirs(plot_directory, exist_ok=True)
 
     x_divisor = 1000000
@@ -474,7 +461,7 @@ def legend():
         fig = legend.figure
         fig.canvas.draw()
         bbox = legend.get_window_extent().transformed(fig.dpi_scale_trans.inverted())
-        filename = "plots/{}".format(filename)
+        filename = "full_plots/{}".format(filename)
         fig.savefig(filename, dpi=300, bbox_inches=bbox)
         # Image.open(filename).convert("CMYK").save(filename)
 
@@ -499,7 +486,7 @@ def legend2():
         fig = legend.figure
         fig.canvas.draw()
         bbox = legend.get_window_extent().transformed(fig.dpi_scale_trans.inverted())
-        filename = "plots/{}".format(filename)
+        filename = "full_plots/{}".format(filename)
         fig.savefig(filename, dpi=300, bbox_inches=bbox)
         # Image.open(filename).convert("CMYK").save(filename)
 

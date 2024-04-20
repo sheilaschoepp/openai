@@ -58,7 +58,7 @@ def plot(title, df_mean, df_sem, num_seeds, ymin, ymax):
         maximum y value on y-axis
     """
 
-    plot_directory = os.getcwd() + "/plots"
+    plot_directory = os.getcwd() + "/test_plots"
     os.makedirs(plot_directory, exist_ok=True)
 
     x = df_mean.index

@@ -310,14 +310,14 @@ def plot_bar_plots():
 
 
 def legend():
-    fig, ax = plt.subplots(figsize=(4, 0.25))
+    fig, ax = plt.subplots(figsize=(3, 0.24))
     ax.axis("off")
 
     f = lambda m, c: plt.plot([], [], marker=m, color=c, ls="none")[0]
-    handles = [f("s", palette_colours[i]) for i in range(5)]
+    handles = [f("s", palette_colours[i]) for i in range(1,5)]
     theta = r"$\theta$"
     emmm = r"$\mathcal{M}$"
-    labels = ["pre-fault", f"retain {theta},\nretain {emmm}",
+    labels = [f"retain {theta},\nretain {emmm}",
               f"retain {theta},\ndiscard {emmm}",
               f"discard {theta},\nretain {emmm}",
               f"discard {theta},\ndiscard {emmm}"]

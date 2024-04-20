@@ -108,7 +108,7 @@ def compute_post_performances(directory, fault_time_steps, performances_data):
 def plot_bar_plots():
 
     algorithms = ["PPO", "SAC"]
-    environments = ["FetchReach"]  # ["Ant", "FetchReach"]
+    environments = ["Ant", "FetchReach"]
 
     for algorithm in algorithms:
 
@@ -319,53 +319,53 @@ if __name__ == "__main__":
     partial_post_performances = []
     complete_post_performances = []
 
-    # """Ant"""
-    #
-    # """Complete Performances"""
-    #
-    # # Data directory for Ant at 300k time steps.
-    # ant_data_dir = f"{os.getenv('HOME')}/Documents/openai/data/ant/exps/complete"
-    #
-    # # For comparison, the number of time steps in the Ant fault
-    # # environment.
-    # ant_fault_time_steps = None
-    #
-    # # Cycle through ppo/sac and v1/v2/v3/v4 to compute post-fault
-    # # performances.
-    # for algo in os.listdir(ant_data_dir):
-    #     if algo == "ppo":
-    #         ant_fault_time_steps = 600000000
-    #     elif algo == "sac":
-    #         ant_fault_time_steps = 20000000
-    #     algo_dir = os.path.join(ant_data_dir, algo)
-    #     for version in os.listdir(algo_dir):
-    #         version_dir = os.path.join(algo_dir, version)
-    #         for exp in os.listdir(version_dir):
-    #             exp_dir = os.path.join(version_dir, exp)
-    #             compute_post_performances(exp_dir,
-    #                                       ant_fault_time_steps,
-    #                                       complete_post_performances)
-    #
-    # """Partial Performances"""
-    #
-    # # Data directory for Ant at 300k time steps.
-    # ant_data_dir = f"{os.getenv('HOME')}/Documents/openai/data/ant/exps/300k"
-    #
-    # # For comparison, the number of time steps in the Ant fault
-    # # environment.
-    # ant_fault_time_steps = 300000  # todo
-    #
-    # # Cycle through ppo/sac and v1/v2/v3/v4 to compute post-fault
-    # # performances.
-    # for algo in os.listdir(ant_data_dir):  # ppo / sac
-    #     algo_dir = os.path.join(ant_data_dir, algo)
-    #     for version in os.listdir(algo_dir):  # v1 / v2 / v3 / v4
-    #         version_dir = os.path.join(algo_dir, version)
-    #         for exp in os.listdir(version_dir):  # cs / rn
-    #             exp_dir = os.path.join(version_dir, exp)
-    #             compute_post_performances(exp_dir,
-    #                                       ant_fault_time_steps,
-    #                                       partial_post_performances)
+    """Ant"""
+
+    """Complete Performances"""
+
+    # Data directory for Ant at 300k time steps.
+    ant_data_dir = f"{os.getenv('HOME')}/Documents/openai/data/ant/exps/complete"
+
+    # For comparison, the number of time steps in the Ant fault
+    # environment.
+    ant_fault_time_steps = None
+
+    # Cycle through ppo/sac and v1/v2/v3/v4 to compute post-fault
+    # performances.
+    for algo in os.listdir(ant_data_dir):
+        if algo == "ppo":
+            ant_fault_time_steps = 600000000
+        elif algo == "sac":
+            ant_fault_time_steps = 20000000
+        algo_dir = os.path.join(ant_data_dir, algo)
+        for version in os.listdir(algo_dir):
+            version_dir = os.path.join(algo_dir, version)
+            for exp in os.listdir(version_dir):
+                exp_dir = os.path.join(version_dir, exp)
+                compute_post_performances(exp_dir,
+                                          ant_fault_time_steps,
+                                          complete_post_performances)
+
+    """Partial Performances"""
+
+    # Data directory for Ant at 300k time steps.
+    ant_data_dir = f"{os.getenv('HOME')}/Documents/openai/data/ant/exps/300k"
+
+    # For comparison, the number of time steps in the Ant fault
+    # environment.
+    ant_fault_time_steps = 200000  # todo
+
+    # Cycle through ppo/sac and v1/v2/v3/v4 to compute post-fault
+    # performances.
+    for algo in os.listdir(ant_data_dir):  # ppo / sac
+        algo_dir = os.path.join(ant_data_dir, algo)
+        for version in os.listdir(algo_dir):  # v1 / v2 / v3 / v4
+            version_dir = os.path.join(algo_dir, version)
+            for exp in os.listdir(version_dir):  # cs / rn
+                exp_dir = os.path.join(version_dir, exp)
+                compute_post_performances(exp_dir,
+                                          ant_fault_time_steps,
+                                          partial_post_performances)
 
     """FetchReach"""
 
@@ -401,7 +401,7 @@ if __name__ == "__main__":
 
     # For comparison, the number of time steps in the FetchReach fault
     # environment.
-    fetchreach_fault_time_steps = 200000  # todo
+    fetchreach_fault_time_steps = 0  # todo
 
     # Cycle through ppo/sac and v1/v2/v3/v4 to compute post-fault
     # performances.
@@ -415,8 +415,4 @@ if __name__ == "__main__":
                                           fetchreach_fault_time_steps,
                                           partial_post_performances)
 
-
     plot_bar_plots()
-
-    print(1)
-

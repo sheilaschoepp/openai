@@ -906,44 +906,45 @@ class FetchReachHistogram:
         # agent
         if "SAC" in self.load_data_dir:
 
-            self.agent = SAC(self.env.env_state_dim(),
-                             self.env.env_action_dim(),
-                             self.parameters["gamma"],
-                             self.parameters["tau"],
-                             self.parameters["alpha"],
-                             self.parameters["lr"],
-                             self.parameters["hidden_dim"],
-                             self.parameters["replay_buffer_size"],
-                             self.parameters["batch_size"],
-                             self.parameters["model_updates_per_step"],
-                             self.parameters["target_update_interval"],
-                             self.parameters["automatic_entropy_tuning"],
-                             self.parameters["device"],
-                             None)
+            self.agent = SAC(state_dim=self.env.env_state_dim(),
+                             action_dim=self.env.env_action_dim(),
+                             gamma=self.parameters["gamma"],
+                             tau=self.parameters["tau"],
+                             alpha=self.parameters["alpha"],
+                             lr=self.parameters["lr"],
+                             hidden_dim=self.parameters["hidden_dim"],
+                             replay_buffer_size=self.parameters["replay_buffer_size"],
+                             batch_size=self.parameters["batch_size"],
+                             model_updates_per_step=self.parameters["model_updates_per_step"],
+                             target_update_interval=self.parameters["target_update_interval"],
+                             automatic_entropy_tuning=self.parameters["automatic_entropy_tuning"],
+                             device=self.parameters["device"],
+                             loss_data=None)
 
         elif "PPO" in self.load_data_dir:
 
-            self.agent = PPO(self.env.env_state_dim(),
-                             self.env.env_action_dim(),
-                             self.parameters["hidden_dim"],
-                             self.parameters["log_std"],
-                             self.parameters["lr"],
-                             self.parameters["linear_lr_decay"],
-                             self.parameters["gamma"],
-                             self.parameters["n_time_steps"],
-                             self.parameters["num_samples"],
-                             self.parameters["mini_batch_size"],
-                             self.parameters["epochs"],
-                             self.parameters["epsilon"],
-                             self.parameters["vf_loss_coef"],
-                             self.parameters["policy_entropy_coef"],
-                             self.parameters["clipped_value_fn"],
-                             self.parameters["max_grad_norm"],
-                             self.parameters["use_gae"],
-                             self.parameters["gae_lambda"],
-                             self.parameters["device"],
-                             None,
-                             False)
+            self.agent = PPO(state_dim=self.env.env_state_dim(),
+                             action_dim=self.env.env_action_dim(),
+                             hidden_dim=self.parameters["hidden_dim"],
+                             log_std=self.parameters["log_std"],
+                             lr=self.parameters["lr"],
+                             linear_lr_decay=self.parameters["linear_lr_decay"],
+                             slow_lrd=1.0,
+                             gamma=self.parameters["gamma"],
+                             time_steps=self.parameters["n_time_steps"],
+                             num_samples=self.parameters["num_samples"],
+                             mini_batch_size=self.parameters["mini_batch_size"],
+                             epochs=self.parameters["epochs"],
+                             epsilon=self.parameters["epsilon"],
+                             vf_loss_coef=self.parameters["vf_loss_coef"],
+                             policy_entropy_coef=self.parameters["policy_entropy_coef"],
+                             clipped_value_fn=self.parameters["clipped_value_fn"],
+                             max_grad_norm=self.parameters["max_grad_norm"],
+                             use_gae=self.parameters["use_gae"],
+                             gae_lambda=self.parameters["gae_lambda"],
+                             device=self.parameters["device"],
+                             loss_data=None,
+                             resume=False)
 
         # RLGlue used for training
         self.rlg = RLGlue(self.env, self.agent)
@@ -1349,7 +1350,7 @@ if __name__ == "__main__":
 
     # PPO v1
 
-    fetchreach_ppo_v1 = True
+    fetchreach_ppo_v1 = False
 
     if fetchreach_ppo_v1:
 
@@ -1367,7 +1368,7 @@ if __name__ == "__main__":
 
     # PPO v4
 
-    fetchreach_ppo_v4 = True
+    fetchreach_ppo_v4 = False
 
     if fetchreach_ppo_v4:
 
@@ -1385,7 +1386,7 @@ if __name__ == "__main__":
 
     # PPO v6
 
-    fetchreach_ppo_v6 = True
+    fetchreach_ppo_v6 = False
 
     if fetchreach_ppo_v6:
 
@@ -1403,7 +1404,7 @@ if __name__ == "__main__":
 
     # SAC v1
 
-    fetchreach_sac_v1 = True
+    fetchreach_sac_v1 = False
 
     if fetchreach_sac_v1:
 
@@ -1421,36 +1422,36 @@ if __name__ == "__main__":
 
     # SAC v4
 
-    fetchreach_sac_v4 = False
+    fetchreach_sac_v4 = True
 
     if fetchreach_sac_v4:
 
-        file = "/media/sschoepp/easystore/openai/fetchreach/original/seeds/faulty/sac/v4/SACv2_FetchReachEnv-v4:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:False_rn:False_a:True_d:cuda_mod"
+        file = "/media/sschoepp/easystore/openai/fetchreach/original/faulty/sac/v4/SACv2_FetchReachEnv-v4:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:False_rn:False_a:True_d:cuda_mod"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/openai/fetchreach/original/seeds/faulty/sac/v4/SACv2_FetchReachEnv-v4:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:False_rn:True_a:True_d:cuda_mod"
+        file = "/media/sschoepp/easystore/openai/fetchreach/original/faulty/sac/v4/SACv2_FetchReachEnv-v4:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:False_rn:True_a:True_d:cuda_mod"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/openai/fetchreach/original/seeds/faulty/sac/v4/SACv2_FetchReachEnv-v4:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:True_rn:False_a:True_d:cuda_mod"
+        file = "/media/sschoepp/easystore/openai/fetchreach/original/faulty/sac/v4/SACv2_FetchReachEnv-v4:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:True_rn:False_a:True_d:cuda_mod"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/openai/fetchreach/original/seeds/faulty/sac/v4/SACv2_FetchReachEnv-v4:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:True_rn:True_a:True_d:cuda_mod"
+        file = "/media/sschoepp/easystore/openai/fetchreach/original/faulty/sac/v4/SACv2_FetchReachEnv-v4:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:True_rn:True_a:True_d:cuda_mod"
         draw_histogram()
 
     # SAC v6
 
-    fetchreach_sac_v6 = False
+    fetchreach_sac_v6 = True
 
     if fetchreach_sac_v6:
 
-        file = "/media/sschoepp/easystore/openai/fetchreach/original/seeds/faulty/sac/v6/SACv2_FetchReachEnv-v6:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:False_rn:False_a:True_d:cuda_mod"
+        file = "/media/sschoepp/easystore/openai/fetchreach/original/faulty/sac/v6/SACv2_FetchReachEnv-v6:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:False_rn:False_a:True_d:cuda_mod"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/openai/fetchreach/original/seeds/faulty/sac/v6/SACv2_FetchReachEnv-v6:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:False_rn:True_a:True_d:cuda_mod"
+        file = "/media/sschoepp/easystore/openai/fetchreach/original/faulty/sac/v6/SACv2_FetchReachEnv-v6:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:False_rn:True_a:True_d:cuda_mod"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/openai/fetchreach/original/seeds/faulty/sac/v6/SACv2_FetchReachEnv-v6:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:True_rn:False_a:True_d:cuda_mod"
+        file = "/media/sschoepp/easystore/openai/fetchreach/original/faulty/sac/v6/SACv2_FetchReachEnv-v6:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:True_rn:False_a:True_d:cuda_mod"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/openai/fetchreach/original/seeds/faulty/sac/v6/SACv2_FetchReachEnv-v6:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:True_rn:True_a:True_d:cuda_mod"
+        file = "/media/sschoepp/easystore/openai/fetchreach/original/faulty/sac/v6/SACv2_FetchReachEnv-v6:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:True_rn:True_a:True_d:cuda_mod"
         draw_histogram()

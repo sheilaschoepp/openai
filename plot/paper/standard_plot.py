@@ -197,7 +197,7 @@ def plot_early_adaptation(directory):
     plt.tight_layout()
 
     plot_directory = os.path.join(os.getcwd(), "plots", env_name, algorithm,
-                                  "standard plot", ab_env)
+                                  "standard_plot", ab_env)
     os.makedirs(plot_directory, exist_ok=True)
     filename = plot_directory + "/{}_{}_all_mod.jpg".format(algorithm, ab_env)
     plt.savefig(filename, dpi=300)

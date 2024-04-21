@@ -297,7 +297,7 @@ def plot_bar_plots():
             plt.ylabel("average return (30 seeds)")
             plt.tight_layout()
 
-            plot_directory = os.path.join(os.getcwd(), "plots", environment.lower(), algorithm)
+            plot_directory = os.path.join(os.getcwd(), "plots", environment.lower(), "bar_plot", algorithm)
             os.makedirs(plot_directory, exist_ok=True)
 
             filename = plot_directory + "/{}_{}_average_return_after_fault_onset_{}.jpg".format(algorithm.upper(), environment, ts)

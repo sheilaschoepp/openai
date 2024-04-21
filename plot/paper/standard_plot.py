@@ -80,7 +80,7 @@ def plot_early_adaptation(directory):
                 cs = eval(p.split(":")[1])
             elif "rn:" in p:
                 rn = eval(p.split(":")[1])
-                
+
         label = None
         if not cs and not rn:
             label = "retain NN params\nretain storage"
@@ -107,7 +107,9 @@ def plot_early_adaptation(directory):
 
         if len(dfs) < num_seeds:
             # warning to let user know that seeds are missing
-            print(colored("The number of seeds for this experiment is {} but this setting only has {} seeds: {}".format(num_seeds, str(len( dfs)), dir_), "red"))
+            print(colored(
+                "The number of seeds for this experiment is {} but this setting only has {} seeds: {}".format(
+                    num_seeds, str(len(dfs)), dir_), "red"))
 
         df = pd.concat(dfs)
         df = df.groupby(df.index)
@@ -118,7 +120,8 @@ def plot_early_adaptation(directory):
         # mean = df['average_return'].iloc[-1]
         # sem = df['average_return'].sem()
 
-        ordered_settings.append((algorithm, rn, cs, label, df_mean, df_sem))  # TODO
+        ordered_settings.append(
+            (algorithm, rn, cs, label, df_mean, df_sem))  # TODO
 
     assert len(ordered_settings) == 4, "plot_experiment: not four settings"
 
@@ -133,7 +136,8 @@ def plot_early_adaptation(directory):
 
     x_divisor = 1000000
 
-    x_fault_onset = ordered_settings[0][4].iloc[eval_fault_onset, 0] - ts_fault_onset
+    x_fault_onset = ordered_settings[0][4].iloc[
+                        eval_fault_onset, 0] - ts_fault_onset
 
     # # plot normal asymptotic performance
     #
@@ -145,7 +149,6 @@ def plot_early_adaptation(directory):
     # plot fault performance
 
     for i in range(4):
-
         # # asymptotic performance
         # x_asymp = ordered_settings[i][4].iloc[eval_fault_onset:, 0] - ts_fault_onset
         # y_asymp = ordered_settings[i][4].iloc[-10:, 1].mean()
@@ -159,12 +162,15 @@ def plot_early_adaptation(directory):
         #         break
 
         # data
-        x = (ordered_settings[i][4].iloc[eval_fault_onset:eval_fault_stop, 0] - ts_fault_onset) / x_divisor
+        x = (ordered_settings[i][4].iloc[eval_fault_onset:eval_fault_stop,
+             0] - ts_fault_onset) / x_divisor
         y = ordered_settings[i][4].iloc[eval_fault_onset:eval_fault_stop, 1]
 
         # 95 % confidence interval
-        lb = y - CI_Z * ordered_settings[i][5].iloc[eval_fault_onset:eval_fault_stop, 1]
-        ub = y + CI_Z * ordered_settings[i][5].iloc[eval_fault_onset:eval_fault_stop, 1]
+        lb = y - CI_Z * ordered_settings[i][5].iloc[
+                        eval_fault_onset:eval_fault_stop, 1]
+        ub = y + CI_Z * ordered_settings[i][5].iloc[
+                        eval_fault_onset:eval_fault_stop, 1]
 
         label_ = ordered_settings[i][3]
 
@@ -173,7 +179,8 @@ def plot_early_adaptation(directory):
         # plt.axhline(y=y_asymp, color=palette_colours[i + 1], linestyle="dashed", linewidth=1)
 
     # plt.axvline(x=x_fault_onset, color="red", ymin=0.95, linewidth=4)
-    plt.xlim(xmin - (ts_fault_onset / x_divisor), xmax - (ts_fault_onset / x_divisor))
+    plt.xlim(xmin - (ts_fault_onset / x_divisor),
+             xmax - (ts_fault_onset / x_divisor))
     plt.ylim(ymin, ymax)
     plt.xlabel("million steps")
     plt.ylabel("average return")
@@ -189,7 +196,8 @@ def plot_early_adaptation(directory):
 
     plt.tight_layout()
 
-    plot_directory = os.path.join(os.getcwd(), "plots", env_name, algorithm, "standard plot", ab_env)
+    plot_directory = os.path.join(os.getcwd(), "plots", env_name, algorithm,
+                                  "standard plot", ab_env)
     os.makedirs(plot_directory, exist_ok=True)
     filename = plot_directory + "/{}_{}_all_mod.jpg".format(algorithm, ab_env)
     plt.savefig(filename, dpi=300)
@@ -200,8 +208,7 @@ def plot_early_adaptation(directory):
 
 if __name__ == "__main__":
 
-    PROJECT_PATH = pathlib.Path(os.getcwd()).parents[1]
-    DATA_FOLDER_PATH = os.path.join(PROJECT_PATH, "data")
+    data_folder_path = f"{os.getenv('HOME')}/Documents/openai/data"
 
     # number of seeds to plot
     num_seeds = 30
@@ -221,7 +228,7 @@ if __name__ == "__main__":
     """ant PPO"""
 
     # local for Ant PPO
-    ppo_data_dir = DATA_FOLDER_PATH + "/ant/exps/complete/ppo"
+    ppo_data_dir = data_folder_path + "/ant/exps/complete/ppo"
 
     # local for Ant PPO
     xmin = 600
@@ -246,7 +253,7 @@ if __name__ == "__main__":
     """ant SAC"""
 
     # local for Ant SAC
-    sac_data_dir = DATA_FOLDER_PATH + "/ant/exps/complete/sac"
+    sac_data_dir = data_folder_path + "/ant/exps/complete/sac"
 
     # local for Ant SAC
     xmin = 20
@@ -280,7 +287,7 @@ if __name__ == "__main__":
     # PPO
 
     # local for FetchReach PPO
-    ppo_data_dir = DATA_FOLDER_PATH + "/fetchreach/exps/complete/ppo"
+    ppo_data_dir = data_folder_path + "/fetchreach/exps/complete/ppo"
 
     # local for FetchReach PPO
     xmin = 6
@@ -297,7 +304,7 @@ if __name__ == "__main__":
     # SAC
 
     # local for FetchReach SAC
-    sac_data_dir = DATA_FOLDER_PATH + "/fetchreach/exps/complete/sac"
+    sac_data_dir = data_folder_path + "/fetchreach/exps/complete/sac"
 
     # local for FetchReach SAC
     xmin = 2

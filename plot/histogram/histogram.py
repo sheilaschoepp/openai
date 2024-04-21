@@ -1291,7 +1291,7 @@ if __name__ == "__main__":
 
     # SAC v3
 
-    ant_sac_v3 = True
+    ant_sac_v3 = False
 
     if ant_sac_v3:
 
@@ -1309,7 +1309,7 @@ if __name__ == "__main__":
 
     # SAC v4
 
-    ant_sac_v4 = True
+    ant_sac_v4 = False
 
     if ant_sac_v4:
 
@@ -1329,7 +1329,7 @@ if __name__ == "__main__":
 
     # PPO v0
 
-    fetchreach_ppo_v0 = True
+    fetchreach_ppo_v0 = False
 
     if fetchreach_ppo_v0:
 
@@ -1338,7 +1338,7 @@ if __name__ == "__main__":
 
     # SAC v0
 
-    fetchreach_sac_v0 = True
+    fetchreach_sac_v0 = False
 
     if fetchreach_sac_v0:
 
@@ -1349,7 +1349,7 @@ if __name__ == "__main__":
 
     # PPO v1
 
-    fetchreach_ppo_v1 = False
+    fetchreach_ppo_v1 = True
 
     if fetchreach_ppo_v1:
 
@@ -1367,7 +1367,7 @@ if __name__ == "__main__":
 
     # PPO v4
 
-    fetchreach_ppo_v4 = False
+    fetchreach_ppo_v4 = True
 
     if fetchreach_ppo_v4:
 
@@ -1385,7 +1385,7 @@ if __name__ == "__main__":
 
     # PPO v6
 
-    fetchreach_ppo_v6 = False
+    fetchreach_ppo_v6 = True
 
     if fetchreach_ppo_v6:
 
@@ -1403,7 +1403,7 @@ if __name__ == "__main__":
 
     # SAC v1
 
-    fetchreach_sac_v1 = False
+    fetchreach_sac_v1 = True
 
     if fetchreach_sac_v1:
 

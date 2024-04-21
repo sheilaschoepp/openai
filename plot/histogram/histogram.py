@@ -120,10 +120,6 @@ def plot_ant_histograms(ranges):
 
     def title():
         title = "Proximity Policy Optimization" if algorithm == "PPO" else "Soft Actor-Critic"
-        # if suffix == "":
-        #     title = "{}\n{}\n{}".format(algorithm, name, joint_name)  # todo
-        # else:
-        #     title = "{} ({})\n{}\n{}".format(algorithm, suffix_eval, name, joint_name)
         return title
 
     index = 0  # hip_1
@@ -428,51 +424,52 @@ class AntHistogram:
         # rl problem
 
         # normal environment used for training
-        self.env = Environment("AntEnv-v2", #todo
+        self.env = Environment(self.env_name,  # todo
                                seed,
                                render=False)
 
         # agent
         if "SAC" in self.load_data_dir:
 
-            self.agent = SAC(self.env.env_state_dim(),
-                               self.env.env_action_dim(),
-                               self.parameters["gamma"],
-                               self.parameters["tau"],
-                               self.parameters["alpha"],
-                               self.parameters["lr"],
-                               self.parameters["hidden_dim"],
-                               self.parameters["replay_buffer_size"],
-                               self.parameters["batch_size"],
-                               self.parameters["model_updates_per_step"],
-                               self.parameters["target_update_interval"],
-                               self.parameters["automatic_entropy_tuning"],
-                               self.parameters["device"],
-                               None)
+            self.agent = SAC(state_dim=self.env.env_state_dim(),
+                             action_dim=self.env.env_action_dim(),
+                             gamma=self.parameters["gamma"],
+                             tau=self.parameters["tau"],
+                             alpha=self.parameters["alpha"],
+                             lr=self.parameters["lr"],
+                             hidden_dim=self.parameters["hidden_dim"],
+                             replay_buffer_size=self.parameters["replay_buffer_size"],
+                             batch_size=self.parameters["batch_size"],
+                             model_updates_per_step=self.parameters["model_updates_per_step"],
+                             target_update_interval=self.parameters["target_update_interval"],
+                             automatic_entropy_tuning=self.parameters["automatic_entropy_tuning"],
+                             device=self.parameters["device"],
+                             loss_data=None)
 
         elif "PPO" in self.load_data_dir:
 
-            self.agent = PPO(self.env.env_state_dim(),
-                               self.env.env_action_dim(),
-                               self.parameters["hidden_dim"],
-                               self.parameters["log_std"],
-                               self.parameters["lr"],
-                               self.parameters["linear_lr_decay"],
-                               self.parameters["gamma"],
-                               self.parameters["n_time_steps"],
-                               self.parameters["num_samples"],
-                               self.parameters["mini_batch_size"],
-                               self.parameters["epochs"],
-                               self.parameters["epsilon"],
-                               self.parameters["vf_loss_coef"],
-                               self.parameters["policy_entropy_coef"],
-                               self.parameters["clipped_value_fn"],
-                               self.parameters["max_grad_norm"],
-                               self.parameters["use_gae"],
-                               self.parameters["gae_lambda"],
-                               self.parameters["device"],
-                               None,
-                               False)
+            self.agent = PPO(state_dim=self.env.env_state_dim(),
+                             action_dim=self.env.env_action_dim(),
+                             hidden_dim=self.parameters["hidden_dim"],
+                             log_std=self.parameters["log_std"],
+                             lr=self.parameters["lr"],
+                             linear_lr_decay=self.parameters["linear_lr_decay"],
+                             slow_lrd=1.0,
+                             gamma=self.parameters["gamma"],
+                             time_steps=self.parameters["n_time_steps"],
+                             num_samples=self.parameters["num_samples"],
+                             mini_batch_size=self.parameters["mini_batch_size"],
+                             epochs=self.parameters["epochs"],
+                             epsilon=self.parameters["epsilon"],
+                             vf_loss_coef=self.parameters["vf_loss_coef"],
+                             policy_entropy_coef=self.parameters["policy_entropy_coef"],
+                             clipped_value_fn=self.parameters["clipped_value_fn"],
+                             max_grad_norm=self.parameters["max_grad_norm"],
+                             use_gae=self.parameters["use_gae"],
+                             gae_lambda=self.parameters["gae_lambda"],
+                             device=self.parameters["device"],
+                             loss_data=None,
+                             resume=False)
 
         # RLGlue used for training
         self.rlg = RLGlue(self.env, self.agent)
@@ -910,43 +907,43 @@ class FetchReachHistogram:
         if "SAC" in self.load_data_dir:
 
             self.agent = SAC(self.env.env_state_dim(),
-                               self.env.env_action_dim(),
-                               self.parameters["gamma"],
-                               self.parameters["tau"],
-                               self.parameters["alpha"],
-                               self.parameters["lr"],
-                               self.parameters["hidden_dim"],
-                               self.parameters["replay_buffer_size"],
-                               self.parameters["batch_size"],
-                               self.parameters["model_updates_per_step"],
-                               self.parameters["target_update_interval"],
-                               self.parameters["automatic_entropy_tuning"],
-                               self.parameters["device"],
-                               None)
+                             self.env.env_action_dim(),
+                             self.parameters["gamma"],
+                             self.parameters["tau"],
+                             self.parameters["alpha"],
+                             self.parameters["lr"],
+                             self.parameters["hidden_dim"],
+                             self.parameters["replay_buffer_size"],
+                             self.parameters["batch_size"],
+                             self.parameters["model_updates_per_step"],
+                             self.parameters["target_update_interval"],
+                             self.parameters["automatic_entropy_tuning"],
+                             self.parameters["device"],
+                             None)
 
         elif "PPO" in self.load_data_dir:
 
             self.agent = PPO(self.env.env_state_dim(),
-                               self.env.env_action_dim(),
-                               self.parameters["hidden_dim"],
-                               self.parameters["log_std"],
-                               self.parameters["lr"],
-                               self.parameters["linear_lr_decay"],
-                               self.parameters["gamma"],
-                               self.parameters["n_time_steps"],
-                               self.parameters["num_samples"],
-                               self.parameters["mini_batch_size"],
-                               self.parameters["epochs"],
-                               self.parameters["epsilon"],
-                               self.parameters["vf_loss_coef"],
-                               self.parameters["policy_entropy_coef"],
-                               self.parameters["clipped_value_fn"],
-                               self.parameters["max_grad_norm"],
-                               self.parameters["use_gae"],
-                               self.parameters["gae_lambda"],
-                               self.parameters["device"],
-                               None,
-                               False)
+                             self.env.env_action_dim(),
+                             self.parameters["hidden_dim"],
+                             self.parameters["log_std"],
+                             self.parameters["lr"],
+                             self.parameters["linear_lr_decay"],
+                             self.parameters["gamma"],
+                             self.parameters["n_time_steps"],
+                             self.parameters["num_samples"],
+                             self.parameters["mini_batch_size"],
+                             self.parameters["epochs"],
+                             self.parameters["epsilon"],
+                             self.parameters["vf_loss_coef"],
+                             self.parameters["policy_entropy_coef"],
+                             self.parameters["clipped_value_fn"],
+                             self.parameters["max_grad_norm"],
+                             self.parameters["use_gae"],
+                             self.parameters["gae_lambda"],
+                             self.parameters["device"],
+                             None,
+                             False)
 
         # RLGlue used for training
         self.rlg = RLGlue(self.env, self.agent)
@@ -995,7 +992,7 @@ class FetchReachHistogram:
                 save_fetchreach_joint_angles(self.env.env.sim.data)
 
 
-def draw_histogram(f):
+def draw_histogram():
     global algorithm, env_name, time_steps, abnormal, crb, cm, rn, ant_histogram_data, fetchreach_histogram_data, suffix, suffix_eval, experiment_data_directory, experiment_plot_directory, experiment_name, name
 
     algorithm = None
@@ -1018,7 +1015,7 @@ def draw_histogram(f):
 
     name = None
 
-    params = f.split("/")[-1].split("_")
+    params = file.split("/")[-1].split("_")
     algorithm = params[0][0:3]
     env_info = params[1].split(":")
     env_name = env_info[0]
@@ -1034,13 +1031,13 @@ def draw_histogram(f):
                 elif p.startswith("rn:"):
                     rn = eval(p.split(":")[1])
             if cm and rn:
-                suffix_eval = "Post-Fault Policy\n(discard NN params, discard storage)"
+                suffix_eval = "post-fault: discard NN params, discard storage"
             elif cm and not rn:
-                suffix_eval = "Post-Fault Policy\n(retain NN params, discard storage)"
+                suffix_eval = "post-fault: retain NN params, discard storage"
             elif not cm and rn:
-                suffix_eval = "Post-Fault Policy\n(discard NN params, retain storage)"
+                suffix_eval = "post-fault: discard NN params, retain storage"
             else:
-                suffix_eval = "Post-Fault Policy\n(retain NN params, retain storage)"
+                suffix_eval = "post-fault: retain NN params, retain storage"
         if algorithm == "SAC":
             for p in params[2:]:
                 if p.startswith("crb:"):
@@ -1048,21 +1045,22 @@ def draw_histogram(f):
                 elif p.startswith("rn:"):
                     rn = eval(p.split(":")[1])
             if crb and rn:
-                suffix_eval = "Post-Fault Policy\n(discard NN params, discard storage)"
+                suffix_eval = "post-fault: discard NN params, discard storage"
             elif crb and not rn:
-                suffix_eval = "Post-Fault Policy\n(retain NN params, discard storage)"
+                suffix_eval = "post-fault: retain NN params, discard storage"
             elif not crb and rn:
-                suffix_eval = "Post-Fault Policy\n(discard NN params, retain storage)"
+                suffix_eval = "post-fault: discard NN params, retain storage"
             else:
-                suffix_eval = "Post-Fault Policy\n(retain NN params, retain storage)"
+                suffix_eval = "post-fault: retain NN params, retain storage"
     else:
-        suffix_eval = "Pre-Fault Policy"
+        suffix_eval = "pre-fault"
 
     if "Ant" in env_name:
         env_folder_name = "ant"
-    else:
+    elif "FetchReach in env_name":
         env_folder_name = "fetchreach"
-        assert "FetchReach" in env_name, "draw_histogram: env_name does not contain Ant or FetchReach"
+    else:
+        pass
 
     if not abnormal:
         suffix = ""
@@ -1165,21 +1163,21 @@ if __name__ == "__main__":
 
     # PPO
 
-    ant_ppo_v0 = False  # todo
+    ant_ppo_v0 = True
 
     if ant_ppo_v0:
 
         file = "/media/sschoepp/easystore/openai/ant/original/normal/PPOv2_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_d:cpu_ps:True_pss:33"
-        draw_histogram(file)
+        draw_histogram()
 
     # SAC
 
-    ant_sac_v0 = False  # todo
+    ant_sac_v0 = True
 
     if ant_sac_v0:
 
         file = "/media/sschoepp/easystore/openai/ant/original/normal/SACv2_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_a:True_d:cuda_ps:True_pss:61"
-        draw_histogram(file)
+        draw_histogram()
 
     """ant faulty"""
 
@@ -1190,16 +1188,16 @@ if __name__ == "__main__":
     if ant_ppo_v1:
 
         file = "/media/sschoepp/easystore/openai/ant/original/faulty/ppo/v1/PPOv2_AntEnv-v1:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:False_rn:False_d:cpu"
-        draw_histogram(file)
+        draw_histogram()
 
         file = "/media/sschoepp/easystore/openai/ant/original/faulty/ppo/v1/PPOv2_AntEnv-v1:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:False_rn:True_d:cpu"
-        draw_histogram(file)
+        draw_histogram()
 
         file = "/media/sschoepp/easystore/openai/ant/original/faulty/ppo/v1/PPOv2_AntEnv-v1:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:True_rn:False_d:cpu"
-        draw_histogram(file)
+        draw_histogram()
 
         file = "/media/sschoepp/easystore/openai/ant/original/faulty/ppo/v1/PPOv2_AntEnv-v1:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:True_rn:True_d:cpu"
-        draw_histogram(file)
+        draw_histogram()
 
     # PPO v2
 
@@ -1208,16 +1206,16 @@ if __name__ == "__main__":
     if ant_ppo_v2:
 
         file = "/media/sschoepp/easystore/openai/ant/original/faulty/ppo/v2/PPOv2_AntEnv-v2:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:False_rn:False_d:cpu"
-        draw_histogram(file)
+        draw_histogram()
 
         file = "/media/sschoepp/easystore/openai/ant/original/faulty/ppo/v2/PPOv2_AntEnv-v2:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:False_rn:True_d:cpu"
-        draw_histogram(file)
+        draw_histogram()
 
         file = "/media/sschoepp/easystore/openai/ant/original/faulty/ppo/v2/PPOv2_AntEnv-v2:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:True_rn:False_d:cpu"
-        draw_histogram(file)
+        draw_histogram()
 
         file = "/media/sschoepp/easystore/openai/ant/original/faulty/ppo/v2/PPOv2_AntEnv-v2:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:True_rn:True_d:cpu"
-        draw_histogram(file)
+        draw_histogram()
 
     # PPO v3
 
@@ -1226,16 +1224,16 @@ if __name__ == "__main__":
     if ant_ppo_v3:
 
         file = "/media/sschoepp/easystore/openai/ant/original/faulty/ppo/v3/PPOv2_AntEnv-v3:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:False_rn:False_d:cpu"
-        draw_histogram(file)
+        draw_histogram()
 
         file = "/media/sschoepp/easystore/openai/ant/original/faulty/ppo/v3/PPOv2_AntEnv-v3:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:False_rn:True_d:cpu"
-        draw_histogram(file)
+        draw_histogram()
 
         file = "/media/sschoepp/easystore/openai/ant/original/faulty/ppo/v3/PPOv2_AntEnv-v3:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:True_rn:False_d:cpu"
-        draw_histogram(file)
+        draw_histogram()
 
         file = "/media/sschoepp/easystore/openai/ant/original/faulty/ppo/v3/PPOv2_AntEnv-v3:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:True_rn:True_d:cpu"
-        draw_histogram(file)
+        draw_histogram()
 
     # PPO v4
 
@@ -1244,16 +1242,16 @@ if __name__ == "__main__":
     if ant_ppo_v4:
 
         file = "/media/sschoepp/easystore/openai/ant/original/faulty/ppo/v4/PPOv2_AntEnv-v4:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:False_rn:False_d:cpu"
-        draw_histogram(file)
+        draw_histogram()
 
         file = "/media/sschoepp/easystore/openai/ant/original/faulty/ppo/v4/PPOv2_AntEnv-v4:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:False_rn:True_d:cpu"
-        draw_histogram(file)
+        draw_histogram()
 
         file = "/media/sschoepp/easystore/openai/ant/original/faulty/ppo/v4/PPOv2_AntEnv-v4:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:True_rn:False_d:cpu"
-        draw_histogram(file)
+        draw_histogram()
 
         file = "/media/sschoepp/easystore/openai/ant/original/faulty/ppo/v4/PPOv2_AntEnv-v4:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:True_rn:True_d:cpu"
-        draw_histogram(file)
+        draw_histogram()
 
     # SAC v1
 
@@ -1262,16 +1260,16 @@ if __name__ == "__main__":
     if ant_sac_v1:
 
         file = "/media/sschoepp/easystore/openai/ant/original/faulty/sac/v1/SACv2_AntEnv-v1:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:False_rn:False_a:True_d:cuda"
-        draw_histogram(file)
+        draw_histogram()
 
         file = "/media/sschoepp/easystore/openai/ant/original/faulty/sac/v1/SACv2_AntEnv-v1:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:False_rn:True_a:True_d:cuda"
-        draw_histogram(file)
+        draw_histogram()
 
         file = "/media/sschoepp/easystore/openai/ant/original/faulty/sac/v1/SACv2_AntEnv-v1:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:True_rn:False_a:True_d:cuda"
-        draw_histogram(file)
+        draw_histogram()
 
         file = "/media/sschoepp/easystore/openai/ant/original/faulty/sac/v1/SACv2_AntEnv-v1:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:True_rn:True_a:True_d:cuda"
-        draw_histogram(file)
+        draw_histogram()
 
     # SAC v2
 
@@ -1280,16 +1278,16 @@ if __name__ == "__main__":
     if ant_sac_v2:
 
         file = "/media/sschoepp/easystore/openai/ant/original/faulty/sac/v2/SACv2_AntEnv-v2:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:False_rn:False_a:True_d:cuda"
-        draw_histogram(file)
+        draw_histogram()
 
         file = "/media/sschoepp/easystore/openai/ant/original/faulty/sac/v2/SACv2_AntEnv-v2:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:False_rn:True_a:True_d:cuda"
-        draw_histogram(file)
+        draw_histogram()
 
         file = "/media/sschoepp/easystore/openai/ant/original/faulty/sac/v2/SACv2_AntEnv-v2:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:True_rn:False_a:True_d:cuda"
-        draw_histogram(file)
+        draw_histogram()
 
         file = "/media/sschoepp/easystore/openai/ant/original/faulty/sac/v2/SACv2_AntEnv-v2:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:True_rn:True_a:True_d:cuda"
-        draw_histogram(file)
+        draw_histogram()
 
     # SAC v3
 
@@ -1298,16 +1296,16 @@ if __name__ == "__main__":
     if ant_sac_v3:
 
         file = "/media/sschoepp/easystore/openai/ant/original/faulty/sac/v3/SACv2_AntEnv-v3:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:False_rn:False_a:True_d:cuda"
-        draw_histogram(file)
+        draw_histogram()
 
         file = "/media/sschoepp/easystore/openai/ant/original/faulty/sac/v3/SACv2_AntEnv-v3:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:False_rn:True_a:True_d:cuda"
-        draw_histogram(file)
+        draw_histogram()
 
         file = "/media/sschoepp/easystore/openai/ant/original/faulty/sac/v3/SACv2_AntEnv-v3:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:True_rn:False_a:True_d:cuda"
-        draw_histogram(file)
+        draw_histogram()
 
         file = "/media/sschoepp/easystore/openai/ant/original/faulty/sac/v3/SACv2_AntEnv-v3:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:True_rn:True_a:True_d:cuda"
-        draw_histogram(file)
+        draw_histogram()
 
     # SAC v4
 
@@ -1316,16 +1314,16 @@ if __name__ == "__main__":
     if ant_sac_v4:
 
         file = "/media/sschoepp/easystore/openai/ant/original/faulty/sac/v4/SACv2_AntEnv-v4:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:False_rn:False_a:True_d:cuda"
-        draw_histogram(file)
+        draw_histogram()
 
         file = "/media/sschoepp/easystore/openai/ant/original/faulty/sac/v4/SACv2_AntEnv-v4:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:False_rn:True_a:True_d:cuda"
-        draw_histogram(file)
+        draw_histogram()
 
         file = "/media/sschoepp/easystore/openai/ant/original/faulty/sac/v4/SACv2_AntEnv-v4:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:True_rn:False_a:True_d:cuda"
-        draw_histogram(file)
+        draw_histogram()
 
         file = "/media/sschoepp/easystore/openai/ant/original/faulty/sac/v4/SACv2_AntEnv-v4:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:True_rn:True_a:True_d:cuda"
-        draw_histogram(file)
+        draw_histogram()
 
     """fetchreach normal"""
 
@@ -1336,8 +1334,7 @@ if __name__ == "__main__":
     if fetchreach_ppo_v0:
 
         file = "/media/sschoepp/easystore/openai/fetchreach/original/normal/PPOv2_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_d:cpu_ps:True_pss:43"
-        # file = "/DATA/PPOv2_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_d:cpu_ps:True_pss:43"
-        draw_histogram(file)
+        draw_histogram()
 
     # SAC v0
 
@@ -1346,7 +1343,7 @@ if __name__ == "__main__":
     if fetchreach_sac_v0:
 
         file = "/media/sschoepp/easystore/openai/fetchreach/original/normal/SACv2_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_a:True_d:cuda_ps:True_pss:21"
-        draw_histogram(file)
+        draw_histogram()
 
     """fetchreach faulty"""
 
@@ -1357,16 +1354,16 @@ if __name__ == "__main__":
     if fetchreach_ppo_v1:
 
         file = "/media/sschoepp/easystore/openai/fetchreach/original/faulty/ppo/v1/PPOv2_FetchReachEnv-v1:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:False_rn:False_d:cpu"
-        draw_histogram(file)
+        draw_histogram()
 
         file = "/media/sschoepp/easystore/openai/fetchreach/original/faulty/ppo/v1/PPOv2_FetchReachEnv-v1:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:False_rn:True_d:cpu"
-        draw_histogram(file)
+        draw_histogram()
 
         file = "/media/sschoepp/easystore/openai/fetchreach/original/faulty/ppo/v1/PPOv2_FetchReachEnv-v1:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:True_rn:False_d:cpu"
-        draw_histogram(file)
+        draw_histogram()
 
         file = "/media/sschoepp/easystore/openai/fetchreach/original/faulty/ppo/v1/PPOv2_FetchReachEnv-v1:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:True_rn:True_d:cpu"
-        draw_histogram(file)
+        draw_histogram()
 
     # PPO v4
 
@@ -1375,16 +1372,16 @@ if __name__ == "__main__":
     if fetchreach_ppo_v4:
 
         file = "/media/sschoepp/easystore/openai/fetchreach/original/seeds/faulty/ppo/v4/PPOv2_FetchReachEnv-v4:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:False_rn:False_d:cpu"
-        draw_histogram(file)
+        draw_histogram()
 
         file = "/media/sschoepp/easystore/openai/fetchreach/original/seeds/faulty/ppo/v4/PPOv2_FetchReachEnv-v4:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:False_rn:True_d:cpu"
-        draw_histogram(file)
+        draw_histogram()
 
         file = "/media/sschoepp/easystore/openai/fetchreach/original/seeds/faulty/ppo/v4/PPOv2_FetchReachEnv-v4:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:True_rn:False_d:cpu"
-        draw_histogram(file)
+        draw_histogram()
 
         file = "/media/sschoepp/easystore/openai/fetchreach/original/seeds/faulty/ppo/v4/PPOv2_FetchReachEnv-v4:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:True_rn:True_d:cpu"
-        draw_histogram(file)
+        draw_histogram()
 
     # PPO v6
 
@@ -1393,16 +1390,16 @@ if __name__ == "__main__":
     if fetchreach_ppo_v6:
 
         file = "/media/sschoepp/easystore/openai/fetchreach/original/seeds/faulty/ppo/v6/PPOv2_FetchReachEnv-v6:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:False_rn:False_d:cpu"
-        draw_histogram(file)
+        draw_histogram()
 
         file = "/media/sschoepp/easystore/openai/fetchreach/original/seeds/faulty/ppo/v6/PPOv2_FetchReachEnv-v6:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:False_rn:True_d:cpu"
-        draw_histogram(file)
+        draw_histogram()
 
         file = "/media/sschoepp/easystore/openai/fetchreach/original/seeds/faulty/ppo/v6/PPOv2_FetchReachEnv-v6:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:True_rn:False_d:cpu"
-        draw_histogram(file)
+        draw_histogram()
 
         file = "/media/sschoepp/easystore/openai/fetchreach/original/seeds/faulty/ppo/v6/PPOv2_FetchReachEnv-v6:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:True_rn:True_d:cpu"
-        draw_histogram(file)
+        draw_histogram()
 
     # SAC v1
 
@@ -1411,16 +1408,16 @@ if __name__ == "__main__":
     if fetchreach_sac_v1:
 
         file = "/media/sschoepp/easystore/openai/fetchreach/original/faulty/sac/v1/SACv2_FetchReachEnv-v1:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:False_rn:False_a:True_d:cuda"
-        draw_histogram(file)
+        draw_histogram()
 
         file = "/media/sschoepp/easystore/openai/fetchreach/original/faulty/sac/v1/SACv2_FetchReachEnv-v1:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:False_rn:True_a:True_d:cuda"
-        draw_histogram(file)
+        draw_histogram()
 
         file = "/media/sschoepp/easystore/openai/fetchreach/original/faulty/sac/v1/SACv2_FetchReachEnv-v1:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:True_rn:False_a:True_d:cuda"
-        draw_histogram(file)
+        draw_histogram()
 
         file = "/media/sschoepp/easystore/openai/fetchreach/original/faulty/sac/v1/SACv2_FetchReachEnv-v1:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:True_rn:True_a:True_d:cuda"
-        draw_histogram(file)
+        draw_histogram()
 
     # SAC v4
 
@@ -1429,16 +1426,16 @@ if __name__ == "__main__":
     if fetchreach_sac_v4:
 
         file = "/media/sschoepp/easystore/openai/fetchreach/original/seeds/faulty/sac/v4/SACv2_FetchReachEnv-v4:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:False_rn:False_a:True_d:cuda_mod"
-        draw_histogram(file)
+        draw_histogram()
 
         file = "/media/sschoepp/easystore/openai/fetchreach/original/seeds/faulty/sac/v4/SACv2_FetchReachEnv-v4:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:False_rn:True_a:True_d:cuda_mod"
-        draw_histogram(file)
+        draw_histogram()
 
         file = "/media/sschoepp/easystore/openai/fetchreach/original/seeds/faulty/sac/v4/SACv2_FetchReachEnv-v4:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:True_rn:False_a:True_d:cuda_mod"
-        draw_histogram(file)
+        draw_histogram()
 
         file = "/media/sschoepp/easystore/openai/fetchreach/original/seeds/faulty/sac/v4/SACv2_FetchReachEnv-v4:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:True_rn:True_a:True_d:cuda_mod"
-        draw_histogram(file)
+        draw_histogram()
 
     # SAC v6
 
@@ -1447,13 +1444,13 @@ if __name__ == "__main__":
     if fetchreach_sac_v6:
 
         file = "/media/sschoepp/easystore/openai/fetchreach/original/seeds/faulty/sac/v6/SACv2_FetchReachEnv-v6:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:False_rn:False_a:True_d:cuda_mod"
-        draw_histogram(file)
+        draw_histogram()
 
         file = "/media/sschoepp/easystore/openai/fetchreach/original/seeds/faulty/sac/v6/SACv2_FetchReachEnv-v6:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:False_rn:True_a:True_d:cuda_mod"
-        draw_histogram(file)
+        draw_histogram()
 
         file = "/media/sschoepp/easystore/openai/fetchreach/original/seeds/faulty/sac/v6/SACv2_FetchReachEnv-v6:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:True_rn:False_a:True_d:cuda_mod"
-        draw_histogram(file)
+        draw_histogram()
 
         file = "/media/sschoepp/easystore/openai/fetchreach/original/seeds/faulty/sac/v6/SACv2_FetchReachEnv-v6:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:True_rn:True_a:True_d:cuda_mod"
-        draw_histogram(file)
+        draw_histogram()

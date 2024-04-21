@@ -128,7 +128,7 @@ def plot_early_adaptation(directory):
     # reorganize settings to obtain a plotting order
     # (rn, cs) desired_ordering = [(True, True), (True, False), (False, True), (False, False)]
 
-    ordered_settings.sort(reverse=True)
+    ordered_settings.sort(reverse=False)
 
     # plot
 
@@ -136,17 +136,7 @@ def plot_early_adaptation(directory):
 
     x_divisor = 1000000
 
-    x_fault_onset = ordered_settings[0][4].iloc[
-                        eval_fault_onset, 0] - ts_fault_onset
-
-    # # plot normal asymptotic performance
-    #
-    # x = (ordered_settings[0][4].iloc[eval_fault_onset:, 0] - ts_fault_onset) / x_divisor
-    # normal_asymp = ordered_settings[0][4].iloc[eval_fault_onset - 10:eval_fault_onset, 1].mean()
-    #
-    # plt.axhline(y=normal_asymp, color=palette_colours[0], linestyle="dashed", linewidth=1)
-
-    # plot fault performance
+    x_fault_onset = ordered_settings[0][4].iloc[eval_fault_onset, 0] - ts_fault_onset
 
     for i in range(4):
         # # asymptotic performance

@@ -1181,7 +1181,7 @@ if __name__ == "__main__":
 
     if ant_ppo_v0:
 
-        file = "/media/sschoepp/easystore/ant/combined/normal/PPOv2_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_d:cpu_ps:True_pss:33"
+        file = "/media/sschoepp/easystore/openai/ant/combined/normal/PPOv2_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_d:cpu_ps:True_pss:33"
         draw_histogram()
 
     # SAC
@@ -1190,7 +1190,7 @@ if __name__ == "__main__":
 
     if ant_sac_v0:
 
-        file = "/media/sschoepp/easystore/ant/combined/normal/SACv2_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_a:True_d:cuda_ps:True_pss:61"
+        file = "/media/sschoepp/easystore/openai/ant/combined/normal/SACv2_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_a:True_d:cuda_ps:True_pss:61"
         draw_histogram()
 
     """ant faulty"""
@@ -1201,16 +1201,16 @@ if __name__ == "__main__":
 
     if ant_ppo_v1:
 
-        file = "/media/sschoepp/easystore/ant/combined/faulty/ppo/v1/PPOv2_AntEnv-v1:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:False_rn:False_d:cpu"
+        file = "/media/sschoepp/easystore/openai/ant/combined/faulty/ppo/v1/PPOv2_AntEnv-v1:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:False_rn:False_d:cpu"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/ant/combined/faulty/ppo/v1/PPOv2_AntEnv-v1:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:False_rn:True_d:cpu"
+        file = "/media/sschoepp/easystore/openai/ant/combined/faulty/ppo/v1/PPOv2_AntEnv-v1:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:False_rn:True_d:cpu"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/ant/combined/faulty/ppo/v1/PPOv2_AntEnv-v1:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:True_rn:False_d:cpu"
+        file = "/media/sschoepp/easystore/openai/ant/combined/faulty/ppo/v1/PPOv2_AntEnv-v1:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:True_rn:False_d:cpu"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/ant/combined/faulty/ppo/v1/PPOv2_AntEnv-v1:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:True_rn:True_d:cpu"
+        file = "/media/sschoepp/easystore/openai/ant/combined/faulty/ppo/v1/PPOv2_AntEnv-v1:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:True_rn:True_d:cpu"
         draw_histogram()
 
     # PPO v2
@@ -1219,16 +1219,16 @@ if __name__ == "__main__":
 
     if ant_ppo_v2:
 
-        file = "/media/sschoepp/easystore/ant/combined/faulty/ppo/v2/PPOv2_AntEnv-v2:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:False_rn:False_d:cpu"
+        file = "/media/sschoepp/easystore/openai/ant/combined/faulty/ppo/v2/PPOv2_AntEnv-v2:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:False_rn:False_d:cpu"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/ant/combined/faulty/ppo/v2/PPOv2_AntEnv-v2:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:False_rn:True_d:cpu"
+        file = "/media/sschoepp/easystore/openai/ant/combined/faulty/ppo/v2/PPOv2_AntEnv-v2:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:False_rn:True_d:cpu"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/ant/combined/faulty/ppo/v2/PPOv2_AntEnv-v2:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:True_rn:False_d:cpu"
+        file = "/media/sschoepp/easystore/openai/ant/combined/faulty/ppo/v2/PPOv2_AntEnv-v2:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:True_rn:False_d:cpu"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/ant/combined/faulty/ppo/v2/PPOv2_AntEnv-v2:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:True_rn:True_d:cpu"
+        file = "/media/sschoepp/easystore/openai/ant/combined/faulty/ppo/v2/PPOv2_AntEnv-v2:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:True_rn:True_d:cpu"
         draw_histogram()
 
     # PPO v3
@@ -1237,16 +1237,16 @@ if __name__ == "__main__":
 
     if ant_ppo_v3:
 
-        file = "/media/sschoepp/easystore/ant/combined/faulty/ppo/v3/PPOv2_AntEnv-v3:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:False_rn:False_d:cpu"
+        file = "/media/sschoepp/easystore/openai/ant/combined/faulty/ppo/v3/PPOv2_AntEnv-v3:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:False_rn:False_d:cpu"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/ant/combined/faulty/ppo/v3/PPOv2_AntEnv-v3:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:False_rn:True_d:cpu"
+        file = "/media/sschoepp/easystore/openai/ant/combined/faulty/ppo/v3/PPOv2_AntEnv-v3:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:False_rn:True_d:cpu"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/ant/combined/faulty/ppo/v3/PPOv2_AntEnv-v3:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:True_rn:False_d:cpu"
+        file = "/media/sschoepp/easystore/openai/ant/combined/faulty/ppo/v3/PPOv2_AntEnv-v3:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:True_rn:False_d:cpu"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/ant/combined/faulty/ppo/v3/PPOv2_AntEnv-v3:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:True_rn:True_d:cpu"
+        file = "/media/sschoepp/easystore/openai/ant/combined/faulty/ppo/v3/PPOv2_AntEnv-v3:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:True_rn:True_d:cpu"
         draw_histogram()
 
     # PPO v4
@@ -1255,16 +1255,16 @@ if __name__ == "__main__":
 
     if ant_ppo_v4:
 
-        file = "/media/sschoepp/easystore/ant/combined/faulty/ppo/v4/PPOv2_AntEnv-v4:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:False_rn:False_d:cpu"
+        file = "/media/sschoepp/easystore/openai/ant/combined/faulty/ppo/v4/PPOv2_AntEnv-v4:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:False_rn:False_d:cpu"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/ant/combined/faulty/ppo/v4/PPOv2_AntEnv-v4:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:False_rn:True_d:cpu"
+        file = "/media/sschoepp/easystore/openai/ant/combined/faulty/ppo/v4/PPOv2_AntEnv-v4:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:False_rn:True_d:cpu"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/ant/combined/faulty/ppo/v4/PPOv2_AntEnv-v4:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:True_rn:False_d:cpu"
+        file = "/media/sschoepp/easystore/openai/ant/combined/faulty/ppo/v4/PPOv2_AntEnv-v4:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:True_rn:False_d:cpu"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/ant/combined/faulty/ppo/v4/PPOv2_AntEnv-v4:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:True_rn:True_d:cpu"
+        file = "/media/sschoepp/easystore/openai/ant/combined/faulty/ppo/v4/PPOv2_AntEnv-v4:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000_cm:True_rn:True_d:cpu"
         draw_histogram()
 
     # SAC v1
@@ -1273,16 +1273,16 @@ if __name__ == "__main__":
 
     if ant_sac_v1:
 
-        file = "/media/sschoepp/easystore/ant/combined/faulty/sac/v1/SACv2_AntEnv-v1:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:False_rn:False_a:True_d:cuda"
+        file = "/media/sschoepp/easystore/openai/ant/combined/faulty/sac/v1/SACv2_AntEnv-v1:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:False_rn:False_a:True_d:cuda"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/ant/combined/faulty/sac/v1/SACv2_AntEnv-v1:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:False_rn:True_a:True_d:cuda"
+        file = "/media/sschoepp/easystore/openai/ant/combined/faulty/sac/v1/SACv2_AntEnv-v1:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:False_rn:True_a:True_d:cuda"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/ant/combined/faulty/sac/v1/SACv2_AntEnv-v1:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:True_rn:False_a:True_d:cuda"
+        file = "/media/sschoepp/easystore/openai/ant/combined/faulty/sac/v1/SACv2_AntEnv-v1:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:True_rn:False_a:True_d:cuda"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/ant/combined/faulty/sac/v1/SACv2_AntEnv-v1:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:True_rn:True_a:True_d:cuda"
+        file = "/media/sschoepp/easystore/openai/ant/combined/faulty/sac/v1/SACv2_AntEnv-v1:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:True_rn:True_a:True_d:cuda"
         draw_histogram()
 
     # SAC v2
@@ -1291,16 +1291,16 @@ if __name__ == "__main__":
 
     if ant_sac_v2:
 
-        file = "/media/sschoepp/easystore/ant/combined/faulty/sac/v2/SACv2_AntEnv-v2:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:False_rn:False_a:True_d:cuda"
+        file = "/media/sschoepp/easystore/openai/ant/combined/faulty/sac/v2/SACv2_AntEnv-v2:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:False_rn:False_a:True_d:cuda"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/ant/combined/faulty/sac/v2/SACv2_AntEnv-v2:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:False_rn:True_a:True_d:cuda"
+        file = "/media/sschoepp/easystore/openai/ant/combined/faulty/sac/v2/SACv2_AntEnv-v2:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:False_rn:True_a:True_d:cuda"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/ant/combined/faulty/sac/v2/SACv2_AntEnv-v2:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:True_rn:False_a:True_d:cuda"
+        file = "/media/sschoepp/easystore/openai/ant/combined/faulty/sac/v2/SACv2_AntEnv-v2:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:True_rn:False_a:True_d:cuda"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/ant/combined/faulty/sac/v2/SACv2_AntEnv-v2:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:True_rn:True_a:True_d:cuda"
+        file = "/media/sschoepp/easystore/openai/ant/combined/faulty/sac/v2/SACv2_AntEnv-v2:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:True_rn:True_a:True_d:cuda"
         draw_histogram()
 
     # SAC v3
@@ -1309,16 +1309,16 @@ if __name__ == "__main__":
 
     if ant_sac_v3:
 
-        file = "/media/sschoepp/easystore/ant/combined/faulty/sac/v3/SACv2_AntEnv-v3:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:False_rn:False_a:True_d:cuda"
+        file = "/media/sschoepp/easystore/openai/ant/combined/faulty/sac/v3/SACv2_AntEnv-v3:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:False_rn:False_a:True_d:cuda"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/ant/combined/faulty/sac/v3/SACv2_AntEnv-v3:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:False_rn:True_a:True_d:cuda"
+        file = "/media/sschoepp/easystore/openai/ant/combined/faulty/sac/v3/SACv2_AntEnv-v3:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:False_rn:True_a:True_d:cuda"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/ant/combined/faulty/sac/v3/SACv2_AntEnv-v3:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:True_rn:False_a:True_d:cuda"
+        file = "/media/sschoepp/easystore/openai/ant/combined/faulty/sac/v3/SACv2_AntEnv-v3:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:True_rn:False_a:True_d:cuda"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/ant/combined/faulty/sac/v3/SACv2_AntEnv-v3:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:True_rn:True_a:True_d:cuda"
+        file = "/media/sschoepp/easystore/openai/ant/combined/faulty/sac/v3/SACv2_AntEnv-v3:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:True_rn:True_a:True_d:cuda"
         draw_histogram()
 
     # SAC v4
@@ -1327,16 +1327,16 @@ if __name__ == "__main__":
 
     if ant_sac_v4:
 
-        file = "/media/sschoepp/easystore/ant/combined/faulty/sac/v4/SACv2_AntEnv-v4:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:False_rn:False_a:True_d:cuda"
+        file = "/media/sschoepp/easystore/openai/ant/combined/faulty/sac/v4/SACv2_AntEnv-v4:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:False_rn:False_a:True_d:cuda"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/ant/combined/faulty/sac/v4/SACv2_AntEnv-v4:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:False_rn:True_a:True_d:cuda"
+        file = "/media/sschoepp/easystore/openai/ant/combined/faulty/sac/v4/SACv2_AntEnv-v4:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:False_rn:True_a:True_d:cuda"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/ant/combined/faulty/sac/v4/SACv2_AntEnv-v4:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:True_rn:False_a:True_d:cuda"
+        file = "/media/sschoepp/easystore/openai/ant/combined/faulty/sac/v4/SACv2_AntEnv-v4:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:True_rn:False_a:True_d:cuda"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/ant/combined/faulty/sac/v4/SACv2_AntEnv-v4:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:True_rn:True_a:True_d:cuda"
+        file = "/media/sschoepp/easystore/openai/ant/combined/faulty/sac/v4/SACv2_AntEnv-v4:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000_crb:True_rn:True_a:True_d:cuda"
         draw_histogram()
 
     """fetchreach normal"""
@@ -1347,7 +1347,7 @@ if __name__ == "__main__":
 
     if fetchreach_ppo_v0:
 
-        file = "/media/sschoepp/easystore/fetchreach/combined/normal/PPOv2_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_d:cpu_ps:True_pss:43"
+        file = "/media/sschoepp/easystore/openai/fetchreach/combined/normal/PPOv2_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_d:cpu_ps:True_pss:43"
         # file = "/DATA/PPOv2_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_d:cpu_ps:True_pss:43"
         draw_histogram()
 
@@ -1357,7 +1357,7 @@ if __name__ == "__main__":
 
     if fetchreach_sac_v0:
 
-        file = "/media/sschoepp/easystore/fetchreach/combined/normal/SACv2_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_a:True_d:cuda_ps:True_pss:21"
+        file = "/media/sschoepp/easystore/openai/fetchreach/combined/normal/SACv2_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_a:True_d:cuda_ps:True_pss:21"
         draw_histogram()
 
     """fetchreach faulty"""
@@ -1368,16 +1368,16 @@ if __name__ == "__main__":
 
     if fetchreach_ppo_v1:
 
-        file = "/media/sschoepp/easystore/fetchreach/original/faulty/ppo/v1/PPOv2_FetchReachEnv-v1:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:False_rn:False_d:cpu"
+        file = "/media/sschoepp/easystore/openai/fetchreach/original/faulty/ppo/v1/PPOv2_FetchReachEnv-v1:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:False_rn:False_d:cpu"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/fetchreach/original/faulty/ppo/v1/PPOv2_FetchReachEnv-v1:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:False_rn:True_d:cpu"
+        file = "/media/sschoepp/easystore/openai/fetchreach/original/faulty/ppo/v1/PPOv2_FetchReachEnv-v1:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:False_rn:True_d:cpu"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/fetchreach/original/faulty/ppo/v1/PPOv2_FetchReachEnv-v1:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:True_rn:False_d:cpu"
+        file = "/media/sschoepp/easystore/openai/fetchreach/original/faulty/ppo/v1/PPOv2_FetchReachEnv-v1:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:True_rn:False_d:cpu"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/fetchreach/original/faulty/ppo/v1/PPOv2_FetchReachEnv-v1:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:True_rn:True_d:cpu"
+        file = "/media/sschoepp/easystore/openai/fetchreach/original/faulty/ppo/v1/PPOv2_FetchReachEnv-v1:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:True_rn:True_d:cpu"
         draw_histogram()
 
     # PPO v4
@@ -1386,16 +1386,16 @@ if __name__ == "__main__":
 
     if fetchreach_ppo_v4:
 
-        file = "/media/sschoepp/easystore/fetchreach/original/seeds/faulty/ppo/v4/PPOv2_FetchReachEnv-v4:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:False_rn:False_d:cpu"
+        file = "/media/sschoepp/easystore/openai/fetchreach/original/seeds/faulty/ppo/v4/PPOv2_FetchReachEnv-v4:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:False_rn:False_d:cpu"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/fetchreach/original/seeds/faulty/ppo/v4/PPOv2_FetchReachEnv-v4:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:False_rn:True_d:cpu"
+        file = "/media/sschoepp/easystore/openai/fetchreach/original/seeds/faulty/ppo/v4/PPOv2_FetchReachEnv-v4:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:False_rn:True_d:cpu"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/fetchreach/original/seeds/faulty/ppo/v4/PPOv2_FetchReachEnv-v4:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:True_rn:False_d:cpu"
+        file = "/media/sschoepp/easystore/openai/fetchreach/original/seeds/faulty/ppo/v4/PPOv2_FetchReachEnv-v4:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:True_rn:False_d:cpu"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/fetchreach/original/seeds/faulty/ppo/v4/PPOv2_FetchReachEnv-v4:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:True_rn:True_d:cpu"
+        file = "/media/sschoepp/easystore/openai/fetchreach/original/seeds/faulty/ppo/v4/PPOv2_FetchReachEnv-v4:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:True_rn:True_d:cpu"
         draw_histogram()
 
     # PPO v6
@@ -1404,16 +1404,16 @@ if __name__ == "__main__":
 
     if fetchreach_ppo_v6:
 
-        file = "/media/sschoepp/easystore/fetchreach/original/seeds/faulty/ppo/v6/PPOv2_FetchReachEnv-v6:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:False_rn:False_d:cpu"
+        file = "/media/sschoepp/easystore/openai/fetchreach/original/seeds/faulty/ppo/v6/PPOv2_FetchReachEnv-v6:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:False_rn:False_d:cpu"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/fetchreach/original/seeds/faulty/ppo/v6/PPOv2_FetchReachEnv-v6:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:False_rn:True_d:cpu"
+        file = "/media/sschoepp/easystore/openai/fetchreach/original/seeds/faulty/ppo/v6/PPOv2_FetchReachEnv-v6:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:False_rn:True_d:cpu"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/fetchreach/original/seeds/faulty/ppo/v6/PPOv2_FetchReachEnv-v6:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:True_rn:False_d:cpu"
+        file = "/media/sschoepp/easystore/openai/fetchreach/original/seeds/faulty/ppo/v6/PPOv2_FetchReachEnv-v6:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:True_rn:False_d:cpu"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/fetchreach/original/seeds/faulty/ppo/v6/PPOv2_FetchReachEnv-v6:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:True_rn:True_d:cpu"
+        file = "/media/sschoepp/easystore/openai/fetchreach/original/seeds/faulty/ppo/v6/PPOv2_FetchReachEnv-v6:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000_cm:True_rn:True_d:cpu"
         draw_histogram()
 
     # SAC v1
@@ -1422,16 +1422,16 @@ if __name__ == "__main__":
 
     if fetchreach_sac_v1:
 
-        file = "/media/sschoepp/easystore/fetchreach/original/faulty/sac/v1/SACv2_FetchReachEnv-v1:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:False_rn:False_a:True_d:cuda"
+        file = "/media/sschoepp/easystore/openai/fetchreach/original/faulty/sac/v1/SACv2_FetchReachEnv-v1:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:False_rn:False_a:True_d:cuda"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/fetchreach/original/faulty/sac/v1/SACv2_FetchReachEnv-v1:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:False_rn:True_a:True_d:cuda"
+        file = "/media/sschoepp/easystore/openai/fetchreach/original/faulty/sac/v1/SACv2_FetchReachEnv-v1:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:False_rn:True_a:True_d:cuda"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/fetchreach/original/faulty/sac/v1/SACv2_FetchReachEnv-v1:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:True_rn:False_a:True_d:cuda"
+        file = "/media/sschoepp/easystore/openai/fetchreach/original/faulty/sac/v1/SACv2_FetchReachEnv-v1:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:True_rn:False_a:True_d:cuda"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/fetchreach/original/faulty/sac/v1/SACv2_FetchReachEnv-v1:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:True_rn:True_a:True_d:cuda"
+        file = "/media/sschoepp/easystore/openai/fetchreach/original/faulty/sac/v1/SACv2_FetchReachEnv-v1:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:True_rn:True_a:True_d:cuda"
         draw_histogram()
 
     # SAC v4
@@ -1440,16 +1440,16 @@ if __name__ == "__main__":
 
     if fetchreach_sac_v4:
 
-        file = "/media/sschoepp/easystore/fetchreach/original/seeds/faulty/sac/v4/SACv2_FetchReachEnv-v4:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:False_rn:False_a:True_d:cuda_mod"
+        file = "/media/sschoepp/easystore/openai/fetchreach/original/seeds/faulty/sac/v4/SACv2_FetchReachEnv-v4:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:False_rn:False_a:True_d:cuda_mod"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/fetchreach/original/seeds/faulty/sac/v4/SACv2_FetchReachEnv-v4:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:False_rn:True_a:True_d:cuda_mod"
+        file = "/media/sschoepp/easystore/openai/fetchreach/original/seeds/faulty/sac/v4/SACv2_FetchReachEnv-v4:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:False_rn:True_a:True_d:cuda_mod"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/fetchreach/original/seeds/faulty/sac/v4/SACv2_FetchReachEnv-v4:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:True_rn:False_a:True_d:cuda_mod"
+        file = "/media/sschoepp/easystore/openai/fetchreach/original/seeds/faulty/sac/v4/SACv2_FetchReachEnv-v4:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:True_rn:False_a:True_d:cuda_mod"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/fetchreach/original/seeds/faulty/sac/v4/SACv2_FetchReachEnv-v4:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:True_rn:True_a:True_d:cuda_mod"
+        file = "/media/sschoepp/easystore/openai/fetchreach/original/seeds/faulty/sac/v4/SACv2_FetchReachEnv-v4:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:True_rn:True_a:True_d:cuda_mod"
         draw_histogram()
 
     # SAC v6
@@ -1458,14 +1458,14 @@ if __name__ == "__main__":
 
     if fetchreach_sac_v6:
 
-        file = "/media/sschoepp/easystore/fetchreach/original/seeds/faulty/sac/v6/SACv2_FetchReachEnv-v6:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:False_rn:False_a:True_d:cuda_mod"
+        file = "/media/sschoepp/easystore/openai/fetchreach/original/seeds/faulty/sac/v6/SACv2_FetchReachEnv-v6:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:False_rn:False_a:True_d:cuda_mod"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/fetchreach/original/seeds/faulty/sac/v6/SACv2_FetchReachEnv-v6:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:False_rn:True_a:True_d:cuda_mod"
+        file = "/media/sschoepp/easystore/openai/fetchreach/original/seeds/faulty/sac/v6/SACv2_FetchReachEnv-v6:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:False_rn:True_a:True_d:cuda_mod"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/fetchreach/original/seeds/faulty/sac/v6/SACv2_FetchReachEnv-v6:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:True_rn:False_a:True_d:cuda_mod"
+        file = "/media/sschoepp/easystore/openai/fetchreach/original/seeds/faulty/sac/v6/SACv2_FetchReachEnv-v6:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:True_rn:False_a:True_d:cuda_mod"
         draw_histogram()
 
-        file = "/media/sschoepp/easystore/fetchreach/original/seeds/faulty/sac/v6/SACv2_FetchReachEnv-v6:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:True_rn:True_a:True_d:cuda_mod"
+        file = "/media/sschoepp/easystore/openai/fetchreach/original/seeds/faulty/sac/v6/SACv2_FetchReachEnv-v6:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:True_rn:True_a:True_d:cuda_mod"
         draw_histogram()

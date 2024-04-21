@@ -321,12 +321,35 @@ def legend():
               f"retain {theta},\ndiscard {emmm}",
               f"discard {theta},\nretain {emmm}",
               f"discard {theta},\ndiscard {emmm}"]
-    legend = plt.legend(handles, labels, loc="center", ncol=5, framealpha=1,
+    legend = plt.legend(handles, labels, loc="center", ncol=4, framealpha=1,
                         frameon=True, facecolor="inherit", prop={"size": 6})
     fig.canvas.draw()
 
     # Save the figure with the legend, without padding.
     filename = "plots/{}".format("legend.jpg")
+    fig.savefig(filename, dpi=300, bbox_inches="tight", pad_inches=0)
+    plt.close(fig)
+
+
+def legend2():
+    fig, ax = plt.subplots(figsize=(4, 0.24))
+    ax.axis("off")
+
+    f = lambda m, c: plt.plot([], [], marker=m, color=c, ls="none")[0]
+    handles = [f("s", palette_colours[i]) for i in range(5)]
+    theta = r"$\theta$"
+    emmm = r"$\mathcal{M}$"
+    labels = ["pre-fault",
+              f"retain {theta},\nretain {emmm}",
+              f"retain {theta},\ndiscard {emmm}",
+              f"discard {theta},\nretain {emmm}",
+              f"discard {theta},\ndiscard {emmm}"]
+    legend = plt.legend(handles, labels, loc="center", ncol=5, framealpha=1,
+                        frameon=True, facecolor="inherit", prop={"size": 6})
+    fig.canvas.draw()
+
+    # Save the figure with the legend, without padding.
+    filename = "plots/{}".format("legend2.jpg")
     fig.savefig(filename, dpi=300, bbox_inches="tight", pad_inches=0)
     plt.close(fig)
 
@@ -437,6 +460,7 @@ if __name__ == "__main__":
                                           fetchreach_fault_time_steps,
                                           partial_post_performances)
 
-    plot_bar_plots()
+    # plot_bar_plots()
 
     legend()
+    legend2()

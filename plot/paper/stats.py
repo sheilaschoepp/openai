@@ -15,7 +15,7 @@ if __name__ == "__main__":
         print("---------------------------------------------------------\n")
         print("Adaptation Speed Analysis for Ant-v2. This analysis\n"
               "displays the time step at which the 95% confidence\n"
-              "interval of the final average return of our baseline\n"
+              "interval of the average return of our baseline\n"
               "is reached. Methods that fail to reach this confidence\n"
               "interval are represented with a dashed line.\n")
         print("---------------------------------------------------------")
@@ -36,7 +36,7 @@ if __name__ == "__main__":
             elif version == "v4":
                 print("AntEnv-v4: Broken, Unsevered Limb")
 
-            base_path = f"{os.getenv('HOME')}/Documents/openai/data/ant/exps/complete/ppo/{version}/PPOv2_AntEnv-{version}:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000"
+            base_path = f"{os.getenv('HOME')}/Documents/openai/data/ant/exps/300k/ppo/{version}/PPOv2_AntEnv-{version}:600000000_Ant-v2:600000000_lr:0.000123_lrd:True_slrd:0.25_g:0.9839_ns:2471_mbs:1024_epo:5_eps:0.3_c1:1.0_c2:0.0019_cvl:False_mgn:0.5_gae:True_lam:0.911_hd:64_lstd:0.0_tef:3000000_ee:10_tmsf:50000000"
 
             # cm = clear memory
             # rn = reinitialize networks
@@ -215,7 +215,7 @@ if __name__ == "__main__":
             elif version == "v4":
                 print("AntEnv-v4: Broken, Unsevered Limb")
 
-            base_path = f"{os.getenv('HOME')}/Documents/openai/data/ant/exps/complete/sac/{version}/SACv2_AntEnv-{version}:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000"
+            base_path = f"{os.getenv('HOME')}/Documents/openai/data/ant/exps/300k/sac/{version}/SACv2_AntEnv-{version}:20000000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:100000_ee:10_tmsf:1000000"
 
             # crb = clear replay buffer
             # rn = reinitialize networks
@@ -398,7 +398,7 @@ if __name__ == "__main__":
             elif version == "v6":
                 print("FetchReachEnv-v6: Elbow Flex Position Slippage")
 
-            base_path = f"{os.getenv('HOME')}/Documents/openai/data/fetchreach/exps/complete/ppo/{version}/PPOv2_FetchReachEnv-{version}:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000"
+            base_path = f"{os.getenv('HOME')}/Documents/openai/data/fetchreach/exps/300k/ppo/{version}/PPO_FetchReachEnv-{version}:6000000_FetchReachEnv-v0:6000000_lr:0.000275_lrd:True_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:30000_ee:10_tmsf:60000"
 
             # cm = clear memory
             # rn = reinitialize networks
@@ -573,7 +573,7 @@ if __name__ == "__main__":
             elif version == "v6":
                 print("FetchReachEnv-v6: Elbow Flex Position Slippage")
 
-            base_path = f"{os.getenv('HOME')}/Documents/openai/data/fetchreach/exps/complete/sac/{version}/SACv2_FetchReachEnv-{version}:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000"
+            base_path = f"{os.getenv('HOME')}/Documents/openai/data/fetchreach/exps/300k/sac/{version}/SAC_FetchReachEnv-{version}:2000000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000"
 
             # crb = clear replay buffer
             # rn = reinitialize networks

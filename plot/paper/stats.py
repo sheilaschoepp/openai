@@ -58,7 +58,8 @@ if __name__ == "__main__":
                     eval_data_df = eval_data_df[["num_time_steps", "average_return"]]
                     baseline_cmT_rnT_dfs.append(eval_data_df)
                 else:
-                    print(colored("missing" + dir, "red"))
+                    # print(colored("missing" + dir, "red"))
+                    pass
 
             baseline_cmT_rnT_df = pd.concat(baseline_cmT_rnT_dfs)
             baseline_cmT_rnT_df = baseline_cmT_rnT_df.groupby(baseline_cmT_rnT_df.index)
@@ -92,7 +93,8 @@ if __name__ == "__main__":
                                                  "average_return"]]
                     cmF_rnF_dfs.append(eval_data_df)
                 else:
-                    print(colored("missing" + dir, "red"))
+                    # print(colored("missing" + dir, "red"))
+                    pass
 
             cmF_rnF_df = pd.concat(cmF_rnF_dfs)
             cmF_rnF_df = cmF_rnF_df.groupby(cmF_rnF_df.index)
@@ -122,7 +124,8 @@ if __name__ == "__main__":
                                                  "average_return"]]
                     cmT_rnF_dfs.append(eval_data_df)
                 else:
-                    print(colored("missing" + dir, "red"))
+                    # print(colored("missing" + dir, "red"))
+                    pass
 
             cmT_rnF_df = pd.concat(cmT_rnF_dfs)
             cmT_rnF_df = cmT_rnF_df.groupby(cmT_rnF_df.index)
@@ -152,7 +155,8 @@ if __name__ == "__main__":
                                                  "average_return"]]
                     cmF_rnT_dfs.append(eval_data_df)
                 else:
-                    print(colored("missing" + dir, "red"))
+                    # print(colored("missing" + dir, "red"))
+                    pass
 
             cmF_rnT_df = pd.concat(cmF_rnT_dfs)
             cmF_rnT_df = cmF_rnT_df.groupby(cmF_rnT_df.index)
@@ -182,7 +186,8 @@ if __name__ == "__main__":
                                                  "average_return"]]
                     cmT_rnT_dfs.append(eval_data_df)
                 else:
-                    print(colored("missing" + dir, "red"))
+                    # print(colored("missing" + dir, "red"))
+                    pass
 
             cmT_rnT_df = pd.concat(cmT_rnT_dfs)
             cmT_rnT_df = cmT_rnT_df.groupby(cmT_rnT_df.index)
@@ -238,7 +243,8 @@ if __name__ == "__main__":
                         ["num_time_steps", "average_return"]]
                     baseline_crbT_rnT_dfs.append(eval_data_df)
                 else:
-                    print(colored("missing" + dir, "red"))
+                    # print(colored("missing" + dir, "red"))
+                    pass
 
             baseline_crbT_rnT_df = pd.concat(baseline_crbT_rnT_dfs)
             baseline_crbT_rnT_df = baseline_crbT_rnT_df.groupby(baseline_crbT_rnT_df.index)
@@ -274,7 +280,8 @@ if __name__ == "__main__":
                                                  "average_return"]]
                     crbF_rnF_dfs.append(eval_data_df)
                 else:
-                    print(colored("missing" + dir, "red"))
+                    # print(colored("missing" + dir, "red"))
+                    pass
 
             crbF_rnF_df = pd.concat(crbF_rnF_dfs)
             crbF_rnF_df = crbF_rnF_df.groupby(crbF_rnF_df.index)
@@ -304,7 +311,8 @@ if __name__ == "__main__":
                                                  "average_return"]]
                     crbT_rnF_dfs.append(eval_data_df)
                 else:
-                    print(colored("missing" + dir, "red"))
+                    # print(colored("missing" + dir, "red"))
+                    pass
 
             crbT_rnF_df = pd.concat(crbT_rnF_dfs)
             crbT_rnF_df = crbT_rnF_df.groupby(crbT_rnF_df.index)
@@ -334,7 +342,8 @@ if __name__ == "__main__":
                                                  "average_return"]]
                     crbF_rnT_dfs.append(eval_data_df)
                 else:
-                    print(colored("missing" + dir, "red"))
+                    # print(colored("missing" + dir, "red"))
+                    pass
 
             crbF_rnT_df = pd.concat(crbF_rnT_dfs)
             crbF_rnT_df = crbF_rnT_df.groupby(crbF_rnT_df.index)
@@ -364,7 +373,8 @@ if __name__ == "__main__":
                                                  "average_return"]]
                     crbT_rnT_dfs.append(eval_data_df)
                 else:
-                    print(colored("missing" + dir, "red"))
+                    # print(colored("missing" + dir, "red"))
+                    pass
 
             crbT_rnT_df = pd.concat(crbT_rnT_dfs)
             crbT_rnT_df = crbT_rnT_df.groupby(crbT_rnT_df.index)
@@ -417,7 +427,8 @@ if __name__ == "__main__":
                     eval_data_df = eval_data_df[["num_time_steps", "average_return"]]
                     baseline_cmT_rnT_dfs.append(eval_data_df)
                 else:
-                    print(colored("missing" + dir, "red"))
+                    # print(colored("missing" + dir, "red"))
+                    pass
 
             baseline_cmT_rnT_df = pd.concat(baseline_cmT_rnT_dfs)
             baseline_cmT_rnT_df = baseline_cmT_rnT_df.groupby(baseline_cmT_rnT_df.index)
@@ -451,7 +462,8 @@ if __name__ == "__main__":
                                                  "average_return"]]
                     cmF_rnF_dfs.append(eval_data_df)
                 else:
-                    print(colored("missing" + dir, "red"))
+                    # print(colored("missing" + dir, "red"))
+                    pass
 
             cmF_rnF_df = pd.concat(cmF_rnF_dfs)
             cmF_rnF_df = cmF_rnF_df.groupby(cmF_rnF_df.index)
@@ -481,7 +493,8 @@ if __name__ == "__main__":
                                                  "average_return"]]
                     cmT_rnF_dfs.append(eval_data_df)
                 else:
-                    print(colored("missing" + dir, "red"))
+                    # print(colored("missing" + dir, "red"))
+                    pass
 
             cmT_rnF_df = pd.concat(cmT_rnF_dfs)
             cmT_rnF_df = cmT_rnF_df.groupby(cmT_rnF_df.index)
@@ -511,7 +524,8 @@ if __name__ == "__main__":
                                                  "average_return"]]
                     cmF_rnT_dfs.append(eval_data_df)
                 else:
-                    print(colored("missing" + dir, "red"))
+                    # print(colored("missing" + dir, "red"))
+                    pass
 
             cmF_rnT_df = pd.concat(cmF_rnT_dfs)
             cmF_rnT_df = cmF_rnT_df.groupby(cmF_rnT_df.index)
@@ -541,7 +555,8 @@ if __name__ == "__main__":
                                                  "average_return"]]
                     cmT_rnT_dfs.append(eval_data_df)
                 else:
-                    print(colored("missing" + dir, "red"))
+                    # print(colored("missing" + dir, "red"))
+                    pass
 
             cmT_rnT_df = pd.concat(cmT_rnT_dfs)
             cmT_rnT_df = cmT_rnT_df.groupby(cmT_rnT_df.index)
@@ -593,7 +608,8 @@ if __name__ == "__main__":
                         ["num_time_steps", "average_return"]]
                     baseline_crbT_rnT_dfs.append(eval_data_df)
                 else:
-                    print(colored("missing" + dir, "red"))
+                    # print(colored("missing" + dir, "red"))
+                    pass
 
             baseline_crbT_rnT_df = pd.concat(baseline_crbT_rnT_dfs)
             baseline_crbT_rnT_df = baseline_crbT_rnT_df.groupby(baseline_crbT_rnT_df.index)
@@ -629,7 +645,8 @@ if __name__ == "__main__":
                                                  "average_return"]]
                     crbF_rnF_dfs.append(eval_data_df)
                 else:
-                    print(colored("missing" + dir, "red"))
+                    # print(colored("missing" + dir, "red"))
+                    pass
 
             crbF_rnF_df = pd.concat(crbF_rnF_dfs)
             crbF_rnF_df = crbF_rnF_df.groupby(crbF_rnF_df.index)
@@ -659,7 +676,8 @@ if __name__ == "__main__":
                                                  "average_return"]]
                     crbT_rnF_dfs.append(eval_data_df)
                 else:
-                    print(colored("missing" + dir, "red"))
+                    # print(colored("missing" + dir, "red"))
+                    pass
 
             crbT_rnF_df = pd.concat(crbT_rnF_dfs)
             crbT_rnF_df = crbT_rnF_df.groupby(crbT_rnF_df.index)
@@ -689,7 +707,8 @@ if __name__ == "__main__":
                                                  "average_return"]]
                     crbF_rnT_dfs.append(eval_data_df)
                 else:
-                    print(colored("missing" + dir, "red"))
+                    # print(colored("missing" + dir, "red"))
+                    pass
 
             crbF_rnT_df = pd.concat(crbF_rnT_dfs)
             crbF_rnT_df = crbF_rnT_df.groupby(crbF_rnT_df.index)
@@ -719,7 +738,8 @@ if __name__ == "__main__":
                                                  "average_return"]]
                     crbT_rnT_dfs.append(eval_data_df)
                 else:
-                    print(colored("missing" + dir, "red"))
+                    # print(colored("missing" + dir, "red"))
+                    pass
 
             crbT_rnT_df = pd.concat(crbT_rnT_dfs)
             crbT_rnT_df = crbT_rnT_df.groupby(crbT_rnT_df.index)

@@ -1,0 +1,94 @@
+---------------------------------------------------------
+
+Adaptation Speed Analysis for Ant-v2. This analysis
+displays the time step at which the 95% confidence
+interval of the average return of our baseline at 300k time steps
+is reached. Methods that fail to reach this confidence
+interval are represented with a dashed line.
+
+---------------------------------------------------------
+PPO
+---------------------------------------------------------
+AntEnv-v1: Broken, Severed Limb
+Baseline Confidence Interval:  (array([561.50015793]), array([639.22861114]))
+cmF_rnF: t=600000000.0 mean=979.4267729666666
+cmT_rnF: t=600000000.0 mean=979.4267729666666
+cmF_rnT: t=600255000.0 mean=570.8368152
+cmT_rnT: t=600275000.0 mean=563.7567418666666
+---------------------------------------------------------
+AntEnv-v2: Hip 4 ROM
+Baseline Confidence Interval:  (array([258.93180336]), array([367.82119477]))
+cmF_rnF: t=600000000.0 mean=2899.1325664666665
+cmT_rnF: t=600000000.0 mean=2899.1325664666665
+cmF_rnT: t=600105000.0 mean=273.9255283666667
+cmT_rnT: t=600130000.0 mean=287.21696510000004
+---------------------------------------------------------
+AntEnv-v3: Ankle 4 ROM
+Baseline Confidence Interval:  (array([509.99651155]), array([601.26258079]))
+cmF_rnF: t=600000000.0 mean=885.0693728666666
+cmT_rnF: t=600000000.0 mean=885.0693728666666
+cmF_rnT: t=600265000.0 mean=520.1457702
+cmT_rnT: t=600270000.0 mean=511.5606982333333
+---------------------------------------------------------
+AntEnv-v4: Broken, Unsevered Limb
+Baseline Confidence Interval:  (array([260.3267039]), array([357.98333456]))
+cmF_rnF: t=600000000.0 mean=1316.1888307
+cmT_rnF: t=600000000.0 mean=1316.1888307
+cmF_rnT: t=600115000.0 mean=261.8818174
+cmT_rnT: t=600150000.0 mean=268.75661436666667
+---------------------------------------------------------
+SAC
+---------------------------------------------------------
+AntEnv-v1: Broken, Severed Limb
+Baseline Confidence Interval:  (array([1195.29225424]), array([1714.26986596]))
+[31mmissing/home/sschoepp/Documents/openai/data/ant/exps/300k/sac/v1/SACv2_AntEnv-v1:300000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:10000_crb:False_rn:True_a:True_d:cuda_mod/seed21[0m
+crbT_rnT: t=20270000.0 mean=1221.5791261333334
+---------------------------------------------------------
+AntEnv-v2: Hip 4 ROM
+Baseline Confidence Interval:  (array([1451.83723805]), array([2246.88448608]))
+crbF_rnF: t=20000000.0 mean=2007.1782400000002
+crbT_rnF: t=20000000.0 mean=2007.1782400000002
+[31mmissing/home/sschoepp/Documents/openai/data/ant/exps/300k/sac/v2/SACv2_AntEnv-v2:300000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:10000_crb:False_rn:True_a:True_d:cuda_mod/seed23[0m
+crbT_rnT: t=20270000.0 mean=1759.3273861
+---------------------------------------------------------
+AntEnv-v3: Ankle 4 ROM
+Baseline Confidence Interval:  (array([1455.71073976]), array([1936.62900584]))
+[31mmissing/home/sschoepp/Documents/openai/data/ant/exps/300k/sac/v3/SACv2_AntEnv-v3:300000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:10000_crb:False_rn:True_a:True_d:cuda_mod/seed0[0m
+[31mmissing/home/sschoepp/Documents/openai/data/ant/exps/300k/sac/v3/SACv2_AntEnv-v3:300000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:10000_crb:False_rn:True_a:True_d:cuda_mod/seed14[0m
+[31mmissing/home/sschoepp/Documents/openai/data/ant/exps/300k/sac/v3/SACv2_AntEnv-v3:300000_Ant-v2:20000000_g:0.9646_t:0.0877_a:0.2_lr:0.001092_hd:256_rbs:500000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:10000_crb:False_rn:True_a:True_d:cuda_mod/seed23[0m
+crbT_rnT: t=20260000.0 mean=1602.3350207333335
+---------------------------------------------------------
+AntEnv-v4: Broken, Unsevered Limb
+Baseline Confidence Interval:  (array([1130.23119682]), array([1639.16593365]))
+crbT_rnT: t=20270000.0 mean=1207.8845608666668
+---------------------------------------------------------
+PPO
+---------------------------------------------------------
+FetchReachEnv-v4: Frozen Shoulder Lift Position Sensor
+Baseline Confidence Interval:  (array([-1.68505477]), array([-1.2159753]))
+cmT_rnT: t=6140000.0 mean=-1.6714500666666665
+---------------------------------------------------------
+FetchReachEnv-v6: Elbow Flex Position Slippage
+Baseline Confidence Interval:  (array([-0.69230319]), array([-0.59538561]))
+cmF_rnF: t=6080000.0 mean=-0.6503493333333333
+cmT_rnF: t=6080000.0 mean=-0.6537607
+cmF_rnT: t=6270000.0 mean=-0.6804854666666666
+cmT_rnT: t=6250000.0 mean=-0.6393437
+---------------------------------------------------------
+SAC
+---------------------------------------------------------
+FetchReachEnv-v4: Frozen Shoulder Lift Position Sensor
+Baseline Confidence Interval:  (array([-0.99163674]), array([-0.84983846]))
+[31mmissing/home/sschoepp/Documents/openai/data/fetchreach/exps/300k/sac/v4/SAC_FetchReachEnv-v4:300000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:True_rn:False_a:True_d:cuda/seed3[0m
+[31mmissing/home/sschoepp/Documents/openai/data/fetchreach/exps/300k/sac/v4/SAC_FetchReachEnv-v4:300000_FetchReachEnv-v0:2000000_g:0.8097_t:0.0721_a:0.2_lr:0.001738_hd:256_rbs:10000_bs:512_mups:1_tui:1_tef:10000_ee:10_tmsf:20000_crb:True_rn:False_a:True_d:cuda/seed17[0m
+crbF_rnT: t=2120000.0 mean=-0.9625528
+crbT_rnT: t=2150000.0 mean=-0.9616312666666667
+---------------------------------------------------------
+FetchReachEnv-v6: Elbow Flex Position Slippage
+Baseline Confidence Interval:  (array([-0.5625668]), array([-0.49210534]))
+crbF_rnF: t=2020000.0 mean=-0.5100868666666666
+crbT_rnF: t=2010000.0 mean=-0.5360907666666667
+crbF_rnT: t=2210000.0 mean=-0.5603209666666668
+crbT_rnT: t=2270000.0 mean=-0.5533238333333333
+---------------------------------------------------------
+done

@@ -80,6 +80,42 @@ if __name__ == "__main__":
 
             print("Baseline Confidence Interval: ", baseline_cmT_rnT_ci)
 
+            # cmT_rnT
+
+            cmT_rnT_dfs = []
+
+            for seed in range(0, 30):
+                dir = os.path.join(baseline_cmT_rnT_path, "seed" + str(seed))
+                if os.path.exists(dir):
+                    eval_data_dir = os.path.join(dir, "csv",
+                                                 "eval_data.csv")
+                    eval_data_df = pd.read_csv(eval_data_dir)
+                    eval_data_df = eval_data_df[["num_time_steps",
+                                                 "average_return"]]
+                    cmT_rnT_dfs.append(eval_data_df)
+                else:
+                    # print(colored("missing" + dir, "red"))
+                    pass
+
+            cmT_rnT_df = pd.concat(cmT_rnT_dfs)
+            cmT_rnT_df = cmT_rnT_df.groupby(cmT_rnT_df.index)
+
+            cmT_rnT_df_mean = cmT_rnT_df.mean()
+
+            time_steps = None
+            for i in range(201, 262):
+
+                mean = cmT_rnT_df_mean["average_return"].iloc[i]
+                if baseline_cmT_rnT_ci_min <= mean:
+                    time_steps = cmT_rnT_df_mean['num_time_steps'].iloc[i]
+                    time_steps_ = cmT_rnT_df_mean['num_time_steps'].iloc[i]
+                    print(f"cmT_rnT: "
+                          f"t={time_steps_} "
+                          f"mean={mean}")
+                    percentage_saved = 100 - (((time_steps_ - 600000000) / (time_steps - 600000000)) * 100)
+                    print(f"{percentage_saved}")
+                    break
+
             # cmF_rnF
 
             cmF_rnF_dfs = []
@@ -105,9 +141,12 @@ if __name__ == "__main__":
 
                 mean = cmF_rnF_df_mean["average_return"].iloc[i]
                 if baseline_cmT_rnT_ci_min <= mean:
+                    time_steps_ = cmF_rnF_df_mean['num_time_steps'].iloc[i]
                     print(f"cmF_rnF: "
-                          f"t={cmF_rnF_df_mean['num_time_steps'].iloc[i]} "
+                          f"t={time_steps_} "
                           f"mean={mean}")
+                    percentage_saved = 100 - (((time_steps_ - 600000000) / (time_steps - 600000000)) * 100)
+                    print(f"{percentage_saved}")
                     break
 
             # cmT_rnF
@@ -136,9 +175,12 @@ if __name__ == "__main__":
 
                 mean = cmT_rnF_df_mean["average_return"].iloc[i]
                 if baseline_cmT_rnT_ci_min <= mean:
+                    time_steps_ = cmT_rnF_df_mean['num_time_steps'].iloc[i]
                     print(f"cmT_rnF: "
-                          f"t={cmT_rnF_df_mean['num_time_steps'].iloc[i]} "
+                          f"t={time_steps_} "
                           f"mean={mean}")
+                    percentage_saved = 100 - (((time_steps_ - 600000000) / (time_steps - 600000000)) * 100)
+                    print(f"{percentage_saved}")
                     break
 
             # cmF_rnT
@@ -167,40 +209,12 @@ if __name__ == "__main__":
 
                 mean = cmF_rnT_df_mean["average_return"].iloc[i]
                 if baseline_cmT_rnT_ci_min <= mean:
+                    time_steps_ = cmF_rnT_df_mean['num_time_steps'].iloc[i]
                     print(f"cmF_rnT: "
-                          f"t={cmF_rnT_df_mean['num_time_steps'].iloc[i]} "
+                          f"t={time_steps_} "
                           f"mean={mean}")
-                    break
-
-            # cmT_rnT
-
-            cmT_rnT_dfs = []
-
-            for seed in range(0, 30):
-                dir = os.path.join(baseline_cmT_rnT_path, "seed" + str(seed))
-                if os.path.exists(dir):
-                    eval_data_dir = os.path.join(dir, "csv",
-                                                 "eval_data.csv")
-                    eval_data_df = pd.read_csv(eval_data_dir)
-                    eval_data_df = eval_data_df[["num_time_steps",
-                                                 "average_return"]]
-                    cmT_rnT_dfs.append(eval_data_df)
-                else:
-                    # print(colored("missing" + dir, "red"))
-                    pass
-
-            cmT_rnT_df = pd.concat(cmT_rnT_dfs)
-            cmT_rnT_df = cmT_rnT_df.groupby(cmT_rnT_df.index)
-
-            cmT_rnT_df_mean = cmT_rnT_df.mean()
-
-            for i in range(201, 262):
-
-                mean = cmT_rnT_df_mean["average_return"].iloc[i]
-                if baseline_cmT_rnT_ci_min <= mean:
-                    print(f"cmT_rnT: "
-                          f"t={cmT_rnT_df_mean['num_time_steps'].iloc[i]} "
-                          f"mean={mean}")
+                    percentage_saved = 100 - (((time_steps_ - 600000000) / (time_steps - 600000000)) * 100)
+                    print(f"{percentage_saved}")
                     break
             print("---------------------------------------------------------")
 
@@ -267,6 +281,42 @@ if __name__ == "__main__":
 
             print("Baseline Confidence Interval: ", baseline_crbT_rnT_ci)
 
+            # crbT_rnT
+
+            crbT_rnT_dfs = []
+
+            for seed in range(0, 30):
+                dir = os.path.join(baseline_crbT_rnT_path, "seed" + str(seed))
+                if os.path.exists(dir):
+                    eval_data_dir = os.path.join(dir, "csv",
+                                                 "eval_data.csv")
+                    eval_data_df = pd.read_csv(eval_data_dir)
+                    eval_data_df = eval_data_df[["num_time_steps",
+                                                 "average_return"]]
+                    crbT_rnT_dfs.append(eval_data_df)
+                else:
+                    # print(colored("missing" + dir, "red"))
+                    pass
+
+            crbT_rnT_df = pd.concat(crbT_rnT_dfs)
+            crbT_rnT_df = crbT_rnT_df.groupby(crbT_rnT_df.index)
+
+            crbT_rnT_df_mean = crbT_rnT_df.mean()
+
+            time_steps = None
+            for i in range(201, 232):
+
+                mean = crbT_rnT_df_mean["average_return"].iloc[i]
+                if baseline_crbT_rnT_ci_min <= mean:
+                    time_steps = crbT_rnT_df_mean['num_time_steps'].iloc[i]
+                    time_steps_ = crbT_rnT_df_mean['num_time_steps'].iloc[i]
+                    print(f"crbT_rnT: "
+                          f"t={time_steps_} "
+                          f"mean={mean}")
+                    percentage_saved = 100 - (((time_steps_ - 20000000) / (time_steps - 20000000)) * 100)
+                    print(f"{percentage_saved}")
+                    break
+
             # crbF_rnF
 
             crbF_rnF_dfs = []
@@ -292,9 +342,12 @@ if __name__ == "__main__":
 
                 mean = crbF_rnF_df_mean["average_return"].iloc[i]
                 if baseline_crbT_rnT_ci_min <= mean:
+                    time_steps_ = crbF_rnF_df_mean['num_time_steps'].iloc[i]
                     print(f"crbF_rnF: "
-                          f"t={crbF_rnF_df_mean['num_time_steps'].iloc[i]} "
+                          f"t={time_steps_} "
                           f"mean={mean}")
+                    percentage_saved = 100 - (((time_steps_ - 20000000) / (time_steps - 20000000)) * 100)
+                    print(f"{percentage_saved}")
                     break
 
             # crbT_rnF
@@ -323,9 +376,12 @@ if __name__ == "__main__":
 
                 mean = crbT_rnF_df_mean["average_return"].iloc[i]
                 if baseline_crbT_rnT_ci_min <= mean:
+                    time_steps_ = crbT_rnF_df_mean['num_time_steps'].iloc[i]
                     print(f"crbT_rnF: "
-                          f"t={crbT_rnF_df_mean['num_time_steps'].iloc[i]} "
+                          f"t={time_steps_} "
                           f"mean={mean}")
+                    percentage_saved = 100 - (((time_steps_ - 20000000) / (time_steps - 20000000)) * 100)
+                    print(f"{percentage_saved}")
                     break
 
             # crbF_rnT
@@ -354,40 +410,12 @@ if __name__ == "__main__":
 
                 mean = crbF_rnT_df_mean["average_return"].iloc[i]
                 if baseline_crbT_rnT_ci_min <= mean:
+                    time_steps_ = crbF_rnT_df_mean['num_time_steps'].iloc[i]
                     print(f"crbF_rnT: "
-                          f"t={crbF_rnT_df_mean['num_time_steps'].iloc[i]} "
+                          f"t={time_steps_} "
                           f"mean={mean}")
-                    break
-
-            # crbT_rnT
-
-            crbT_rnT_dfs = []
-
-            for seed in range(0, 30):
-                dir = os.path.join(baseline_crbT_rnT_path, "seed" + str(seed))
-                if os.path.exists(dir):
-                    eval_data_dir = os.path.join(dir, "csv",
-                                                 "eval_data.csv")
-                    eval_data_df = pd.read_csv(eval_data_dir)
-                    eval_data_df = eval_data_df[["num_time_steps",
-                                                 "average_return"]]
-                    crbT_rnT_dfs.append(eval_data_df)
-                else:
-                    # print(colored("missing" + dir, "red"))
-                    pass
-
-            crbT_rnT_df = pd.concat(crbT_rnT_dfs)
-            crbT_rnT_df = crbT_rnT_df.groupby(crbT_rnT_df.index)
-
-            crbT_rnT_df_mean = crbT_rnT_df.mean()
-
-            for i in range(201, 232):
-
-                mean = crbT_rnT_df_mean["average_return"].iloc[i]
-                if baseline_crbT_rnT_ci_min <= mean:
-                    print(f"crbT_rnT: "
-                          f"t={crbT_rnT_df_mean['num_time_steps'].iloc[i]} "
-                          f"mean={mean}")
+                    percentage_saved = 100 - (((time_steps_ - 20000000) / (time_steps - 20000000)) * 100)
+                    print(f"{percentage_saved}")
                     break
             print("---------------------------------------------------------")
 
@@ -449,6 +477,42 @@ if __name__ == "__main__":
 
             print("Baseline Confidence Interval: ", baseline_cmT_rnT_ci)
 
+            # cmT_rnT
+
+            cmT_rnT_dfs = []
+
+            for seed in range(0, 30):
+                dir = os.path.join(baseline_cmT_rnT_path, "seed" + str(seed))
+                if os.path.exists(dir):
+                    eval_data_dir = os.path.join(dir, "csv",
+                                                 "eval_data.csv")
+                    eval_data_df = pd.read_csv(eval_data_dir)
+                    eval_data_df = eval_data_df[["num_time_steps",
+                                                 "average_return"]]
+                    cmT_rnT_dfs.append(eval_data_df)
+                else:
+                    # print(colored("missing" + dir, "red"))
+                    pass
+
+            cmT_rnT_df = pd.concat(cmT_rnT_dfs)
+            cmT_rnT_df = cmT_rnT_df.groupby(cmT_rnT_df.index)
+
+            cmT_rnT_df_mean = cmT_rnT_df.mean()
+
+            time_steps = None
+            for i in range(201, 232):
+
+                mean = cmT_rnT_df_mean["average_return"].iloc[i]
+                time_steps = cmT_rnT_df_mean['num_time_steps'].iloc[i]
+                time_steps_ = cmT_rnT_df_mean['num_time_steps'].iloc[i]
+                if baseline_cmT_rnT_ci_min <= mean:
+                    print(f"cmT_rnT: "
+                          f"t={time_steps_} "
+                          f"mean={mean}")
+                    percentage_saved = 100 - (((time_steps_ - 6000000) / (time_steps - 6000000)) * 100)
+                    print(f"{percentage_saved}")
+                    break
+
             # cmF_rnF
 
             cmF_rnF_dfs = []
@@ -474,9 +538,12 @@ if __name__ == "__main__":
 
                 mean = cmF_rnF_df_mean["average_return"].iloc[i]
                 if baseline_cmT_rnT_ci_min <= mean:
+                    time_steps_ = cmF_rnF_df_mean['num_time_steps'].iloc[i]
                     print(f"cmF_rnF: "
-                          f"t={cmF_rnF_df_mean['num_time_steps'].iloc[i]} "
+                          f"t={time_steps_} "
                           f"mean={mean}")
+                    percentage_saved = 100 - (((time_steps_ - 6000000) / (time_steps - 6000000)) * 100)
+                    print(f"{percentage_saved}")
                     break
 
             # cmT_rnF
@@ -505,9 +572,12 @@ if __name__ == "__main__":
 
                 mean = cmT_rnF_df_mean["average_return"].iloc[i]
                 if baseline_cmT_rnT_ci_min <= mean:
+                    time_steps_ = cmT_rnF_df_mean['num_time_steps'].iloc[i]
                     print(f"cmT_rnF: "
-                          f"t={cmT_rnF_df_mean['num_time_steps'].iloc[i]} "
+                          f"t={time_steps_} "
                           f"mean={mean}")
+                    percentage_saved = 100 - (((time_steps_ - 6000000) / (time_steps - 6000000)) * 100)
+                    print(f"{percentage_saved}")
                     break
 
             # cmF_rnT
@@ -536,40 +606,12 @@ if __name__ == "__main__":
 
                 mean = cmF_rnT_df_mean["average_return"].iloc[i]
                 if baseline_cmT_rnT_ci_min <= mean:
+                    time_steps_ = cmF_rnT_df_mean['num_time_steps'].iloc[i]
                     print(f"cmF_rnT: "
-                          f"t={cmF_rnT_df_mean['num_time_steps'].iloc[i]} "
+                          f"t={time_steps_} "
                           f"mean={mean}")
-                    break
-
-            # cmT_rnT
-
-            cmT_rnT_dfs = []
-
-            for seed in range(0, 30):
-                dir = os.path.join(baseline_cmT_rnT_path, "seed" + str(seed))
-                if os.path.exists(dir):
-                    eval_data_dir = os.path.join(dir, "csv",
-                                                 "eval_data.csv")
-                    eval_data_df = pd.read_csv(eval_data_dir)
-                    eval_data_df = eval_data_df[["num_time_steps",
-                                                 "average_return"]]
-                    cmT_rnT_dfs.append(eval_data_df)
-                else:
-                    # print(colored("missing" + dir, "red"))
-                    pass
-
-            cmT_rnT_df = pd.concat(cmT_rnT_dfs)
-            cmT_rnT_df = cmT_rnT_df.groupby(cmT_rnT_df.index)
-
-            cmT_rnT_df_mean = cmT_rnT_df.mean()
-
-            for i in range(201, 232):
-
-                mean = cmT_rnT_df_mean["average_return"].iloc[i]
-                if baseline_cmT_rnT_ci_min <= mean:
-                    print(f"cmT_rnT: "
-                          f"t={cmT_rnT_df_mean['num_time_steps'].iloc[i]} "
-                          f"mean={mean}")
+                    percentage_saved = 100 - (((time_steps_ - 6000000) / (time_steps - 6000000)) * 100)
+                    print(f"{percentage_saved}")
                     break
             print("---------------------------------------------------------")
 
@@ -632,6 +674,42 @@ if __name__ == "__main__":
 
             print("Baseline Confidence Interval: ", baseline_crbT_rnT_ci)
 
+            # crbT_rnT
+
+            crbT_rnT_dfs = []
+
+            for seed in range(0, 30):
+                dir = os.path.join(baseline_crbT_rnT_path, "seed" + str(seed))
+                if os.path.exists(dir):
+                    eval_data_dir = os.path.join(dir, "csv",
+                                                 "eval_data.csv")
+                    eval_data_df = pd.read_csv(eval_data_dir)
+                    eval_data_df = eval_data_df[["num_time_steps",
+                                                 "average_return"]]
+                    crbT_rnT_dfs.append(eval_data_df)
+                else:
+                    # print(colored("missing" + dir, "red"))
+                    pass
+
+            crbT_rnT_df = pd.concat(crbT_rnT_dfs)
+            crbT_rnT_df = crbT_rnT_df.groupby(crbT_rnT_df.index)
+
+            crbT_rnT_df_mean = crbT_rnT_df.mean()
+
+            time_steps = None
+            for i in range(201, 232):
+
+                mean = crbT_rnT_df_mean["average_return"].iloc[i]
+                if baseline_crbT_rnT_ci_min <= mean:
+                    time_steps = crbT_rnT_df_mean['num_time_steps'].iloc[i]
+                    time_steps_ = crbT_rnT_df_mean['num_time_steps'].iloc[i]
+                    print(f"crbT_rnT: "
+                          f"t={time_steps_} "
+                          f"mean={mean}")
+                    percentage_saved = 100 - (((time_steps_ - 2000000) / (time_steps - 2000000)) * 100)
+                    print(f"{percentage_saved}")
+                    break
+
             # crbF_rnF
 
             crbF_rnF_dfs = []
@@ -657,9 +735,12 @@ if __name__ == "__main__":
 
                 mean = crbF_rnF_df_mean["average_return"].iloc[i]
                 if baseline_crbT_rnT_ci_min <= mean:
+                    time_steps_ = crbF_rnF_df_mean['num_time_steps'].iloc[i]
                     print(f"crbF_rnF: "
-                          f"t={crbF_rnF_df_mean['num_time_steps'].iloc[i]} "
+                          f"t={time_steps_} "
                           f"mean={mean}")
+                    percentage_saved = 100 - (((time_steps_ - 2000000) / (time_steps - 2000000)) * 100)
+                    print(f"{percentage_saved}")
                     break
 
             # crbT_rnF
@@ -688,9 +769,12 @@ if __name__ == "__main__":
 
                 mean = crbT_rnF_df_mean["average_return"].iloc[i]
                 if baseline_crbT_rnT_ci_min <= mean:
+                    time_steps_ = crbT_rnF_df_mean['num_time_steps'].iloc[i]
                     print(f"crbT_rnF: "
-                          f"t={crbT_rnF_df_mean['num_time_steps'].iloc[i]} "
+                          f"t={time_steps_} "
                           f"mean={mean}")
+                    percentage_saved = 100 - (((time_steps_ - 2000000) / (time_steps - 2000000)) * 100)
+                    print(f"{percentage_saved}")
                     break
 
             # crbF_rnT
@@ -719,40 +803,12 @@ if __name__ == "__main__":
 
                 mean = crbF_rnT_df_mean["average_return"].iloc[i]
                 if baseline_crbT_rnT_ci_min <= mean:
+                    time_steps_ = crbF_rnT_df_mean['num_time_steps'].iloc[i]
                     print(f"crbF_rnT: "
-                          f"t={crbF_rnT_df_mean['num_time_steps'].iloc[i]} "
+                          f"t={time_steps_} "
                           f"mean={mean}")
-                    break
-
-            # crbT_rnT
-
-            crbT_rnT_dfs = []
-
-            for seed in range(0, 30):
-                dir = os.path.join(baseline_crbT_rnT_path, "seed" + str(seed))
-                if os.path.exists(dir):
-                    eval_data_dir = os.path.join(dir, "csv",
-                                                 "eval_data.csv")
-                    eval_data_df = pd.read_csv(eval_data_dir)
-                    eval_data_df = eval_data_df[["num_time_steps",
-                                                 "average_return"]]
-                    crbT_rnT_dfs.append(eval_data_df)
-                else:
-                    # print(colored("missing" + dir, "red"))
-                    pass
-
-            crbT_rnT_df = pd.concat(crbT_rnT_dfs)
-            crbT_rnT_df = crbT_rnT_df.groupby(crbT_rnT_df.index)
-
-            crbT_rnT_df_mean = crbT_rnT_df.mean()
-
-            for i in range(201, 232):
-
-                mean = crbT_rnT_df_mean["average_return"].iloc[i]
-                if baseline_crbT_rnT_ci_min <= mean:
-                    print(f"crbT_rnT: "
-                          f"t={crbT_rnT_df_mean['num_time_steps'].iloc[i]} "
-                          f"mean={mean}")
+                    percentage_saved = 100 - (((time_steps_ - 2000000) / (time_steps - 2000000)) * 100)
+                    print(f"{percentage_saved}")
                     break
             print("---------------------------------------------------------")
         print("done")

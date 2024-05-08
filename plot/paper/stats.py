@@ -706,6 +706,7 @@ if __name__ == "__main__":
                     print(f"crbT_rnT: "
                           f"t={time_steps_} "
                           f"mean={mean}")
+                    # print(f"{percentage_saved} = 100 - ((({time_steps_} - 2000000) / ({time_steps} - 2000000)) * 100)")
                     percentage_saved = 100 - (((time_steps_ - 2000000) / (time_steps - 2000000)) * 100)
                     print(f"{percentage_saved}")
                     break
@@ -739,6 +740,7 @@ if __name__ == "__main__":
                     print(f"crbF_rnF: "
                           f"t={time_steps_} "
                           f"mean={mean}")
+                    # print(f"{percentage_saved} = 100 - ((({time_steps_} - 2000000) / ({time_steps} - 2000000)) * 100)")
                     percentage_saved = 100 - (((time_steps_ - 2000000) / (time_steps - 2000000)) * 100)
                     print(f"{percentage_saved}")
                     break
@@ -774,6 +776,7 @@ if __name__ == "__main__":
                           f"t={time_steps_} "
                           f"mean={mean}")
                     percentage_saved = 100 - (((time_steps_ - 2000000) / (time_steps - 2000000)) * 100)
+                    # print(f"{percentage_saved} = 100 - ((({time_steps_} - 2000000) / ({time_steps} - 2000000)) * 100)")
                     print(f"{percentage_saved}")
                     break
 
@@ -808,6 +811,7 @@ if __name__ == "__main__":
                           f"t={time_steps_} "
                           f"mean={mean}")
                     percentage_saved = 100 - (((time_steps_ - 2000000) / (time_steps - 2000000)) * 100)
+                    # print(f"{percentage_saved} = 100 - ((({time_steps_} - 2000000) / ({time_steps} - 2000000)) * 100)")
                     print(f"{percentage_saved}")
                     break
             print("---------------------------------------------------------")

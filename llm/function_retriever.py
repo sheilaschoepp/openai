@@ -24,17 +24,13 @@ class FunctionRetriever:
         if not os.path.exists(src_dir):
             raise FileNotFoundError(f"The source directory {src_dir} does not exist.")
         
-        # Get the parent directory of the source directory
         parent_dir = os.path.dirname(src_dir)
         
-        # Construct the full path for the new directory
         new_dir_path = os.path.join(parent_dir, new_name)
         
-        # Ensure the new directory does not already exist
         if os.path.exists(new_dir_path):
             raise FileExistsError(f"The destination directory {new_dir_path} already exists.")
         
-        # Copy the source directory to the new location
         shutil.copytree(src_dir, new_dir_path)
         
         print(f"Copied {src_dir} to {new_dir_path}")
@@ -42,16 +38,27 @@ class FunctionRetriever:
 
         
     def replace_method_in_class(self, file_path, class_name, old_method_name, new_method_code):
-        # Read the original file content
+
         with open(file_path, 'r') as file:
             file_content = file.read()
 
-        pattern = (
+        # Regular expression to find the indentation level of the old method
+        pattern_indent = rf'(?s)(class\s+{class_name}\s*\(.*?\):.*?\n)(\s*)def\s+{old_method_name}\s*\(.*?\):.*?(?=^\s*def\s+\w+\s*\(|^class\s+\w+\s*\(|\Z)'
+        match = re.search(pattern_indent, file_content, flags=re.MULTILINE)
+        
+        if not match:
+            raise ValueError(f"Method {old_method_name} not found in class {class_name}")
+
+        # Get the indentation of the old method
+        indent = match.group(2)
+
+        new_method_code_indented = '\n'.join([indent + line if line.strip() else line for line in new_method_code.strip().split('\n')])
+
+        pattern_replace = (
             rf'(?s)(class\s+{class_name}\s*\(.*?\):.*?)(def\s+{old_method_name}\s*\(.*?\):.*?)(?=^\s*def\s+\w+\s*\(|^class\s+\w+\s*\(|\Z)'
         )
         
-        modified_content = re.sub(pattern, rf'\1{new_method_code}', file_content, flags=re.MULTILINE)
-
+        modified_content = re.sub(pattern_replace, rf'\1{new_method_code_indented}', file_content, flags=re.MULTILINE)
 
         with open(file_path, 'w') as file:
             file.write(modified_content)

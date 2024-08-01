@@ -1,6 +1,7 @@
 import os
 from dotenv import load_dotenv
 from function_retriever import FunctionRetriever
+import time
 
 # Load environment variables from the .env file
 load_dotenv()
@@ -67,19 +68,35 @@ if __name__ == "__main__":
         def _is_success(self, achieved_goal, desired_goal):
             d = goal_distance(achieved_goal, desired_goal)
             return (d < self.distance_threshold).astype(np.float32)
+
+        Here are some variables or functions you can access:
+        Compute distance between goal and the achieved goal:
+        goal_distance(achieved_goal, goal)
+
+        self.reward_type : has values "sparse" or "dense"
         
         Only return one function and incorporate your whole idea into it.
     """
 
     retriever = FunctionRetriever(api_key)
-    function_code = retriever.retrieve_and_verify_function(prompt_with_reward_func)
+    function_code_v1 = retriever.retrieve_and_verify_function(prompt_with_reward_func)
+    function_code_v2 = retriever.retrieve_and_verify_function(prompt_without_reward_func)
     main_project_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
     relative_path_to_copy = 'custom_gym_envs/envs/fetchreach/FetchReachEnv_v1_BrokenShoulderLiftJoint'
-    new_directory_name = 'FetchReachEnv_v1_BrokenShoulderLiftJoint_LLM_v1'  # Name of the new directory
+    new_directory_name_v1 = 'FetchReachEnv_v1_BrokenShoulderLiftJoint_LLM_v1'
+    new_directory_name_v2 = 'FetchReachEnv_v1_BrokenShoulderLiftJoint_LLM_v2'  
+
+
+    new_file_path_v1 = f'/home/afraz1/Documents/openai/custom_gym_envs/envs/fetchreach/{new_directory_name_v1}/fetch_env.py'
+    new_file_path_v2 = f'/home/afraz1/Documents/openai/custom_gym_envs/envs/fetchreach/{new_directory_name_v2}/fetch_env.py'
+    method_name = 'compute_reward'
 
     src_directory = os.path.join(main_project_dir, relative_path_to_copy)
-    retriever.copy_env(src_directory, new_directory_name)
 
-    if function_code:
-        print("Function code:")
-        print(function_code)
+
+    retriever.copy_env(src_directory, new_directory_name_v1)
+    retriever.replace_method_in_class(new_file_path_v1, 'FetchEnv', method_name, function_code_v1)
+
+
+    retriever.copy_env(src_directory, new_directory_name_v2)
+    retriever.replace_method_in_class(new_file_path_v2, 'FetchEnv', method_name, function_code_v2)

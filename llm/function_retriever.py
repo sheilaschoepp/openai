@@ -9,7 +9,19 @@ class FunctionRetriever:
         self.api_handler = APIHandler(api_key)
 
     def retrieve_and_verify_function(self, prompt):
-        function_code = self.api_handler.get_function_from_gpt(prompt)
+        function_code = self.api_handler.get_function_from_gpt4(prompt)
+        verifier = FunctionVerifier(function_code)
+        
+        if verifier.is_valid_function():
+            function_name = verifier.get_function_name()
+            print(f"Retrieved valid function: {function_name}")
+            return function_code
+        else:
+            print("The retrieved code is not a valid Python function.")
+            return function_code
+        
+    def retrieve_and_verify_function_expert(self, prompt):
+        function_code = self.api_handler.get_function_from_gpt3(prompt)
         verifier = FunctionVerifier(function_code)
         
         if verifier.is_valid_function():

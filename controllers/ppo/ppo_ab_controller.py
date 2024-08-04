@@ -15,6 +15,8 @@ from datetime import date, timedelta
 from os import path
 from shutil import rmtree
 
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
+
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd

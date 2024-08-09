@@ -13,7 +13,8 @@ class APIHandler:
         self.messages.append(content)
         response = self.client.chat.completions.create(
             model = "gpt-4o-mini",
-            messages = self.messages
+            messages = self.messages,
+            temperature=1.3
         )
         return response.choices[0].message.content.strip()
     
@@ -25,6 +26,7 @@ class APIHandler:
         self.messages.append(content)
         response = self.client.chat.completions.create(
             model = "gpt-3.5-turbo",
-            messages = self.messages
+            messages = self.messages,
+            temperature=1.3
         )
         return response.choices[0].message.content.strip()

@@ -1,9 +1,23 @@
-<!--
-sources:
-https://github.com/openai/gym/edit/master/gym/envs/robotics/assets/robot.xml
-http://www.mujoco.org/book/XMLreference.html#joint
-http://www.mujoco.org/book/XMLreference.html#geom
+Your task is to create a new dense reward function in the context of reinforcement learning. You are a reinforcement learning expert and
+an expert in robotic physics and reward design.
+I am currently using Mujoco to simulate a fetchreach robot to learn to do a task. The aim is to make the robot learn to place it's end
+effector at a particular position in a space. The robot is able to learn to do this using the following reward function:
+    def compute_reward(self, achieved_goal, goal, info):
+        # Compute distance between goal and the achieved goal.
+        d = goal_distance(achieved_goal, goal)
+        
+        return -d
+	where 
+	    def _is_success(self, achieved_goal, desired_goal):
+            d = goal_distance(achieved_goal, desired_goal)
+            return (d < self.distance_threshold).astype(np.float32)
+        
+        def goal_distance(goal_a, goal_b):
+            assert goal_a.shape == goal_b.shape
+            return np.linalg.norm(goal_a - goal_b, axis=-1)
 
+Now, we need a better reward function in the case the robot experiences a fault in it's mechanism. In this case, the fault is
+named BrokenElbowFlexJoint. The fault is mentioned here in the robot.xml file:
 modifications:
 name="robot0:elbow_flex_joint", range="-2.251 2.251" changed to range="-0.2 0.2", added limited="true" \\
 name="upperarm_roll_link", added class="robot0:red" \\
@@ -136,3 +150,12 @@ name="robot0:elbow_flex_link", class="robot0:blue" changed to class="robot0:red"
 		</body>
 	</body>
 </mujoco>
+
+The info parameter of the reward function consists of a key 'joint_torques' representing the total torque of each joint mentioned in the xml file. 
+Here is an example:
+{'robot0:slide0': 76.4, 'robot0:slide1': -26.3, 'robot0:slide2': 48.9, 'robot0:torso_lift_joint': 49.1, 'robot0:head_pan_joint': 1.29e-08, 'robot0:head_tilt_joint': 2.65e-06, 'robot0:shoulder_pan_joint': -64.5, 'robot0:shoulder_lift_joint': -46.5, 'robot0:upperarm_roll_joint': -13.0, 'robot0:elbow_flex_joint': -17.7, 'robot0:forearm_roll_joint': -13.1, 'robot0:wrist_flex_joint': 2.24, 'robot0:wrist_roll_joint': -7.33, 'robot0:r_gripper_finger_joint': -2.0, 'robot0:l_gripper_finger_joint': 1.47}
+Your task is to develop an optimal reward function for the same task but in this fault environment maximizing rewards for torque in the direction of the end goal. Make sure to consider the direction of the faulty joint.
+
+Only give the reward function in your response without any markdown. Be creative and create a detailed reward function. You can use numpy as np.
+
+

@@ -66,6 +66,7 @@ class RobotEnv(gym.GoalEnv):
         done = False
         info = {
             'is_success': self._is_success(obs['achieved_goal'], self.goal),
+            'joint_torques': obs['joint_torques']
         }
         reward = self.compute_reward(obs['achieved_goal'], self.goal, info)
         return obs, reward, done, info

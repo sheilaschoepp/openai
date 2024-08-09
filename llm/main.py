@@ -44,47 +44,13 @@ if __name__ == "__main__":
             d = goal_distance(achieved_goal, desired_goal)
             return (d < self.distance_threshold).astype(np.float32)
         
-        def _get_obs(self):
-                # positions
-                grip_pos = self.sim.data.get_site_xpos('robot0:grip')
-                dt = self.sim.nsubsteps * self.sim.model.opt.timestep
-                grip_velp = self.sim.data.get_site_xvelp('robot0:grip') * dt
-                robot_qpos, robot_qvel = utils.robot_get_obs(self.sim)
-                if self.has_object:
-                    object_pos = self.sim.data.get_site_xpos('object0')
-                    # rotations
-                    object_rot = rotations.mat2euler(self.sim.data.get_site_xmat('object0'))
-                    # velocities
-                    object_velp = self.sim.data.get_site_xvelp('object0') * dt
-                    object_velr = self.sim.data.get_site_xvelr('object0') * dt
-                    # gripper state
-                    object_rel_pos = object_pos - grip_pos
-                    object_velp -= grip_velp
-                else:
-                    object_pos = object_rot = object_velp = object_velr = object_rel_pos = np.zeros(0)
-                gripper_state = robot_qpos[-2:]
-                gripper_vel = robot_qvel[-2:] * dt  # change to a scalar if the gripper is made symmetric
-
-                if not self.has_object:
-                    achieved_goal = grip_pos.copy()
-                else:
-                    achieved_goal = np.squeeze(object_pos.copy())
-                obs = np.concatenate([
-                    grip_pos, object_pos.ravel(), object_rel_pos.ravel(), gripper_state, object_rot.ravel(),
-                    object_velp.ravel(), object_velr.ravel(), grip_velp, gripper_vel
-                ])
-
-                return {{
-                    'observation': obs.copy(),
-                    'achieved_goal': achieved_goal.copy(),
-                    'desired_goal': self.goal.copy(),
-                }}
-        
         def goal_distance(goal_a, goal_b):
             assert goal_a.shape == goal_b.shape
             return np.linalg.norm(goal_a - goal_b, axis=-1)
         
         Only return one function and incorporate your whole idea into it. You are allowed to use numpy as np. No need to make any imports or use anything else not mentioned.
+        Keep the function simple and straightforward but be creative so that the machine adapts to the fault quickly. Make sure the reward function makes the machine learn to do the task optimally,
+        while avoiding things like reward hacking, non-scalability and overfitting.
         The following is the faulty robot representation in xml being used in Mujoco. The robot fault modification is mentioned at the top:
         {}
     """
@@ -118,42 +84,6 @@ if __name__ == "__main__":
         def _is_success(self, achieved_goal, desired_goal):
             d = goal_distance(achieved_goal, desired_goal)
             return (d < self.distance_threshold).astype(np.float32)
-
-        def _get_obs(self):
-                # positions
-                grip_pos = self.sim.data.get_site_xpos('robot0:grip')
-                dt = self.sim.nsubsteps * self.sim.model.opt.timestep
-                grip_velp = self.sim.data.get_site_xvelp('robot0:grip') * dt
-                robot_qpos, robot_qvel = utils.robot_get_obs(self.sim)
-                if self.has_object:
-                    object_pos = self.sim.data.get_site_xpos('object0')
-                    # rotations
-                    object_rot = rotations.mat2euler(self.sim.data.get_site_xmat('object0'))
-                    # velocities
-                    object_velp = self.sim.data.get_site_xvelp('object0') * dt
-                    object_velr = self.sim.data.get_site_xvelr('object0') * dt
-                    # gripper state
-                    object_rel_pos = object_pos - grip_pos
-                    object_velp -= grip_velp
-                else:
-                    object_pos = object_rot = object_velp = object_velr = object_rel_pos = np.zeros(0)
-                gripper_state = robot_qpos[-2:]
-                gripper_vel = robot_qvel[-2:] * dt  # change to a scalar if the gripper is made symmetric
-
-                if not self.has_object:
-                    achieved_goal = grip_pos.copy()
-                else:
-                    achieved_goal = np.squeeze(object_pos.copy())
-                obs = np.concatenate([
-                    grip_pos, object_pos.ravel(), object_rel_pos.ravel(), gripper_state, object_rot.ravel(),
-                    object_velp.ravel(), object_velr.ravel(), grip_velp, gripper_vel
-                ])
-
-                return {{
-                    'observation': obs.copy(),
-                    'achieved_goal': achieved_goal.copy(),
-                    'desired_goal': self.goal.copy(),
-                }}
         
         def goal_distance(goal_a, goal_b):
             assert goal_a.shape == goal_b.shape
@@ -161,8 +91,11 @@ if __name__ == "__main__":
 
         The following is an expert reward funciton for the faulty case:
         {}
-        Your task if to make a better adapting reward function for this faulty case.
+        Your task if to make a better adapting reward function for this faulty case. You are expected to use all the knowledge in expert reward shaping and it's related techniques. There should be a significant
+        difference in the learning curve with the reward function you provide.
         Only return one function and incorporate your whole idea into it. You are allowed to use numpy as np. No need to make any imports or use anything else not mentioned.
+        Keep the function simple and straightforward but be creative so that the machine adapts to the fault quickly. Make sure the reward function makes the machine learn to do the task optimally,
+        while avoiding things like reward hacking, non-scalability and overfitting.
         The following is the faulty robot representation in xml being used in Mujoco. The robot fault modification is mentioned at the top:
         {}
         """
@@ -192,7 +125,7 @@ if __name__ == "__main__":
         to the next non-broken tooth, causing inaccurate gear movements. Specifically, if the joint position is expected to change by x radians, this fault would cause the joint 
         position to move by x+c radians, where c is a constant noise value of 0.05 radians. Give a reward function that considers this fault and would make fetchreach
         reach learning convergence in the least amount of time. Do not give any explaination, just return the reward function in python without markdown. You are only allowed to use the given sample 
-        parameters for the new reward function. The name of the function should be compute_reward. You are expected to use all the knowledge in expert reward shaping and it's related techniques.
+        parameters for the new reward function. The name of the function should be compute_reward. 
         This is the format for the info parameter:
         info = {{
             'is_success': self._is_success(obs['achieved_goal'], self.goal),
@@ -202,41 +135,6 @@ if __name__ == "__main__":
             d = goal_distance(achieved_goal, desired_goal)
             return (d < self.distance_threshold).astype(np.float32)
         
-        def _get_obs(self):
-                # positions
-                grip_pos = self.sim.data.get_site_xpos('robot0:grip')
-                dt = self.sim.nsubsteps * self.sim.model.opt.timestep
-                grip_velp = self.sim.data.get_site_xvelp('robot0:grip') * dt
-                robot_qpos, robot_qvel = utils.robot_get_obs(self.sim)
-                if self.has_object:
-                    object_pos = self.sim.data.get_site_xpos('object0')
-                    # rotations
-                    object_rot = rotations.mat2euler(self.sim.data.get_site_xmat('object0'))
-                    # velocities
-                    object_velp = self.sim.data.get_site_xvelp('object0') * dt
-                    object_velr = self.sim.data.get_site_xvelr('object0') * dt
-                    # gripper state
-                    object_rel_pos = object_pos - grip_pos
-                    object_velp -= grip_velp
-                else:
-                    object_pos = object_rot = object_velp = object_velr = object_rel_pos = np.zeros(0)
-                gripper_state = robot_qpos[-2:]
-                gripper_vel = robot_qvel[-2:] * dt  # change to a scalar if the gripper is made symmetric
-
-                if not self.has_object:
-                    achieved_goal = grip_pos.copy()
-                else:
-                    achieved_goal = np.squeeze(object_pos.copy())
-                obs = np.concatenate([
-                    grip_pos, object_pos.ravel(), object_rel_pos.ravel(), gripper_state, object_rot.ravel(),
-                    object_velp.ravel(), object_velr.ravel(), grip_velp, gripper_vel
-                ])
-
-                return {{
-                    'observation': obs.copy(),
-                    'achieved_goal': achieved_goal.copy(),
-                    'desired_goal': self.goal.copy(),
-                }}
 
         Here are some variables or functions you can access:
         Compute distance between goal and the achieved goal:
@@ -245,9 +143,14 @@ if __name__ == "__main__":
             return np.linalg.norm(goal_a - goal_b, axis=-1)
 
         self.reward_type : has values "sparse" or "dense"
+
+        You are expected to use all the knowledge in expert reward shaping and it's related techniques. There should be a significant
+        difference in the learning curve with the reward function you provide.
         
         Only return one function and incorporate your whole idea into it. You are allowed to use numpy as np. No need to make any imports or use anything else not mentioned.
-        The following is the faulty robot representation in xml being used in Mujoco. The robot fault modification is mentioned at the top:
+        Keep the function simple and straightforward but be creative so that the machine adapts to the fault quickly. Make sure the reward function makes the machine learn to do the task optimally,
+        while avoiding things like reward hacking, non-scalability and overfitting.
+        The following is the faulty robot representation in xml being used in Mujoco.
         {}
     """
 

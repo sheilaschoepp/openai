@@ -8,16 +8,21 @@ except ImportError as e:
 
 
 def robot_get_obs(sim):
-    """Returns all joint positions and velocities associated with
-    a robot.
-    """
+    """Returns all joint positions, velocities, and torques associated with a robot."""
     if sim.data.qpos is not None and sim.model.joint_names:
         names = [n for n in sim.model.joint_names if n.startswith('robot')]
-        return (
-            np.array([sim.data.get_joint_qpos(name) for name in names]),
-            np.array([sim.data.get_joint_qvel(name) for name in names]),
-        )
-    return np.zeros(0), np.zeros(0)
+        qpos = np.array([sim.data.get_joint_qpos(name) for name in names])
+        qvel = np.array([sim.data.get_joint_qvel(name) for name in names])
+        
+        # Calculate total joint torques
+        qfrc_unc = np.array([sim.data.qfrc_unc[sim.model.joint_names.index(name)] for name in names])
+        qfrc_constraint = np.array([sim.data.qfrc_constraint[sim.model.joint_names.index(name)] for name in names])
+        qfrc_total = qfrc_unc + qfrc_constraint
+        
+        torques_dict = {name: float(f'{torque:.2e}') for name, torque in zip(names, qfrc_total)}
+        
+        return qpos, qvel, torques_dict
+    return np.zeros(0), np.zeros(0), {}
 
 
 def ctrl_set_action(sim, action):

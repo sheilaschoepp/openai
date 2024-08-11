@@ -21,8 +21,7 @@ effector at a particular position in a space. The robot is able to learn to do t
 			'joint_positions': {} # contains a dict with keys as joint names and values as their positions
         }
 
-Now, we need a better reward function in the case the robot experiences a fault in it's mechanism. In this case, the fault is
-named BrokenElbowFlexJoint. The fault is mentioned here in the robot.xml file:
+Now, we need a better reward function in the case the robot experiences a fault in it's mechanism. In this case, we named the fault a BrokenElbowFlexJoint fault. The fault is mentioned here in the robot.xml file:
 modifications:
 name="robot0:elbow_flex_joint", range="-2.251 2.251" changed to range="-0.2 0.2", added limited="true" \\
 name="upperarm_roll_link", added class="robot0:red" \\
@@ -156,7 +155,10 @@ name="robot0:elbow_flex_link", class="robot0:blue" changed to class="robot0:red"
 	</body>
 </mujoco>
 
-Only return one function without any explaination and markdown and incorporate your whole idea into it. You are allowed to use numpy as np. No need to make any imports or use anything else not mentioned.
-Keep the function simple and straightforward but be creative so that the machine adapts to the fault quickly. Make sure the reward function makes the machine learn to do the task optimally,
-while avoiding things like reward hacking, non-scalability and overfitting. In your reward function, only use the parameters and variables given in the original reward function. Your reward
-function will be used only for this particular fault. The learning process will be started once the robot has a fault so no need to check if the fault exists.
+Your task is to develop an optimal reward function for the same task but in this fault environment. 
+Only return one function without any explaination and markdown and incorporate your whole idea into it. 
+You are allowed to use numpy as np. No need to make any imports or use anything else not mentioned.
+Keep the function simple and straightforward but be creative so that the machine adapts to the fault quickly. 
+Make sure the reward function makes the machine learn to do the task optimally,
+while avoiding things like reward hacking, non-scalability and overfitting. In your reward function, only use the parameters and variables given in the original reward function. 
+Your reward function will be used only for this particular fault. Do not check if the BrokenElbowFlexJoint fault exists as it already does.

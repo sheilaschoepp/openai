@@ -34,4 +34,4 @@ if __name__ == "__main__":
     retriever.replace_method_in_class(new_file_path_v1, 'FetchEnv', method_name, function_code_3)
 
     retriever.copy_env(src_directory, new_directory_name_v2)
-    retriever.replace_method_in_class(new_directory_name_v2, 'FetchEnv', method_name, function_code_4)
+    retriever.replace_method_in_class(new_file_path_v2, 'FetchEnv', method_name, function_code_4)

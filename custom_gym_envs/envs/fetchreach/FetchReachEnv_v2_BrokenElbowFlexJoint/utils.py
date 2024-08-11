@@ -18,11 +18,14 @@ def robot_get_obs(sim):
         qfrc_unc = np.array([sim.data.qfrc_unc[sim.model.joint_names.index(name)] for name in names])
         qfrc_constraint = np.array([sim.data.qfrc_constraint[sim.model.joint_names.index(name)] for name in names])
         qfrc_total = qfrc_unc + qfrc_constraint
+
+        qpos_dict = {name: float(f'{sim.data.get_joint_qpos(name):.2e}') for name in names}
+        qvel_dict = {name: float(f'{sim.data.get_joint_qvel(name):.2e}') for name in names}
         
         torques_dict = {name: float(f'{torque:.2e}') for name, torque in zip(names, qfrc_total)}
         
-        return qpos, qvel, torques_dict
-    return np.zeros(0), np.zeros(0), {}
+        return qpos_dict, qvel_dict, torques_dict
+    return {}, {}, {}
 
 
 def ctrl_set_action(sim, action):

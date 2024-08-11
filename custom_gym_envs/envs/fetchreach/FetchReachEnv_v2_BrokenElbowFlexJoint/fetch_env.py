@@ -128,7 +128,8 @@ class FetchEnv(robot_env.RobotEnv):
             'achieved_goal': achieved_goal.copy(),
             'desired_goal': self.goal.copy(),
             'joint_torques': joint_torques.copy(),
-            'joint_velocities': robot_qvel.copy()
+            'joint_velocities': robot_qvel.copy(),
+            'joint_positions': robot_qpos.copy()
         }
 
     def _viewer_setup(self):

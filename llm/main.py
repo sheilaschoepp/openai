@@ -19,8 +19,8 @@ if __name__ == "__main__":
 
     main_project_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
     relative_path_to_copy = 'custom_gym_envs/envs/fetchreach/FetchReachEnv_v2_BrokenElbowFlexJoint'
-    new_directory_name_v1 = 'FetchReachEnv_v1_BrokenElbowFlexJoint_LLM_3_v1'
-    new_directory_name_v2 = 'FetchReachEnv_v1_BrokenElbowFlexJoint_LLM_4_v2'
+    new_directory_name_v1 = 'FetchReachEnv_v2_BrokenElbowFlexJoint_LLM_3_v1'
+    new_directory_name_v2 = 'FetchReachEnv_v2_BrokenElbowFlexJoint_LLM_4_v2'
 
 
     new_file_path_v1 = f'/home/sschoepp/Documents/openai/custom_gym_envs/envs/fetchreach/{new_directory_name_v1}/fetch_env.py'

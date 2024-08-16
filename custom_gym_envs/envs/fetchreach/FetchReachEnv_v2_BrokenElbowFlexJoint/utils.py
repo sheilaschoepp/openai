@@ -24,8 +24,8 @@ def robot_get_obs(sim):
         
         torques_dict = {name: float(f'{torque:.2e}') for name, torque in zip(names, qfrc_total)}
         
-        return qpos_dict, qvel_dict, torques_dict
-    return {}, {}, {}
+        return qpos, qvel, qpos_dict, qvel_dict, torques_dict
+    return np.zeros(), np.zeros(), {}, {}, {}
 
 
 def ctrl_set_action(sim, action):

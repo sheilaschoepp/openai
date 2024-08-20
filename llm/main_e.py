@@ -6,7 +6,7 @@ import time
 load_dotenv()
 
 if __name__ == "__main__":
-    f = open('new_prompt.txt', 'r')
+    f = open('energy_prompt.txt', 'r')
     main_prompt = f.read()
     f.close()
 

@@ -7,6 +7,7 @@ effector at a particular position in a space. The robot is able to learn to do t
         
         return -d
 	where 
+    (already defined)
 	    def _is_success(self, achieved_goal, desired_goal):
             d = goal_distance(achieved_goal, desired_goal)
             return (d < self.distance_threshold).astype(np.float32)
@@ -30,7 +31,7 @@ info['joint_velocities'] # a dict with keys as joint names and values as their f
 
 Your task is to develop an optimal reward function using reward shaping techniques for the same task but in this fault environment, considering the torque values while minimizing energy usage
 towards sub-optimal paths so that the robot learns more efficiently. Remember that your reward function will be used as is. Try to make such a reward function that gives out a smooth learning curve, learning very quickly and then plateauing well after convergence.
-Define constants in the function itself if any.
+Define constants in the function itself if any. Your reward function should converge better and faster than the given reward function that was used in the fault environment.
 Only give the reward function in your response incorporating everything inside it. Do not use markdown in your output and make the agent avoid things like reward hacking.
 Be creative and create a detailed reward function. No need to import anything, you can use numpy as np.
 

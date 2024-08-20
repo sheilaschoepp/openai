@@ -7,7 +7,7 @@ import time
 load_dotenv()
 
 if __name__ == "__main__":
-    f = open('fault.txt', 'r')
+    f = open('distance_prompt.txt', 'r')
     robot_info = f.read()
     f.close()
 

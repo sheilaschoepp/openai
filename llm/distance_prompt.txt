@@ -7,7 +7,8 @@ effector at a particular position in a space. The robot is able to learn to do t
         d = goal_distance(achieved_goal, goal)
         
         return -d
-	where 
+	where
+    (already defined)
 	    def _is_success(self, achieved_goal, desired_goal):
             d = goal_distance(achieved_goal, desired_goal)
             return (d < self.distance_threshold).astype(np.float32)
@@ -18,16 +19,16 @@ effector at a particular position in a space. The robot is able to learn to do t
 
 		info = {
             'is_success': self._is_success(obs['achieved_goal'], self.goal),
-			'joint_positions': {}, # a dict with keys as all joint names and values as their float positions given by the sim.data.get_joint_qpos() method
-			'joint_velocities;: {} # a dict with keys as all joint names and values as their float velocities given by the sim.data.get_joint_qvel() method
+			'joint_positions': {}, # a dict with keys as all joint names as mentioned in robot.xml and values as their float positions given by the sim.data.get_joint_qpos() method
+			'joint_velocities;: {} # a dict with keys as all joint names as mentioned in robot.xml and values as their float velocities given by the sim.data.get_joint_qvel() method
         }
 
-Now, we need a better reward function in the case the robot experiences a fault in it's mechanism. In this case, the robot is experiencing a BrokenElbowFlexJoint fault. The fault is already mentioned in the robot.xml file provided to you.
+Now, we need a better reward function in the case the robot experiences a fault in it's mechanism. In this case, the robot is experiencing a fault in the elbow flex joint. The fault is already mentioned in the robot.xml file provided to you.
 
 
-Your task is to develop an optimal reward function using reward shaping techniques for the same task but in this fault environment so that the task is learned 
-quickly and optimally despite the fault.
-Only return one function without any explaination and incorporate your whole idea into it. 
+Your task is to develop an optimal reward function using reward shaping techniques for the same task (reducing the distance between the end-effector and the goal) but in this fault environment so that the task is learned 
+quickly and optimally despite the fault. Your function should converge better and faster than the given reward function that was used in the fault environment.
+Only return one function without any explaination and incorporate your whole idea into it.
 Do not use any formatting or markdown.
 You are allowed to use numpy as np. No need to make any imports or use anything else not mentioned. 
 Make sure the reward function makes the machine learn to do the task optimally,

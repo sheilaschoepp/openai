@@ -90,7 +90,7 @@ class FetchEnv(robot_env.RobotEnv):
         grip_pos = self.sim.data.get_site_xpos('robot0:grip')
         dt = self.sim.nsubsteps * self.sim.model.opt.timestep
         grip_velp = self.sim.data.get_site_xvelp('robot0:grip') * dt
-        robot_qpos, robot_qvel = utils.robot_get_obs(self.sim)
+        robot_qpos, robot_qvel, qpos_dict, qvel_dict, actuator_torques = utils.robot_get_obs(self.sim)
         if self.has_object:
             object_pos = self.sim.data.get_site_xpos('object0')
             # rotations
@@ -119,6 +119,9 @@ class FetchEnv(robot_env.RobotEnv):
             'observation': obs.copy(),
             'achieved_goal': achieved_goal.copy(),
             'desired_goal': self.goal.copy(),
+            'qpos_dict': qpos_dict,
+            'qvel_dict': qvel_dict,
+            'actuator_torques': actuator_torques
         }
 
     def _viewer_setup(self):

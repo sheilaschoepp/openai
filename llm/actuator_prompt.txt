@@ -1,0 +1,38 @@
+Your task is to create a new dense reward function in the context of reinforcement learning. 
+I am currently using Mujoco to simulate a fetchreach robot to learn to do a task with the Proximal Policy Optimization RL algorithm. The aim is to make the robot learn to place it's end
+effector at a particular position in a space. The robot is able to learn to do this using the following reward function:
+    def compute_reward(self, achieved_goal, goal, info):
+        # Compute distance between goal and the achieved goal.
+        d = goal_distance(achieved_goal, goal)
+        
+        return -d
+	where 
+    (already defined)
+	    def _is_success(self, achieved_goal, desired_goal):
+            d = goal_distance(achieved_goal, desired_goal)
+            return (d < self.distance_threshold).astype(np.float32)
+        
+        def goal_distance(goal_a, goal_b):
+            assert goal_a.shape == goal_b.shape
+            return np.linalg.norm(goal_a - goal_b, axis=-1)
+
+Now, we need a better reward function in the case the robot experiences a fault in it's mechanism. In this case, the fault is
+named BrokenElbowFlexJoint. The fault is already mentioned in the robot.xml I provided you.
+
+The info parameter of the reward function consists of a key 'actuator_torques' representing the total torque applied by each joint mentioned in the xml file at each time step.
+These are obtained from sim.data.qfrc_actuator
+Here is an example:
+info['actuator_torques']:
+{'robot0:torso_lift_joint': 0.0, 'robot0:head_pan_joint': 0.0, 'robot0:head_tilt_joint': 0.0, 'robot0:shoulder_pan_joint': -25.146901607513428, 'robot0:shoulder_lift_joint': -50.0, 'robot0:upperarm_roll_joint': 23.3603835105896, 'robot0:elbow_flex_joint': 34.99385714530945, 'robot0:forearm_roll_joint': 50.0, 'robot0:wrist_flex_joint': 37.14141845703125, 'robot0:wrist_roll_joint': 50.0, 'robot0:r_gripper_finger_joint': 0.0, 'robot0:l_gripper_finger_joint': 0.0}
+The torque values of torso_lift_joint, head_pan_joint, head_tilt_joint, shoulder_lift_joint, forearm_roll_joint, wrist_roll_joint and the gripper joints will be the same as above throughout the experiment.
+info['qpos_dict'] # a dict with keys as joint names and values as their float positions given by the sim.data.get_joint_qpos() method
+
+info['qvel_dict'] # a dict with keys as joint names and values as their float velocities given by the sim.data.get_joint_qvel() method
+
+Your task is to develop an optimal reward function using reward shaping techniques for the same task but in this fault environment, considering the torque values while minimizing energy usage
+towards sub-optimal paths so that the robot learns more efficiently. Remember that your reward function will be used as is. Try to make such a reward function that gives out a smooth learning curve, learning very quickly and then plateauing well after convergence.
+Define constants in the function itself if any. Your reward function should converge better and faster than the given reward function that was used in the fault environment.
+Only give the reward function in your response incorporating everything inside it. Do not use markdown in your output and make the agent avoid things like reward hacking.
+Be creative and create a detailed reward function. No need to import anything, you can use numpy as np.
+
+

@@ -31,7 +31,7 @@ plt.ylabel("Average Return")
 plt.title("Policy Evaluation Across 75 Experiments")
 
 plt.legend(handles=legend_handles, loc='upper left', bbox_to_anchor=(1, 1), ncol=1)
-plt.xlim(left=0, right=60000)
+plt.xlim(left=0, right=150000)
 
 
 plt.subplots_adjust(left=0.1, right=0.9, top=0.9, bottom=0.2)

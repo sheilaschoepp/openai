@@ -2,17 +2,17 @@ import os
 import pandas as pd
 import time
 
-normal = "../data/PPO_FetchReachEnv-v2:1000000_lr:0.000275_lrd:False_slrd:1.0_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:5000_ee:10_tmsf:50000000_d:cpu_ps:True_pss:43"
+normal = "../data/PPO_FetchReachEnv-E-v20:1000000_lr:0.000275_lrd:False_slrd:1.0_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:5000_ee:10_tmsf:50000000_d:cpu_ps:True_pss:43"
 v7_3 = "../data/PPO_FetchReachEnv-LLM-3-v7:1000000_lr:0.000275_lrd:False_slrd:1.0_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:5000_ee:10_tmsf:50000000_d:cpu_ps:True_pss:43"
-v9_3 = "../data/PPO_FetchReachEnv-LLM-3-v9:1000000_lr:0.000275_lrd:False_slrd:1.0_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:5000_ee:10_tmsf:50000000_d:cpu_ps:True_pss:43"
+v11_3 = "../data/PPO_FetchReachEnv-E-v11:1000000_lr:0.000275_lrd:False_slrd:1.0_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:5000_ee:10_tmsf:50000000_d:cpu_ps:True_pss:43"
 v8_4 = "../data/PPO_FetchReachEnv-LLM-4-v8:1000000_lr:0.000275_lrd:False_slrd:1.0_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:5000_ee:10_tmsf:50000000_d:cpu_ps:True_pss:43"
-v10_4 = "../data/PPO_FetchReachEnv-LLM-4-v10:1000000_lr:0.000275_lrd:False_slrd:1.0_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:5000_ee:10_tmsf:50000000_d:cpu_ps:True_pss:43"
+v12_4 = "../data/PPO_FetchReachEnv-E-v12:1000000_lr:0.000275_lrd:False_slrd:1.0_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:5000_ee:10_tmsf:50000000_d:cpu_ps:True_pss:43"
 
 
 
-folders = [v7_3, v9_3, v8_4, v10_4, normal]
+folders = [v7_3, v11_3, v8_4, v12_4, normal]
 
-data_folder_names = ["v7_3", "v9_3", "v8_4", "v10_4", "normal"]
+data_folder_names = ["v7_3", "v11_3", "v8_4", "v12_4", "normal"]
 
 global_min_return = float('inf')
 global_max_return = float('-inf')
@@ -74,7 +74,7 @@ print(f"Global Max Return: {global_max_return}")
 normalize_experiment(normal, 'FetchReach-v2')
 normalize_experiment(v7_3, 'FetchReach-LLM-3-v7')
 normalize_experiment(v8_4, 'FetchReach-LLM-4-v8')
-normalize_experiment(v9_3, 'FetchReach-LLM-3-v9')
-normalize_experiment(v10_4, 'FetchReach-LLM-4-v10')
+normalize_experiment(v11_3, 'FetchReach-LLM-3-v9')
+normalize_experiment(v12_4, 'FetchReach-LLM-4-v10')
 
 

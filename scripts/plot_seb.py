@@ -38,7 +38,7 @@ plt.ylabel("Average Return")
 plt.title("Policy Evaluation Across Experiments with Error Bands")
 
 
-plt.xlim(left=0, right=60000) 
+plt.xlim(left=0, right=300000) 
 plt.legend(handles=legend_handles, loc='upper left', bbox_to_anchor=(1, 1), ncol=1)
 plt.tight_layout()
 

@@ -18,7 +18,7 @@ if __name__ == "__main__":
     function_code_4 = retriever.retrieve_and_verify_function(robot_info)
 
     main_project_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-    relative_path_to_copy = 'custom_gym_envs/envs/fetchreach/FetchReachEnv_v2_BrokenElbowFlexJoint'
+    relative_path_to_copy = 'custom_gym_envs/envs/fetchreach/FetchReachEnv_v2_BrokenElbowFlexJoint_E'
     new_directory_name_v1 = 'FetchReachEnv_v2_BrokenElbowFlexJoint_LLM_3_v1'
     new_directory_name_v2 = 'FetchReachEnv_v2_BrokenElbowFlexJoint_LLM_4_v2'
 

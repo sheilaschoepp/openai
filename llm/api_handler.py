@@ -7,11 +7,14 @@ class APIHandler:
         f = open('system_prompt.txt', 'r')
         self.system_content = f.read()
         f.close()
+        f1 = open('system_prompt_e.txt', 'r')
+        self.system_content1 = f1.read()
+        f1.close()
 
     def get_function_from_gpt4(self, prompt):
         system_content = {
             "role": "system",
-            "content": self.system_content
+            "content": self.system_content1
         }
         user_content = {
             "role": "user",
@@ -28,7 +31,7 @@ class APIHandler:
     def get_function_from_gpt3(self, prompt):
         system_content = {
             "role": "system",
-            "content": self.system_content
+            "content": self.system_content1
         }
         user_content = {
             "role": "user",

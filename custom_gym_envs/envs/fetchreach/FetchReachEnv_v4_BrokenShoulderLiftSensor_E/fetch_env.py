@@ -8,7 +8,7 @@ note: forward does not advance the simulation.  It only fills in the MjData
 """
 import numpy as np
 
-from custom_gym_envs.envs.fetchreach.FetchReachEnv_v4_BrokenShoulderLiftSensor import robot_env, rotations, utils  # modification here
+from custom_gym_envs.envs.fetchreach.FetchReachEnv_v4_BrokenShoulderLiftSensor_E import robot_env, rotations, utils  # modification here
 
 
 def goal_distance(goal_a, goal_b):
@@ -127,6 +127,7 @@ class FetchEnv(robot_env.RobotEnv):
         # modification here
         old_value = self.sim.data.get_joint_qpos("robot0:shoulder_lift_joint")
         self.sim.data.set_joint_qpos("robot0:shoulder_lift_joint", 1.5)
+        qpos_dict["robot0:shoulder_lift_joint"] = 1.5
         self.sim.forward()
         grip_pos = self.sim.data.get_site_xpos('robot0:grip')
         obs = np.concatenate([

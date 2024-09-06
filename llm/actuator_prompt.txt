@@ -19,23 +19,22 @@ effector at a particular position in a space. The robot is able to learn to do t
 Now, we need a better reward function in the case the robot experiences a fault in it's mechanism. In this case, the fault is
 named BrokenElbowFlexJoint. The fault is already mentioned in the robot.xml I provided you.
 
-The info parameter of the reward function consists of a key 'actuator_torques' representing the total torque applied by each joint mentioned in the xml file at each time step.
-These are obtained from sim.data.qfrc_actuator
-Here is an example:
-info['actuator_torques']:
+Here is what the "info" parameter of the function consists of:
+For example:
+info['actuator_torques'] # given by sim.data.qfrc_actuator
 {'robot0:torso_lift_joint': 0.0, 'robot0:head_pan_joint': 0.0, 'robot0:head_tilt_joint': 0.0, 'robot0:shoulder_pan_joint': -25.146901607513428, 'robot0:shoulder_lift_joint': -50.0, 'robot0:upperarm_roll_joint': 23.3603835105896, 'robot0:elbow_flex_joint': 34.99385714530945, 'robot0:forearm_roll_joint': 50.0, 'robot0:wrist_flex_joint': 37.14141845703125, 'robot0:wrist_roll_joint': 50.0, 'robot0:r_gripper_finger_joint': 0.0, 'robot0:l_gripper_finger_joint': 0.0}
 The torque values of torso_lift_joint, head_pan_joint, head_tilt_joint, shoulder_lift_joint, forearm_roll_joint, wrist_roll_joint and the gripper joints will be the same as above throughout the experiment.
-This is other information you can access to make the reward function.
 info['qpos_dict'] # a dict with keys as joint names and values as their float positions given by the sim.data.get_joint_qpos() method.
 info['qvel_dict'] # a dict with keys as joint names and values as their float velocities given by the sim.data.get_joint_qvel() method.
 info['constraint_forces'] # a dict with keys as joint names and values as forces given by sim.data.qfrc_contraint for each joint.
+You can use this information when making your reward function.
 
-Your task is to develop an optimal reward function using reward shaping techniques for the same task but in this fault environment, considering to minimize torque and energy usage
-towards sub-optimal paths so that the robot learns more efficiently and converges quickly. Remember that your reward function will be used as is. 
-The position of the faulty joint will never exceed the allowed range given in the xml.
+Your task is to develop an optimal reward function using standard reward shaping techniques for the same task but in this fault environment. Remember that your reward function will be used as is. 
+
 Try to make such a reward function that gives out a smooth learning curve, learning very quickly and then plateauing well after convergence.
 Define all variables in the function itself. Your reward function should converge better and faster than the given expert reward function that was used in the fault environment.
 Only give the reward function in your response incorporating everything inside it. Do not use markdown in your output and make the agent avoid things like reward hacking.
 Be creative and create a detailed reward function. No need to import anything, you can use numpy as np.
+No need to use anything that would make it converge slower than the original reward function.
 
 

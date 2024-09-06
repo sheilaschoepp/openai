@@ -1,0 +1,43 @@
+Your task is to create a new dense reward function in the context of reinforcement learning. You are a reinforcement learning expert and
+an expert in robotic physics and reward design.
+I am currently using Mujoco to simulate a fetchreach-v2 robot to learn to do a task with the Proximal Policy Optimization RL algorithm. The aim is to make the robot learn to place it's end
+effector at a particular position in a space. The robot is able to learn to do this using the following reward function:
+    def compute_reward(self, achieved_goal, goal, info):
+        # Compute distance between goal and the achieved goal.
+        d = goal_distance(achieved_goal, goal)
+        
+        return -d
+	where
+    (already defined method in the same class)
+	    def _is_success(self, achieved_goal, desired_goal):
+            d = goal_distance(achieved_goal, desired_goal)
+            return (d < self.distance_threshold).astype(np.float32)
+    (already defined function in the same file)
+        def goal_distance(goal_a, goal_b):
+            assert goal_a.shape == goal_b.shape
+            return np.linalg.norm(goal_a - goal_b, axis=-1)
+
+		info = {
+            'is_success': self._is_success(obs['achieved_goal'], self.goal),
+			'qpos_dict': {}, # a dict with keys as all joint names as mentioned in robot.xml and values as their float positions given by the sim.data.get_joint_qpos() method
+			'qvel_dict': {} # a dict with keys as all joint names as mentioned in robot.xml and values as their float velocities given by the sim.data.get_joint_qvel() method
+        }
+
+We need a better reward function in the case the robot experiences a fault in it's mechanism. In this case, the robot is experiencing a fault in the shoulder lift joint sensor. 
+where the reading given by the sensor is a constant value of 1.5 radians which might not be it's actual alignment. That means the value of the that joint
+in the qpos dict will ALWAYS be 1.5 no matter it's actual position. The values for other joints will be accurate.
+
+Your task is to develop an optimal reward function for the same task (reducing the distance between the end-effector and the goal) 
+but in this fault environment so that the task is learned quickly and optimally despite the fault. 
+Your function should converge better and faster than the given expert reward function that was used in the fault environment.
+
+Use all information provided about the other joints in the robot.xml file and the aforementioned parameters to give this new reward function.
+Due to the fault, the value of qpos_dict['robot0:shoulder_lift_joint'] will always be 1.5. There is no way to access the 'true' position of this joint.
+
+Only return one function without any explaination and incorporate your whole idea into it. Define all variables inside the function.
+Do not use any formatting or markdown.
+You are allowed to use numpy as np. Do not make any imports or use anything else not mentioned. 
+Make sure the reward function makes the machine learn to do the task optimally, while avoiding reward hacking.
+In your reward function, only use the parameters and variables given in the original reward function. 
+Your reward function will be used only for this particular fault and as is and only after the fault happens.
+

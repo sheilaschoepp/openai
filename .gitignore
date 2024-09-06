@@ -1,6 +1,6 @@
 # ignore data folder
 data/**
-
+scripts/data
 # ignore conda tar file
 openai3.9.tar.gz
 

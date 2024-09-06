@@ -5,7 +5,7 @@ from matplotlib.lines import Line2D
 
 
 root_directory = "data"
-colors = ['blue', 'green', 'red', 'grey', 'orange']
+colors = ['blue', 'green', 'red', 'grey', 'black']
 
 plt.figure(figsize=(12, 8))
 legend_handles = []

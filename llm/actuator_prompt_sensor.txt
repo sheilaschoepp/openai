@@ -1,0 +1,38 @@
+Your task is to create a new dense reward function in the context of reinforcement learning. 
+I am currently using Mujoco to simulate a fetchreach robot to learn to do a task with the Proximal Policy Optimization RL algorithm. The aim is to make the robot learn to place it's end
+effector at a particular position in a space. The robot is able to learn to do this using the following reward function:
+    def compute_reward(self, achieved_goal, goal, info):
+        # Compute distance between goal and the achieved goal.
+        d = goal_distance(achieved_goal, goal)
+        
+        return -d
+	where 
+    (already defined)
+	    def _is_success(self, achieved_goal, desired_goal):
+            d = goal_distance(achieved_goal, desired_goal)
+            return (d < self.distance_threshold).astype(np.float32)
+        
+        def goal_distance(goal_a, goal_b):
+            assert goal_a.shape == goal_b.shape
+            return np.linalg.norm(goal_a - goal_b, axis=-1)
+
+Now, we need a better reward function in the case the robot experiences a fault in it's mechanism. In this case, the fault is
+in the shoulder lift joint sensor. The reading given by the sensor is a constant value of 1.5 radians which might not be it's actual alignment.
+
+"info" parameter:
+info['actuator_torques'] # given by sim.data.qfrc_actuator
+The torque values of torso_lift_joint, head_pan_joint, head_tilt_joint, shoulder_lift_joint, forearm_roll_joint, wrist_roll_joint and the gripper joints will be the same as above throughout the experiment.
+info['qpos_dict'] # a dict with keys as joint names and values as their float positions given by the sim.data.get_joint_qpos() method.
+info['qvel_dict'] # a dict with keys as joint names and values as their float velocities given by the sim.data.get_joint_qvel() method.
+info['constraint_forces'] # a dict with keys as joint names and values as forces given by sim.data.qfrc_contraint for each joint.
+You can use this information when making your reward function.
+
+Your task is to develop an optimal reward function for the same task but in this fault environment. Remember that your reward function will be used as is. 
+The value of qpos_dict['robot0:shoulder_lift_joint'] will always be 1.5 due the fault.
+
+Try to make such a reward function that gives out a smooth learning curve, learning very quickly and then plateauing well after convergence.
+Define all variables in the function itself. Your reward function should converge better and faster than the given expert reward function that was used in the fault environment.
+Only give the reward function in your response incorporating everything inside it. Do not use markdown in your output and make the agent avoid reward hacking.
+Be creative and create a detailed reward function. No need to import anything, you can use numpy as np.
+
+

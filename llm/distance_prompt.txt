@@ -25,12 +25,13 @@ effector at a particular position in a space. The robot is able to learn to do t
 
 We need a better reward function in the case the robot experiences a fault in it's mechanism. In this case, the robot is experiencing a fault in the elbow flex joint. The fault is already mentioned in the robot.xml file provided to you.
 
-Your task is to develop an optimal reward function using reward shaping techniques for the same task (reducing the distance between the end-effector and the goal) but in this fault environment so that the task is learned 
+Your task is to develop an optimal reward function using standard reward shaping techniques for the same task (reducing the distance between the end-effector and the goal) but in this fault environment so that the task is learned 
 quickly and optimally despite the fault. Your function should converge better and faster than the given expert reward function that was used in the fault environment.
-The position of the faulty joint will never exceed the allowed range given in the xml.
+
 Only return one function without any explaination and incorporate your whole idea into it. Define all variables inside the function.
 Do not use any formatting or markdown.
 You are allowed to use numpy as np. No need to make any imports or use anything else not mentioned. 
 Make sure the reward function makes the machine learn to do the task optimally,
 while avoiding things like reward hacking and overfitting. In your reward function, only use the parameters and variables given in the original reward function. 
 Your reward function will be used only for this particular fault and as is. Your reward function will be used only after the fault happens.
+No need to use anything that would make it converge slower than the original reward function.

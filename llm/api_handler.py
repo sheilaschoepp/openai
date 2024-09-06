@@ -4,10 +4,10 @@ class APIHandler:
     def __init__(self, api_key):
         self.client = OpenAI(api_key=api_key)
         self.messages = []
-        f = open('system_prompt.txt', 'r')
+        f = open('system_prompt_sensor.txt', 'r')
         self.system_content = f.read()
         f.close()
-        f1 = open('system_prompt_e.txt', 'r')
+        f1 = open('system_prompt_sensor_e.txt', 'r')
         self.system_content1 = f1.read()
         f1.close()
 

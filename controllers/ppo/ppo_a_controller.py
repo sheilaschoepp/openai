@@ -801,7 +801,8 @@ class NormalController:
                                      "num_mini_batch_updates": self.eval_data[:, 3],
                                      "num_samples": self.eval_data[:, 4],
                                      "average_return": self.eval_data[:, 5],
-                                     "real_time": self.eval_data[:, 6]})
+                                     "average_distance_from_goal": self.eval_data[:, 6],
+                                     "real_time": self.eval_data[:, 7]})
         eval_data_df.to_csv(csv_foldername + "/eval_data.csv", float_format="%f")
 
         # # remove zero entries

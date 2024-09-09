@@ -24,8 +24,8 @@ if __name__ == "__main__":
     #new_directory_name_v2 = 'FetchReachEnv_v2_BrokenElbowFlexJoint_LLM_E_v12'
 
     # Sensor Fault
-    new_directory_name_v1 = 'FetchReachEnv_v4_BrokenShoulderLiftSensor_E_v11'
-    new_directory_name_v2 = 'FetchReachEnv_v4_BrokenShoulderLiftSensor_E_v12'
+    new_directory_name_v1 = 'FetchReachEnv_v4_BrokenShoulderLiftSensor_E_v13'
+    new_directory_name_v2 = 'FetchReachEnv_v4_BrokenShoulderLiftSensor_E_v14'
 
     new_file_path_v1 = f'/home/sschoepp/Documents/openai/custom_gym_envs/envs/fetchreach/{new_directory_name_v1}/fetch_env.py'
     new_file_path_v2 = f'/home/sschoepp/Documents/openai/custom_gym_envs/envs/fetchreach/{new_directory_name_v2}/fetch_env.py'

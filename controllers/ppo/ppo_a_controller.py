@@ -523,7 +523,7 @@ class NormalController:
 
                 max_steps_this_episode = 1000
                 while not terminal and ((max_steps_this_episode <= 0) or (rlg_eval.num_ep_steps() < max_steps_this_episode)):
-                    _, _, terminal, _, distance = rlg_eval.rl_step()
+                    _, _, terminal, _, _ = rlg_eval.rl_step()
 
                 returns.append(rlg_eval.episode_reward())
                 returns_distance.append(rlg_eval.episode_distance_from_goal())

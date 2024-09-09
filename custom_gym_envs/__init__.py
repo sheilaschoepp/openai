@@ -69,42 +69,27 @@ register(
     max_episode_steps=50,
 )
 register(
-    id="FetchReachEnv-LLM-3-v7",
-    entry_point="custom_gym_envs.envs.fetchreach.FetchReachEnv_v2_BrokenElbowFlexJoint_LLM_3_v1.fetch.reach:FetchReachEnv",
-    max_episode_steps=50
-)
-register(
-    id="FetchReachEnv-LLM-4-v8",
-    entry_point="custom_gym_envs.envs.fetchreach.FetchReachEnv_v2_BrokenElbowFlexJoint_LLM_4_v2.fetch.reach:FetchReachEnv",
-    max_episode_steps=50
-)
-register(
-    id="FetchReachEnv-LLM-3-v9",
-    entry_point="custom_gym_envs.envs.fetchreach.FetchReachEnv_v2_BrokenElbowFlexJoint_LLM_3e_v1.fetch.reach:FetchReachEnv",
-    max_episode_steps=50
-)
-register(
-    id="FetchReachEnv-LLM-4-v10",
-    entry_point="custom_gym_envs.envs.fetchreach.FetchReachEnv_v2_BrokenElbowFlexJoint_LLM_4e_v2.fetch.reach:FetchReachEnv",
-    max_episode_steps=50
-)
-register(
-    id="FetchReachEnv-E-v20",
-    entry_point="custom_gym_envs.envs.fetchreach.FetchReachEnv_v2_BrokenElbowFlexJoint_E.fetch.reach:FetchReachEnv",
-    max_episode_steps=50
-)
-register(
-    id="FetchReachEnv-E-v11",
-    entry_point="custom_gym_envs.envs.fetchreach.FetchReachEnv_v2_BrokenElbowFlexJoint_LLM_E_v11.fetch.reach:FetchReachEnv",
-    max_episode_steps=50
-)
-register(
-    id="FetchReachEnv-E-v12",
-    entry_point="custom_gym_envs.envs.fetchreach.FetchReachEnv_v2_BrokenElbowFlexJoint_LLM_E_v12.fetch.reach:FetchReachEnv",
-    max_episode_steps=50
-)
-register(
-    id="FetchReachEnv-E-v13",
+    id="FetchReachEnv-v7",
     entry_point="custom_gym_envs.envs.fetchreach.FetchReachEnv_v4_BrokenShoulderLiftSensor_E.fetch.reach:FetchReachEnv",
-    max_episode_steps=50
+    max_episode_steps=50,
+)
+register(
+    id="FetchReachEnv-v8",
+    entry_point="custom_gym_envs.envs.fetchreach.FetchReachEnv_v4_BrokenShoulderLiftSensor_E_v11.fetch.reach:FetchReachEnv",
+    max_episode_steps=50,
+)
+register(
+    id="FetchReachEnv-v9",
+    entry_point="custom_gym_envs.envs.fetchreach.FetchReachEnv_v4_BrokenShoulderLiftSensor_E_v12.fetch.reach:FetchReachEnv",
+    max_episode_steps=50,
+)
+register(
+    id="FetchReachEnv-v10",
+    entry_point="custom_gym_envs.envs.fetchreach.FetchReachEnv_v4_BrokenShoulderLiftSensor_E_v13.fetch.reach:FetchReachEnv",
+    max_episode_steps=50,
+)
+register(
+    id="FetchReachEnv-v11",
+    entry_point="custom_gym_envs.envs.fetchreach.FetchReachEnv_v4_BrokenShoulderLiftSensor_E_v14.fetch.reach:FetchReachEnv",
+    max_episode_steps=50,
 )

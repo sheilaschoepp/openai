@@ -140,7 +140,7 @@ class RLGlue:
         self._total_reward += reward
         self._total_distance_from_goal += distance
         self._episode_reward += reward
-        self.episode_distance_from_goal += distance
+        self._episode_distance_from_goal += distance
 
         if terminal:
             self._action = self._agent.agent_end(reward, next_state, terminal)

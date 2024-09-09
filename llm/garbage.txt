@@ -7,7 +7,7 @@ effector at a particular position in a space. The robot is able to learn to do t
         
         return -d
 	where 
-    (are ready to use, no need to redefine in your function)
+    (already defined)
 	    def _is_success(self, achieved_goal, desired_goal):
             d = goal_distance(achieved_goal, desired_goal)
             return (d < self.distance_threshold).astype(np.float32)
@@ -28,7 +28,7 @@ info['qvel_dict'] # a dict with keys as joint names and values as their float ve
 info['constraint_forces'] # a dict with keys as joint names and values as forces given by sim.data.qfrc_contraint for each joint.
 You can use this information when making your reward function.
 
-Your task is to develop an optimal reward function for the same task but in this fault environment. Remember that your reward function will be used as is and only after the fault occurs. 
+Your task is to develop an optimal reward function for the same task but in this fault environment. Remember that your reward function will be used as is. 
 The value of qpos_dict['robot0:shoulder_lift_joint'] will always be 1.5 due the fault.
 
 Try to make such a reward function that gives out a smooth learning curve, learning very quickly and then plateauing well after convergence.

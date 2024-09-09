@@ -1,9 +1,8 @@
 #!/bin/bash
 
 # Constants
-PPO_CONTROLLER_ABSOLUTE_PATH="controllers/ppo/ppo_n_controller.py"
-ENVIRONMENTS=("FetchReachEnv-E-v11" "FetchReachEnv-E-v12" "FetchReachEnv-LLM-3-v7" "FetchReachEnv-LLM-4-v8")
-# ENVIRONMENTS=("FetchReachEnv-E-v12")
+PPO_CONTROLLER_ABSOLUTE_PATH="controllers/ppo/ppo_a_controller.py"
+ENVIRONMENTS=("FetchReachEnv-v7" "FetchReachEnv-v8" "FetchReachEnv-v9" "FetchReachEnv-v10", "FetchReachEnv-v11")
 TOTAL_SEEDS=15
 WINDOWS=10
 

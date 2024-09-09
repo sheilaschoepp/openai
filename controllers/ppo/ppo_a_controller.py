@@ -259,7 +259,7 @@ class NormalController:
         # data
 
         num_rows = int(self.parameters["n_time_steps"] / self.parameters["time_step_eval_frequency"]) + 1  # add 1 for evaluation before any learning (0th entry)
-        num_columns = 7
+        num_columns = 8
         self.eval_data = np.zeros((num_rows, num_columns))
 
         # num_rows = self.parameters["n_time_steps"]  # larger than needed; will remove extra entries later
@@ -312,7 +312,7 @@ class NormalController:
 
         # RLGlue used for training
         self.rlg = RLGlue(self.env, self.agent)
-        self.rlg_statistics = {"num_episodes": 0, "num_steps": 0, "total_reward": 0}
+        self.rlg_statistics = {"num_episodes": 0, "num_steps": 0, "total_reward": 0, "distance_from_goal": 0}
 
         # resume experiment - load data, seed state, env, agent, and rlg
 
@@ -398,7 +398,8 @@ class NormalController:
 
         self.rlg.rl_init(total_reward=self.rlg_statistics["total_reward"],
                          num_steps=self.rlg_statistics["num_steps"],
-                         num_episodes=self.rlg_statistics["num_episodes"])
+                         num_episodes=self.rlg_statistics["num_episodes"],
+                         distance_from_goal=self.rlg_statistics["distance_from_goal"])
 
         # save the agent model and evaluate the model before any learning
         if not args.resume:
@@ -434,7 +435,7 @@ class NormalController:
             terminal = False
 
             while not terminal and ((max_steps_this_episode <= 0) or (self.rlg.num_ep_steps() < max_steps_this_episode)):
-                _, _, terminal, _ = self.rlg.rl_step()
+                _, _, terminal, _, _ = self.rlg.rl_step()
 
                 # save the agent model each 'self.parameters["time_step_model_save_frequency"]' time steps
                 # policy model will be used for videos demonstrating learning progress
@@ -510,6 +511,7 @@ class NormalController:
             rlg_eval.rl_agent_message("mode, eval")
 
             returns = []
+            returns_distance = []
 
             rlg_eval.rl_init()
 
@@ -521,11 +523,13 @@ class NormalController:
 
                 max_steps_this_episode = 1000
                 while not terminal and ((max_steps_this_episode <= 0) or (rlg_eval.num_ep_steps() < max_steps_this_episode)):
-                    _, _, terminal, _ = rlg_eval.rl_step()
+                    _, _, terminal, _, distance = rlg_eval.rl_step()
 
                 returns.append(rlg_eval.episode_reward())
+                returns_distance.append(rlg_eval.episode_distance_from_goal())
 
             average_return = np.average(returns)
+            average_distance = np.average(returns_distance)
 
             num_updates = num_time_steps // self.parameters["num_samples"]
             num_epoch_updates = num_updates * self.parameters["epochs"]
@@ -536,9 +540,9 @@ class NormalController:
             real_time = int(time.time() - self.start)
 
             index = num_time_steps // self.parameters["time_step_eval_frequency"]
-            self.eval_data[index] = [num_time_steps, num_updates, num_epoch_updates, num_mini_batch_updates, num_samples, average_return, real_time]
+            self.eval_data[index] = [num_time_steps, num_updates, num_epoch_updates, num_mini_batch_updates, num_samples, average_return, average_distance, real_time]
 
-            print("evaluation at {} time steps: {}".format(num_time_steps, average_return))
+            print("evaluation at {} time steps: {}, distance from target: {}".format(num_time_steps, average_return, average_distance))
 
             run_time = str(timedelta(seconds=time.time() - self.start))[:-7]
             print("runtime:", run_time, "h:m:s")

@@ -70,8 +70,8 @@ class RobotEnv(gym.GoalEnv):
             'qvel_dict': obs['qvel_dict'],
             'constraint_forces': obs['constraint_forces']
         }
-        reward = self.compute_reward(obs['achieved_goal'], self.goal, info)
-        return obs, reward, done, info
+        reward, distance = self.compute_reward(obs['achieved_goal'], self.goal, info)
+        return obs, reward, done, info, distance
 
     def reset(self):
         # Attempt to reset the simulator. Since we randomize initial conditions, it

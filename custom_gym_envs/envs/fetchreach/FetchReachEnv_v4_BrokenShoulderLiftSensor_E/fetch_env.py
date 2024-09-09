@@ -64,7 +64,7 @@ class FetchEnv(robot_env.RobotEnv):
         if self.reward_type == 'sparse':
             return -(d > self.distance_threshold).astype(np.float32)
         else:
-            return -d
+            return -d, -d
 
     # RobotEnv methods
     # ----------------------------

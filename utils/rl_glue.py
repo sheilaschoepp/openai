@@ -23,12 +23,20 @@ class RLGlue:
 
         # useful statistics
         self._total_reward = None
+        self._episode_distance_from_goal = None
+        self._total_distance_from_goal = None
         self._num_steps = None
         self._num_episodes = None
         self._episode_reward = None
         self._num_ep_steps = None
 
         self._action = None
+
+    def total_distance_from_goal(self):
+        return self._total_distance_from_goal
+    
+    def episode_distance_from_goal(self):
+        return self._episode_distance_from_goal
 
     def total_reward(self):
         """
@@ -66,7 +74,7 @@ class RLGlue:
         return self._num_ep_steps
 
     # repeat for each run
-    def rl_init(self, total_reward=0, num_steps=0, num_episodes=0):
+    def rl_init(self, total_reward=0, num_steps=0, num_episodes=0, distance_from_goal=0):
         """
         Reset experiment data.
         Reset action.
@@ -74,9 +82,11 @@ class RLGlue:
         """
 
         self._total_reward = total_reward  # amount of reward accumulated in a single run
+        self._total_distance_from_goal = distance_from_goal # distance of end effector from goal
         self._num_steps = num_steps  # number of steps in a single run
         self._num_episodes = num_episodes  # number of episodes in a single run
         self._episode_reward = 0  # amount of reward accumulated in an episode
+        self._episode_distance_from_goal = 0 
         self._num_ep_steps = 0  # number of steps in the current episode
 
         self._action = None
@@ -97,6 +107,7 @@ class RLGlue:
         """
 
         self._episode_reward = 0  # reward accumulated in an episode
+        self._episode_distance_from_goal = 0
         self._num_ep_steps = 0  # number of steps in the current episode
         # self._num_steps = max(self._num_steps, 0)  # number of steps in a run
 
@@ -121,13 +132,15 @@ class RLGlue:
         self._action: float64 numpy array with shape (action_dim,)
             action selected by the agent
         """
-        reward, next_state, terminal = self._environment.env_step(self._action)  # returns reward, next_state, done
+        reward, next_state, terminal, distance = self._environment.env_step(self._action)  # returns reward, next_state, done
 
         self._num_ep_steps += 1
         self._num_steps += 1
 
         self._total_reward += reward
+        self._total_distance_from_goal += distance
         self._episode_reward += reward
+        self.episode_distance_from_goal += distance
 
         if terminal:
             self._action = self._agent.agent_end(reward, next_state, terminal)
@@ -135,7 +148,7 @@ class RLGlue:
         else:
             self._action = self._agent.agent_step(reward, next_state, terminal)
 
-        return reward, next_state, terminal, self._action
+        return reward, next_state, terminal, self._action, distance
 
     # repeat for each episode
     def rl_episode(self, max_steps_this_episode=0):
@@ -154,7 +167,7 @@ class RLGlue:
         self.rl_start()
 
         while not terminal and ((max_steps_this_episode <= 0) or (self._num_ep_steps < max_steps_this_episode)):
-            _, _, _, terminal = self.rl_step()
+            _, _, _, terminal, _ = self.rl_step()
 
         self._num_episodes += 1
 

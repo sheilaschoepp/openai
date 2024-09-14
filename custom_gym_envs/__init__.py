@@ -84,12 +84,12 @@ register(
     max_episode_steps=50,
 )
 register(
-    id="FetchReachEnv-v10",
+    id="FetchReachEnv-v11",
     entry_point="custom_gym_envs.envs.fetchreach.FetchReachEnv_v4_BrokenShoulderLiftSensor_E_v13.fetch.reach:FetchReachEnv",
     max_episode_steps=50,
 )
 register(
-    id="FetchReachEnv-v11",
+    id="FetchReachEnv-v12",
     entry_point="custom_gym_envs.envs.fetchreach.FetchReachEnv_v4_BrokenShoulderLiftSensor_E_v14.fetch.reach:FetchReachEnv",
     max_episode_steps=50,
 )

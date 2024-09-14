@@ -23,7 +23,7 @@ for i, experiment_folder in enumerate(os.listdir(root_directory)):
         combined_df = pd.concat(dfs)
         
 
-        grouped = combined_df.groupby("num_time_steps")["average_return"]
+        grouped = combined_df.groupby("num_time_steps")["average_distance_from_goal"]
         mean_return = grouped.mean()
         std_return = grouped.std()
         

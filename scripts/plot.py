@@ -22,7 +22,7 @@ for i, experiment_folder in enumerate(os.listdir(root_directory)):
             if csv_file.endswith('.csv') and os.path.exists(csv_file_path):
                 df = pd.read_csv(csv_file_path)
                 
-                plt.plot(df["num_time_steps"], df["average_return"], color=colors[i], alpha=0.6, linewidth=1.5)  # Increased line thickness
+                plt.plot(df["num_time_steps"], df["average_distance_from_goal"], color=colors[i], alpha=0.6, linewidth=1.5)  # Increased line thickness
         
         legend_handles.append(Line2D([0], [0], color=colors[i], lw=4, label=experiment_folder))  # Increased legend line thickness
 

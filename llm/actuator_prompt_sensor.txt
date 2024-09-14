@@ -20,11 +20,10 @@ Now, we need a better reward function in the case the robot experiences a fault 
 in the shoulder lift joint sensor. The reading given by the sensor is a constant value of 1.5 radians which might not be it's actual alignment.
 
 "info" parameter:
-info['actuator_torques'] # given by sim.data.qfrc_actuator
+info['actuator_torques'] # contains a dict with keys as joint names and values as torques for each joint given by sim.data.qfrc_actuator
 use this as your main indication for the reward. The following are also available to use:
 The torque values of torso_lift_joint, head_pan_joint, head_tilt_joint, shoulder_lift_joint, forearm_roll_joint, wrist_roll_joint and the gripper joints will be the same as above throughout the experiment.
-info['qpos_dict'] # a dict with keys as joint names and values as their float positions given by the sim.data.get_joint_qpos() method.
-info['qvel_dict'] # a dict with keys as joint names and values as their float velocities given by the sim.data.get_joint_qvel() method.
+
 info['constraint_forces'] # a dict with keys as joint names and values as forces given by sim.data.qfrc_contraint for each joint.
 You can use this information when making your reward function.
 

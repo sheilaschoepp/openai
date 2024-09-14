@@ -32,7 +32,7 @@ but in this fault environment so that the task is learned quickly and optimally 
 Your function should converge better and faster than the given expert reward function that was used in the fault environment.
 
 Use all information provided about the other joints in the robot.xml file and the aforementioned parameters to give this new reward function.
-Due to the fault, the value of qpos_dict['robot0:shoulder_lift_joint'] will always be 1.5. There is no way to access the 'true' position of this joint.
+Due to the fault, the value of qpos_dict['robot0:shoulder_lift_joint'] or the shoulder lift position will always be 1.5. There is no way to access the true or actual position of this joint.
 
 Only return one function without any explaination and incorporate your whole idea into it. Define all variables inside the function.
 Do not use any formatting or markdown.

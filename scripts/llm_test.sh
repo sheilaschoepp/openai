@@ -2,7 +2,7 @@
 
 # Constants
 PPO_CONTROLLER_ABSOLUTE_PATH="controllers/ppo/ppo_a_controller.py"
-ENVIRONMENTS=("FetchReachEnv-v11" "FetchReachEnv-v12")
+ENVIRONMENTS=("FetchReachEnv-v11")
 TOTAL_SEEDS=15
 WINDOWS=10
 

@@ -34,11 +34,11 @@ for i, experiment_folder in enumerate(os.listdir(root_directory)):
 
 
 plt.xlabel("Time Steps")
-plt.ylabel("Average Return")
+plt.ylabel("Average Dist from Goal")
 plt.title("Policy Evaluation Across Experiments with Error Bands")
 
 
-plt.xlim(left=0, right=300000) 
+plt.xlim(left=0, right=750000) 
 plt.legend(handles=legend_handles, loc='upper left', bbox_to_anchor=(1, 1), ncol=1)
 plt.tight_layout()
 

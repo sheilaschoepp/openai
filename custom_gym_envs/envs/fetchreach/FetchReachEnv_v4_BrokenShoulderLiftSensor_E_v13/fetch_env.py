@@ -59,11 +59,13 @@ class FetchEnv(robot_env.RobotEnv):
     # ----------------------------
 
     
-    def compute_reward(self, achieved_goal, desired_goal, info):
+    def compute_reward(self, achieved_goal, goal, info):
 
         # Variables
 
-        target_position = desired_goal[0] # Assuming desired_goal is a 3D position
+        d = goal_distance(achieved_goal, goal)
+
+        target_position = goal[0] # Assuming desired_goal is a 3D position
 
         achieved_position = achieved_goal[0] # Assuming achieved_goal is a 3D position
 
@@ -89,7 +91,7 @@ class FetchEnv(robot_env.RobotEnv):
         reward = -distance - 0.5*torque_penalty - np.abs(shoulder_lift_joint_constraint_force)*0.1
     
 
-        return reward, -distance
+        return reward, -d
     def _step_callback(self):
         if self.block_gripper:
             self.sim.data.set_joint_qpos('robot0:l_gripper_finger_joint', 0.)

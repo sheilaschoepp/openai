@@ -27,11 +27,11 @@ for i, experiment_folder in enumerate(os.listdir(root_directory)):
         legend_handles.append(Line2D([0], [0], color=colors[i], lw=4, label=experiment_folder))  # Increased legend line thickness
 
 plt.xlabel("Time Steps")
-plt.ylabel("Average Return")
+plt.ylabel("Average Dist from Goal")
 plt.title("Policy Evaluation Across 75 Experiments")
 
 plt.legend(handles=legend_handles, loc='upper left', bbox_to_anchor=(1, 1), ncol=1)
-plt.xlim(left=0, right=150000)
+plt.xlim(left=0, right=750000)
 
 
 plt.subplots_adjust(left=0.1, right=0.9, top=0.9, bottom=0.2)

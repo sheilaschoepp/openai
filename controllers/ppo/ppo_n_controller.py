@@ -7,7 +7,6 @@ os.environ["NUMEXPR_NUM_THREADS"] = "1"
 os.environ["OMP_NUM_THREADS"] = "1"
 import pickle
 import random
-import smtplib
 import sys
 import time
 from copy import copy
@@ -217,7 +216,7 @@ class NormalController:
         if self.parameters["device"] == "cuda":
             torch.cuda.manual_seed(self.parameters["seed"])
 
-        # env is seeded in Environment __init__() method
+        # env is seeded in Environment __init__ method
 
         # rl problem
 
@@ -562,15 +561,20 @@ class NormalController:
 
         print("saving...")
 
+        self.save_seed_state()
+
         self.save_parameters()
 
         self.save_data()
 
+        # save rlg data
         self.save_rlg_statistics()
 
-        self.rlg.rl_env_message(f"save, {self.data_dir}")  # save environment data
+        # save environment data
+        self.rlg.rl_env_message(f"save, {self.data_dir}")
 
-        self.rlg.rl_agent_message(f"save, {self.data_dir}, {self.rlg.num_steps()}")  # save agent data
+        # save agent data
+        self.rlg.rl_agent_message(f"save, {self.data_dir}, {self.rlg.num_steps()}")
 
         print("saving complete")
 

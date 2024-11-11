@@ -7,7 +7,6 @@ os.environ["NUMEXPR_NUM_THREADS"] = "1"
 os.environ["OMP_NUM_THREADS"] = "1"
 import pickle
 import random
-import smtplib
 import sys
 import time
 from copy import copy
@@ -32,8 +31,8 @@ parser = argparse.ArgumentParser(description="PyTorch Proximal Policy Optimizati
 
 parser.add_argument("-e", "--ab_env_name", default="Ant-v5",
                     help="name of abnormal (malfunctioning) MuJoCo Gym environment (default: Ant-v5)")
-parser.add_argument("-t", "--ab_time_steps", type=int, default=400000000, metavar="N",
-                    help="number of time steps in abnormal (malfunctioning) MuJoCo Gym environment (default: 400000000)")
+parser.add_argument("-t", "--ab_time_steps", type=int, default=10000, metavar="N", # todo
+                    help="number of time steps in abnormal (malfunctioning) MuJoCo Gym environment (default: 10000)") # todo
 
 parser.add_argument("-cm", "--clear_memory", default=False, action="store_true",
                     help="if true, clear the memory (default: False)")
@@ -154,7 +153,7 @@ class AbnormalController:
         # Note: we load the seeds after all rl problem elements are created because the creation of the agent
         # network(s) uses xavier initialization, thereby altering the torch seed state
 
-        # env is seeded in Environment __init__() method
+        # env is seeded in Environment __init__ method
 
         # rl problem
 
@@ -380,7 +379,7 @@ class AbnormalController:
             if self.parameters["clear_memory"] and self.parameters["reinitialize_networks"]:
                 num_updates = ((num_time_steps - self.parameters["n_time_steps"]) // self.parameters["num_samples"])
             elif not self.parameters["clear_memory"] and self.parameters["reinitialize_networks"]:
-                num_updates = (num_time_steps - self.parameters["n_time_steps"] + self.agent.memory_num_samples) // self.parameters["num_samples"]
+                num_updates = (num_time_steps - self.parameters["n_time_steps"] + self.agent.memory_init_samples) // self.parameters["num_samples"]
             elif self.parameters["clear_memory"] and not self.parameters["reinitialize_networks"]:
                 num_updates = ((num_time_steps - self.parameters["n_time_steps"]) // self.parameters["num_samples"]) + (self.parameters["n_time_steps"] // self.parameters["num_samples"])
             else:
@@ -393,8 +392,7 @@ class AbnormalController:
 
             run_time = int(time.time() - self.start)
 
-            # index = (num_time_steps // self.parameters["time_step_eval_frequency"]) + 1  # add 1 because we evaluate policy before learning
-            index = (((num_time_steps - self.parameters["n_time_steps"]) // 10000) + 201)  # add 1 because we evaluate policy before learning  todo
+            index = (num_time_steps // self.parameters["time_step_eval_frequency"]) + 1  # add 1 because we evaluate policy before learning
             self.eval_data[index] = [num_time_steps, num_updates, num_epoch_updates, num_mini_batch_updates, num_samples, average_return, run_time]
 
             print(f"evaluation at {num_time_steps} time steps: {average_return}")
@@ -408,7 +406,7 @@ class AbnormalController:
         Note: Experiment parameters already loaded.
         Load seed state: random, torch, and numpy seed states.
         Load experiment data.
-        Load environment data: OpenAI seed states.
+        Load environment data: OpenAI seed states. # todo
         Load agent data: models, number of updates of models, and memory.
         Load rlg statistics: num_episodes, num_steps, and total_reward.
         """
@@ -417,12 +415,15 @@ class AbnormalController:
 
         self.load_data()
 
-        self.rlg.rl_env_message(f"load, {self.load_data_dir}")  # load environment data
+        # load environment data
+        self.rlg.rl_env_message(f"load, {self.load_data_dir}")
 
+        # load agent data
         self.rlg.rl_agent_message(f"load, {self.load_data_dir}, {self.parameters['completed_time_steps']}")
         self.agent.loss_data = self.loss_data
 
-        self.load_rlg_statistics()  # load rlg data
+        # load rlg data
+        self.load_rlg_statistics()
 
     def load_data(self):
         """

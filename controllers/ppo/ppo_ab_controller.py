@@ -470,7 +470,7 @@ class AbnormalController:
             if self.parameters["clear_memory"] and self.parameters["reinitialize_networks"]:
                 num_updates = ((num_time_steps - self.parameters["n_time_steps"]) // self.parameters["num_samples"])
             elif not self.parameters["clear_memory"] and self.parameters["reinitialize_networks"]:
-                num_updates = (num_time_steps - self.parameters["n_time_steps"] + self.agent.memory_init_samples) // self.parameters["num_samples"]
+                num_updates = (num_time_steps - self.parameters["n_time_steps"] + self.agent.memory_num_samples) // self.parameters["num_samples"]
             elif self.parameters["clear_memory"] and not self.parameters["reinitialize_networks"]:
                 num_updates = ((num_time_steps - self.parameters["n_time_steps"]) // self.parameters["num_samples"]) + (self.parameters["n_time_steps"] // self.parameters["num_samples"])
             else:

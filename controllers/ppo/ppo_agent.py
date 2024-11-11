@@ -120,7 +120,7 @@ class PPO(BaseAgent):
 
         # memory
         self.memory = Memory(num_samples, self.state_dim, self.action_dim, gamma, use_gae, gae_lambda, mini_batch_size, device=self.device)
-        self.memory_init_samples = 0
+        self.memory_num_samples = 0
 
         # loss_index
         self.loss_index = 0
@@ -259,7 +259,7 @@ class PPO(BaseAgent):
 
         if split_message[0] == "clear_memory":
             self.agent_clear_memory()
-            self.memory_init_samples = 0
+            self.memory_num_samples = 0
             self.agent_load_total_num_updates()
         if split_message[0] == "load":
             data_dir = split_message[1]
@@ -381,9 +381,9 @@ class PPO(BaseAgent):
         pickle_foldername = dir_ + "/pickle"
         os.makedirs(pickle_foldername, exist_ok=True)
 
-        memory_dic = {"memory_init_samples": self.memory_init_samples}
+        memory_dic = {"memory_num_samples": self.memory_num_samples}
 
-        with open(pickle_foldername + "/memory_init_samples.pickle", "wb") as f:
+        with open(pickle_foldername + "/memory_num_samples.pickle", "wb") as f:
             pickle.dump(memory_dic, f)
 
     def agent_save_models(self, dir_, t):

@@ -497,7 +497,7 @@ class AbnormalController:
 
         pt_filename = self.load_data_dir + "/pt"
 
-        torch_random_state = torch.load(pt_filename + "/torch_random_state.pt")
+        torch_random_state = torch.load(pt_filename + "/torch_random_state.pt", weights_only=False)
         torch.set_rng_state(torch_random_state)
 
         if self.parameters["device"] == "cuda":

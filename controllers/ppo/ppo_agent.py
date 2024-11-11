@@ -329,7 +329,7 @@ class PPO(BaseAgent):
 
         if self.device == "cuda":
             # send to gpu
-            checkpoint = torch.load(tar_foldername + "/{}.tar".format(t))
+            checkpoint = torch.load(tar_foldername + "/{}.tar".format(t), weights_only=False)
 
             # load neural network(s)
             self.actor_critic_network.load_state_dict(
@@ -342,7 +342,7 @@ class PPO(BaseAgent):
 
             # send to CPU
             checkpoint = torch.load(tar_foldername + "/{}.tar".format(t),
-                                    map_location=torch.device(self.device))
+                                    map_location=torch.device(self.device), weights_only=False)
 
             # load neural network(s)
             self.actor_critic_network.load_state_dict(
@@ -631,6 +631,8 @@ class PPO(BaseAgent):
         """
 
         if self.linear_lr_decay:
+
+            # TODO: There is an error here
 
             lr = (self.lr *
                   (0.1 + 0.9 * (1 - self.num_updates / self.total_num_updates)))

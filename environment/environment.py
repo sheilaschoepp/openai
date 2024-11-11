@@ -1,3 +1,4 @@
+import numpy as np
 import os
 import pickle
 
@@ -18,7 +19,7 @@ class Environment(BaseEnvironment):
         """
         Initialize environment variables.
 
-        @param env_name: string
+        @param env_name: str
             name of OpenAI environment
         @param seed: int
             seed for random number generator
@@ -28,10 +29,9 @@ class Environment(BaseEnvironment):
 
         super(Environment, self).__init__()
 
+        render_mode = None
         if render:
             render_mode = "human"
-        else:
-            render_mode = None
 
         self.env = gym.make(env_name, render_mode=render_mode)
 
@@ -80,8 +80,6 @@ class Environment(BaseEnvironment):
 
         observation, reward, terminated, truncated, info = self.env.step(action)
 
-        # combine terminated and truncated flags into a single terminal
-        # flag
         terminal = terminated or truncated
 
         return reward, observation, terminal
@@ -144,58 +142,140 @@ class Environment(BaseEnvironment):
 
     def env_load(self, dir_):
         """
-        Load environment's data.
+        Restore the environment's state and random number generator
+        (RNG) settings to reproduce a previously saved environment
+        configuration.
 
-        @param dir_: string
+        @param dir_: str
             load directory
         """
 
+        self.env_load_state(dir_)
         self.env_load_rng(dir_)
 
-    def env_load_rng(self, dir_):
+    def env_load_state(self, dir_):
         """
-        Load the state of the random number generator used by
-        Gymnasium.
+        Restore the state of the MuJoCo simulator, including the saved
+        observation and the simulator's position and velocity data
+        (qpos and qvel), to reproduce a previously saved environment
+        state.
 
         File format: .pickle
 
-        @param dir_: string
+        @param dir_: str
             load directory
         """
 
         pickle_foldername = dir_ + "/pickle"
 
-        with open(pickle_foldername + "/env_np_random_state.pickle",
-                  "rb") as handle:
-            env_np_random_state = pickle.load(handle)
+        with open(pickle_foldername + "/mujoco_qpos.pickle", "rb") as handle:
+            mujoco_qpos = pickle.load(handle)
+        with open(pickle_foldername + "/mujoco_qvel.pickle", "rb") as handle:
+            mujoco_qvel = pickle.load(handle)
 
-        self.env.np_random.bit_generator.state = env_np_random_state
+        self.env.unwrapped.set_state(mujoco_qpos, mujoco_qvel)
 
-    def env_save(self, dir_):
+        # TODO: comment out
+        with open(pickle_foldername + "/saved_observation.pickle", "rb") as handle:
+            saved_observation = pickle.load(handle)
+
+        restored_observation = self.env.unwrapped._get_obs()
+        observations_equal = np.array_equal(saved_observation, restored_observation)
+        assert observations_equal, "Loaded observation is different from saved observation."
+
+    def env_load_rng(self, dir_):
         """
-        Save environment's data.
+        Restore the state of the Gymnasium environment's random number
+        generators (RNGs) to ensure reproducible results.
 
-        @param dir_: string
-            save directory
-        """
-
-        self.env_save_rng(dir_)
-
-    def env_save_rng(self, dir_):
-        """
-        Save the state of the random number generator used by
-        Gymnasium.
+        Loads the saved RNG states for both the main environment and its
+        action space, allowing for consistent sampling of actions and
+        environment dynamics.
 
         File format: .pickle
 
-        @param dir_: string
+        @param dir_: str
+            load directory
+        """
+
+        pickle_foldername = dir_ + "/pickle"
+
+        with open(pickle_foldername + "/env_np_random_state.pickle", "rb") as handle:
+            env_np_random_state = pickle.load(handle)
+        with open(pickle_foldername + "/env_action_space_np_random_state.pickle", "rb") as handle:
+            env_action_space_np_random_state = pickle.load(handle)
+
+        self.env.np_random.bit_generator.state = env_np_random_state
+        self.env.action_space.np_random.bit_generator.state = env_action_space_np_random_state
+
+    def env_save(self, dir_):
+        """
+        Save the current state of the environment to ensure
+        reproducibility.
+
+        This method saves both the simulator's physical state (such as
+        positions and velocities) and the random number generator (RNG)
+        states used by the environment.
+
+        @param dir_: str
+            save directory
+        """
+
+        self.env_save_state(dir_)
+        self.env_save_rng(dir_)
+
+    def env_save_state(self, dir_):
+        """
+        Save the current state of the MuJoCo simulator, including the
+        observation, and the simulator's position and velocity data
+        (qpos and qvel).
+
+        This method captures:
+        - The current observation as perceived by the environment.
+        - qpos: The simulator's internal state of positions.
+        - qvel: The simulator's internal state of velocities.
+
+        File format: .pickle
+
+        @param dir_: str
+            save directory
+        """
+
+        mujoco_qpos = self.env.unwrapped.data.qpos.copy()
+        mujoco_qvel = self.env.unwrapped.data.qvel.copy()
+
+        pickle_foldername = dir_ + "/pickle"
+        os.makedirs(pickle_foldername, exist_ok=True)
+
+        with open(pickle_foldername + "/mujoco_qpos.pickle", "wb") as f:
+            pickle.dump(mujoco_qpos, f)
+        with open(pickle_foldername + "/mujoco_qvel.pickle", "wb") as f:
+            pickle.dump(mujoco_qvel, f)
+
+        # TODO: comment out
+        saved_observation = self.env.unwrapped._get_obs()
+        with open(pickle_foldername + "/saved_observation.pickle", "wb") as f:
+            pickle.dump(saved_observation, f)
+
+    def env_save_rng(self, dir_):
+        """
+        Save the state of the random number generators (RNGs) used by
+        the Gymnasium environment, including the environment's main RNG
+        and the action space's RNG.
+
+        File format: .pickle
+
+        @param dir_: str
             save directory
         """
 
         env_np_random_state = self.env.np_random.bit_generator.state
+        env_action_space_np_random_state = self.env.action_space.np_random.bit_generator.state
 
         pickle_foldername = dir_ + "/pickle"
         os.makedirs(pickle_foldername, exist_ok=True)
 
         with open(pickle_foldername + "/env_np_random_state.pickle", "wb") as f:
             pickle.dump(env_np_random_state, f)
+        with open(pickle_foldername + "/env_action_space_np_random_state.pickle", "wb") as f:
+            pickle.dump(env_action_space_np_random_state, f)

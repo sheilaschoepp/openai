@@ -1,3 +1,6 @@
+import os
+import pickle
+
 import gymnasium as gym
 
 from utils.rl_glue import BaseEnvironment
@@ -99,6 +102,12 @@ class Environment(BaseEnvironment):
 
         if split_message[0] == "close":
             self.env_close()
+        if split_message[0] == "load":
+            data_dir = split_message[1]
+            self.env_load(data_dir)
+        if split_message[0] == "save":
+            data_dir = split_message[1]
+            self.env_save(data_dir)
 
         return response
 
@@ -132,3 +141,61 @@ class Environment(BaseEnvironment):
         """
 
         self.env.close()
+
+    def env_load(self, dir_):
+        """
+        Load environment's data.
+
+        @param dir_: string
+            load directory
+        """
+
+        self.env_load_rng(dir_)
+
+    def env_load_rng(self, dir_):
+        """
+        Load the state of the random number generator used by
+        Gymnasium.
+
+        File format: .pickle
+
+        @param dir_: string
+            load directory
+        """
+
+        pickle_foldername = dir_ + "/pickle"
+
+        with open(pickle_foldername + "/env_np_random_state.pickle",
+                  "rb") as handle:
+            env_np_random_state = pickle.load(handle)
+
+        self.env.np_random.bit_generator.state = env_np_random_state
+
+    def env_save(self, dir_):
+        """
+        Save environment's data.
+
+        @param dir_: string
+            save directory
+        """
+
+        self.env_save_rng(dir_)
+
+    def env_save_rng(self, dir_):
+        """
+        Save the state of the random number generator used by
+        Gymnasium.
+
+        File format: .pickle
+
+        @param dir_: string
+            save directory
+        """
+
+        env_np_random_state = self.env.np_random.bit_generator.state
+
+        pickle_foldername = dir_ + "/pickle"
+        os.makedirs(pickle_foldername, exist_ok=True)
+
+        with open(pickle_foldername + "/env_np_random_state.pickle", "wb") as f:
+            pickle.dump(env_np_random_state, f)

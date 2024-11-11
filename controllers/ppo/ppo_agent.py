@@ -349,7 +349,7 @@ class PPO(BaseAgent):
         self.agent_save_models(dir_, t)
         self.agent_save_num_updates(dir_)
         self.agent_save_memory(dir_)
-        self.agent_save_memory_init_samples(dir_)
+        self.agent_save_memory_num_samples(dir_)
 
     def agent_save_memory(self, dir_):
         """
@@ -367,9 +367,10 @@ class PPO(BaseAgent):
         with open(pickle_foldername + "/memory.pickle", "wb") as f:
             pickle.dump(self.memory, f)
 
-    def agent_save_memory_init_samples(self, dir_):
+    def agent_save_memory_num_samples(self, dir_):
         """
-        Save number of samples in memory at the start of learning with the ab_controller..
+        Save number of samples in memory at the start of learning with
+        the ab_controller.
 
         File format: .pickle
 

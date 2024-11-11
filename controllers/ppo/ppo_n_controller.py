@@ -111,12 +111,6 @@ class NormalController:
 
         self.start = time.time()
 
-        # hostname
-
-        self.hostname = os.uname()[1]
-        self.localhosts = ["melco", "Legion", "amii", "remaining20seeds"]
-        self.computecanada = not any(host in self.hostname for host in self.localhosts)
-
         # experiment parameters
 
         self.parameters = None
@@ -175,43 +169,36 @@ class NormalController:
 
         self.experiment = "PPO_" + suffix
 
-        if self.computecanada:
-            # path for compute canada
-            self.data_dir = os.getenv("HOME") + "/scratch/openai/data/" + self.experiment + "/seed" + str(self.parameters["seed"])
-        else:
-            # path for servers and local machines
-            self.data_dir = os.getenv("HOME") + "/Documents/openai/data/" + self.experiment + "/seed" + str(self.parameters["seed"])
+        self.data_dir = os.getenv("HOME") + "/Documents/openai/data/" + self.experiment + "/seed" + str(self.parameters["seed"])
 
-        # old data
+        # are we restarting training?  do the data files for the
+        # selected seed already exist?
+        if path.exists(self.data_dir):
 
-        if not self.computecanada:
-            # are we restarting training?  do the data files for the selected seed already exist?
-            if path.exists(self.data_dir):
+            print(self.LINE)
+            print(self.LINE)
 
-                print(self.LINE)
-                print(self.LINE)
-
-                if args.delete:
-                    # yes; argument flag present to indicate data deletion
-                    print(colored("argument indicates DATA DELETION", "red"))
+            if args.delete:
+                # yes; argument flag present to indicate data deletion
+                print(colored("argument indicates DATA DELETION", "red"))
+                print(colored("deleting data...", "red"))
+                rmtree(self.data_dir, ignore_errors=True)
+                print(colored("data deletion complete", "red"))
+            else:
+                # yes; argument flag not present; get confirmation of data deletion from user input
+                print(colored("You are about to delete saved data and restart training.", "red"))
+                s = input(colored("Are you sure you want to continue?  Hit 'y' then 'Enter' to continue.\n", "red"))
+                if s == "y":
+                    # delete old data; rewrite new data to same location
+                    print(colored("user input indicates DATA DELETION", "red"))
                     print(colored("deleting data...", "red"))
                     rmtree(self.data_dir, ignore_errors=True)
                     print(colored("data deletion complete", "red"))
                 else:
-                    # yes; argument flag not present; get confirmation of data deletion from user input
-                    print(colored("You are about to delete saved data and restart training.", "red"))
-                    s = input(colored("Are you sure you want to continue?  Hit 'y' then 'Enter' to continue.\n", "red"))
-                    if s == "y":
-                        # delete old data; rewrite new data to same location
-                        print(colored("user input indicates DATA DELETION", "red"))
-                        print(colored("deleting data...", "red"))
-                        rmtree(self.data_dir, ignore_errors=True)
-                        print(colored("data deletion complete", "red"))
-                    else:
-                        # do not delete old data; system exit
-                        print(colored("user input indicates NO DATA DELETION", "red"))
-                        print(self.LINE)
-                        sys.exit("\nexiting...")
+                    # do not delete old data; system exit
+                    print(colored("user input indicates NO DATA DELETION", "red"))
+                    print(self.LINE)
+                    sys.exit("\nexiting...")
 
         # data
 
@@ -348,7 +335,7 @@ class NormalController:
                          num_episodes=self.rlg_statistics["num_episodes"])
 
         # save the agent model and evaluate the model before any learning
-        self.rlg.rl_agent_message("save_model, {}, {}".format(self.data_dir, 0))
+        self.rlg.rl_agent_message(f"save_model, {self.data_dir}, {0}")
         self.evaluate_model(self.rlg.num_steps())
 
         for _ in itertools.count(1):
@@ -368,7 +355,7 @@ class NormalController:
                 # save the agent model each 'self.parameters["time_step_model_save_frequency"]' time steps
                 # policy model will be used for videos demonstrating learning progress
                 if self.rlg.num_steps() % self.parameters["time_step_model_save_frequency"] == 0:
-                    self.rlg.rl_agent_message("save_model, {}, {}".format(self.data_dir, self.rlg.num_steps()))
+                    self.rlg.rl_agent_message(f"save_model, {self.data_dir}, {self.rlg.num_steps()}")
 
                 # evaluate the model every 'self.parameters["time_step_eval_frequency"]' time steps
                 if self.rlg.num_steps() % self.parameters["time_step_eval_frequency"] == 0:
@@ -400,12 +387,9 @@ class NormalController:
         print("time to complete one run:", run_time, "h:m:s")
         print(self.LINE)
 
-        # if not self.computecanada:
-        #     self.send_email(run_time)
-
         text_file = open(self.data_dir + "/run_summary.txt", "w")
         text_file.write(date.today().strftime("%m/%d/%y"))
-        text_file.write("\n\nExperiment {}/seed{} complete.\n\nTime to complete: {} h:m:s".format(self.experiment, self.parameters["seed"], run_time))
+        text_file.write(f"\n\nExperiment {self.experiment}/seed{self.parameters['seed']} complete.\n\nTime to complete: {run_time} h:m:s")
         text_file.close()
 
     def evaluate_model(self, num_time_steps):
@@ -456,10 +440,10 @@ class NormalController:
 
             num_samples = num_mini_batch_updates * self.parameters["mini_batch_size"]
 
-            real_time = int(time.time() - self.start)
+            run_time = int(time.time() - self.start)
 
             index = num_time_steps // self.parameters["time_step_eval_frequency"]
-            self.eval_data[index] = [num_time_steps, num_updates, num_epoch_updates, num_mini_batch_updates, num_samples, average_return, real_time]
+            self.eval_data[index] = [num_time_steps, num_updates, num_epoch_updates, num_mini_batch_updates, num_samples, average_return, run_time]
 
             print("evaluation at {} time steps: {}".format(num_time_steps, average_return))
 
@@ -477,6 +461,7 @@ class NormalController:
         print("plotting...")
 
         csv_foldername = self.data_dir + "/csv"
+        os.makedirs(csv_foldername, exist_ok=True)
 
         jpg_foldername = self.data_dir + "/jpg"
         os.makedirs(jpg_foldername, exist_ok=True)
@@ -586,17 +571,15 @@ class NormalController:
 
         print("saving...")
 
-        self.save_seed_state()
-
         self.save_parameters()
 
         self.save_data()
 
-        self.save_rlg_statistics()  # save rlg data
+        self.save_rlg_statistics()
 
-        self.rlg.rl_env_message("save, {}".format(self.data_dir))  # save environment data
+        self.rlg.rl_env_message(f"save, {self.data_dir}")  # save environment data
 
-        self.rlg.rl_agent_message("save, {}, {}".format(self.data_dir, self.rlg.num_steps()))  # save agent data
+        self.rlg.rl_agent_message(f"save, {self.data_dir}, {self.rlg.num_steps()}")  # save agent data
 
         print("saving complete")
 
@@ -618,7 +601,7 @@ class NormalController:
                                      "num_mini_batch_updates": self.eval_data[:, 3],
                                      "num_samples": self.eval_data[:, 4],
                                      "average_return": self.eval_data[:, 5],
-                                     "real_time": self.eval_data[:, 6]})
+                                     "run_time": self.eval_data[:, 6]})
         eval_data_df.to_csv(csv_foldername + "/eval_data.csv", float_format="%f")
 
         # # remove zero entries
@@ -714,33 +697,6 @@ class NormalController:
         if self.parameters["device"] == "cuda":
             torch_cuda_random_state = torch.cuda.get_rng_state()
             torch.save(torch_cuda_random_state, pt_foldername + "/torch_cuda_random_state.pt")
-
-    def send_email(self, run_time):
-        """
-        Send email to indicate that the experiment is complete.
-
-        @param run_time: string
-            the time to complete a single run of the experiment (h:m:s)
-        """
-
-        gmail_email = "mynewbfnao@gmail.com"
-        gmail_password = "k!1t8qL(YQO%labr}kS%"
-
-        recipient = "sschoepp@ualberta.ca"
-
-        from_ = gmail_email
-        to = recipient if type(recipient) is list else [recipient]
-        subject = "Experiment Complete"
-        text = "Experiment {}/seed{} complete.\n\nTime to complete: \n{} h:m:s\n\nThis message is sent from Python.".format(self.experiment, self.parameters["seed"], run_time)
-
-        message = """\From: %s\nTo: %s\nSubject: %s\n\n%s""" % (from_, ", ".join(to), subject, text)
-
-        server = smtplib.SMTP("smtp.gmail.com", 587)
-        server.ehlo()
-        server.starttls()
-        server.login(gmail_email, gmail_password)
-        server.sendmail(from_, to, message)
-        server.close()
 
 
 def main():

@@ -74,8 +74,6 @@ parser.add_argument("-tef", "--time_step_eval_frequency", type=int, default=1000
                     help="frequency of policy evaluation during learning (default: 10000)")
 parser.add_argument("-ee", "--eval_episodes", type=int, default=10, metavar="N",
                     help="number of episodes in policy evaluation roll-out (default: 10)")
-parser.add_argument("-tmsf", "--time_step_model_save_frequency", type=int, default=1000000, metavar="N",  # todo
-                    help="frequency of saving models during learning (default: 1000000)")
 
 parser.add_argument("-c", "--cuda", default=False, action="store_true",
                     help="if true, run on GPU (default: False)")
@@ -134,7 +132,6 @@ class NormalController:
                            "log_std": args.log_std,
                            "time_step_eval_frequency": args.time_step_eval_frequency,
                            "eval_episodes": args.eval_episodes,
-                           "time_step_model_save_frequency": args.time_step_model_save_frequency,
                            "cuda": args.cuda,
                            "device": "cuda" if args.cuda and torch.cuda.is_available() else "cpu",
                            "seed": args.seed,
@@ -162,7 +159,6 @@ class NormalController:
                  + "_lstd:" + str(self.parameters["log_std"]) \
                  + "_tef:" + str(self.parameters["time_step_eval_frequency"]) \
                  + "_ee:" + str(self.parameters["eval_episodes"]) \
-                 + "_tmsf:" + str(self.parameters["time_step_model_save_frequency"]) \
                  + "_d:" + str(self.parameters["device"]) \
                  + (("_ps:" + str(self.parameters["param_search"])) if self.parameters["param_search"] else "") \
                  + (("_pss:" + str(self.parameters["param_search_seed"])) if self.parameters["param_search"] else "")
@@ -308,7 +304,6 @@ class NormalController:
         print("log_std:", highlight_non_default_values("log_std"))
         print("time step evaluation frequency:", highlight_non_default_values("time_step_eval_frequency"))
         print("evaluation episodes:", highlight_non_default_values("eval_episodes"))
-        print("time step model save frequency:", highlight_non_default_values("time_step_model_save_frequency"))
         if self.parameters["device"] == "cuda":
             print("device:", self.parameters["device"])
             if "CUDA_VISIBLE_DEVICES" in os.environ:
@@ -352,13 +347,11 @@ class NormalController:
             while not terminal and ((max_steps_this_episode <= 0) or (self.rlg.num_ep_steps() < max_steps_this_episode)):
                 _, _, terminal, _ = self.rlg.rl_step()
 
-                # save the agent model each 'self.parameters["time_step_model_save_frequency"]' time steps
-                # policy model will be used for videos demonstrating learning progress
-                if self.rlg.num_steps() % self.parameters["time_step_model_save_frequency"] == 0:
-                    self.rlg.rl_agent_message(f"save_model, {self.data_dir}, {self.rlg.num_steps()}")
-
-                # evaluate the model every 'self.parameters["time_step_eval_frequency"]' time steps
+                # save and evaluate the model every
+                # 'self.parameters["time_step_eval_frequency"]' time
+                # steps
                 if self.rlg.num_steps() % self.parameters["time_step_eval_frequency"] == 0:
+                    self.rlg.rl_agent_message(f"save_model, {self.data_dir}, {self.rlg.num_steps()}")
                     self.evaluate_model(self.rlg.num_steps())
 
             # index = self.rlg.num_episodes() - 1

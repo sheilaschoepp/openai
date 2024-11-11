@@ -421,9 +421,7 @@ class PPO(BaseAgent):
 
         update_dic = {"loss_index": self.loss_index,
                       "total_num_updates": self.total_num_updates,
-                      "num_updates": self.num_updates,
-                      "num_epoch_updates": self.num_epoch_updates,
-                      "num_mini_batch_updates": self.num_mini_batch_updates}
+                      "num_updates": self.num_updates}
 
         with open(pickle_foldername + "/num_updates.pickle", "wb") as f:
             pickle.dump(update_dic, f)

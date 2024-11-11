@@ -374,11 +374,8 @@ class PPO(BaseAgent):
         self.total_num_updates = update_dic["total_num_updates"]
         self.num_updates = update_dic["num_updates"]
 
-        if self.resume:
-            self.num_old_updates = update_dic["num_old_updates"]
-        else:
-            self.num_old_updates = update_dic[
-                "num_updates"]  # number of updates with n_controller
+        # number of updates with n_controller
+        self.num_old_updates = update_dic["num_updates"]
 
         self.num_epoch_updates = update_dic["num_epoch_updates"]
         self.num_mini_batch_updates = update_dic["num_mini_batch_updates"]
@@ -408,19 +405,7 @@ class PPO(BaseAgent):
             load directory
         """
 
-        if self.resume:
-
-            pickle_foldername = dir_ + "/pickle"
-
-            with open(pickle_foldername + "/memory_init_samples.pickle",
-                      "rb") as f:
-                memory_dic = pickle.load(f)
-
-            self.memory_init_samples = memory_dic["memory_init_samples"]
-
-        else:
-
-            self.memory_init_samples = self.memory.step
+        self.memory_init_samples = self.memory.step
 
     def agent_load_total_num_updates(self):
         """
@@ -437,10 +422,7 @@ class PPO(BaseAgent):
         within the memory.
         """
 
-        if self.resume:
-            pass
-        else:
-            self.total_num_updates = (self.memory.step + self.time_steps) // self.num_samples
+        self.total_num_updates = (self.memory.step + self.time_steps) // self.num_samples
 
     def agent_memory_compute(self, next_state):
         """
@@ -569,7 +551,9 @@ class PPO(BaseAgent):
 
         update_dic = {"loss_index": self.loss_index,
                       "total_num_updates": self.total_num_updates,
-                      "num_updates": self.num_updates}
+                      "num_updates": self.num_updates,
+                      "num_epoch_updates": self.num_epoch_updates,
+                      "num_mini_batch_updates": self.num_mini_batch_updates}
 
         with open(pickle_foldername + "/num_updates.pickle", "wb") as f:
             pickle.dump(update_dic, f)

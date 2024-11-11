@@ -221,8 +221,8 @@ class NormalController:
         # rl problem
 
         # normal environment used for training
-        self.env = Environment(env_name=self.parameters["n_env_name"],
-                               seed=self.parameters["seed"])
+        self.env = Environment(self.parameters["n_env_name"],
+                               self.parameters["seed"])
 
         # agent
         self.agent = PPO(self.env.env_observation_dim(),

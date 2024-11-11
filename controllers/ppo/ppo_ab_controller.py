@@ -418,8 +418,9 @@ class AbnormalController:
         # load environment data
         self.rlg.rl_env_message(f"load, {self.load_data_dir}")
 
-        # load agent data
-        self.rlg.rl_agent_message(f"load, {self.load_data_dir}, {self.parameters['completed_time_steps']}")
+        # load agent data and reset learning rate to its full value
+        self.rlg.rl_agent_message(f"load, {self.load_data_dir}, {self.parameters['n_time_steps']}")
+        self.rlg.rl_agent_message("reset_lr")
         self.agent.loss_data = self.loss_data
 
         # load rlg data
@@ -634,15 +635,20 @@ class AbnormalController:
 
         print("saving...")
 
+        self.save_seed_state()
+
         self.save_parameters()
 
         self.save_data()
 
+        # save rlg data
         self.save_rlg_statistics()
 
-        self.rlg.rl_env_message(f"save, {self.data_dir}")  # save environment data
+        # save environment data
+        self.rlg.rl_env_message(f"save, {self.data_dir}")
 
-        self.rlg.rl_agent_message(f"save, {self.data_dir}, {self.rlg.num_steps()}")  # save agent data
+        # save agent data
+        self.rlg.rl_agent_message(f"save, {self.data_dir}, {self.rlg.num_steps()}")
 
         print("saving complete")
 

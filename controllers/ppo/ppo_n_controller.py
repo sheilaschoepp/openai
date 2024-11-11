@@ -2,9 +2,9 @@ import argparse
 import csv
 import itertools
 import os
-# os.environ["MKL_NUM_THREADS"] = "1"   # must be before numpy import
-# os.environ["NUMEXPR_NUM_THREADS"] = "1"
-# os.environ["OMP_NUM_THREADS"] = "1"
+os.environ["MKL_NUM_THREADS"] = "1"   # must be before numpy import
+os.environ["NUMEXPR_NUM_THREADS"] = "1"
+os.environ["OMP_NUM_THREADS"] = "1"
 import pickle
 import random
 import sys

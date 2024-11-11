@@ -219,7 +219,7 @@ class AbnormalController:
                                self.parameters["seed"])
 
         # agent
-        self.agent = PPO(self.env.env_state_dim(),
+        self.agent = PPO(self.env.env_observation_dim(),
                          self.env.env_action_dim(),
                          self.parameters["hidden_dim"],
                          self.parameters["log_std"],

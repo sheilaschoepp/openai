@@ -260,7 +260,7 @@ class NormalController:
                                self.parameters["seed"])
 
         # agent
-        self.agent = SAC(self.env.env_state_dim(),
+        self.agent = SAC(self.env.env_observation_dim(),
                          self.env.env_action_dim(),
                          self.parameters["gamma"],
                          self.parameters["tau"],

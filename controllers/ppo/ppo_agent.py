@@ -24,7 +24,6 @@ class PPO(BaseAgent):
                  log_std,
                  lr,
                  linear_lr_decay,
-                 slow_lrd,
                  gamma,
                  time_steps,
                  num_samples,
@@ -38,8 +37,7 @@ class PPO(BaseAgent):
                  use_gae,
                  gae_lambda,
                  device,
-                 loss_data,
-                 resume):
+                 loss_data):
         """
         Initialize agent variables.
         Initialize agent neural network.
@@ -56,8 +54,6 @@ class PPO(BaseAgent):
             learning rate
         @param linear_lr_decay: bool
             if true, decrease the learning rate linearly
-        @param slow_lrd: float
-            slow linear learning rate decay by this percentage
         @param gamma: float
             discount factor
         @param time_steps: int
@@ -82,12 +78,10 @@ class PPO(BaseAgent):
             if true, use generalized advantage estimation
         @param gae_lambda: float
             generalized advantage estimation smoothing parameter
-        @param device: string
+        @param device: str
             indicates whether using 'cuda' or 'cpu'
         @param loss_data: float64 numpy zeros array with shape (n_timesteps / num_samples * epochs, 3)
             numpy array to store agent loss data
-        @param resume: bool
-            if true, we are resuming the experiment
         """
 
         super(PPO, self).__init__()
@@ -100,7 +94,6 @@ class PPO(BaseAgent):
         self.log_std = log_std
         self.lr = lr
         self.linear_lr_decay = linear_lr_decay
-        self.slow_lrd = slow_lrd
 
         self.time_steps = time_steps
         self.num_samples = num_samples
@@ -115,8 +108,6 @@ class PPO(BaseAgent):
 
         self.device = device
         self.loss_data = loss_data
-
-        self.resume = resume
 
         # network
         self.actor_critic_network = ActorCriticNetwork(self.state_dim, self.action_dim, self.hidden_dim, self.log_std).to(device=self.device)
@@ -139,7 +130,6 @@ class PPO(BaseAgent):
 
         # number of full updates of the network(s)
         self.num_updates = 0
-        self.num_old_updates = 0
 
         # number of epochs to update the network(s)
         self.num_epoch_updates = 0
@@ -169,11 +159,13 @@ class PPO(BaseAgent):
         Initialize the variables that you want to reset before starting a new episode.
         Agent selects an action.
 
-        @param state: float64 numpy array with shape (state_dim,)
-            state of the environment
+        @param state: np.ndarray
+            a float64 numpy array with shape (state_dim,) representing
+            the state of the environment
 
-        @return action: float64 numpy array with shape (action_dim,)
-            action selected by the agent
+        @return action: np.ndarray
+            a float64 numpy array with shape (action_dim,) representing
+            the action selected by the agent
         """
 
         action = self.agent_select_action(state)
@@ -194,13 +186,15 @@ class PPO(BaseAgent):
 
         @param reward: float64
             reward received for taking action
-        @param next_state: float64 numpy array with shape (state_dim,)
+        @param next_state: np.ndarray
+            a float64 numpy array with shape (state_dim,) representing
             the state of the environment after taking action
         @param terminal: boolean
-            true if the goal state has been reached after taking action; otherwise false
+            true if the goal state has been reached; otherwise false
 
-        @return action: float64 numpy array with shape (action_dim,)
-            action selected by the agent
+        @return action: np.ndarray
+            a float64 numpy array with shape (action_dim,) representing
+            the action selected by the agent
         """
 
         if self.mode == "train":
@@ -228,10 +222,11 @@ class PPO(BaseAgent):
 
         @param reward: float64
             reward received for taking action
-        @param next_state: float64 numpy array with shape (state_dim,)
+        @param next_state: np.ndarray
+            a float64 numpy array with shape (state_dim,) representing
             the state of the environment after taking action
         @param terminal: boolean
-            true if the goal state has been reached after taking action; otherwise false
+            true if the goal state has been reached; otherwise false
 
         @return self.action: None
         """
@@ -299,149 +294,14 @@ class PPO(BaseAgent):
 
         self.memory.clear()
 
-    def agent_load(self, dir_, t):
-        """
-        Load agent's data.
-
-        @param dir_: string
-            load directory
-        @param t: int
-            number of time steps into training
-        """
-
-        self.agent_load_models(dir_, t)
-        self.agent_load_num_updates(dir_)
-        self.agent_load_memory(dir_)
-        self.agent_load_memory_inti_samples(dir_)  # must come after agent_load_memory
-        self.agent_load_total_num_updates()  # must come after agent_load_memory
-
-    def agent_load_models(self, dir_, t):
-        """
-        Load NNs and optimizers.  Set NNs to training mode.
-
-        Important: you must initialize them before loading!
-
-        File format: .tar
-
-        @param dir_: string
-            load directory
-        @param t: int
-            number of time steps into training
-        """
-
-        tar_foldername = dir_ + "/tar"
-
-        if self.device == "cuda":
-
-            # send to gpu
-            checkpoint = torch.load(tar_foldername + "/{}.tar".format(t))
-
-            # load neural network(s)
-            self.actor_critic_network.load_state_dict(checkpoint["actor_critic_network_state_dict"])
-
-            # send to GPU
-            self.actor_critic_network.to(device=self.device)
-
-        else:
-
-            # send to CPU
-            checkpoint = torch.load(tar_foldername + "/{}.tar".format(t), map_location=torch.device(self.device))
-
-            # load neural network(s)
-            self.actor_critic_network.load_state_dict(checkpoint["actor_critic_network_state_dict"])
-
-        # set network(s) to training mode
-        self.actor_critic_network.train()
-
-        # load Adam optimizers
-        self.actor_critic_optimizer.load_state_dict(checkpoint["actor_critic_optimizer_state_dict"])
-
-    def agent_load_num_updates(self, dir_):
-        """
-        Load number of updates.
-
-        File format: .pickle
-
-        @param dir_: string
-            load directory
-        """
-
-        pickle_foldername = dir_ + "/pickle"
-
-        with open(pickle_foldername + "/num_updates.pickle", "rb") as f:
-            update_dic = pickle.load(f)
-
-        self.loss_index = update_dic["loss_index"]
-        self.total_num_updates = update_dic["total_num_updates"]
-        self.num_updates = update_dic["num_updates"]
-
-        if self.resume:
-            self.num_old_updates = update_dic["num_old_updates"]
-        else:
-            self.num_old_updates = update_dic["num_updates"]  # number of updates with n_controller
-
-        self.num_epoch_updates = update_dic["num_epoch_updates"]
-        self.num_mini_batch_updates = update_dic["num_mini_batch_updates"]
-
-    def agent_load_memory(self, dir_):
-        """
-        Load memory.
-
-        File format: .pickle
-
-        @param dir_: string
-            load directory
-        """
-
-        pickle_foldername = dir_ + "/pickle"
-
-        with open(pickle_foldername + "/memory.pickle", "rb") as f:
-            self.memory = pickle.load(f)
-
-    def agent_load_memory_inti_samples(self, dir_):
-        """
-        Load the number of samples stored in memory at the start of learning with the abnormal controller.
-
-        File format: .pickle
-
-        @param dir_: string
-            load directory
-        """
-
-        if self.resume:
-
-            pickle_foldername = dir_ + "/pickle"
-
-            with open(pickle_foldername + "/memory_init_samples.pickle", "rb") as f:
-                memory_dic = pickle.load(f)
-
-            self.memory_init_samples = memory_dic["memory_init_samples"]
-
-        else:
-
-            self.memory_init_samples = self.memory.step
-
-    def agent_load_total_num_updates(self):
-        """
-        Update instance attribute total_num_updates - the number of updates that will occur in this experiment.
-        This value is used to linearly decay the learning rate in the agent_update_network_parameters method.
-
-        Note: If we load the memory, there may be samples stored within the memory.
-        Note: If we clear the memory, any samples are no longer stored within the memory.
-        """
-
-        if self.resume:
-            pass
-        else:
-            self.total_num_updates = (self.memory.step + self.time_steps) // self.num_samples
-
     def agent_memory_compute(self, next_state):
         """
         Compute the values of all states in memory and save them to memory.
         Update the memory by computing returns and (normalized) advantages for the collected samples.
 
-        @param next_state: float64 numpy array with shape (state_dim,)
-            state of the environment
+        @param next_state: np.ndarray
+            a float64 numpy array with shape (state_dim,) representing
+            the state of the environment
         """
 
         # save next state and terminal to memory
@@ -466,7 +326,6 @@ class PPO(BaseAgent):
         self.actor_critic_optimizer = Adam(self.actor_critic_network.parameters(), lr=self.lr)
 
         self.num_updates = 0
-        self.num_old_updates = 0
         self.num_epoch_updates = 0
         self.num_mini_batch_updates = 0
 
@@ -481,7 +340,7 @@ class PPO(BaseAgent):
         """
         Save agent's data.
 
-        @param dir_: string
+        @param dir_: str
             save directory
         @param t: int
             number of time steps into training
@@ -498,7 +357,7 @@ class PPO(BaseAgent):
 
         File format: .pickle
 
-        @param dir_: string
+        @param dir_: str
             save directory
         """
 
@@ -514,7 +373,7 @@ class PPO(BaseAgent):
 
         File format: .pickle
 
-        @param dir_: string
+        @param dir_: str
             save directory
         """
 
@@ -532,7 +391,7 @@ class PPO(BaseAgent):
 
         File format: .tar
 
-        @param dir_: string
+        @param dir_: str
             save directory
         @param t: int
             number of time steps into training
@@ -552,7 +411,7 @@ class PPO(BaseAgent):
 
         File format: .pickle
 
-        @param dir_: string
+        @param dir_: str
             save directory
         """
 
@@ -562,7 +421,6 @@ class PPO(BaseAgent):
         update_dic = {"loss_index": self.loss_index,
                       "total_num_updates": self.total_num_updates,
                       "num_updates": self.num_updates,
-                      "num_old_updates": self.num_old_updates,
                       "num_epoch_updates": self.num_epoch_updates,
                       "num_mini_batch_updates": self.num_mini_batch_updates}
 
@@ -578,11 +436,13 @@ class PPO(BaseAgent):
         deterministic=False: an action is sampled from a multivariate normal distribution.
         deterministic=True: action is mean of multivariate normal distribution.
 
-        @param state: float64 numpy array with shape (state_dim,)
-            state of the environment
+        @param state: np.ndarray
+            a float64 numpy array with shape (state_dim,) representing
+            the state of the environment
 
-        @return action: float64 numpy array with shape (action_dim,)
-            action selected by the agent
+        @return action: np.ndarray
+            a float64 numpy array with shape (action_dim,) representing
+            the action selected by the agent
         """
 
         if self.mode == "train":
@@ -601,26 +461,18 @@ class PPO(BaseAgent):
 
     def agent_set_policy_mode(self, mode):
         """
-        Set the policy mode (deterministic or stochastic).
-        Set policy model mode (train or eval).
+        Sets the policy mode for action selection.
 
-        Note: Summary of effects of this method
+        Options:
+        - "train": uses a stochastic policy for action selection, adds
+        new experiences to memory, and updates network parameters.
+        - "eval": uses a deterministic policy for action selection,
+        does not add experiences to memory, and does not update network
+        parameters.
 
-        'eval':
-        - deterministic policy (see self.agent_select_action() method)
-        - no new experiences added to the memory (see self.agent_step() and self.agent_end() methods)
-        - network parameters not updated (see self.agent_set_policy_mode() method)
-        - set policy model to evaluation mode - output of policy network may be changed if it contains dropout and
-          batch normalization layers
-
-        'train':
-        - stochastic policy (see self.agent_select_action() method)
-        - new experiences added to the memory (see self.agent_step() and self.agent_end() methods)
-        - network parameters are updated (see self.agent_set_policy_mode() method)
-        - set policy model to training mode
-
-        @param mode: string
-            mode: training mode ('train') during learning, evaluation mode ('eval') during inference
+        @param mode: str
+            mode: training ('train') during learning, evaluation
+            ('eval') during inference
         """
 
         assert (mode == "train" or mode == "eval"), "ppo_agent.agent_set_policy_mode: mode must be either 'train' or 'eval'"
@@ -637,15 +489,20 @@ class PPO(BaseAgent):
         Update the learning rate.
         Update the parameters for the NN(s).
 
-        Note: The learning rate starts at its full value (as passed by the argument 'lr').  The learning rate is
-        gradually decreased by an equal amount each update until it reaches 0.0.
-        Note: At the start of learning in the normal environment, the learning rate has its full value.  At the start of
-        learning in the abnormal environment, the learning rate has its full value.
+        Note: The learning rate starts at its full value (as specified
+        by the 'lr' argument) and decreases linearly with each update,
+        reaching 10% of the initial learning rate by the end of the
+        total updates (total_num_updates).
+
+        Note: At the start of learning in the normal environment, the
+        learning rate has its full value.  At the start of learning in
+        the abnormal environment, the learning rate has its full value.
         """
 
         if self.linear_lr_decay:
 
-            lr = self.lr - (self.lr * ((self.num_updates - self.num_old_updates) / self.total_num_updates) * self.slow_lrd)  # self.num_old_updates is > 0 only if we loaded data from normal environment
+            lr = (self.lr *
+                  (0.1 + 0.9 * (1 - self.num_updates / self.total_num_updates)))
 
             for param_group in self.actor_critic_optimizer.param_groups:
                 param_group["lr"] = lr

@@ -175,7 +175,7 @@ class Environment(BaseEnvironment):
 
         self.env.unwrapped.set_state(mujoco_qpos, mujoco_qvel)
 
-        # TODO: comment out
+        # Consistency check.
         with open(pickle_foldername + "/saved_observation.pickle", "rb") as handle:
             saved_observation = pickle.load(handle)
 
@@ -252,7 +252,7 @@ class Environment(BaseEnvironment):
         with open(pickle_foldername + "/mujoco_qvel.pickle", "wb") as f:
             pickle.dump(mujoco_qvel, f)
 
-        # TODO: comment out
+        # Consistency check.
         saved_observation = self.env.unwrapped._get_obs()
         with open(pickle_foldername + "/saved_observation.pickle", "wb") as f:
             pickle.dump(saved_observation, f)

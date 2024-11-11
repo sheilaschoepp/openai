@@ -31,7 +31,7 @@ import custom_gym_envs  # do not delete; required for custom gym environments
 parser = argparse.ArgumentParser(description="PyTorch Proximal Policy Optimization Arguments")
 
 parser.add_argument("-e", "--n_env_name", default="Ant-v5",
-                    help="name of normal (non-malfunctioning) MuJoCo Gym environment (default: Ant-v2)")
+                    help="name of normal (non-malfunctioning) MuJoCo Gym environment (default: Ant-v5)")
 parser.add_argument("-t", "--n_time_steps", type=int, default=10000, metavar="N",  # todo
                     help="number of time steps in normal (non-malfunctioning) MuJoCo Gym environment (default: 1000000000)")
 
@@ -135,7 +135,6 @@ class NormalController:
                            "cuda": args.cuda,
                            "device": "cuda" if args.cuda and torch.cuda.is_available() else "cpu",
                            "seed": args.seed,
-                           "complete": False,
                            "param_search": args.param_search,
                            "param_search_seed": args.param_search_seed}
 
@@ -359,7 +358,6 @@ class NormalController:
 
             # learning complete
             if self.rlg.num_steps() == self.parameters["n_time_steps"]:
-                self.parameters["complete"] = True
                 break
 
         self.save()
@@ -438,7 +436,7 @@ class NormalController:
             index = num_time_steps // self.parameters["time_step_eval_frequency"]
             self.eval_data[index] = [num_time_steps, num_updates, num_epoch_updates, num_mini_batch_updates, num_samples, average_return, run_time]
 
-            print("evaluation at {} time steps: {}".format(num_time_steps, average_return))
+            print(f"evaluation at {num_time_steps} time steps: {average_return}")
 
             run_time = str(timedelta(seconds=time.time() - self.start))[:-7]
             print("runtime:", run_time, "h:m:s")

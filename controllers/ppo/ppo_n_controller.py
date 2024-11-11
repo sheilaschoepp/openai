@@ -31,38 +31,38 @@ parser = argparse.ArgumentParser(description="PyTorch Proximal Policy Optimizati
 
 parser.add_argument("-e", "--n_env_name", default="Ant-v5",
                     help="name of normal (non-malfunctioning) MuJoCo Gym environment (default: Ant-v5)")
-parser.add_argument("-t", "--n_time_steps", type=int, default=10000, metavar="N",  # todo
-                    help="number of time steps in normal (non-malfunctioning) MuJoCo Gym environment (default: 1000000000)")
+parser.add_argument("-t", "--n_time_steps", type=int, default=5000000, metavar="N",  # todo
+                    help="number of time steps in normal (non-malfunctioning) MuJoCo Gym environment (default: 5000000)")
 
-parser.add_argument("--lr", type=float, default=0.00025, metavar="G",
-                    help="learning rate (default: 0.0003)")
+parser.add_argument("--lr", type=float, default=0.000275, metavar="G",
+                    help="learning rate (default: 0.000275)")
 parser.add_argument("-lrd", "--linear_lr_decay", default=False, action="store_true",
                     help="if true, decrease learning rate linearly (default: False)")
-parser.add_argument("--gamma", type=float, default=0.98, metavar="G",
-                    help="discount factor (default: 0.99)")
+parser.add_argument("--gamma", type=float, default=0.848, metavar="G",
+                    help="discount factor (default: 0.848)")
 
-parser.add_argument("-ns", "--num_samples", type=int, default=512, metavar="N",
-                    help="number of samples used to update the network(s) (default: 2048)")
-parser.add_argument("-mbs", "--mini_batch_size", type=int, default=256, metavar="N",
-                    help=" number of samples per mini-batch (default: 64)")
-parser.add_argument("--epochs", type=int, default=4, metavar="N",
-                    help="number of epochs when updating the network(s) (default: 10)")
+parser.add_argument("-ns", "--num_samples", type=int, default=3424, metavar="N",
+                    help="number of samples used to update the network(s) (default: 3424)")
+parser.add_argument("-mbs", "--mini_batch_size", type=int, default=8, metavar="N",
+                    help=" number of samples per mini-batch (default: 8)")
+parser.add_argument("--epochs", type=int, default=24, metavar="N",
+                    help="number of epochs when updating the network(s) (default: 24)")
 
-parser.add_argument("--epsilon", type=float, default=0.1, metavar="G",
-                    help="clip parameter (default: 0.1)")
-parser.add_argument("--vf_loss_coef", type=float, default=0.5, metavar="G",
-                    help=" c1 - coefficient for the squared error loss term (default: 0.5)")
-parser.add_argument("--policy_entropy_coef", type=float, default=0.01, metavar="G",
-                    help=" c2 - coefficient for the entropy bonus term (default: 0.01)")
+parser.add_argument("--epsilon", type=float, default=0.3, metavar="G",
+                    help="clip parameter (default: 0.3)")
+parser.add_argument("--vf_loss_coef", type=float, default=1.0, metavar="G",
+                    help=" c1 - coefficient for the squared error loss term (default: 1.0)")
+parser.add_argument("--policy_entropy_coef", type=float, default=0.0007, metavar="G",
+                    help=" c2 - coefficient for the entropy bonus term (default: 0.0007)")
 parser.add_argument("--clipped_value_fn", default=False, action="store_true",
                     help="if true, clip value function (default: False)")
 parser.add_argument("--max_grad_norm", type=float, default=0.5, metavar="G",
                     help=" max norm of gradients (default: 0.5)")
 
 parser.add_argument("--use_gae", default=True, action="store_false",
-                    help=" if true, use generalized advantage estimation (default: False)")
-parser.add_argument("--gae_lambda", type=float, default=0.95, metavar="G",
-                    help="generalized advantage estimation smoothing parameter (default: 0.95)")
+                    help=" if true, use generalized advantage estimation (default: True)")
+parser.add_argument("--gae_lambda", type=float, default=0.9327, metavar="G",
+                    help="generalized advantage estimation smoothing parameter (default: 0.9327)")
 
 parser.add_argument("--hidden_dim", type=int, default=64, metavar="N",
                     help="hidden dimension (default: 64)")

@@ -880,7 +880,7 @@ def objective(trial):
     # Define the seeds for the experiment.
     seeds = [0, 1, 2, 3, 4]
 
-    average_returns = []
+    cumulative_returns = []
     for seed in seeds:
         # Set the random seed for the experiment.
         args.seed = seed
@@ -891,18 +891,17 @@ def objective(trial):
         # Run training.
         controller.run()
 
-        # Obtain the last 10 policy evaluations.
-        seed_returns = controller.eval_data[-10:]
-        seed_returns = [x[-2] for x in seed_returns]
-        seed_average_return = np.average(seed_returns)
+        # Compute the cumulative return.
+        seed_returns = [x[-2] for x in controller.eval_data]
+        seed_cumulative_return = np.sum(seed_returns)
 
-        # Append the average return to the list.
-        average_returns.append(seed_average_return)
+        # Append the cumulative return to the list.
+        cumulative_returns.append(seed_cumulative_return)
 
-    # Compute the average return across the seeds.
-    average_return = np.average(average_returns)
+    # Compute the average cumulative return across the seeds.
+    average_cumulative_returns = np.average(cumulative_returns)
 
-    return average_return
+    return average_cumulative_returns
 
 
 def main():

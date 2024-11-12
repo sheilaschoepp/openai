@@ -184,38 +184,38 @@ class NormalController:
 
         # are we restarting training?  do the data files for the
         # selected seed already exist?
-        if not self.parameters["optuna"]:
-            if path.exists(self.data_dir):
 
-                print(self.LINE)
-                print(self.LINE)
+        if path.exists(self.data_dir):
 
-                if args.delete:
-                    # yes; argument flag present to indicate data deletion
-                    print(colored("argument indicates DATA DELETION", "red"))
+            print(self.LINE)
+            print(self.LINE)
+
+            if args.delete:
+                # yes; argument flag present to indicate data deletion
+                print(colored("argument indicates DATA DELETION", "red"))
+                print(colored("deleting data...", "red"))
+                rmtree(self.data_dir, ignore_errors=True)
+                print(colored("data deletion complete", "red"))
+            else:
+                # yes; argument flag not present; get confirmation of data deletion from user input
+                print(colored(
+                    "You are about to delete saved data and restart training.",
+                    "red"))
+                s = input(colored(
+                    "Are you sure you want to continue?  Hit 'y' then 'Enter' to continue.\n",
+                    "red"))
+                if s == "y":
+                    # delete old data; rewrite new data to same location
+                    print(colored("user input indicates DATA DELETION", "red"))
                     print(colored("deleting data...", "red"))
                     rmtree(self.data_dir, ignore_errors=True)
                     print(colored("data deletion complete", "red"))
                 else:
-                    # yes; argument flag not present; get confirmation of data deletion from user input
-                    print(colored(
-                        "You are about to delete saved data and restart training.",
-                        "red"))
-                    s = input(colored(
-                        "Are you sure you want to continue?  Hit 'y' then 'Enter' to continue.\n",
-                        "red"))
-                    if s == "y":
-                        # delete old data; rewrite new data to same location
-                        print(colored("user input indicates DATA DELETION", "red"))
-                        print(colored("deleting data...", "red"))
-                        rmtree(self.data_dir, ignore_errors=True)
-                        print(colored("data deletion complete", "red"))
-                    else:
-                        # do not delete old data; system exit
-                        print(
-                            colored("user input indicates NO DATA DELETION", "red"))
-                        print(self.LINE)
-                        sys.exit("\nexiting...")
+                    # do not delete old data; system exit
+                    print(
+                        colored("user input indicates NO DATA DELETION", "red"))
+                    print(self.LINE)
+                    sys.exit("\nexiting...")
 
         # data
 
@@ -280,86 +280,84 @@ class NormalController:
 
         # is GPU being used?
 
-        if not self.parameters["optuna"]:
+        print(self.LINE)
 
-            print(self.LINE)
+        if self.parameters["device"] == "cuda":
+            print("NOTE: GPU is being used for this experiment.")
+        else:
+            print("NOTE: GPU is not being used for this experiment.  CPU only.")
 
-            if self.parameters["device"] == "cuda":
-                print("NOTE: GPU is being used for this experiment.")
+        # what are the experiment parameters?
+
+        print(self.LINE)
+
+        def highlight_non_default_values(argument):
+            """
+            Highlight non-default argument values in printed summary.
+
+            Note: Non-default values are printed in red.
+
+            @param argument: string
+                the argument name
+
+            @return: string
+                the value of the argument
+            """
+            default = parser.get_default(argument)
+            if self.parameters[argument] != default:
+                return colored(self.parameters[argument], "red")
             else:
-                print("NOTE: GPU is not being used for this experiment.  CPU only.")
+                return self.parameters[argument]
 
-            # what are the experiment parameters?
-
-            print(self.LINE)
-
-            def highlight_non_default_values(argument):
-                """
-                Highlight non-default argument values in printed summary.
-
-                Note: Non-default values are printed in red.
-
-                @param argument: string
-                    the argument name
-
-                @return: string
-                    the value of the argument
-                """
-                default = parser.get_default(argument)
-                if self.parameters[argument] != default:
-                    return colored(self.parameters[argument], "red")
-                else:
-                    return self.parameters[argument]
-
-            print("normal environment name:",
-                  highlight_non_default_values("n_env_name"))
-            print("normal time steps:",
-                  highlight_non_default_values("n_time_steps"))
-            print("lr:", highlight_non_default_values("lr"))
-            print("linear lr decay:",
-                  highlight_non_default_values("linear_lr_decay"))
-            print("gamma:", highlight_non_default_values("gamma"))
-            print("number of samples:", highlight_non_default_values("num_samples"))
-            print("mini-batch size:",
-                  highlight_non_default_values("mini_batch_size"))
-            print("epochs:", highlight_non_default_values("epochs"))
-            print("epsilon:", highlight_non_default_values("epsilon"))
-            print("value function loss coefficient:",
-                  highlight_non_default_values("vf_loss_coef"))
-            print("policy entropy coefficient:",
-                  highlight_non_default_values("policy_entropy_coef"))
-            print("clipped value function:",
-                  highlight_non_default_values("clipped_value_fn"))
-            print("max norm of gradients:",
-                  highlight_non_default_values("max_grad_norm"))
-            print("use generalized advantage estimation:",
-                  highlight_non_default_values("use_gae"))
-            print("gae smoothing coefficient (lambda):",
-                  highlight_non_default_values("gae_lambda"))
-            print("hidden dimension:", highlight_non_default_values("hidden_dim"))
-            print("log_std:", highlight_non_default_values("log_std"))
-            print("time step evaluation frequency:",
-                  highlight_non_default_values("time_step_eval_frequency"))
-            print("evaluation episodes:",
-                  highlight_non_default_values("eval_episodes"))
-            if self.parameters["device"] == "cuda":
-                print("device:", self.parameters["device"])
-                if "CUDA_VISIBLE_DEVICES" in os.environ:
-                    print("cuda visible device(s):",
-                          colored(os.environ["CUDA_VISIBLE_DEVICES"], "red"))
-                else:
-                    print(colored("cuda visible device(s): N/A", "red"))
+        print("normal environment name:",
+              highlight_non_default_values("n_env_name"))
+        print("normal time steps:",
+              highlight_non_default_values("n_time_steps"))
+        print("lr:", highlight_non_default_values("lr"))
+        print("linear lr decay:",
+              highlight_non_default_values("linear_lr_decay"))
+        print("gamma:", highlight_non_default_values("gamma"))
+        print("number of samples:", highlight_non_default_values("num_samples"))
+        print("mini-batch size:",
+              highlight_non_default_values("mini_batch_size"))
+        print("epochs:", highlight_non_default_values("epochs"))
+        print("epsilon:", highlight_non_default_values("epsilon"))
+        print("value function loss coefficient:",
+              highlight_non_default_values("vf_loss_coef"))
+        print("policy entropy coefficient:",
+              highlight_non_default_values("policy_entropy_coef"))
+        print("clipped value function:",
+              highlight_non_default_values("clipped_value_fn"))
+        print("max norm of gradients:",
+              highlight_non_default_values("max_grad_norm"))
+        print("use generalized advantage estimation:",
+              highlight_non_default_values("use_gae"))
+        print("gae smoothing coefficient (lambda):",
+              highlight_non_default_values("gae_lambda"))
+        print("hidden dimension:", highlight_non_default_values("hidden_dim"))
+        print("log_std:", highlight_non_default_values("log_std"))
+        print("time step evaluation frequency:",
+              highlight_non_default_values("time_step_eval_frequency"))
+        print("evaluation episodes:",
+              highlight_non_default_values("eval_episodes"))
+        if self.parameters["device"] == "cuda":
+            print("device:", self.parameters["device"])
+            if "CUDA_VISIBLE_DEVICES" in os.environ:
+                print("cuda visible device(s):",
+                      colored(os.environ["CUDA_VISIBLE_DEVICES"], "red"))
             else:
-                print("device:", colored(self.parameters["device"], "red"))
-            print("seed:", colored(self.parameters["seed"], "red"))
-            if self.parameters["optuna"]:
-                print("optuna:", colored(self.parameters["optuna"], "red"))
-            # if self.parameters["param_search"]:
-            #     print("param search:", colored(self.parameters["param_search"], "red"))
-            #     print("param search seed:", colored(self.parameters["param_search_seed"], "red"))
+                print(colored("cuda visible device(s): N/A", "red"))
+        else:
+            print("device:", colored(self.parameters["device"], "red"))
+        print("seed:", colored(self.parameters["seed"], "red"))
+        if self.parameters["optuna"]:
+            print("optuna:", colored(self.parameters["optuna"], "red"))
+        # if self.parameters["param_search"]:
+        #     print("param search:", colored(self.parameters["param_search"], "red"))
+        #     print("param search seed:", colored(self.parameters["param_search_seed"], "red"))
 
-            print(self.LINE)
-            print(self.LINE)
+        print(self.LINE)
+        print(self.LINE)
 
     def run(self):
         """
@@ -422,9 +420,8 @@ class NormalController:
 
         run_time = str(timedelta(seconds=time.time() - self.start))[:-7]
 
-        if not self.parameters["optuna"]:
-            print("time to complete one run:", run_time, "h:m:s")
-            print(self.LINE)
+        print("time to complete one run:", run_time, "h:m:s")
+        print(self.LINE)
 
         text_file = open(self.data_dir + "/run_summary.txt", "w")
         text_file.write(date.today().strftime("%m/%d/%y"))
@@ -491,13 +488,11 @@ class NormalController:
                                      num_epoch_updates, num_mini_batch_updates,
                                      num_samples, average_return, run_time]
 
-            if not self.parameters["optuna"]:
-                print(f"evaluation at {num_time_steps} time steps: {average_return}")
+            print(f"evaluation at {num_time_steps} time steps: {average_return}")
 
             run_time = str(timedelta(seconds=time.time() - self.start))[:-7]
-            if not self.parameters["optuna"]:
-                print("runtime:", run_time, "h:m:s")
-                print(self.LINE)
+            print("runtime:", run_time, "h:m:s")
+            print(self.LINE)
 
     def plot(self):
         """
@@ -506,8 +501,7 @@ class NormalController:
         File format: .jpg
         """
 
-        if not self.parameters["optuna"]:
-            print("plotting...")
+        print("plotting...")
 
         csv_foldername = self.data_dir + "/csv"
         os.makedirs(csv_foldername, exist_ok=True)
@@ -603,11 +597,9 @@ class NormalController:
         plt.savefig(jpg_foldername + "/clip_fraction_updates.jpg")
         plt.close()
 
-        if not self.parameters["optuna"]:
+        print("plotting complete")
 
-            print("plotting complete")
-
-            print(self.LINE)
+        print(self.LINE)
 
     def save(self):
         """
@@ -621,9 +613,7 @@ class NormalController:
         Save agent data: models, number of updates of models, and memory.
         """
 
-        if not self.parameters["optuna"]:
-
-            print("saving...")
+        print("saving...")
 
         self.save_seed_state()
 
@@ -641,11 +631,9 @@ class NormalController:
         self.rlg.rl_agent_message(
             f"save, {self.data_dir}, {self.rlg.num_steps()}")
 
-        if not self.parameters["optuna"]:
+        print("saving complete")
 
-            print("saving complete")
-
-            print(self.LINE)
+        print(self.LINE)
 
     def save_data(self):
         """
@@ -933,7 +921,7 @@ def main():
         def print_trial_count(study, trial):
             print(f"Trial {trial.number} completed. Total trials so far: {len(study.trials)}\n")
 
-        study.optimize(objective, n_trials=24, n_jobs=40, callbacks=[print_trial_count])
+        study.optimize(objective, n_trials=20, n_jobs=40, callbacks=[print_trial_count])
 
         print("Best hyperparameters found:")
         print(f"{study.best_params}")

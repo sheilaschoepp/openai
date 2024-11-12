@@ -36,7 +36,7 @@ parser = argparse.ArgumentParser(
 
 parser.add_argument("-e", "--n_env_name", default="Ant-v5",
                     help="name of normal (non-malfunctioning) MuJoCo Gym environment (default: Ant-v5)")
-parser.add_argument("-t", "--n_time_steps", type=int, default=5000000, metavar="N",
+parser.add_argument("-t", "--n_time_steps", type=int, default=10000000, metavar="N",
                     help="number of time steps in normal (non-malfunctioning) MuJoCo Gym environment (default: 5000000)")
 
 parser.add_argument("--lr", type=float, default=0.000275, metavar="G",

@@ -85,7 +85,7 @@ class Environment(BaseEnvironment):
         if self.render:
             self.env.render()
 
-        next_state, reward, terminal, _ = self.env.step(action)
+        next_state, reward, terminal, _, _ = self.env.step(action)
 
         return reward, next_state, terminal
 

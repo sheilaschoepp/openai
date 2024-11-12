@@ -911,7 +911,7 @@ def main():
                                 direction="maximize",
                                 load_if_exists=True)
 
-    study.optimize(objective, n_trials=20, n_jobs=20)
+    study.optimize(objective, n_trials=20)
 
     print("Best hyperparameters found:")
     print(study.best_params)

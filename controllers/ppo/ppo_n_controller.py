@@ -924,9 +924,12 @@ def main():
 
         study.optimize(objective, n_trials=1, callbacks=[print_trial_count]) # n_jobs=1
 
-        print("Best hyperparameters found:")
-        print(f"{study.best_params}")
-        print("Best average return:", study.best_value)
+        with open(f"{optuna_folder}/optuna.txt", "w") as f:
+            print(f"Best hyperparameters found:", file=f)
+            for key, value in study.best_params.items():
+                print(f"{key}: {value}", file=f)
+            print("\n", file=f)
+            print(f"Best average return:\n{study.best_value}", file=f)
 
     else:
 

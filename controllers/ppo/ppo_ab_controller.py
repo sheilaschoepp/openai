@@ -411,8 +411,10 @@ class AbnormalController:
         Load rlg statistics: num_episodes, num_steps, and total_reward.
         """
 
+        # load random, numpy and torch seed states
         self.load_seed_state()
 
+        # load eval_data and loss_data
         self.load_data()
 
         # load environment data

@@ -833,48 +833,49 @@ def objective(trial):
     # Set the epsilon parameter.
     epsilon = trial.suggest_float(name="epsilon",
                                   low=0.1,
-                                  high=0.4)
+                                  high=0.4,
+                                  step=0.0001)
 
-    # Set the gamma parameter to be a random value between 0.9 and
-    # 0.9999.
+    # Set the gamma parameter.
     gamma = trial.suggest_float(name="gamma",
                                 low=0.8,
-                                high=0.9999)
+                                high=0.9999,
+                                step=0.0001)
 
-    # Set the GAE lambda parameter to be a random value between 0.9 and
-    # 1.0.
+    # Set the GAE lambda parameter.
     gae_lambda = trial.suggest_float(name="gae_lambda",
                                      low=0.9,
-                                     high=1.0)
+                                     high=1.0,
+                                     step=0.0001)
 
-    # Set the value function loss coefficient to be a random value
-    # between 0.1 and 1.0.
+    # Set the value function loss coefficient.
     vf_loss_coef = trial.suggest_float(name="vf_loss_coef",
                                        low=0.1,
-                                       high=1.0)
+                                       high=1.0,
+                                       step=0.0001)
 
-    # Set the policy entropy coefficient to be a random value between
-    # 0.001 and 0.05.
+    # Set the policy entropy coefficient.
     policy_entropy_coef = trial.suggest_float(name="policy_entropy_coef",
                                               low=0.0001,
-                                              high=0.1)
+                                              high=0.1,
+                                              step=0.0000001)
 
-    # Set the learning rate to be a random value between 0.00001 and
-    # 0.001.
+    # Set the learning rate.
     lr = trial.suggest_float(name="lr",
                              low=0.00001,
-                             high=0.001)
+                             high=0.001,
+                             step=0.00000001)
 
     # Set the hyperparameters directly in `args`.
     args.num_samples = num_samples
     args.mini_batch_size = mini_batch_size
     args.epochs = epochs
-    args.epsilon = epsilon
-    args.gamma = gamma
-    args.gae_lambda = gae_lambda
-    args.vf_loss_coef = vf_loss_coef
-    args.policy_entropy_coef = policy_entropy_coef
-    args.lr = lr
+    args.epsilon = round(epsilon, 4)
+    args.gamma = round(gamma, 4)
+    args.gae_lambda = round(gae_lambda, 4)
+    args.vf_loss_coef = round(vf_loss_coef, 4)
+    args.policy_entropy_coef = round(policy_entropy_coef, 7)
+    args.lr = round(lr, 8)
 
     # Define the seeds for the experiment.
     seeds = [0, 1, 2, 3, 4]

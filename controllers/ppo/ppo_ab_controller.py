@@ -335,9 +335,9 @@ class AbnormalController:
                          num_episodes=self.rlg_statistics["num_episodes"])
 
         # save the agent model and evaluate the model before any learning
-        if not args.resume:
-            self.rlg.rl_agent_message("save_model, {}, {}".format(self.data_dir, self.parameters["n_time_steps"]))  # not needed as we already have this model saved
-            self.evaluate_model(self.rlg.num_steps())
+        # if not args.resume:
+        #     self.rlg.rl_agent_message("save_model, {}, {}".format(self.data_dir, self.parameters["n_time_steps"]))  # not needed as we already have this model saved
+        #     self.evaluate_model(self.rlg.num_steps())
 
         for _ in itertools.count(1):
 

@@ -307,9 +307,11 @@ class PPO(BaseAgent):
         self.agent_load_models(dir_, t)
         self.agent_load_num_updates(dir_)
         self.agent_load_memory(dir_)
-        self.agent_load_memory_inti_samples(
-            dir_)  # must come after agent_load_memory
-        self.agent_load_total_num_updates()  # must come after agent_load_memory
+
+        # the following two method calls must come after
+        # agent_load_memory
+        self.agent_load_memory_inti_samples(dir_)
+        self.agent_load_total_num_updates()
 
     def agent_load_models(self, dir_, t):
         """
@@ -329,11 +331,11 @@ class PPO(BaseAgent):
 
         if self.device == "cuda":
             # send to gpu
-            checkpoint = torch.load(tar_foldername + "/{}.tar".format(t), weights_only=False)
+            checkpoint = torch.load(tar_foldername + "/{}.tar".format(t),
+                                    weights_only=False)
 
             # load neural network(s)
-            self.actor_critic_network.load_state_dict(
-                checkpoint["actor_critic_network_state_dict"])
+            self.actor_critic_network.load_state_dict(checkpoint["actor_critic_network_state_dict"])
 
             # send to GPU
             self.actor_critic_network.to(device=self.device)
@@ -342,18 +344,17 @@ class PPO(BaseAgent):
 
             # send to CPU
             checkpoint = torch.load(tar_foldername + "/{}.tar".format(t),
-                                    map_location=torch.device(self.device), weights_only=False)
+                                    map_location=torch.device(self.device),
+                                    weights_only=False)
 
             # load neural network(s)
-            self.actor_critic_network.load_state_dict(
-                checkpoint["actor_critic_network_state_dict"])
+            self.actor_critic_network.load_state_dict(checkpoint["actor_critic_network_state_dict"])
 
         # set network(s) to training mode
         self.actor_critic_network.train()
 
         # load Adam optimizers
-        self.actor_critic_optimizer.load_state_dict(
-            checkpoint["actor_critic_optimizer_state_dict"])
+        self.actor_critic_optimizer.load_state_dict(checkpoint["actor_critic_optimizer_state_dict"])
 
     def agent_load_num_updates(self, dir_):
         """

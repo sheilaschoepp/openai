@@ -1,6 +1,9 @@
 # ignore data folder
 data/**
 
+# ignore optuna folder
+optuna/**
+
 # ignore conda tar file
 ~virtualenv/openai3.9.tar.gz
 

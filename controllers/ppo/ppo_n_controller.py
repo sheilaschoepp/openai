@@ -1,23 +1,27 @@
 import argparse
 import csv
 import itertools
+import matplotlib.pyplot as plt
+import optuna
 import os
-os.environ["MKL_NUM_THREADS"] = "1"   # must be before numpy import
+
+# The following three lines must come before numpy import.
+os.environ["MKL_NUM_THREADS"] = "1"
 os.environ["NUMEXPR_NUM_THREADS"] = "1"
 os.environ["OMP_NUM_THREADS"] = "1"
+
+import numpy as np
+import pandas as pd
 import pickle
 import random
 import sys
 import time
-from copy import copy
+import torch
+
+from copy import copy, deepcopy
 from datetime import date, timedelta
 from os import path
 from shutil import rmtree
-
-import matplotlib.pyplot as plt
-import numpy as np
-import pandas as pd
-import torch
 from termcolor import colored
 
 import utils.plot_style_settings as pss
@@ -27,23 +31,27 @@ from utils.rl_glue import RLGlue
 
 import custom_gym_envs  # do not delete; required for custom gym environments
 
-parser = argparse.ArgumentParser(description="PyTorch Proximal Policy Optimization Arguments")
+parser = argparse.ArgumentParser(
+    description="PyTorch Proximal Policy Optimization Arguments")
 
 parser.add_argument("-e", "--n_env_name", default="Ant-v5",
                     help="name of normal (non-malfunctioning) MuJoCo Gym environment (default: Ant-v5)")
-parser.add_argument("-t", "--n_time_steps", type=int, default=5000000, metavar="N",  # todo
+parser.add_argument("-t", "--n_time_steps", type=int, default=10000,
+                    metavar="N",  # todo
                     help="number of time steps in normal (non-malfunctioning) MuJoCo Gym environment (default: 5000000)")
 
 parser.add_argument("--lr", type=float, default=0.000275, metavar="G",
                     help="learning rate (default: 0.000275)")
-parser.add_argument("-lrd", "--linear_lr_decay", default=False, action="store_true",
+parser.add_argument("-lrd", "--linear_lr_decay", default=False,
+                    action="store_true",
                     help="if true, decrease learning rate linearly (default: False)")
 parser.add_argument("--gamma", type=float, default=0.848, metavar="G",
                     help="discount factor (default: 0.848)")
 
 parser.add_argument("-ns", "--num_samples", type=int, default=3424, metavar="N",
                     help="number of samples used to update the network(s) (default: 3424)")
-parser.add_argument("-mbs", "--mini_batch_size", type=int, default=8, metavar="N",
+parser.add_argument("-mbs", "--mini_batch_size", type=int, default=8,
+                    metavar="N",
                     help=" number of samples per mini-batch (default: 8)")
 parser.add_argument("--epochs", type=int, default=24, metavar="N",
                     help="number of epochs when updating the network(s) (default: 24)")
@@ -52,7 +60,8 @@ parser.add_argument("--epsilon", type=float, default=0.3, metavar="G",
                     help="clip parameter (default: 0.3)")
 parser.add_argument("--vf_loss_coef", type=float, default=1.0, metavar="G",
                     help=" c1 - coefficient for the squared error loss term (default: 1.0)")
-parser.add_argument("--policy_entropy_coef", type=float, default=0.0007, metavar="G",
+parser.add_argument("--policy_entropy_coef", type=float, default=0.0007,
+                    metavar="G",
                     help=" c2 - coefficient for the entropy bonus term (default: 0.0007)")
 parser.add_argument("--clipped_value_fn", default=False, action="store_true",
                     help="if true, clip value function (default: False)")
@@ -69,7 +78,8 @@ parser.add_argument("--hidden_dim", type=int, default=64, metavar="N",
 parser.add_argument("--log_std", type=float, default=0.0, metavar="G",
                     help="log standard deviation of the policy distribution (default: 0.0)")
 
-parser.add_argument("-tef", "--time_step_eval_frequency", type=int, default=10000, metavar="N",  # todo
+parser.add_argument("-tef", "--time_step_eval_frequency", type=int,
+                    default=1000, metavar="N",  # todo
                     help="frequency of policy evaluation during learning (default: 10000)")
 parser.add_argument("-ee", "--eval_episodes", type=int, default=10, metavar="N",
                     help="number of episodes in policy evaluation roll-out (default: 10)")
@@ -86,7 +96,8 @@ parser.add_argument("-d", "--delete", default=False, action="store_true",
 parser.add_argument("-ps", "--param_search", default=False, action="store_true",
                     help="if true, run a parameter search")
 
-parser.add_argument("-pss", "--param_search_seed", type=int, default=0, metavar="N",
+parser.add_argument("-pss", "--param_search_seed", type=int, default=0,
+                    metavar="N",
                     help="random seed for parameter search (default: 0)")
 
 args = parser.parse_args()
@@ -139,7 +150,8 @@ class NormalController:
 
         # experiment data directory
 
-        suffix = self.parameters["n_env_name"] + ":" + str(self.parameters["n_time_steps"]) \
+        suffix = self.parameters["n_env_name"] + ":" + str(
+            self.parameters["n_time_steps"]) \
                  + "_lr:" + str(self.parameters["lr"]) \
                  + "_lrd:" + str(self.parameters["linear_lr_decay"]) \
                  + "_g:" + str(self.parameters["gamma"]) \
@@ -158,12 +170,16 @@ class NormalController:
                  + "_tef:" + str(self.parameters["time_step_eval_frequency"]) \
                  + "_ee:" + str(self.parameters["eval_episodes"]) \
                  + "_d:" + str(self.parameters["device"]) \
-                 + (("_ps:" + str(self.parameters["param_search"])) if self.parameters["param_search"] else "") \
-                 + (("_pss:" + str(self.parameters["param_search_seed"])) if self.parameters["param_search"] else "")
+                 + (("_ps:" + str(self.parameters["param_search"])) if
+                    self.parameters["param_search"] else "") \
+                 + (("_pss:" + str(self.parameters["param_search_seed"])) if
+                    self.parameters["param_search"] else "")
 
         self.experiment = "PPO_" + suffix
 
-        self.data_dir = os.getenv("HOME") + "/Documents/openai/data/" + self.experiment + "/seed" + str(self.parameters["seed"])
+        self.data_dir = os.getenv(
+            "HOME") + "/Documents/openai/data/" + self.experiment + "/seed" + str(
+            self.parameters["seed"])
 
         # are we restarting training?  do the data files for the
         # selected seed already exist?
@@ -180,8 +196,12 @@ class NormalController:
                 print(colored("data deletion complete", "red"))
             else:
                 # yes; argument flag not present; get confirmation of data deletion from user input
-                print(colored("You are about to delete saved data and restart training.", "red"))
-                s = input(colored("Are you sure you want to continue?  Hit 'y' then 'Enter' to continue.\n", "red"))
+                print(colored(
+                    "You are about to delete saved data and restart training.",
+                    "red"))
+                s = input(colored(
+                    "Are you sure you want to continue?  Hit 'y' then 'Enter' to continue.\n",
+                    "red"))
                 if s == "y":
                     # delete old data; rewrite new data to same location
                     print(colored("user input indicates DATA DELETION", "red"))
@@ -190,13 +210,15 @@ class NormalController:
                     print(colored("data deletion complete", "red"))
                 else:
                     # do not delete old data; system exit
-                    print(colored("user input indicates NO DATA DELETION", "red"))
+                    print(
+                        colored("user input indicates NO DATA DELETION", "red"))
                     print(self.LINE)
                     sys.exit("\nexiting...")
 
         # data
 
-        num_rows = int(self.parameters["n_time_steps"] / self.parameters["time_step_eval_frequency"]) + 1  # add 1 for evaluation before any learning (0th entry)
+        num_rows = int(self.parameters["n_time_steps"] / self.parameters[
+            "time_step_eval_frequency"]) + 1  # add 1 for evaluation before any learning (0th entry)
         num_columns = 7
         self.eval_data = np.zeros((num_rows, num_columns))
 
@@ -204,7 +226,8 @@ class NormalController:
         # num_columns = 3
         # self.train_data = np.zeros((num_rows, num_columns))
 
-        num_rows = (self.parameters["n_time_steps"] // self.parameters["num_samples"])
+        num_rows = (self.parameters["n_time_steps"] // self.parameters[
+            "num_samples"])
         num_columns = 8
         self.loss_data = np.zeros((num_rows, num_columns))
 
@@ -248,7 +271,8 @@ class NormalController:
 
         # RLGlue used for training
         self.rlg = RLGlue(self.env, self.agent)
-        self.rlg_statistics = {"num_episodes": 0, "num_steps": 0, "total_reward": 0}
+        self.rlg_statistics = {"num_episodes": 0, "num_steps": 0,
+                               "total_reward": 0}
 
         # print summary info
 
@@ -283,37 +307,52 @@ class NormalController:
             else:
                 return self.parameters[argument]
 
-        print("normal environment name:", highlight_non_default_values("n_env_name"))
-        print("normal time steps:", highlight_non_default_values("n_time_steps"))
+        print("normal environment name:",
+              highlight_non_default_values("n_env_name"))
+        print("normal time steps:",
+              highlight_non_default_values("n_time_steps"))
         print("lr:", highlight_non_default_values("lr"))
-        print("linear lr decay:", highlight_non_default_values("linear_lr_decay"))
+        print("linear lr decay:",
+              highlight_non_default_values("linear_lr_decay"))
         print("gamma:", highlight_non_default_values("gamma"))
         print("number of samples:", highlight_non_default_values("num_samples"))
-        print("mini-batch size:", highlight_non_default_values("mini_batch_size"))
+        print("mini-batch size:",
+              highlight_non_default_values("mini_batch_size"))
         print("epochs:", highlight_non_default_values("epochs"))
         print("epsilon:", highlight_non_default_values("epsilon"))
-        print("value function loss coefficient:", highlight_non_default_values("vf_loss_coef"))
-        print("policy entropy coefficient:", highlight_non_default_values("policy_entropy_coef"))
-        print("clipped value function:", highlight_non_default_values("clipped_value_fn"))
-        print("max norm of gradients:", highlight_non_default_values("max_grad_norm"))
-        print("use generalized advantage estimation:", highlight_non_default_values("use_gae"))
-        print("gae smoothing coefficient (lambda):", highlight_non_default_values("gae_lambda"))
+        print("value function loss coefficient:",
+              highlight_non_default_values("vf_loss_coef"))
+        print("policy entropy coefficient:",
+              highlight_non_default_values("policy_entropy_coef"))
+        print("clipped value function:",
+              highlight_non_default_values("clipped_value_fn"))
+        print("max norm of gradients:",
+              highlight_non_default_values("max_grad_norm"))
+        print("use generalized advantage estimation:",
+              highlight_non_default_values("use_gae"))
+        print("gae smoothing coefficient (lambda):",
+              highlight_non_default_values("gae_lambda"))
         print("hidden dimension:", highlight_non_default_values("hidden_dim"))
         print("log_std:", highlight_non_default_values("log_std"))
-        print("time step evaluation frequency:", highlight_non_default_values("time_step_eval_frequency"))
-        print("evaluation episodes:", highlight_non_default_values("eval_episodes"))
+        print("time step evaluation frequency:",
+              highlight_non_default_values("time_step_eval_frequency"))
+        print("evaluation episodes:",
+              highlight_non_default_values("eval_episodes"))
         if self.parameters["device"] == "cuda":
             print("device:", self.parameters["device"])
             if "CUDA_VISIBLE_DEVICES" in os.environ:
-                print("cuda visible device(s):", colored(os.environ["CUDA_VISIBLE_DEVICES"], "red"))
+                print("cuda visible device(s):",
+                      colored(os.environ["CUDA_VISIBLE_DEVICES"], "red"))
             else:
                 print(colored("cuda visible device(s): N/A", "red"))
         else:
             print("device:", colored(self.parameters["device"], "red"))
         print("seed:", colored(self.parameters["seed"], "red"))
         if self.parameters["param_search"]:
-            print("param search:", colored(self.parameters["param_search"], "red"))
-            print("param search seed:", colored(self.parameters["param_search_seed"], "red"))
+            print("param search:",
+                  colored(self.parameters["param_search"], "red"))
+            print("param search seed:",
+                  colored(self.parameters["param_search_seed"], "red"))
 
         print(self.LINE)
         print(self.LINE)
@@ -335,21 +374,25 @@ class NormalController:
 
             # episode time steps are limited to 1000 (set below)
             # this is used to ensure that once self.parameters["n_time_steps"] is reached, the experiment is terminated
-            max_steps_this_episode = min(1000, self.parameters["n_time_steps"] - self.rlg.num_steps())
+            max_steps_this_episode = min(1000, self.parameters[
+                "n_time_steps"] - self.rlg.num_steps())
 
             # run an episode
             self.rlg.rl_start()
 
             terminal = False
 
-            while not terminal and ((max_steps_this_episode <= 0) or (self.rlg.num_ep_steps() < max_steps_this_episode)):
+            while not terminal and ((max_steps_this_episode <= 0) or (
+                    self.rlg.num_ep_steps() < max_steps_this_episode)):
                 _, _, terminal, _ = self.rlg.rl_step()
 
                 # save and evaluate the model every
                 # 'self.parameters["time_step_eval_frequency"]' time
                 # steps
-                if self.rlg.num_steps() % self.parameters["time_step_eval_frequency"] == 0:
-                    self.rlg.rl_agent_message(f"save_model, {self.data_dir}, {self.rlg.num_steps()}")
+                if self.rlg.num_steps() % self.parameters[
+                    "time_step_eval_frequency"] == 0:
+                    self.rlg.rl_agent_message(
+                        f"save_model, {self.data_dir}, {self.rlg.num_steps()}")
                     self.evaluate_model(self.rlg.num_steps())
 
             # index = self.rlg.num_episodes() - 1
@@ -379,7 +422,8 @@ class NormalController:
 
         text_file = open(self.data_dir + "/run_summary.txt", "w")
         text_file.write(date.today().strftime("%m/%d/%y"))
-        text_file.write(f"\n\nExperiment {self.experiment}/seed{self.parameters['seed']} complete.\n\nTime to complete: {run_time} h:m:s")
+        text_file.write(
+            f"\n\nExperiment {self.experiment}/seed{self.parameters['seed']} complete.\n\nTime to complete: {run_time} h:m:s")
         text_file.close()
 
     def evaluate_model(self, num_time_steps):
@@ -417,7 +461,8 @@ class NormalController:
                 terminal = False
 
                 max_steps_this_episode = 1000
-                while not terminal and ((max_steps_this_episode <= 0) or (rlg_eval.num_ep_steps() < max_steps_this_episode)):
+                while not terminal and ((max_steps_this_episode <= 0) or (
+                        rlg_eval.num_ep_steps() < max_steps_this_episode)):
                     _, _, terminal, _ = rlg_eval.rl_step()
 
                 returns.append(rlg_eval.episode_reward())
@@ -426,16 +471,23 @@ class NormalController:
 
             num_updates = num_time_steps // self.parameters["num_samples"]
             num_epoch_updates = num_updates * self.parameters["epochs"]
-            num_mini_batch_updates = num_epoch_updates * (self.parameters["num_samples"] // self.parameters["mini_batch_size"])
+            num_mini_batch_updates = num_epoch_updates * (
+                    self.parameters["num_samples"] // self.parameters[
+                "mini_batch_size"])
 
-            num_samples = num_mini_batch_updates * self.parameters["mini_batch_size"]
+            num_samples = num_mini_batch_updates * self.parameters[
+                "mini_batch_size"]
 
             run_time = int(time.time() - self.start)
 
-            index = num_time_steps // self.parameters["time_step_eval_frequency"]
-            self.eval_data[index] = [num_time_steps, num_updates, num_epoch_updates, num_mini_batch_updates, num_samples, average_return, run_time]
+            index = num_time_steps // self.parameters[
+                "time_step_eval_frequency"]
+            self.eval_data[index] = [num_time_steps, num_updates,
+                                     num_epoch_updates, num_mini_batch_updates,
+                                     num_samples, average_return, run_time]
 
-            print(f"evaluation at {num_time_steps} time steps: {average_return}")
+            print(
+                f"evaluation at {num_time_steps} time steps: {average_return}")
 
             run_time = str(timedelta(seconds=time.time() - self.start))[:-7]
             print("runtime:", run_time, "h:m:s")
@@ -459,7 +511,8 @@ class NormalController:
         df = pd.read_csv(csv_foldername + "/eval_data.csv")
 
         # evaluation: average_return vs num_time_steps
-        df.plot(x="num_time_steps", y="average_return", color="blue", legend=False)
+        df.plot(x="num_time_steps", y="average_return", color="blue",
+                legend=False)
         plt.xlabel("time_steps")
         plt.ylabel("average\nreturn", rotation="horizontal", labelpad=30)
         plt.title("Policy Evaluation")
@@ -574,7 +627,8 @@ class NormalController:
         self.rlg.rl_env_message(f"save, {self.data_dir}")
 
         # save agent data
-        self.rlg.rl_agent_message(f"save, {self.data_dir}, {self.rlg.num_steps()}")
+        self.rlg.rl_agent_message(
+            f"save, {self.data_dir}, {self.rlg.num_steps()}")
 
         print("saving complete")
 
@@ -593,11 +647,13 @@ class NormalController:
         eval_data_df = pd.DataFrame({"num_time_steps": self.eval_data[:, 0],
                                      "num_updates": self.eval_data[:, 1],
                                      "num_epoch_updates": self.eval_data[:, 2],
-                                     "num_mini_batch_updates": self.eval_data[:, 3],
+                                     "num_mini_batch_updates": self.eval_data[:,
+                                                               3],
                                      "num_samples": self.eval_data[:, 4],
                                      "average_return": self.eval_data[:, 5],
                                      "run_time": self.eval_data[:, 6]})
-        eval_data_df.to_csv(csv_foldername + "/eval_data.csv", float_format="%f")
+        eval_data_df.to_csv(csv_foldername + "/eval_data.csv",
+                            float_format="%f")
 
         # # remove zero entries
         # index = None
@@ -613,13 +669,15 @@ class NormalController:
 
         loss_data_df = pd.DataFrame({"num_updates": self.loss_data[:, 0],
                                      "num_epoch_updates": self.loss_data[:, 1],
-                                     "num_mini_batch_updates": self.loss_data[:, 2],
+                                     "num_mini_batch_updates": self.loss_data[:,
+                                                               2],
                                      "clip_loss": self.loss_data[:, 3],
                                      "vf_loss": self.loss_data[:, 4],
                                      "entropy": self.loss_data[:, 5],
                                      "clip_vf_s_loss": self.loss_data[:, 6],
                                      "clip_fraction": self.loss_data[:, 7]})
-        loss_data_df.to_csv(csv_foldername + "/loss_data.csv", float_format="%f")
+        loss_data_df.to_csv(csv_foldername + "/loss_data.csv",
+                            float_format="%f")
 
     def save_parameters(self):
         """
@@ -691,51 +749,174 @@ class NormalController:
 
         if self.parameters["device"] == "cuda":
             torch_cuda_random_state = torch.cuda.get_rng_state()
-            torch.save(torch_cuda_random_state, pt_foldername + "/torch_cuda_random_state.pt")
+            torch.save(torch_cuda_random_state,
+                       pt_foldername + "/torch_cuda_random_state.pt")
+
+
+# def main():
+#
+#     if args.param_search:
+#         param_search()
+#
+#     nc = NormalController()
+#
+#     try:
+#
+#         nc.run()
+#
+#     except KeyboardInterrupt as e:
+#
+#         print("keyboard interrupt")
+#
+#
+# def param_search():
+#     """
+#     Conduct a random parameter search for PPOv2 using parameter ranges from https://medium.com/aureliantactics/ppo-hyperparameters-and-ranges-6fc2d29bccbe.
+#     """
+#
+#     np.random.seed(args.param_search_seed)
+#
+#     args.num_samples = np.random.randint(32, 5001)  # upper bound excluded
+#
+#     args.mini_batch_size = int(np.random.choice([2**x for x in range(2, 13)]))  # powers of two
+#     while args.mini_batch_size > args.num_samples:
+#         args.mini_batch_size = int(np.random.choice([2 ** x for x in range(2, 13)]))
+#
+#     args.epochs = np.random.randint(3, 31)  # upper bound excluded
+#
+#     args.epsilon = float(np.random.choice([0.1, 0.2, 0.3]))
+#
+#     args.gamma = round(np.random.uniform(0.8, 0.9997), 4)
+#
+#     args.gae_lambda = round(np.random.uniform(0.9, 1.0), 4)
+#
+#     args.vf_loss_coef = float(np.random.choice([0.5, 1.0]))
+#
+#     args.policy_entropy_coef = round(np.random.uniform(0, 0.01), 4)
+#
+#     args.lr = round(np.random.uniform(0.0001, 0.003), 6)
+
+def objective(trial):
+    """
+    Optuna objective function for hyperparameter tuning of the PPO
+    agent.
+
+    Parameters:
+        trial (optuna.trial.Trial): An Optuna trial object that provides
+        parameter suggestions.
+
+    Returns:
+        float: The average return after training for the specified
+        number of time steps.
+    """
+
+    # Set the number of samples.
+    num_samples_choices = [1024, 2048, 4096, 8192]
+    num_samples = trial.suggest_categorical(name="num_samples",
+                                            choices=num_samples_choices)
+
+    # Set the mini-batch size.
+    mini_batch_size_choices = [32, 64, 128, 256, 512]
+    mini_batch_size = trial.suggest_categorical(name="mini_batch_size",
+                                                choices=mini_batch_size_choices)
+
+    # If mini_batch_size is greater than num_samples, prune the trial.
+    if mini_batch_size > num_samples:
+        raise optuna.TrialPruned()
+
+    # Set the number of epochs.
+    epochs = trial.suggest_int(name="num_epochs",
+                               low=3,
+                               high=10)
+
+    # Set the epsilon parameter.
+    epsilon = trial.suggest_float(name="epsilon",
+                                  low=0.1,
+                                  high=0.4)
+
+    # Set the gamma parameter to be a random value between 0.9 and
+    # 0.9999.
+    gamma = trial.suggest_float(name="gamma",
+                                low=0.8,
+                                high=0.9999)
+
+    # Set the GAE lambda parameter to be a random value between 0.9 and
+    # 1.0.
+    gae_lambda = trial.suggest_float(name="gae_lambda",
+                                     low=0.9,
+                                     high=1.0)
+
+    # Set the value function loss coefficient to be a random value
+    # between 0.1 and 1.0.
+    vf_loss_coef = trial.suggest_float(name="vf_loss_coef",
+                                       low=0.1,
+                                       high=1.0)
+
+    # Set the policy entropy coefficient to be a random value between
+    # 0.001 and 0.05.
+    policy_entropy_coef = trial.suggest_float(name="policy_entropy_coef",
+                                              low=0.0001,
+                                              high=0.1)
+
+    # Set the learning rate to be a random value between 0.00001 and
+    # 0.001.
+    lr = trial.suggest_float(name="lr",
+                             low=0.00001,
+                             high=0.001)
+
+    # Set the hyperparameters directly in `args`.
+    args.num_samples = num_samples
+    args.mini_batch_size = mini_batch_size
+    args.epochs = epochs
+    args.epsilon = epsilon
+    args.gamma = gamma
+    args.gae_lambda = gae_lambda
+    args.vf_loss_coef = vf_loss_coef
+    args.policy_entropy_coef = policy_entropy_coef
+    args.lr = lr
+
+    # Define the seeds for the experiment.
+    seeds = [0, 1, 2, 3, 4]
+
+    average_return = []
+    for seed in seeds:
+        # Set the random seed for the experiment.
+        args.seed = seed
+
+        # Create a new controller object.
+        controller = NormalController()
+
+        # Run training.
+        controller.run()
+
+        # Obtain the last 10 policy evaluations.
+        seed_returns = controller.eval_data[-5:]
+        seed_returns = [x[-2] for x in seed_returns]
+        seed_average_return = np.average(seed_returns)
+
+        # Append the average return to the list.
+        average_return.append(seed_average_return)
+
+    # Compute the average return across the seeds.
+    average_return = np.average(average_return)
+
+    return average_return
 
 
 def main():
 
-    if args.param_search:
-        param_search()
+    storage = "sqlite:///../../optuna/optuna_study.db"
+    study_name = "ppo_study"
+    study = optuna.create_study(study_name=study_name,
+                                storage=storage,
+                                direction="maximize",
+                                load_if_exists=True)
 
-    nc = NormalController()
+    study.optimize(objective, n_trials=20, n_jobs=20)
 
-    try:
-
-        nc.run()
-
-    except KeyboardInterrupt as e:
-
-        print("keyboard interrupt")
-
-
-def param_search():
-    """
-    Conduct a random parameter search for PPOv2 using parameter ranges from https://medium.com/aureliantactics/ppo-hyperparameters-and-ranges-6fc2d29bccbe.
-    """
-
-    np.random.seed(args.param_search_seed)
-
-    args.num_samples = np.random.randint(32, 5001)  # upper bound excluded
-
-    args.mini_batch_size = int(np.random.choice([2**x for x in range(2, 13)]))  # powers of two
-    while args.mini_batch_size > args.num_samples:
-        args.mini_batch_size = int(np.random.choice([2 ** x for x in range(2, 13)]))
-
-    args.epochs = np.random.randint(3, 31)  # upper bound excluded
-
-    args.epsilon = float(np.random.choice([0.1, 0.2, 0.3]))
-
-    args.gamma = round(np.random.uniform(0.8, 0.9997), 4)
-
-    args.gae_lambda = round(np.random.uniform(0.9, 1.0), 4)
-
-    args.vf_loss_coef = float(np.random.choice([0.5, 1.0]))
-
-    args.policy_entropy_coef = round(np.random.uniform(0, 0.01), 4)
-
-    args.lr = round(np.random.uniform(0.000005, 0.006), 6)
+    print("Best hyperparameters found:")
+    print(study.best_params)
+    print("Best average return:", study.best_value)
 
 
 if __name__ == "__main__":

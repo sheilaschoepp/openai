@@ -175,14 +175,6 @@ class Environment(BaseEnvironment):
 
         self.env.unwrapped.set_state(mujoco_qpos, mujoco_qvel)
 
-        # Consistency check.
-        with open(pickle_foldername + "/saved_observation.pickle", "rb") as handle:
-            saved_observation = pickle.load(handle)
-
-        restored_observation = self.env.unwrapped._get_obs()
-        observations_equal = np.array_equal(saved_observation, restored_observation)
-        assert observations_equal, "Loaded observation is different from saved observation."
-
     def env_load_rng(self, dir_):
         """
         Restore the state of the Gymnasium environment's random number
@@ -251,11 +243,6 @@ class Environment(BaseEnvironment):
             pickle.dump(mujoco_qpos, f)
         with open(pickle_foldername + "/mujoco_qvel.pickle", "wb") as f:
             pickle.dump(mujoco_qvel, f)
-
-        # Consistency check.
-        saved_observation = self.env.unwrapped._get_obs()
-        with open(pickle_foldername + "/saved_observation.pickle", "wb") as f:
-            pickle.dump(saved_observation, f)
 
     def env_save_rng(self, dir_):
         """

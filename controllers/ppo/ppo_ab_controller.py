@@ -83,7 +83,7 @@ class AbnormalController:
         # hostname
 
         self.hostname = os.uname()[1]
-        self.localhosts = ["melco", "Legion", "amii", "remaining20seeds"]
+        self.localhosts = ["melco", "Legion", "amii", "mehran"]
         self.computecanada = not any(host in self.hostname for host in self.localhosts)
 
         # experiment parameters
@@ -126,15 +126,12 @@ class AbnormalController:
             self.parameters["resume_file"] = args.resume_file  # update
             self.parameters["complete"] = False  # update
 
-        self.parameters["slow_lrd"] = 1.0  # todo
-
         # experiment data directory
 
         suffix = self.parameters["ab_env_name"] + ":" + str(self.parameters["ab_time_steps"]) \
                  + "_" + self.parameters["n_env_name"] + ":" + str(self.parameters["n_time_steps"]) \
                  + "_lr:" + str(self.parameters["lr"]) \
                  + "_lrd:" + str(self.parameters["linear_lr_decay"]) \
-                 + "_slrd:" + str(self.parameters["slow_lrd"]) \
                  + "_g:" + str(self.parameters["gamma"]) \
                  + "_ns:" + str(self.parameters["num_samples"]) \
                  + "_mbs:" + str(self.parameters["mini_batch_size"]) \
@@ -296,7 +293,6 @@ class AbnormalController:
         print("normal time steps:", self.parameters["n_time_steps"])
         print("lr:", self.parameters["lr"])
         print("linear lr decay:", self.parameters["linear_lr_decay"])
-        print("slow linear lr decay:", self.parameters["slow_lrd"])
         print("gamma:", self.parameters["gamma"])
         print("number of samples:", self.parameters["num_samples"])
         print("mini-batch size:", self.parameters["mini_batch_size"])
@@ -358,7 +354,7 @@ class AbnormalController:
 
             # episode time steps are limited to 1000 (set below)
             # this is used to ensure that once self.parameters["n_time_steps"] + self.parameters["ab_time_steps"] is reached, the experiment is terminated
-            max_steps_this_episode = min(1000, self.parameters["n_time_steps"] + 300000 - self.rlg.num_steps())  # todo
+            max_steps_this_episode = min(1000, self.parameters["n_time_steps"] + self.parameters["ab_time_steps"] - self.rlg.num_steps())
 
             # if we want to make an experiment resumable, we must save after the last possible episode
             # since episodes are limited to be a maximum of 1000 time steps, we can save when the max_steps_this_episode is less than 1000
@@ -380,16 +376,14 @@ class AbnormalController:
                     self.rlg.rl_agent_message("save_model, {}, {}".format(self.data_dir, self.rlg.num_steps()))
 
                 # evaluate the model every 'self.parameters["time_step_eval_frequency"]' time steps
-                # if self.rlg.num_steps() % self.parameters["time_step_eval_frequency"] == 0:
-                if self.rlg.num_steps() % 10000 == 0:  # todo
+                if self.rlg.num_steps() % self.parameters["time_step_eval_frequency"] == 0:
                     self.evaluate_model(self.rlg.num_steps())
 
             # index = self.rlg.num_episodes() - 1
             # self.train_data[index] = [self.rlg.num_episodes(), self.rlg.num_steps(), self.rlg.episode_reward()]
 
             # learning complete
-            # if self.rlg.num_steps() == self.parameters["n_time_steps"] + self.parameters["ab_time_steps"]:
-            if self.rlg.num_steps() == self.parameters["n_time_steps"] + 300000:  # todo
+            if self.rlg.num_steps() == self.parameters["n_time_steps"] + self.parameters["ab_time_steps"]:
                 if self.parameters["resumable"]:
                     self.parameters["completed_time_steps"] = self.rlg.num_steps()
                 else:
@@ -483,8 +477,7 @@ class AbnormalController:
 
             real_time = int(time.time() - self.start)
 
-            # index = (num_time_steps // self.parameters["time_step_eval_frequency"]) + 1  # add 1 because we evaluate policy before learning
-            index = (((num_time_steps - self.parameters["n_time_steps"]) // 10000) + 201)  # add 1 because we evaluate policy before learning  todo
+            index = (num_time_steps // self.parameters["time_step_eval_frequency"]) + 1  # add 1 because we evaluate policy before learning
             self.eval_data[index] = [num_time_steps, num_updates, num_epoch_updates, num_mini_batch_updates, num_samples, average_return, real_time]
 
             print("evaluation at {} time steps: {}".format(num_time_steps, average_return))

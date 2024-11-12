@@ -130,6 +130,7 @@ class PPO(BaseAgent):
 
         # number of full updates of the network(s)
         self.num_updates = 0
+        self.num_old_updates = 0
 
         # number of epochs to update the network(s)
         self.num_epoch_updates = 0
@@ -330,6 +331,7 @@ class PPO(BaseAgent):
         tar_foldername = dir_ + "/tar"
 
         if self.device == "cuda":
+
             # send to gpu
             checkpoint = torch.load(tar_foldername + "/{}.tar".format(t),
                                     weights_only=False)
@@ -457,6 +459,7 @@ class PPO(BaseAgent):
         self.actor_critic_optimizer = Adam(self.actor_critic_network.parameters(), lr=self.lr)
 
         self.num_updates = 0
+        self.num_old_updates = 0
         self.num_epoch_updates = 0
         self.num_mini_batch_updates = 0
 
@@ -553,6 +556,7 @@ class PPO(BaseAgent):
         update_dic = {"loss_index": self.loss_index,
                       "total_num_updates": self.total_num_updates,
                       "num_updates": self.num_updates,
+                      "num_old_updates": self.num_old_updates,
                       "num_epoch_updates": self.num_epoch_updates,
                       "num_mini_batch_updates": self.num_mini_batch_updates}
 
@@ -633,10 +637,8 @@ class PPO(BaseAgent):
 
         if self.linear_lr_decay:
 
-            # TODO: There is an error here
-
-            lr = (self.lr *
-                  (0.1 + 0.9 * (1 - self.num_updates / self.total_num_updates)))
+            # note: self.num_old_updates is > 0 only if we loaded data from normal environment
+            lr = self.lr * (1 - 0.9 * ((self.num_updates - self.num_old_updates) / (self.total_num_updates - 1)))
 
             for param_group in self.actor_critic_optimizer.param_groups:
                 param_group["lr"] = lr

@@ -922,7 +922,7 @@ def main():
         def print_trial_count(study, trial):
             print(f"Trial {trial.number} completed. Total trials so far: {len(study.trials)}\n")
 
-        study.optimize(objective, n_trials=20, n_jobs=40, callbacks=[print_trial_count])
+        study.optimize(objective, n_trials=1, callbacks=[print_trial_count]) # n_jobs=1
 
         print("Best hyperparameters found:")
         print(f"{study.best_params}")

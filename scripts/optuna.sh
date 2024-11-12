@@ -2,8 +2,8 @@
 
 # Define session range and maximum active sessions
 SESSION_START=1
-SESSION_END=2
-MAX_ACTIVE_SESSIONS=40
+SESSION_END=40
+MAX_ACTIVE_SESSIONS=41
 
 # Define command to run in each session
 COMMAND="python controllers/ppo/ppo_n_controller.py -o"
@@ -28,7 +28,7 @@ do
     # Create a new tmux session
     echo "Starting session $SESSION_NAME"
     tmux new-session -d -s "$SESSION_NAME" "$COMMAND"
-    sleep 1  # Small delay to avoid overwhelming tmux
+    sleep 60  # Small delay to avoid overwhelming tmux
 done
 
 echo "All sessions started."

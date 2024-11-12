@@ -878,7 +878,7 @@ def objective(trial):
     # Define the seeds for the experiment.
     seeds = [0, 1, 2, 3, 4]
 
-    average_return = []
+    average_returns = []
     for seed in seeds:
         # Set the random seed for the experiment.
         args.seed = seed
@@ -890,15 +890,15 @@ def objective(trial):
         controller.run()
 
         # Obtain the last 10 policy evaluations.
-        seed_returns = controller.eval_data[-5:]
+        seed_returns = controller.eval_data[-10:]
         seed_returns = [x[-2] for x in seed_returns]
         seed_average_return = np.average(seed_returns)
 
         # Append the average return to the list.
-        average_return.append(seed_average_return)
+        average_returns.append(seed_average_return)
 
     # Compute the average return across the seeds.
-    average_return = np.average(average_return)
+    average_return = np.average(average_returns)
 
     return average_return
 

@@ -339,9 +339,9 @@ class AbnormalController:
                          num_episodes=self.rlg_statistics["num_episodes"])
 
         # save the agent model and evaluate the model before any learning
-        # if not args.resume:
-        #     self.rlg.rl_agent_message("save_model, {}, {}".format(self.data_dir, self.parameters["n_time_steps"]))  # not needed as we already have this model saved
-        #     self.evaluate_model(self.rlg.num_steps())
+        if not args.resume:
+            self.rlg.rl_agent_message("save_model, {}, {}".format(self.data_dir, self.parameters["n_time_steps"]))  # not needed as we already have this model saved
+            self.evaluate_model(self.rlg.num_steps())
 
         for _ in itertools.count(1):
 
@@ -483,7 +483,8 @@ class AbnormalController:
 
             real_time = int(time.time() - self.start)
 
-            index = (num_time_steps // self.parameters["time_step_eval_frequency"]) + 1  # add 1 because we evaluate policy before learning
+            # index = (num_time_steps // self.parameters["time_step_eval_frequency"]) + 1  # add 1 because we evaluate policy before learning
+            index = (((num_time_steps - self.parameters["n_time_steps"]) // 10000) + 201)  # add 1 because we evaluate policy before learning  todo
             self.eval_data[index] = [num_time_steps, num_updates, num_epoch_updates, num_mini_batch_updates, num_samples, average_return, real_time]
 
             print("evaluation at {} time steps: {}".format(num_time_steps, average_return))

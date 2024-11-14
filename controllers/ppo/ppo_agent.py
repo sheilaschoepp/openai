@@ -637,11 +637,18 @@ class PPO(BaseAgent):
 
         if self.linear_lr_decay:
 
-            # note: self.num_old_updates is > 0 only if we loaded data from normal environment
+            # Note: self.num_old_updates is > 0 only if we loaded data
+            # from normal environment.
+            # Note: We subtract 1 from self.total_num_updates since we
+            # start at 0 and increment to self.total_num_updates - 1;
+            # at self.total_num_updates - 1 our lr should be 10% of the
+            # original learning rate.
             lr = self.lr * (1 - 0.9 * ((self.num_updates - self.num_old_updates) / (self.total_num_updates - 1)))
 
             for param_group in self.actor_critic_optimizer.param_groups:
                 param_group["lr"] = lr
+
+            print(lr)
 
         self.num_updates += 1
 

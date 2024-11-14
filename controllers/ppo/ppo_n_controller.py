@@ -345,6 +345,8 @@ class NormalController:
               highlight_non_default_values("use_gae"))
         print("gae smoothing coefficient (lambda):",
               highlight_non_default_values("gae_lambda"))
+        print("normalize rewards:",
+              highlight_non_default_values("normalize rewards"))
         print("hidden dimension:", highlight_non_default_values("hidden_dim"))
         print("log_std:", highlight_non_default_values("log_std"))
         print("time step evaluation frequency:",

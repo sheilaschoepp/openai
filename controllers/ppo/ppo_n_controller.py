@@ -71,8 +71,7 @@ parser.add_argument("--use_gae", default=True, action="store_false",
 parser.add_argument("--gae_lambda", type=float, default=0.9327, metavar="G",
                     help="generalized advantage estimation smoothing parameter (default: 0.9327)")
 
-parser.add_argument("-nr", "--normalize_rewards", default=True,
-                    action="store_true",
+parser.add_argument("-nr", "--normalize_rewards", default=True, action="store_false",
                     help="if true, normalize rewards in memory (default: True)")
 
 parser.add_argument("--hidden_dim", type=int, default=64, metavar="N",
@@ -346,7 +345,7 @@ class NormalController:
         print("gae smoothing coefficient (lambda):",
               highlight_non_default_values("gae_lambda"))
         print("normalize rewards:",
-              highlight_non_default_values("normalize rewards"))
+              highlight_non_default_values("normalize_rewards"))
         print("hidden dimension:", highlight_non_default_values("hidden_dim"))
         print("log_std:", highlight_non_default_values("log_std"))
         print("time step evaluation frequency:",

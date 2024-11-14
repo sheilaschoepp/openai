@@ -41,8 +41,8 @@ parser.add_argument("-t", "--n_time_steps", type=int, default=50000000, metavar=
 
 parser.add_argument("--lr", type=float, default=0.000275, metavar="G",
                     help="learning rate (default: 0.000275)")
-parser.add_argument("-lrd", "--linear_lr_decay", default=False, action="store_true",
-                    help="if true, decrease learning rate linearly (default: False)")
+parser.add_argument("-lrd", "--linear_lr_decay", default=True, action="store_true",
+                    help="if true, decrease learning rate linearly (default: True)")
 parser.add_argument("--gamma", type=float, default=0.848, metavar="G",
                     help="discount factor (default: 0.848)")
 

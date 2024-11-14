@@ -71,6 +71,10 @@ parser.add_argument("--use_gae", default=True, action="store_false",
 parser.add_argument("--gae_lambda", type=float, default=0.9327, metavar="G",
                     help="generalized advantage estimation smoothing parameter (default: 0.9327)")
 
+parser.add_argument("-nr", "--normalize_rewards", default=True,
+                    action="store_true",
+                    help="if true, normalize rewards in memory (default: True)")
+
 parser.add_argument("--hidden_dim", type=int, default=64, metavar="N",
                     help="hidden dimension (default: 64)")
 parser.add_argument("--log_std", type=float, default=0.0, metavar="G",
@@ -138,6 +142,7 @@ class NormalController:
                            "max_grad_norm": args.max_grad_norm,
                            "use_gae": args.use_gae,
                            "gae_lambda": args.gae_lambda,
+                           "normalize_rewards": args.normalize_rewards,
                            "hidden_dim": args.hidden_dim,
                            "log_std": args.log_std,
                            "time_step_eval_frequency": args.time_step_eval_frequency,
@@ -166,6 +171,7 @@ class NormalController:
                  + "_mgn:" + str(self.parameters["max_grad_norm"]) \
                  + "_gae:" + str(self.parameters["use_gae"]) \
                  + "_lam:" + str(self.parameters["gae_lambda"]) \
+                 + "_nr:" + str(self.parameters["normalize_rewards"]) \
                  + "_hd:" + str(self.parameters["hidden_dim"]) \
                  + "_lstd:" + str(self.parameters["log_std"]) \
                  + "_tef:" + str(self.parameters["time_step_eval_frequency"]) \
@@ -179,8 +185,12 @@ class NormalController:
 
         self.experiment = "PPO_" + suffix
 
-        self.data_dir = os.getenv("HOME") + "/Documents/openai/data/" + self.experiment + "/seed" + str(
-            self.parameters["seed"])
+        self.data_dir = (
+                os.getenv("HOME")
+                + "/Documents/openai/data/"
+                + self.experiment + "/seed"
+                + str(self.parameters["seed"])
+        )
 
         # are we restarting training?  do the data files for the
         # selected seed already exist?
@@ -268,6 +278,7 @@ class NormalController:
                          self.parameters["max_grad_norm"],
                          self.parameters["use_gae"],
                          self.parameters["gae_lambda"],
+                         self.parameters["normalize_rewards"],
                          self.parameters["device"],
                          self.loss_data)
 

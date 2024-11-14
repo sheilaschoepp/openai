@@ -36,6 +36,7 @@ class PPO(BaseAgent):
                  max_grad_norm,
                  use_gae,
                  gae_lambda,
+                 normalize_rewards,
                  device,
                  loss_data):
         """
@@ -78,6 +79,8 @@ class PPO(BaseAgent):
             if true, use generalized advantage estimation
         @param gae_lambda: float
             generalized advantage estimation smoothing parameter
+        @param normalize_rewards: bool
+            if true, normalize rewards in memory
         @param device: str
             indicates whether using 'cuda' or 'cpu'
         @param loss_data: float64 numpy zeros array with shape (n_timesteps / num_samples * epochs, 3)
@@ -119,7 +122,14 @@ class PPO(BaseAgent):
         self.actor_critic_criterion = nn.MSELoss()
 
         # memory
-        self.memory = Memory(num_samples, self.state_dim, self.action_dim, gamma, use_gae, gae_lambda, mini_batch_size, device=self.device)
+        self.memory = Memory(num_samples,
+                             self.state_dim,
+                             self.action_dim,
+                             gamma, use_gae,
+                             gae_lambda,
+                             normalize_rewards,
+                             mini_batch_size,
+                             device=self.device)
         self.memory_init_samples = 0
 
         # loss_index

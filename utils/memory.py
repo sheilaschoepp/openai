@@ -115,6 +115,7 @@ class Memory:
         # normalize rewards
 
         if self.normalize_rewards:
+
             mean_rewards = self.rewards.mean()
             # Add small epsilon to prevent division by zero.
             std_rewards = self.rewards.std() + 1e-8

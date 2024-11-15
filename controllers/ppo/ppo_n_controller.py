@@ -36,8 +36,8 @@ parser = argparse.ArgumentParser(
 
 parser.add_argument("-e", "--n_env_name", default="Ant-v5",
                     help="name of normal (non-malfunctioning) MuJoCo Gym environment (default: Ant-v5)")
-parser.add_argument("-t", "--n_time_steps", type=int, default=50000000, metavar="N",
-                    help="number of time steps in normal (non-malfunctioning) MuJoCo Gym environment (default: 50000000)")
+parser.add_argument("-t", "--n_time_steps", type=int, default=5000000, metavar="N",
+                    help="number of time steps in normal (non-malfunctioning) MuJoCo Gym environment (default: 5000000)")
 
 parser.add_argument("--lr", type=float, default=0.000275, metavar="G",
                     help="learning rate (default: 0.000275)")
@@ -79,8 +79,8 @@ parser.add_argument("--hidden_dim", type=int, default=64, metavar="N",
 parser.add_argument("--log_std", type=float, default=0.0, metavar="G",
                     help="log standard deviation of the policy distribution (default: 0.0)")
 
-parser.add_argument("-tef", "--time_step_eval_frequency", type=int, default=100000, metavar="N",
-                    help="frequency of policy evaluation during learning (default: 100000)")
+parser.add_argument("-tef", "--time_step_eval_frequency", type=int, default=10000, metavar="N",
+                    help="frequency of policy evaluation during learning (default: 10000)")
 parser.add_argument("-ee", "--eval_episodes", type=int, default=10, metavar="N",
                     help="number of episodes in policy evaluation roll-out (default: 10)")
 
@@ -823,6 +823,49 @@ def objective(trial):
         number of time steps.
     """
 
+
+    # parser.add_argument("-nr", "--normalize_rewards", default=True, action="store_false",
+    #                     help="if true, normalize rewards in memory (default: True)")
+    #
+    # parser.add_argument("--hidden_dim", type=int, default=64, metavar="N",
+    #                     help="hidden dimension (default: 64)")
+    # parser.add_argument("--log_std", type=float, default=0.0, metavar="G",
+    #                     help="log standard deviation of the policy distribution (default: 0.0)")
+    #
+    # parser.add_argument("-tef", "--time_step_eval_frequency", type=int, default=10000, metavar="N",
+    #                     help="frequency of policy evaluation during learning (default: 10000)")
+    # parser.add_argument("-ee", "--eval_episodes", type=int, default=10, metavar="N",
+    #                     help="number of episodes in policy evaluation roll-out (default: 10)")
+    #
+    # parser.add_argument("-c", "--cuda", default=False, action="store_true",
+    #                     help="if true, run on GPU (default: False)")
+    #
+    # parser.add_argument("-s", "--seed", type=int, default=0, metavar="N",
+    #                     help="random seed (default: 0)")
+    #
+    # parser.add_argument("-d", "--delete", default=False, action="store_true",
+    #                     help="if true, delete previously saved data and restart training (default: False)")
+    #
+    # parser.add_argument("-o", "--optuna", default=False, action="store_true",
+    #                     help="if true, run a parameter search with optuna")
+
+    # Set the learning rate.
+    lr = trial.suggest_float(name="lr",
+                             low=0.00001,
+                             high=0.001,
+                             step=0.00000001)
+
+    # Set the linear learning rate decay flag.
+    linear_lr_decay_choices = [True, False]
+    linear_lr_decay = trial.suggest_categorical(name="linear_lr_decay",
+                                                choices=linear_lr_decay_choices)
+
+    # Set the gamma parameter.
+    gamma = trial.suggest_float(name="gamma",
+                                low=0.8,
+                                high=0.9999,
+                                step=0.0001)
+
     # Set the number of samples.
     num_samples_choices = [1024, 2048, 4096, 8192]
     num_samples = trial.suggest_categorical(name="num_samples",
@@ -848,18 +891,6 @@ def objective(trial):
                                   high=0.4,
                                   step=0.0001)
 
-    # Set the gamma parameter.
-    gamma = trial.suggest_float(name="gamma",
-                                low=0.8,
-                                high=0.9999,
-                                step=0.0001)
-
-    # Set the GAE lambda parameter.
-    gae_lambda = trial.suggest_float(name="gae_lambda",
-                                     low=0.9,
-                                     high=1.0,
-                                     step=0.0001)
-
     # Set the value function loss coefficient.
     vf_loss_coef = trial.suggest_float(name="vf_loss_coef",
                                        low=0.1,
@@ -872,22 +903,30 @@ def objective(trial):
                                               high=0.1,
                                               step=0.0000001)
 
-    # Set the learning rate.
-    lr = trial.suggest_float(name="lr",
-                             low=0.00001,
-                             high=0.001,
-                             step=0.00000001)
+    # Set the GAE lambda parameter.
+    gae_lambda = trial.suggest_float(name="gae_lambda",
+                                     low=0.9,
+                                     high=1.0,
+                                     step=0.0001)
+
+    # Set the normalize rewards flag.
+    normalize_rewards_choices = [True, False]
+    normalize_rewards = trial.suggest_categorical(name="normalize_rewards",
+                                                  choices=normalize_rewards_choices)
+
 
     # Set the hyperparameters directly in `args`.
+    args.lr = round(lr, 8)
+    args.linear_lr_decay = linear_lr_decay
+    args.gamma = round(gamma, 4)
     args.num_samples = num_samples
     args.mini_batch_size = mini_batch_size
     args.epochs = epochs
     args.epsilon = round(epsilon, 4)
-    args.gamma = round(gamma, 4)
-    args.gae_lambda = round(gae_lambda, 4)
     args.vf_loss_coef = round(vf_loss_coef, 4)
     args.policy_entropy_coef = round(policy_entropy_coef, 7)
-    args.lr = round(lr, 8)
+    args.gae_lambda = round(gae_lambda, 4)
+    args.normalize_rewards = normalize_rewards
 
     # Define the seeds for the experiment.
     seeds = [0, 1, 2, 3, 4]

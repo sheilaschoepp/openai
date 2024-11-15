@@ -822,33 +822,7 @@ def objective(trial):
         float: The average return after training for the specified
         number of time steps.
     """
-
-
-    # parser.add_argument("-nr", "--normalize_rewards", default=True, action="store_false",
-    #                     help="if true, normalize rewards in memory (default: True)")
-    #
-    # parser.add_argument("--hidden_dim", type=int, default=64, metavar="N",
-    #                     help="hidden dimension (default: 64)")
-    # parser.add_argument("--log_std", type=float, default=0.0, metavar="G",
-    #                     help="log standard deviation of the policy distribution (default: 0.0)")
-    #
-    # parser.add_argument("-tef", "--time_step_eval_frequency", type=int, default=10000, metavar="N",
-    #                     help="frequency of policy evaluation during learning (default: 10000)")
-    # parser.add_argument("-ee", "--eval_episodes", type=int, default=10, metavar="N",
-    #                     help="number of episodes in policy evaluation roll-out (default: 10)")
-    #
-    # parser.add_argument("-c", "--cuda", default=False, action="store_true",
-    #                     help="if true, run on GPU (default: False)")
-    #
-    # parser.add_argument("-s", "--seed", type=int, default=0, metavar="N",
-    #                     help="random seed (default: 0)")
-    #
-    # parser.add_argument("-d", "--delete", default=False, action="store_true",
-    #                     help="if true, delete previously saved data and restart training (default: False)")
-    #
-    # parser.add_argument("-o", "--optuna", default=False, action="store_true",
-    #                     help="if true, run a parameter search with optuna")
-
+    
     # Set the learning rate.
     lr = trial.suggest_float(name="lr",
                              low=0.00001,

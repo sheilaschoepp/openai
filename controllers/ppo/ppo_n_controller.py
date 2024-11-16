@@ -936,12 +936,14 @@ def main():
         optuna_folder = f"{os.getenv('HOME')}/Documents/openai/optuna"
         os.makedirs(optuna_folder, exist_ok=True)
 
-        storage = f"sqlite:///{optuna_folder}/optuna_study.db"
         study_name = "ppo_study"
+        storage = f"sqlite:///{optuna_folder}/optuna_study.db"
+        sampler = optuna.samplers.TPESampler(n_startup_trials=200)
         study = optuna.create_study(study_name=study_name,
                                     storage=storage,
                                     direction="maximize",
-                                    load_if_exists=True)
+                                    load_if_exists=True,
+                                    sampler=sampler)
 
         def print_trial_count(study, trial):
             print(f"Trial {trial.number} completed. Total trials so far: {len(study.trials)}\n")

@@ -1,4 +1,3 @@
-import numpy as np
 import os
 import pickle
 
@@ -29,13 +28,13 @@ class Environment(BaseEnvironment):
 
         super(Environment, self).__init__()
 
+        self.seed = seed
+
         render_mode = None
         if render:
             render_mode = "human"
 
         self.env = gym.make(env_name, render_mode=render_mode)
-
-        observation, info = self.env.reset(seed=seed)
 
     def env_init(self):
         """
@@ -43,7 +42,8 @@ class Environment(BaseEnvironment):
         before starting a new run.
         """
 
-        pass
+        observation, info = self.env.reset(seed=self.seed)
+        self.env.action_space.seed(seed=self.seed)
 
     def env_start(self):
         """

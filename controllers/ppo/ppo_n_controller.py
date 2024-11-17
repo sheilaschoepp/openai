@@ -31,8 +31,7 @@ from utils.rl_glue import RLGlue
 
 import custom_gym_envs  # do not delete; required for custom gym environments
 
-parser = argparse.ArgumentParser(
-    description="PyTorch Proximal Policy Optimization Arguments")
+parser = argparse.ArgumentParser(description="PyTorch Proximal Policy Optimization Arguments")
 
 parser.add_argument("-e", "--n_env_name", default="Ant-v5",
                     help="name of normal (non-malfunctioning) MuJoCo Gym environment (default: Ant-v5)")
@@ -96,13 +95,6 @@ parser.add_argument("-d", "--delete", default=False, action="store_true",
 parser.add_argument("-o", "--optuna", default=False, action="store_true",
                     help="if true, run a parameter search with optuna")
 
-# parser.add_argument("-ps", "--param_search", default=False, action="store_true",
-#                     help="if true, run a parameter search")
-
-# parser.add_argument("-pss", "--param_search_seed", type=int, default=0,
-#                     metavar="N",
-#                     help="random seed for parameter search (default: 0)")
-
 args = parser.parse_args()
 
 
@@ -150,13 +142,10 @@ class NormalController:
                            "device": "cuda" if args.cuda and torch.cuda.is_available() else "cpu",
                            "seed": args.seed,
                            "optuna": args.optuna}
-                           # "param_search": args.param_search,
-                           # "param_search_seed": args.param_search_seed}
 
         # experiment data directory
 
-        suffix = self.parameters["n_env_name"] + ":" + str(
-            self.parameters["n_time_steps"]) \
+        suffix = self.parameters["n_env_name"] + ":" + str(self.parameters["n_time_steps"]) \
                  + "_lr:" + str(self.parameters["lr"]) \
                  + "_lrd:" + str(self.parameters["linear_lr_decay"]) \
                  + "_g:" + str(self.parameters["gamma"]) \
@@ -177,17 +166,14 @@ class NormalController:
                  + "_ee:" + str(self.parameters["eval_episodes"]) \
                  + "_d:" + str(self.parameters["device"]) \
                  + ("_o" if self.parameters["optuna"] else "")
-                 # + (("_ps:" + str(self.parameters["param_search"])) if
-                 #    self.parameters["param_search"] else "") \
-                 # + (("_pss:" + str(self.parameters["param_search_seed"])) if
-                 #    self.parameters["param_search"] else "")
 
         self.experiment = "PPO_" + suffix
 
         self.data_dir = (
                 os.getenv("HOME")
                 + "/Documents/openai/data/"
-                + self.experiment + "/seed"
+                + self.experiment
+                + "/seed"
                 + str(self.parameters["seed"])
         )
 
@@ -207,12 +193,8 @@ class NormalController:
                 print(colored("data deletion complete", "red"))
             else:
                 # yes; argument flag not present; get confirmation of data deletion from user input
-                print(colored(
-                    "You are about to delete saved data and restart training.",
-                    "red"))
-                s = input(colored(
-                    "Are you sure you want to continue?  Hit 'y' then 'Enter' to continue.\n",
-                    "red"))
+                print(colored("You are about to delete saved data and restart training.", "red"))
+                s = input(colored("Are you sure you want to continue?  Hit 'y' then 'Enter' to continue.\n", "red"))
                 if s == "y":
                     # delete old data; rewrite new data to same location
                     print(colored("user input indicates DATA DELETION", "red"))
@@ -221,15 +203,13 @@ class NormalController:
                     print(colored("data deletion complete", "red"))
                 else:
                     # do not delete old data; system exit
-                    print(
-                        colored("user input indicates NO DATA DELETION", "red"))
+                    print(colored("user input indicates NO DATA DELETION", "red"))
                     print(self.LINE)
                     sys.exit("\nexiting...")
 
         # data
 
-        num_rows = int(self.parameters["n_time_steps"] / self.parameters[
-            "time_step_eval_frequency"]) + 1  # add 1 for evaluation before any learning (0th entry)
+        num_rows = int(self.parameters["n_time_steps"] / self.parameters["time_step_eval_frequency"]) + 1  # add 1 for evaluation before any learning (0th entry)
         num_columns = 7
         self.eval_data = np.zeros((num_rows, num_columns))
 
@@ -237,8 +217,7 @@ class NormalController:
         # num_columns = 3
         # self.train_data = np.zeros((num_rows, num_columns))
 
-        num_rows = (self.parameters["n_time_steps"] // self.parameters[
-            "num_samples"])
+        num_rows = (self.parameters["n_time_steps"] // self.parameters["num_samples"])
         num_columns = 8
         self.loss_data = np.zeros((num_rows, num_columns))
 
@@ -250,7 +229,7 @@ class NormalController:
         if self.parameters["device"] == "cuda":
             torch.cuda.manual_seed(self.parameters["seed"])
 
-        # env is seeded in Environment __init__ method
+        # env is seeded in Environment env_init() method
 
         # rl problem
 
@@ -283,7 +262,8 @@ class NormalController:
 
         # RLGlue used for training
         self.rlg = RLGlue(self.env, self.agent)
-        self.rlg_statistics = {"num_episodes": 0, "num_steps": 0,
+        self.rlg_statistics = {"num_episodes": 0,
+                               "num_steps": 0,
                                "total_reward": 0}
 
         # print summary info
@@ -319,44 +299,30 @@ class NormalController:
             else:
                 return self.parameters[argument]
 
-        print("normal environment name:",
-              highlight_non_default_values("n_env_name"))
-        print("normal time steps:",
-              highlight_non_default_values("n_time_steps"))
+        print("normal environment name:", highlight_non_default_values("n_env_name"))
+        print("normal time steps:", highlight_non_default_values("n_time_steps"))
         print("lr:", highlight_non_default_values("lr"))
-        print("linear lr decay:",
-              highlight_non_default_values("linear_lr_decay"))
+        print("linear lr decay:", highlight_non_default_values("linear_lr_decay"))
         print("gamma:", highlight_non_default_values("gamma"))
         print("number of samples:", highlight_non_default_values("num_samples"))
-        print("mini-batch size:",
-              highlight_non_default_values("mini_batch_size"))
+        print("mini-batch size:", highlight_non_default_values("mini_batch_size"))
         print("epochs:", highlight_non_default_values("epochs"))
         print("epsilon:", highlight_non_default_values("epsilon"))
-        print("value function loss coefficient:",
-              highlight_non_default_values("vf_loss_coef"))
-        print("policy entropy coefficient:",
-              highlight_non_default_values("policy_entropy_coef"))
-        print("clipped value function:",
-              highlight_non_default_values("clipped_value_fn"))
-        print("max norm of gradients:",
-              highlight_non_default_values("max_grad_norm"))
-        print("use generalized advantage estimation:",
-              highlight_non_default_values("use_gae"))
-        print("gae smoothing coefficient (lambda):",
-              highlight_non_default_values("gae_lambda"))
-        print("normalize rewards:",
-              highlight_non_default_values("normalize_rewards"))
+        print("value function loss coefficient:", highlight_non_default_values("vf_loss_coef"))
+        print("policy entropy coefficient:", highlight_non_default_values("policy_entropy_coef"))
+        print("clipped value function:", highlight_non_default_values("clipped_value_fn"))
+        print("max norm of gradients:", highlight_non_default_values("max_grad_norm"))
+        print("use generalized advantage estimation:", highlight_non_default_values("use_gae"))
+        print("gae smoothing coefficient (lambda):", highlight_non_default_values("gae_lambda"))
+        print("normalize rewards:", highlight_non_default_values("normalize_rewards"))
         print("hidden dimension:", highlight_non_default_values("hidden_dim"))
         print("log_std:", highlight_non_default_values("log_std"))
-        print("time step evaluation frequency:",
-              highlight_non_default_values("time_step_eval_frequency"))
-        print("evaluation episodes:",
-              highlight_non_default_values("eval_episodes"))
+        print("time step evaluation frequency:", highlight_non_default_values("time_step_eval_frequency"))
+        print("evaluation episodes:", highlight_non_default_values("eval_episodes"))
         if self.parameters["device"] == "cuda":
             print("device:", self.parameters["device"])
             if "CUDA_VISIBLE_DEVICES" in os.environ:
-                print("cuda visible device(s):",
-                      colored(os.environ["CUDA_VISIBLE_DEVICES"], "red"))
+                print("cuda visible device(s):", colored(os.environ["CUDA_VISIBLE_DEVICES"], "red"))
             else:
                 print(colored("cuda visible device(s): N/A", "red"))
         else:
@@ -364,9 +330,6 @@ class NormalController:
         print("seed:", colored(self.parameters["seed"], "red"))
         if self.parameters["optuna"]:
             print("optuna:", colored(self.parameters["optuna"], "red"))
-        # if self.parameters["param_search"]:
-        #     print("param search:", colored(self.parameters["param_search"], "red"))
-        #     print("param search seed:", colored(self.parameters["param_search_seed"], "red"))
 
         print(self.LINE)
         print(self.LINE)
@@ -388,25 +351,21 @@ class NormalController:
 
             # episode time steps are limited to 1000 (set below)
             # this is used to ensure that once self.parameters["n_time_steps"] is reached, the experiment is terminated
-            max_steps_this_episode = min(1000, self.parameters[
-                "n_time_steps"] - self.rlg.num_steps())
+            max_steps_this_episode = min(1000, self.parameters["n_time_steps"] - self.rlg.num_steps())
 
             # run an episode
             self.rlg.rl_start()
 
             terminal = False
 
-            while not terminal and ((max_steps_this_episode <= 0) or (
-                    self.rlg.num_ep_steps() < max_steps_this_episode)):
+            while not terminal and ((max_steps_this_episode <= 0) or (self.rlg.num_ep_steps() < max_steps_this_episode)):
                 _, _, terminal, _ = self.rlg.rl_step()
 
                 # save and evaluate the model every
                 # 'self.parameters["time_step_eval_frequency"]' time
                 # steps
-                if self.rlg.num_steps() % self.parameters[
-                    "time_step_eval_frequency"] == 0:
-                    self.rlg.rl_agent_message(
-                        f"save_model, {self.data_dir}, {self.rlg.num_steps()}")
+                if self.rlg.num_steps() % self.parameters["time_step_eval_frequency"] == 0:
+                    self.rlg.rl_agent_message(f"save_model, {self.data_dir}, {self.rlg.num_steps()}")
                     self.evaluate_model(self.rlg.num_steps())
 
             # index = self.rlg.num_episodes() - 1
@@ -457,48 +416,48 @@ class NormalController:
 
         if self.parameters["eval_episodes"] != 0:
 
-            agent_eval = copy(self.agent)
-            env_eval = copy(self.env)
+            eval_agent = copy(self.agent)
+            eval_env = copy(self.env)
 
-            rlg_eval = RLGlue(env_eval, agent_eval)
+            eval_rlg = RLGlue(eval_env, eval_agent)
 
-            rlg_eval.rl_agent_message("mode, eval")
+            eval_rlg.rl_agent_message("mode, eval")
 
             returns = []
 
-            rlg_eval.rl_init()
+            eval_rlg.rl_init()
 
             for e in range(self.parameters["eval_episodes"]):
 
-                rlg_eval.rl_start()
+                eval_rlg.rl_start()
 
                 terminal = False
 
                 max_steps_this_episode = 1000
-                while not terminal and ((max_steps_this_episode <= 0) or (
-                        rlg_eval.num_ep_steps() < max_steps_this_episode)):
-                    _, _, terminal, _ = rlg_eval.rl_step()
+                while not terminal and ((max_steps_this_episode <= 0) or (eval_rlg.num_ep_steps() < max_steps_this_episode)):
+                    _, _, terminal, _ = eval_rlg.rl_step()
 
-                returns.append(rlg_eval.episode_reward())
+                returns.append(eval_rlg.episode_reward())
 
             average_return = np.average(returns)
 
             num_updates = num_time_steps // self.parameters["num_samples"]
             num_epoch_updates = num_updates * self.parameters["epochs"]
             num_mini_batch_updates = num_epoch_updates * (
-                    self.parameters["num_samples"] // self.parameters[
-                "mini_batch_size"])
+                    self.parameters["num_samples"] // self.parameters["mini_batch_size"])
 
-            num_samples = num_mini_batch_updates * self.parameters[
-                "mini_batch_size"]
+            num_samples = num_mini_batch_updates * self.parameters["mini_batch_size"]
 
-            run_time = int(time.time() - self.start)
+            real_time = int(time.time() - self.start)
 
-            index = num_time_steps // self.parameters[
-                "time_step_eval_frequency"]
-            self.eval_data[index] = [num_time_steps, num_updates,
-                                     num_epoch_updates, num_mini_batch_updates,
-                                     num_samples, average_return, run_time]
+            index = num_time_steps // self.parameters["time_step_eval_frequency"]
+            self.eval_data[index] = [num_time_steps,
+                                     num_updates,
+                                     num_epoch_updates,
+                                     num_mini_batch_updates,
+                                     num_samples,
+                                     average_return,
+                                     real_time]
 
             print(f"evaluation at {num_time_steps} time steps: {average_return}")
 
@@ -524,8 +483,7 @@ class NormalController:
         df = pd.read_csv(csv_foldername + "/eval_data.csv")
 
         # evaluation: average_return vs num_time_steps
-        df.plot(x="num_time_steps", y="average_return", color="blue",
-                legend=False)
+        df.plot(x="num_time_steps", y="average_return", color="blue", legend=False)
         plt.xlabel("time_steps")
         plt.ylabel("average\nreturn", rotation="horizontal", labelpad=30)
         plt.title("Policy Evaluation")
@@ -550,17 +508,6 @@ class NormalController:
         pss.plot_settings()
         plt.savefig(jpg_foldername + "/evaluation_samples.jpg")
         plt.close()
-
-        # df = pd.read_csv(csv_foldername + "/train_data.csv")
-        #
-        # # training: episode_return vs num_episodes
-        # df.plot(x="num_episodes", y="episode_return", color="blue", legend=False)
-        # plt.xlabel("episodes")
-        # plt.ylabel("episode\nreturn", rotation="horizontal", labelpad=30)
-        # plt.title("Training")
-        # pss.plot_settings()
-        # plt.savefig(jpg_foldername + "/train_episodes.jpg")
-        # plt.close()
 
         df = pd.read_csv(csv_foldername + "/loss_data.csv")
 
@@ -640,8 +587,7 @@ class NormalController:
         self.rlg.rl_env_message(f"save, {self.data_dir}")
 
         # save agent data
-        self.rlg.rl_agent_message(
-            f"save, {self.data_dir}, {self.rlg.num_steps()}")
+        self.rlg.rl_agent_message(f"save, {self.data_dir}, {self.rlg.num_steps()}")
 
         print("saving complete")
 
@@ -660,37 +606,21 @@ class NormalController:
         eval_data_df = pd.DataFrame({"num_time_steps": self.eval_data[:, 0],
                                      "num_updates": self.eval_data[:, 1],
                                      "num_epoch_updates": self.eval_data[:, 2],
-                                     "num_mini_batch_updates": self.eval_data[:,
-                                                               3],
+                                     "num_mini_batch_updates": self.eval_data[:, 3],
                                      "num_samples": self.eval_data[:, 4],
                                      "average_return": self.eval_data[:, 5],
                                      "run_time": self.eval_data[:, 6]})
-        eval_data_df.to_csv(csv_foldername + "/eval_data.csv",
-                            float_format="%f")
-
-        # # remove zero entries
-        # index = None
-        # for i in range(self.train_data.shape[0]):
-        #     if (self.train_data[i] == np.zeros(3)).all() and (self.train_data[i+1] == np.zeros(3)).all():
-        #         index = i
-        #         break
-        # self.train_data = self.train_data[:index]
-        # train_data_df = pd.DataFrame({"num_episodes": self.train_data[:, 0],
-        #                               "num_time_steps": self.train_data[:, 1],
-        #                               "episode_return": self.train_data[:, 2]})
-        # train_data_df.to_csv(csv_foldername + "/train_data.csv", float_format="%f")
+        eval_data_df.to_csv(csv_foldername + "/eval_data.csv", float_format="%f")
 
         loss_data_df = pd.DataFrame({"num_updates": self.loss_data[:, 0],
                                      "num_epoch_updates": self.loss_data[:, 1],
-                                     "num_mini_batch_updates": self.loss_data[:,
-                                                               2],
+                                     "num_mini_batch_updates": self.loss_data[:, 2],
                                      "clip_loss": self.loss_data[:, 3],
                                      "vf_loss": self.loss_data[:, 4],
                                      "entropy": self.loss_data[:, 5],
                                      "clip_vf_s_loss": self.loss_data[:, 6],
                                      "clip_fraction": self.loss_data[:, 7]})
-        loss_data_df.to_csv(csv_foldername + "/loss_data.csv",
-                            float_format="%f")
+        loss_data_df.to_csv(csv_foldername + "/loss_data.csv", float_format="%f")
 
     def save_parameters(self):
         """
@@ -764,50 +694,6 @@ class NormalController:
             torch_cuda_random_state = torch.cuda.get_rng_state()
             torch.save(torch_cuda_random_state,
                        pt_foldername + "/torch_cuda_random_state.pt")
-
-
-# def main():
-#
-#     if args.param_search:
-#         param_search()
-#
-#     nc = NormalController()
-#
-#     try:
-#
-#         nc.run()
-#
-#     except KeyboardInterrupt as e:
-#
-#         print("keyboard interrupt")
-#
-#
-# def param_search():
-#     """
-#     Conduct a random parameter search for PPOv2 using parameter ranges from https://medium.com/aureliantactics/ppo-hyperparameters-and-ranges-6fc2d29bccbe.
-#     """
-#
-#     np.random.seed(args.param_search_seed)
-#
-#     args.num_samples = np.random.randint(32, 5001)  # upper bound excluded
-#
-#     args.mini_batch_size = int(np.random.choice([2**x for x in range(2, 13)]))  # powers of two
-#     while args.mini_batch_size > args.num_samples:
-#         args.mini_batch_size = int(np.random.choice([2 ** x for x in range(2, 13)]))
-#
-#     args.epochs = np.random.randint(3, 31)  # upper bound excluded
-#
-#     args.epsilon = float(np.random.choice([0.1, 0.2, 0.3]))
-#
-#     args.gamma = round(np.random.uniform(0.8, 0.9997), 4)
-#
-#     args.gae_lambda = round(np.random.uniform(0.9, 1.0), 4)
-#
-#     args.vf_loss_coef = float(np.random.choice([0.5, 1.0]))
-#
-#     args.policy_entropy_coef = round(np.random.uniform(0, 0.01), 4)
-#
-#     args.lr = round(np.random.uniform(0.0001, 0.003), 6)
 
 def objective(trial):
     """

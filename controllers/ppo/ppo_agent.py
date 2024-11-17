@@ -355,7 +355,7 @@ class PPO(BaseAgent):
         else:
 
             # send to CPU
-            checkpoint = torch.load(tar_foldername + "/{}.tar".format(t),
+            checkpoint = torch.load(f"{tar_foldername}/{t}.tar",
                                     map_location=torch.device(self.device),
                                     weights_only=False)
 
@@ -548,7 +548,7 @@ class PPO(BaseAgent):
         torch.save({
             "actor_critic_network_state_dict": self.actor_critic_network.state_dict(),
             "actor_critic_optimizer_state_dict": self.actor_critic_optimizer.state_dict()
-        }, foldername + "/{}.tar".format(t))
+        }, f"{foldername}/{t}.tar")
 
     def agent_save_num_updates(self, dir_):
         """

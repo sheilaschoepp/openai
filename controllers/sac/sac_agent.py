@@ -1,6 +1,7 @@
 import numpy as np
 import os
 import pickle
+
 import torch
 import torch.nn as nn
 from torch.optim import Adam
@@ -326,7 +327,8 @@ class SAC(BaseAgent):
         if self.device == "cuda":
 
             # send to gpu
-            checkpoint = torch.load(tar_foldername + "/{}.tar".format(t))
+            checkpoint = torch.load(f"{tar_foldername}/{t}.tar",
+                                    weights_only=False)
 
             # load neural network(s)
             self.q_network.load_state_dict(checkpoint["q_network_state_dict"])
@@ -341,7 +343,7 @@ class SAC(BaseAgent):
         else:
 
             # send to CPU
-            checkpoint = torch.load(tar_foldername + "/{}.tar".format(t), map_location=torch.device(self.device))
+            checkpoint = torch.load(f"{tar_foldername}/{t}.tar", map_location=torch.device(self.device))
 
             # load neural network(s)
             self.q_network.load_state_dict(checkpoint["q_network_state_dict"])
@@ -476,7 +478,7 @@ class SAC(BaseAgent):
                 "q_optimizer_2_state_dict": self.q_optimizer_2.state_dict(),
                 "policy_optimizer_state_dict": self.policy_optimizer.state_dict(),
                 "alpha_optimizer_state_dict": self.alpha_optimizer.state_dict()
-            }, foldername + "/{}.tar".format(t))
+            }, f"{foldername}/{t}.tar")
 
         else:
 
@@ -487,7 +489,7 @@ class SAC(BaseAgent):
                 "q_optimizer_1_state_dict": self.q_optimizer_1.state_dict(),
                 "q_optimizer_2_state_dict": self.q_optimizer_2.state_dict(),
                 "policy_optimizer_state_dict": self.policy_optimizer.state_dict()
-            }, foldername + "/{}.tar".format(t))
+            }, f"{foldername}/{t}.tar")
 
     def agent_save_num_updates(self, dir_):
         """

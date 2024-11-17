@@ -2,7 +2,7 @@
 
 # Define session range and maximum active sessions
 SESSION_START=1
-SESSION_END=200
+SESSION_END=600
 MAX_ACTIVE_SESSIONS=41
 
 # Define command to run in each session

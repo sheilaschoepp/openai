@@ -343,7 +343,7 @@ class PPO(BaseAgent):
         if self.device == "cuda":
 
             # send to gpu
-            checkpoint = torch.load(tar_foldername + "/{}.tar".format(t),
+            checkpoint = torch.load(f"{tar_foldername}/{t}.tar",
                                     weights_only=False)
 
             # load neural network(s)

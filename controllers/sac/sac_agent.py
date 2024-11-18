@@ -66,7 +66,7 @@ class SAC(BaseAgent):
             number of target value network updates per number gradient steps (network updates)
         @param automatic_entropy_tuning: bool
             if True, automatically tune the temperature
-        @param device: string
+        @param device: str
             indicates whether using 'cuda' or 'cpu'
         @param loss_data: float64 numpy zeros array with shape (n_time_steps - batch_size, 5)
             numpy array to store agent loss data
@@ -276,7 +276,7 @@ class SAC(BaseAgent):
         """
         Load agent's data.
 
-        @param dir_: string
+        @param dir_: str
             load directory
         @param t: int
             number of time steps into training
@@ -293,7 +293,7 @@ class SAC(BaseAgent):
 
         File format: .npy
 
-        @param dir_: string
+        @param dir_: str
             save directory
         """
 
@@ -314,7 +314,7 @@ class SAC(BaseAgent):
 
         File format: .tar
 
-        @param dir_: string
+        @param dir_: str
             load directory
         @param t: int
             number of time steps into training
@@ -368,7 +368,7 @@ class SAC(BaseAgent):
 
         File format: .npy
 
-        @param dir_: string
+        @param dir_: str
             load directory
         """
 
@@ -383,7 +383,7 @@ class SAC(BaseAgent):
 
         File format: .pickle
 
-        @param dir_: string
+        @param dir_: str
             load directory
         """
 
@@ -421,7 +421,7 @@ class SAC(BaseAgent):
         """
         Save agent's data.
 
-        @param dir_: string
+        @param dir_: str
             save directory
         @param t: int
             number of time steps into training
@@ -438,7 +438,7 @@ class SAC(BaseAgent):
 
         File format: .pt
 
-        @param dir_: string
+        @param dir_: str
             save directory
         """
 
@@ -457,7 +457,7 @@ class SAC(BaseAgent):
 
         File format: .tar
 
-        @param dir_: string
+        @param dir_: str
             save directory
         @param t: int
             number of time steps into training
@@ -495,7 +495,7 @@ class SAC(BaseAgent):
 
         File format: .npy
 
-        @param dir_: string
+        @param dir_: str
             save directory
         """
 
@@ -511,7 +511,7 @@ class SAC(BaseAgent):
 
         File format: .pickle
 
-        @param dir_: string
+        @param dir_: str
             save directory
         """
 
@@ -564,7 +564,7 @@ class SAC(BaseAgent):
         - network parameters are updated (see self.agent_set_policy_mode() method)
         - set policy model to training mode
 
-        @param mode: string
+        @param mode: str
             mode: training mode ('train') during learning, evaluation mode ('eval') during inference
         """
 

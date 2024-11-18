@@ -18,7 +18,7 @@ import sys
 import time
 import torch
 
-from copy import copy, deepcopy
+from copy import deepcopy
 from datetime import date, timedelta
 from os import path
 from shutil import rmtree
@@ -233,9 +233,13 @@ class NormalController:
 
         # rl problem
 
-        # normal environment used for training
+        # environment used for training
         self.env = Environment(self.parameters["n_env_name"],
                                self.parameters["seed"])
+
+        # environment used for evaluation
+        self.eval_env = Environment(self.parameters["n_env_name"],
+                                    self.parameters["seed"])
 
         # agent
         self.agent = PPO(self.env.env_observation_dim(),
@@ -416,10 +420,9 @@ class NormalController:
 
         if self.parameters["eval_episodes"] != 0:
 
-            eval_agent = copy(self.agent)
-            eval_env = copy(self.env)
+            eval_agent = deepcopy(self.agent)
 
-            eval_rlg = RLGlue(eval_env, eval_agent)
+            eval_rlg = RLGlue(self.eval_env, eval_agent)
 
             eval_rlg.rl_agent_message("mode, eval")
 

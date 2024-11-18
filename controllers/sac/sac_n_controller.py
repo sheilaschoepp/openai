@@ -60,13 +60,13 @@ parser.add_argument("--model_updates_per_step", type=int, default=1, metavar="N"
 parser.add_argument("--target_update_interval", type=int, default=1, metavar="N",
                     help="number of target value network updates per number of gradient steps (network updates) (default: 1)")
 
+parser.add_argument("-a", "--automatic_entropy_tuning", default=False, action="store_true",
+                    help="if true, automatically tune the temperature (default: False)")
+
 parser.add_argument("-tef", "--time_step_eval_frequency", type=int, default=25000, metavar="N",
                     help="frequency of policy evaluation during learning (default: 10000)")
 parser.add_argument("-ee", "--eval_episodes", type=int, default=10, metavar="N",
                     help="number of episodes in policy evaluation roll-out (default: 10)")
-
-parser.add_argument("-a", "--automatic_entropy_tuning", default=False, action="store_true",
-                    help="if true, automatically tune the temperature (default: False)")
 
 parser.add_argument("-c", "--cuda", default=False, action="store_true",
                     help="if true, run on GPU (default: False)")
@@ -114,9 +114,9 @@ class NormalController:
                            "batch_size": args.batch_size,
                            "model_updates_per_step": args.model_updates_per_step,
                            "target_update_interval": args.target_update_interval,
+                           "automatic_entropy_tuning": args.automatic_entropy_tuning,
                            "time_step_eval_frequency": args.time_step_eval_frequency,
                            "eval_episodes": args.eval_episodes,
-                           "automatic_entropy_tuning": args.automatic_entropy_tuning,
                            "cuda": args.cuda,
                            "device": "cuda" if args.cuda and torch.cuda.is_available() else "cpu",
                            "seed": args.seed,
@@ -134,9 +134,9 @@ class NormalController:
                  + "_bs:" + str(self.parameters["batch_size"]) \
                  + "_mups:" + str(self.parameters["model_updates_per_step"]) \
                  + "_tui:" + str(self.parameters["target_update_interval"]) \
+                 + "_a:" + str(self.parameters["automatic_entropy_tuning"]) \
                  + "_tef:" + str(self.parameters["time_step_eval_frequency"]) \
                  + "_ee:" + str(self.parameters["eval_episodes"]) \
-                 + "_a:" + str(self.parameters["automatic_entropy_tuning"]) \
                  + "_d:" + str(self.parameters["device"]) \
                  + ("_o" if self.parameters["optuna"] else "")
 
@@ -280,9 +280,9 @@ class NormalController:
         print("batch size:", highlight_non_default_values("batch_size"))
         print("model updates per step:", highlight_non_default_values("model_updates_per_step"))
         print("target updates interval:", highlight_non_default_values("target_update_interval"))
+        print("automatic entropy tuning:", highlight_non_default_values("automatic_entropy_tuning"))
         print("time step evaluation frequency:", highlight_non_default_values("time_step_eval_frequency"))
         print("evaluation episodes:", highlight_non_default_values("eval_episodes"))
-        print("automatic entropy tuning:", highlight_non_default_values("automatic_entropy_tuning"))
         if self.parameters["device"] == "cuda":
             print("device:", self.parameters["device"])
             if "CUDA_VISIBLE_DEVICES" in os.environ:

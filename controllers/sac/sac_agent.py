@@ -124,10 +124,6 @@ class SAC(BaseAgent):
         # replay buffer
         self.replay_buffer = ReplayBuffer(self.replay_buffer_size)
 
-        # RL problem
-        self.state = None
-        self.action = None
-
         # mode - learn or evaluation
         # if train, select an action using a policy distribution; add experience to the replay buffer; policy model mode is 'train'
         # if eval, select a deterministic action (distribution mean); do not add experience to the replay buffer; policy mode is 'eval'
@@ -138,7 +134,9 @@ class SAC(BaseAgent):
         Initialize the variables that you want to reset before starting a new run.
         """
 
-        pass
+        # RL problem
+        self.state = None
+        self.action = None
 
     def agent_start(self, state):
         """

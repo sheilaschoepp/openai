@@ -148,11 +148,6 @@ class PPO(BaseAgent):
         # number of mini batch updates of the networks
         self.num_mini_batch_updates = 0
 
-        # RL problem
-        self.state = None
-        self.action = None
-        self.log_prob = None
-
         # mode - learn or evaluation
         # if train, select an action using a policy distribution; add experience to the memory; policy model mode is 'train'
         # if eval, select a deterministic action (distribution mean); do not add experience to the memory; policy mode is 'eval'
@@ -163,7 +158,10 @@ class PPO(BaseAgent):
         Initialize the variables that you want to reset before starting a new run.
         """
 
-        pass
+        # RL problem
+        self.state = None
+        self.action = None
+        self.log_prob = None
 
     def agent_start(self, state):
         """

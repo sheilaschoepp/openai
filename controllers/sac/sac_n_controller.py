@@ -14,7 +14,6 @@ import numpy as np
 import pandas as pd
 import pickle
 import random
-import smtplib
 import sys
 import time
 import torch
@@ -61,13 +60,13 @@ parser.add_argument("--model_updates_per_step", type=int, default=1, metavar="N"
 parser.add_argument("--target_update_interval", type=int, default=1, metavar="N",
                     help="number of target value network updates per number of gradient steps (network updates) (default: 1)")
 
+parser.add_argument("-a", "--automatic_entropy_tuning", default=False, action="store_true",
+                    help="if true, automatically tune the temperature (default: False)")
+
 parser.add_argument("-tef", "--time_step_eval_frequency", type=int, default=25000, metavar="N",
                     help="frequency of policy evaluation during learning (default: 10000)")
 parser.add_argument("-ee", "--eval_episodes", type=int, default=10, metavar="N",
                     help="number of episodes in policy evaluation roll-out (default: 10)")
-
-parser.add_argument("-a", "--automatic_entropy_tuning", default=False, action="store_true",
-                    help="if true, automatically tune the temperature (default: False)")
 
 parser.add_argument("-c", "--cuda", default=False, action="store_true",
                     help="if true, run on GPU (default: False)")
@@ -115,9 +114,9 @@ class NormalController:
                            "batch_size": args.batch_size,
                            "model_updates_per_step": args.model_updates_per_step,
                            "target_update_interval": args.target_update_interval,
+                           "automatic_entropy_tuning": args.automatic_entropy_tuning,
                            "time_step_eval_frequency": args.time_step_eval_frequency,
                            "eval_episodes": args.eval_episodes,
-                           "automatic_entropy_tuning": args.automatic_entropy_tuning,
                            "cuda": args.cuda,
                            "device": "cuda" if args.cuda and torch.cuda.is_available() else "cpu",
                            "seed": args.seed,
@@ -135,9 +134,9 @@ class NormalController:
                  + "_bs:" + str(self.parameters["batch_size"]) \
                  + "_mups:" + str(self.parameters["model_updates_per_step"]) \
                  + "_tui:" + str(self.parameters["target_update_interval"]) \
+                 + "_a:" + str(self.parameters["automatic_entropy_tuning"]) \
                  + "_tef:" + str(self.parameters["time_step_eval_frequency"]) \
                  + "_ee:" + str(self.parameters["eval_episodes"]) \
-                 + "_a:" + str(self.parameters["automatic_entropy_tuning"]) \
                  + "_d:" + str(self.parameters["device"]) \
                  + ("_o" if self.parameters["optuna"] else "")
 
@@ -281,9 +280,9 @@ class NormalController:
         print("batch size:", highlight_non_default_values("batch_size"))
         print("model updates per step:", highlight_non_default_values("model_updates_per_step"))
         print("target updates interval:", highlight_non_default_values("target_update_interval"))
+        print("automatic entropy tuning:", highlight_non_default_values("automatic_entropy_tuning"))
         print("time step evaluation frequency:", highlight_non_default_values("time_step_eval_frequency"))
         print("evaluation episodes:", highlight_non_default_values("eval_episodes"))
-        print("automatic entropy tuning:", highlight_non_default_values("automatic_entropy_tuning"))
         if self.parameters["device"] == "cuda":
             print("device:", self.parameters["device"])
             if "CUDA_VISIBLE_DEVICES" in os.environ:
@@ -381,6 +380,16 @@ class NormalController:
 
         if self.parameters["eval_episodes"] != 0:
 
+            # save torch RNG state(s)
+            # this is needed because the SAC network sample() method
+            # samples from a normal distribution during evaluation,
+            # despite only needing a deterministic (mean) sample.
+            rng_state_cpu = torch.get_rng_state()
+            if torch.cuda.is_available():
+                rng_state_cuda = torch.cuda.get_rng_state()
+            else:
+                rng_state_cuda = None
+
             eval_agent = deepcopy(self.agent)
 
             eval_rlg = RLGlue(self.eval_env, eval_agent)
@@ -409,6 +418,7 @@ class NormalController:
                 num_updates = 0
             else:
                 num_updates = (num_time_steps - self.parameters["batch_size"]) * self.parameters["model_updates_per_step"]
+
             num_samples = num_updates * self.parameters["batch_size"]
 
             real_time = int(time.time() - self.start)
@@ -425,6 +435,11 @@ class NormalController:
             run_time = str(timedelta(seconds=time.time() - self.start))[:-7]
             print("runtime:", run_time, "h:m:s")
             print(self.LINE)
+
+            # reload the torch RNG state(s)
+            torch.set_rng_state(rng_state_cpu)
+            if rng_state_cuda is not None:
+                torch.cuda.set_rng_state(rng_state_cuda)
 
     def plot(self):
         """
@@ -660,34 +675,6 @@ class NormalController:
         if self.parameters["device"] == "cuda":
             torch_cuda_random_state = torch.cuda.get_rng_state()
             torch.save(torch_cuda_random_state, pt_foldername + "/torch_cuda_random_state.pt")
-
-    def send_email(self, run_time):
-        """
-        Send email to indicate that the experiment is complete.
-
-        @param run_time: str
-            the time to complete a single run of the experiment (h:m:s)
-        """
-
-        gmail_email = "mynewbfnao@gmail.com"
-        gmail_password = "k!1t8qL(YQO%labr}kS%"
-
-        recipient = "sschoepp@ualberta.ca"
-
-        from_ = gmail_email
-        to = recipient if type(recipient) is list else [recipient]
-        subject = "Experiment Complete"
-        text = f"Experiment {self.experiment}/seed{self.parameters['seed']} complete.\n\nTime to complete: \n{run_time} h:m:s\n\nThis message is sent from Python."
-
-        message = """\From: %s\nTo: %s\nSubject: %s\n\n%s""" % (from_, ", ".join(to), subject, text)
-
-        server = smtplib.SMTP("smtp.gmail.com", 587)
-        server.ehlo()
-        server.starttls()
-        server.login(gmail_email, gmail_password)
-        server.sendmail(from_, to, message)
-        server.close()
-
 
 def main():
 

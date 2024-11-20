@@ -5,7 +5,7 @@ data/**
 optuna/*.db
 
 # ignore conda tar file
-~virtualenv/openai3.9.tar.gz
+~virtualenv/*
 
 # ignore histogram data
 **/plot/histogram/data/*

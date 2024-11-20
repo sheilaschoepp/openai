@@ -4,7 +4,7 @@ data/**
 # ignore optuna folder
 optuna/*.db
 
-# ignore conda tar file
+# ignore conda tar files
 ~virtualenv/*
 
 # ignore histogram data

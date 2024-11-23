@@ -68,8 +68,8 @@ parser.add_argument("-tef", "--time_step_eval_frequency", type=int, default=7500
 parser.add_argument("-ee", "--eval_episodes", type=int, default=10, metavar="N",
                     help="number of episodes in policy evaluation roll-out (default: 10)")
 
-parser.add_argument("-c", "--cuda", default=True, action="store_false",
-                    help="if true, run on GPU (default: True)")
+parser.add_argument("-c", "--cuda", default=False, action="store_true",
+                    help="if true, run on GPU (default: False)")
 
 parser.add_argument("-s", "--seed", type=int, default=0, metavar="N",
                     help="random seed (default: 0)")
@@ -807,6 +807,17 @@ def main():
 
         def print_trial_count(study, trial):
             print(f"Trial {trial.number} completed. Total trials so far: {len(study.trials)}\n")
+
+        # study.enqueue_trial(
+        #     {"gamma": 0.00058328,
+        #      "tau": True,
+        #      "alpha": 0.9785,
+        #      "lr": 2048,
+        #      "replay_buffer_size": 512,
+        #      "batch_size": 5,
+        #      "target_update_interval": 0.4932,
+        #      "automatic_entropy_tuning": 0.0055157},
+        # )
 
         study.optimize(
             objective,

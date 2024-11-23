@@ -695,8 +695,8 @@ class NormalController:
 
         if self.parameters["device"] == "cuda":
             torch_cuda_random_state = torch.cuda.get_rng_state()
-            torch.save(torch_cuda_random_state,
-                       pt_foldername + "/torch_cuda_random_state.pt")
+            torch.save(torch_cuda_random_state, pt_foldername + "/torch_cuda_random_state.pt")
+
 
 def objective(trial):
     """
@@ -796,6 +796,7 @@ def objective(trial):
 
     cumulative_returns = []
     for seed in seeds:
+
         # Set the random seed for the experiment.
         args.seed = seed
 
@@ -837,7 +838,11 @@ def main():
         def print_trial_count(study, trial):
             print(f"Trial {trial.number} completed. Total trials so far: {len(study.trials)}\n")
 
-        study.optimize(objective, n_trials=1, callbacks=[print_trial_count]) # n_jobs=1
+        study.optimize(
+            objective,
+            n_trials=1,
+            callbacks=[print_trial_count]
+        )
 
         with open(f"{optuna_folder}/optuna.txt", "w") as f:
             print(f"Best hyperparameters found:", file=f)

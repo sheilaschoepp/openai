@@ -771,6 +771,7 @@ def objective(trial):
 
     return average_cumulative_returns
 
+
 def main():
 
     if args.optuna:
@@ -803,15 +804,17 @@ def main():
             print("\n", file=f)
             print(f"Best average return:\n{study.best_value}", file=f)
 
-    nc = NormalController()
+    else:
 
-    try:
+        nc = NormalController()
 
-        nc.run()
+        try:
 
-    except KeyboardInterrupt as e:
+            nc.run()
 
-        print("keyboard interrupt")
+        except KeyboardInterrupt as e:
+
+            print("keyboard interrupt")
 
 
 if __name__ == "__main__":

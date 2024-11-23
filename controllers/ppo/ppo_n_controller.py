@@ -852,11 +852,11 @@ def main():
              "normalize_rewards": False},
         )
 
-        # study.optimize(
-        #     objective,
-        #     n_trials=1,
-        #     callbacks=[print_trial_count]
-        # )
+        study.optimize(
+            objective,
+            n_trials=1,
+            callbacks=[print_trial_count]
+        )
 
         with open(f"{optuna_folder}/optuna.txt", "w") as f:
             print(f"Best hyperparameters found:", file=f)

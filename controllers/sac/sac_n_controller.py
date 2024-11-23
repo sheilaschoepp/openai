@@ -709,6 +709,13 @@ def objective(trial):
                              high=0.001,
                              step=0.00000001)
 
+    # Set the hidden dimension.
+    hidden_dim_choices = [256, 512, 1024]
+    hidden_dim = trial.suggest_categorical(
+        name="hidden_dim",
+        choices=hidden_dim_choices
+    )
+
     # Set the replay buffer size.
     replay_buffer_size_choices = [10000, 25000, 50000, 75000, 100000, 250000, 500000, 750000, 1000000]
     replay_buffer_size = trial.suggest_categorical(
@@ -721,28 +728,29 @@ def objective(trial):
     batch_size = trial.suggest_categorical(name="batch_size",
                                            choices=batch_size_choices)
 
-    # Set the model updates per step.
-    model_updates_per_step_choices = [1, 2, 3, 4, 5]
-    model_updates_per_step = trial.suggest_categorical(
-        name="model_updates_per_step",
-        choices=model_updates_per_step_choices
-    )
-
-    # Set the target update interval.
-    target_update_interval_choices = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-    target_update_interval = trial.suggest_categorical(
-        name="time_step_evaluation_frequency",
-        choices=target_update_interval_choices
-    )
+    # # Set the model updates per step.
+    # model_updates_per_step_choices = [1, 2, 3, 4, 5]
+    # model_updates_per_step = trial.suggest_categorical(
+    #     name="model_updates_per_step",
+    #     choices=model_updates_per_step_choices
+    # )
+    #
+    # # Set the target update interval.
+    # target_update_interval_choices = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    # target_update_interval = trial.suggest_categorical(
+    #     name="time_step_evaluation_frequency",
+    #     choices=target_update_interval_choices
+    # )
 
     # Set the hyperparameters directly in `args`.
     args.gamma = round(gamma, 4)
     args.tau = round(tau, 7)
     args.lr = round(lr, 8)
+    args.hidden_dim = hidden_dim
     args.replay_buffer_size = replay_buffer_size
     args.batch_size = batch_size
-    args.model_updates_per_step = model_updates_per_step
-    args.target_update_interval = target_update_interval
+    # args.model_updates_per_step = model_updates_per_step
+    # args.target_update_interval = target_update_interval
 
     # Define the seeds for the experiment.
     seeds = [0, 1, 2, 3, 4]

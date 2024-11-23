@@ -837,19 +837,19 @@ def main():
         def print_trial_count(study, trial):
             print(f"Trial {trial.number} completed. Total trials so far: {len(study.trials)}\n")
 
-        study.enqueue_trial(
-            {"lr": 0.00058328,
-             "linear_lr_decay": True,
-             "gamma": 0.9785,
-             "num_samples": 2048,
-             "mini_batch_size": 512,
-             "num_epochs": 5,
-             "epsilon": 0.2885,
-             "vf_loss_coef": 0.4932,
-             "policy_entropy_coef": 0.0055157,
-             "gae_lambda": 0.9463,
-             "normalize_rewards": False},
-        )
+        # study.enqueue_trial(
+        #     {"lr": 0.00058328,
+        #      "linear_lr_decay": True,
+        #      "gamma": 0.9785,
+        #      "num_samples": 2048,
+        #      "mini_batch_size": 512,
+        #      "num_epochs": 5,
+        #      "epsilon": 0.2885,
+        #      "vf_loss_coef": 0.4932,
+        #      "policy_entropy_coef": 0.0055157,
+        #      "gae_lambda": 0.9463,
+        #      "normalize_rewards": False},
+        # )
 
         study.optimize(
             objective,

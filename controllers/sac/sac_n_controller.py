@@ -797,10 +797,14 @@ def main():
         os.makedirs(optuna_folder, exist_ok=True)
 
         study_name = "sac_optuna_study"
-        storage = f"sqlite:///{optuna_folder}/sac_optuna_study.db"
-        sampler = optuna.samplers.TPESampler(n_startup_trials=200)
+
+        database_url = os.environ.get("SAC_OPTUNA_DB_URL")
+        if not database_url:
+            raise ValueError("Database URL not found in environment. Make sure SAC_OPTUNA_DB_URL is set.")
+
+        sampler = optuna.samplers.TPESampler(seed=0)
         study = optuna.create_study(study_name=study_name,
-                                    storage=storage,
+                                    storage=database_url,
                                     direction="maximize",
                                     load_if_exists=True,
                                     sampler=sampler)

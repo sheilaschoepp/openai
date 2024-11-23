@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Define session range and maximum active sessions
-SESSION_START=191
+SESSION_START=417
 SESSION_END=600
 MAX_ACTIVE_SESSIONS=51
 

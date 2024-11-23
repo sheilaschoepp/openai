@@ -3,7 +3,7 @@
 # Define session range and maximum active sessions
 SESSION_START=1
 SESSION_END=600
-MAX_ACTIVE_SESSIONS=24
+MAX_ACTIVE_SESSIONS=25
 CUDA_DEVICES=(0 1 2 3 4 5)  # List of available CUDA devices
 MAX_PROCESSES_PER_DEVICE=4
 

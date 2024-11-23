@@ -715,24 +715,19 @@ def objective(trial):
                              high=0.001,
                              step=0.00000001)
 
-    # # Set the hidden dimension.
-    # hidden_dim_choices = [256, 512, 1024]
-    # hidden_dim = trial.suggest_categorical(
-    #     name="hidden_dim",
-    #     choices=hidden_dim_choices
-    # )
-
     # Set the replay buffer size.
-    replay_buffer_size_choices = [10000, 25000, 50000, 75000, 100000, 250000, 500000, 750000, 1000000]
+    replay_buffer_size_choices = [100000, 250000, 500000, 750000, 1000000]
     replay_buffer_size = trial.suggest_categorical(
         name="replay_buffer_size",
         choices=replay_buffer_size_choices
     )
 
     # Set the batch size.
-    automatic_entropy_tuning_choices = [512, 1024, 2048, 4096, 8192]
-    batch_size = trial.suggest_categorical(name="batch_size",
-                                           choices=automatic_entropy_tuning_choices)
+    batch_size_choices = [64, 128, 256]
+    batch_size = trial.suggest_categorical(
+        name="batch_size",
+        choices=batch_size_choices
+    )
 
     # # Set the model updates per step.
     # model_updates_per_step_choices = [1, 2, 3, 4, 5]
@@ -740,13 +735,13 @@ def objective(trial):
     #     name="model_updates_per_step",
     #     choices=model_updates_per_step_choices
     # )
-    #
-    # # Set the target update interval.
-    # target_update_interval_choices = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-    # target_update_interval = trial.suggest_categorical(
-    #     name="time_step_evaluation_frequency",
-    #     choices=target_update_interval_choices
-    # )
+
+    # Set the target update interval.
+    target_update_interval_choices = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    target_update_interval = trial.suggest_categorical(
+        name="time_step_evaluation_frequency",
+        choices=target_update_interval_choices
+    )
 
     # Set the automatic entropy tuning flag.
     automatic_entropy_tuning_choices = [True, False]
@@ -760,11 +755,10 @@ def objective(trial):
     args.tau = round(tau, 7)
     args.alpha = round(alpha, 7)
     args.lr = round(lr, 8)
-    # args.hidden_dim = hidden_dim
     args.replay_buffer_size = replay_buffer_size
     args.batch_size = batch_size
     # args.model_updates_per_step = model_updates_per_step
-    # args.target_update_interval = target_update_interval
+    args.target_update_interval = target_update_interval
     args.automatic_entropy_tuning = automatic_entropy_tuning
 
     # Define the seeds for the experiment.

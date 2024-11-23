@@ -1,24 +1,27 @@
 import argparse
 import csv
 import itertools
+import matplotlib.pyplot as plt
+import optuna
 import os
-os.environ["MKL_NUM_THREADS"] = "1"   # must be before numpy import
+
+# The following three lines must come before numpy import.
+os.environ["MKL_NUM_THREADS"] = "1"
 os.environ["NUMEXPR_NUM_THREADS"] = "1"
 os.environ["OMP_NUM_THREADS"] = "1"
+
+import numpy as np
+import pandas as pd
 import pickle
 import random
-import smtplib
 import sys
 import time
-from copy import copy
+import torch
+
+from copy import deepcopy
 from datetime import date, timedelta
 from os import path
 from shutil import rmtree
-
-import matplotlib.pyplot as plt
-import numpy as np
-import pandas as pd
-import torch
 from termcolor import colored
 
 import utils.plot_style_settings as pss
@@ -30,54 +33,55 @@ import custom_gym_envs  # do not delete; required for custom gym environments
 
 parser = argparse.ArgumentParser(description="PyTorch Proximal Policy Optimization Arguments")
 
-parser.add_argument("-e", "--n_env_name", default="Ant-v2",
-                    help="name of normal (non-malfunctioning) MuJoCo Gym environment (default: Ant-v2)")
-parser.add_argument("-t", "--n_time_steps", type=int, default=1000000000, metavar="N",  # todo
-                    help="number of time steps in normal (non-malfunctioning) MuJoCo Gym environment (default: 1000000000)")
+parser.add_argument("-e", "--n_env_name", default="Ant-v5",
+                    help="name of normal (non-malfunctioning) MuJoCo Gym environment (default: Ant-v5)")
+parser.add_argument("-t", "--n_time_steps", type=int, default=10000000, metavar="N",
+                    help="number of time steps in normal (non-malfunctioning) MuJoCo Gym environment (default: 5000000)")
 
-parser.add_argument("--lr", type=float, default=0.00025, metavar="G",
-                    help="learning rate (default: 0.0003)")
-parser.add_argument("-lrd", "--linear_lr_decay", default=False, action="store_true",
-                    help="if true, decrease learning rate linearly (default: False)")
-parser.add_argument("-slrd", "--slow_lrd", type=float, default=1.0, metavar="G",
-                    help="slow linear learning rate decay by this percentage (default: 1.0)")
-parser.add_argument("--gamma", type=float, default=0.98, metavar="G",
-                    help="discount factor (default: 0.99)")
+parser.add_argument("--lr", type=float, default=0.000275, metavar="G",
+                    help="learning rate (default: 0.000275)")
+parser.add_argument("-lrd", "--linear_lr_decay", default=True, action="store_true",
+                    help="if true, decrease learning rate linearly (default: True)")
+parser.add_argument("--gamma", type=float, default=0.848, metavar="G",
+                    help="discount factor (default: 0.848)")
 
-parser.add_argument("-ns", "--num_samples", type=int, default=512, metavar="N",
-                    help="number of samples used to update the network(s) (default: 2048)")
-parser.add_argument("-mbs", "--mini_batch_size", type=int, default=256, metavar="N",
-                    help=" number of samples per mini-batch (default: 64)")
-parser.add_argument("--epochs", type=int, default=4, metavar="N",
-                    help="number of epochs when updating the network(s) (default: 10)")
+parser.add_argument("-ns", "--num_samples", type=int, default=3424, metavar="N",
+                    help="number of samples used to update the network(s) (default: 3424)")
+parser.add_argument("-mbs", "--mini_batch_size", type=int, default=8,
+                    metavar="N",
+                    help=" number of samples per mini-batch (default: 8)")
+parser.add_argument("--epochs", type=int, default=24, metavar="N",
+                    help="number of epochs when updating the network(s) (default: 24)")
 
-parser.add_argument("--epsilon", type=float, default=0.1, metavar="G",
-                    help="clip parameter (default: 0.1)")
-parser.add_argument("--vf_loss_coef", type=float, default=0.5, metavar="G",
-                    help=" c1 - coefficient for the squared error loss term (default: 0.5)")
-parser.add_argument("--policy_entropy_coef", type=float, default=0.01, metavar="G",
-                    help=" c2 - coefficient for the entropy bonus term (default: 0.01)")
+parser.add_argument("--epsilon", type=float, default=0.3, metavar="G",
+                    help="clip parameter (default: 0.3)")
+parser.add_argument("--vf_loss_coef", type=float, default=1.0, metavar="G",
+                    help=" c1 - coefficient for the squared error loss term (default: 1.0)")
+parser.add_argument("--policy_entropy_coef", type=float, default=0.0007,
+                    metavar="G",
+                    help=" c2 - coefficient for the entropy bonus term (default: 0.0007)")
 parser.add_argument("--clipped_value_fn", default=False, action="store_true",
                     help="if true, clip value function (default: False)")
 parser.add_argument("--max_grad_norm", type=float, default=0.5, metavar="G",
                     help=" max norm of gradients (default: 0.5)")
 
 parser.add_argument("--use_gae", default=True, action="store_false",
-                    help=" if true, use generalized advantage estimation (default: False)")
-parser.add_argument("--gae_lambda", type=float, default=0.95, metavar="G",
-                    help="generalized advantage estimation smoothing parameter (default: 0.95)")
+                    help=" if true, use generalized advantage estimation (default: True)")
+parser.add_argument("--gae_lambda", type=float, default=0.9327, metavar="G",
+                    help="generalized advantage estimation smoothing parameter (default: 0.9327)")
+
+parser.add_argument("-nr", "--normalize_rewards", default=True, action="store_false",
+                    help="if true, normalize rewards in memory (default: True)")
 
 parser.add_argument("--hidden_dim", type=int, default=64, metavar="N",
                     help="hidden dimension (default: 64)")
 parser.add_argument("--log_std", type=float, default=0.0, metavar="G",
                     help="log standard deviation of the policy distribution (default: 0.0)")
 
-parser.add_argument("-tef", "--time_step_eval_frequency", type=int, default=5000000, metavar="N",  # todo
-                    help="frequency of policy evaluation during learning (default: 5000000)")
+parser.add_argument("-tef", "--time_step_eval_frequency", type=int, default=25000, metavar="N",
+                    help="frequency of policy evaluation during learning (default: 10000)")
 parser.add_argument("-ee", "--eval_episodes", type=int, default=10, metavar="N",
                     help="number of episodes in policy evaluation roll-out (default: 10)")
-parser.add_argument("-tmsf", "--time_step_model_save_frequency", type=int, default=50000000, metavar="N",  # todo
-                    help="frequency of saving models during learning (default: 50000000)")
 
 parser.add_argument("-c", "--cuda", default=False, action="store_true",
                     help="if true, run on GPU (default: False)")
@@ -88,23 +92,8 @@ parser.add_argument("-s", "--seed", type=int, default=0, metavar="N",
 parser.add_argument("-d", "--delete", default=False, action="store_true",
                     help="if true, delete previously saved data and restart training (default: False)")
 
-parser.add_argument("--resumable", default=False, action="store_true",
-                    help="if true, make experiment resumable (i.e. save data at the end of the last possible episode)")
-
-parser.add_argument("--resume", default=False, action="store_true",
-                    help="if true, resume experiment starting with data from last possible episode")
-
-parser.add_argument("-rf", "--resume_file", default="",
-                    help="absolute path of the seedX folder containing data from previous checkpoint")
-
-parser.add_argument("-tl", "--time_limit", type=float, default=100000000000.0, metavar="N",
-                    help="run time limit for use on Compute Canada (units: days)")
-
-parser.add_argument("-ps", "--param_search", default=False, action="store_true",
-                    help="if true, run a parameter search")
-
-parser.add_argument("-pss", "--param_search_seed", type=int, default=0, metavar="N",
-                    help="random seed for parameter search (default: 0)")
+parser.add_argument("-o", "--optuna", default=False, action="store_true",
+                    help="if true, run a parameter search with optuna")
 
 args = parser.parse_args()
 
@@ -125,73 +114,40 @@ class NormalController:
 
         self.start = time.time()
 
-        # hostname
-
-        self.hostname = os.uname()[1]
-        self.localhosts = ["melco", "Legion", "amii", "remaining20seeds"]
-        self.computecanada = not any(host in self.hostname for host in self.localhosts)
-
         # experiment parameters
 
         self.parameters = None
 
-        if not args.resume:
-
-            self.parameters = {"n_env_name": args.n_env_name,
-                               "n_time_steps": args.n_time_steps,
-                               "lr": args.lr,
-                               "linear_lr_decay": args.linear_lr_decay,
-                               "slow_lrd": args.slow_lrd,
-                               "gamma": args.gamma,
-                               "num_samples": args.num_samples,
-                               "mini_batch_size": args.mini_batch_size,
-                               "epochs": args.epochs,
-                               "epsilon": args.epsilon,
-                               "vf_loss_coef": args.vf_loss_coef,
-                               "policy_entropy_coef": args.policy_entropy_coef,
-                               "clipped_value_fn": args.clipped_value_fn,
-                               "max_grad_norm": args.max_grad_norm,
-                               "use_gae": args.use_gae,
-                               "gae_lambda": args.gae_lambda,
-                               "hidden_dim": args.hidden_dim,
-                               "log_std": args.log_std,
-                               "time_step_eval_frequency": args.time_step_eval_frequency,
-                               "eval_episodes": args.eval_episodes,
-                               "time_step_model_save_frequency": args.time_step_model_save_frequency,
-                               "cuda": args.cuda,
-                               "device": "cuda" if args.cuda and torch.cuda.is_available() else "cpu",
-                               "seed": args.seed,
-                               "resumable": args.resumable,
-                               "resume": args.resume,
-                               "resume_file": args.resume_file,
-                               "complete": False,
-                               "param_search": args.param_search,
-                               "param_search_seed": args.param_search_seed}
-
-        else:
-
-            self.load_data_dir = args.resume_file
-
-            # load old parameters to make sure we are running the same experiment
-            self.load_parameters()
-
-            # overwrite parameters that need to be updated
-            if not self.parameters["linear_lr_decay"]:  # ONLY experiments with no linear lr decay are properly resumable for a longer number of time steps than originally passed
-                self.parameters["n_time_steps"] = args.n_time_steps  # overwrite
-            self.parameters["cuda"] = args.cuda  # update
-            self.parameters["device"] = "cuda" if args.cuda and torch.cuda.is_available() else "cpu"  # update
-
-            self.parameters["resumable"] = args.resumable  # update
-            self.parameters["resume"] = args.resume  # update
-            self.parameters["resume_file"] = args.resume_file  # update
-            self.parameters["complete"] = False  # update
+        self.parameters = {"n_env_name": args.n_env_name,
+                           "n_time_steps": args.n_time_steps,
+                           "lr": args.lr,
+                           "linear_lr_decay": args.linear_lr_decay,
+                           "gamma": args.gamma,
+                           "num_samples": args.num_samples,
+                           "mini_batch_size": args.mini_batch_size,
+                           "epochs": args.epochs,
+                           "epsilon": args.epsilon,
+                           "vf_loss_coef": args.vf_loss_coef,
+                           "policy_entropy_coef": args.policy_entropy_coef,
+                           "clipped_value_fn": args.clipped_value_fn,
+                           "max_grad_norm": args.max_grad_norm,
+                           "use_gae": args.use_gae,
+                           "gae_lambda": args.gae_lambda,
+                           "normalize_rewards": args.normalize_rewards,
+                           "hidden_dim": args.hidden_dim,
+                           "log_std": args.log_std,
+                           "time_step_eval_frequency": args.time_step_eval_frequency,
+                           "eval_episodes": args.eval_episodes,
+                           "cuda": args.cuda,
+                           "device": "cuda" if args.cuda and torch.cuda.is_available() else "cpu",
+                           "seed": args.seed,
+                           "optuna": args.optuna}
 
         # experiment data directory
 
         suffix = self.parameters["n_env_name"] + ":" + str(self.parameters["n_time_steps"]) \
                  + "_lr:" + str(self.parameters["lr"]) \
                  + "_lrd:" + str(self.parameters["linear_lr_decay"]) \
-                 + "_slrd:" + str(self.parameters["slow_lrd"]) \
                  + "_g:" + str(self.parameters["gamma"]) \
                  + "_ns:" + str(self.parameters["num_samples"]) \
                  + "_mbs:" + str(self.parameters["mini_batch_size"]) \
@@ -203,56 +159,53 @@ class NormalController:
                  + "_mgn:" + str(self.parameters["max_grad_norm"]) \
                  + "_gae:" + str(self.parameters["use_gae"]) \
                  + "_lam:" + str(self.parameters["gae_lambda"]) \
+                 + "_nr:" + str(self.parameters["normalize_rewards"]) \
                  + "_hd:" + str(self.parameters["hidden_dim"]) \
                  + "_lstd:" + str(self.parameters["log_std"]) \
                  + "_tef:" + str(self.parameters["time_step_eval_frequency"]) \
                  + "_ee:" + str(self.parameters["eval_episodes"]) \
-                 + "_tmsf:" + str(self.parameters["time_step_model_save_frequency"]) \
                  + "_d:" + str(self.parameters["device"]) \
-                 + (("_ps:" + str(self.parameters["param_search"])) if self.parameters["param_search"] else "") \
-                 + (("_pss:" + str(self.parameters["param_search_seed"])) if self.parameters["param_search"] else "") \
-                 + ("_r" if self.parameters["resumable"] else "") \
-                 + ("_resumed" if self.parameters["resume"] else "")
+                 + ("_o" if self.parameters["optuna"] else "")
 
         self.experiment = "PPO_" + suffix
 
-        if self.computecanada:
-            # path for compute canada
-            self.data_dir = os.getenv("HOME") + "/scratch/openai/data/" + self.experiment + "/seed" + str(self.parameters["seed"])
-        else:
-            # path for servers and local machines
-            self.data_dir = os.getenv("HOME") + "/Documents/openai/data/" + self.experiment + "/seed" + str(self.parameters["seed"])
+        self.data_dir = (
+                os.getenv("HOME")
+                + "/Documents/openai/data/"
+                + self.experiment
+                + "/seed"
+                + str(self.parameters["seed"])
+        )
 
-        # old data
+        # are we restarting training?  do the data files for the
+        # selected seed already exist?
 
-        if not self.computecanada:
-            # are we restarting training?  do the data files for the selected seed already exist?
-            if path.exists(self.data_dir):
+        if path.exists(self.data_dir):
 
-                print(self.LINE)
-                print(self.LINE)
+            print(self.LINE)
+            print(self.LINE)
 
-                if args.delete:
-                    # yes; argument flag present to indicate data deletion
-                    print(colored("argument indicates DATA DELETION", "red"))
+            if args.delete:
+                # yes; argument flag present to indicate data deletion
+                print(colored("argument indicates DATA DELETION", "red"))
+                print(colored("deleting data...", "red"))
+                rmtree(self.data_dir, ignore_errors=True)
+                print(colored("data deletion complete", "red"))
+            else:
+                # yes; argument flag not present; get confirmation of data deletion from user input
+                print(colored("You are about to delete saved data and restart training.", "red"))
+                s = input(colored("Are you sure you want to continue?  Hit 'y' then 'Enter' to continue.\n", "red"))
+                if s == "y":
+                    # delete old data; rewrite new data to same location
+                    print(colored("user input indicates DATA DELETION", "red"))
                     print(colored("deleting data...", "red"))
                     rmtree(self.data_dir, ignore_errors=True)
                     print(colored("data deletion complete", "red"))
                 else:
-                    # yes; argument flag not present; get confirmation of data deletion from user input
-                    print(colored("You are about to delete saved data and restart training.", "red"))
-                    s = input(colored("Are you sure you want to continue?  Hit 'y' then 'Enter' to continue.\n", "red"))
-                    if s == "y":
-                        # delete old data; rewrite new data to same location
-                        print(colored("user input indicates DATA DELETION", "red"))
-                        print(colored("deleting data...", "red"))
-                        rmtree(self.data_dir, ignore_errors=True)
-                        print(colored("data deletion complete", "red"))
-                    else:
-                        # do not delete old data; system exit
-                        print(colored("user input indicates NO DATA DELETION", "red"))
-                        print(self.LINE)
-                        sys.exit("\nexiting...")
+                    # do not delete old data; system exit
+                    print(colored("user input indicates NO DATA DELETION", "red"))
+                    print(self.LINE)
+                    sys.exit("\nexiting...")
 
         # data
 
@@ -276,22 +229,25 @@ class NormalController:
         if self.parameters["device"] == "cuda":
             torch.cuda.manual_seed(self.parameters["seed"])
 
-        # env is seeded in Environment __init__() method
+        # env is seeded in Environment env_init() method
 
         # rl problem
 
-        # normal environment used for training
+        # environment used for training
         self.env = Environment(self.parameters["n_env_name"],
                                self.parameters["seed"])
 
+        # environment used for evaluation
+        self.eval_env = Environment(self.parameters["n_env_name"],
+                                    self.parameters["seed"])
+
         # agent
-        self.agent = PPO(self.env.env_state_dim(),
+        self.agent = PPO(self.env.env_observation_dim(),
                          self.env.env_action_dim(),
                          self.parameters["hidden_dim"],
                          self.parameters["log_std"],
                          self.parameters["lr"],
                          self.parameters["linear_lr_decay"],
-                         self.parameters["slow_lrd"],
                          self.parameters["gamma"],
                          self.parameters["n_time_steps"],
                          self.parameters["num_samples"],
@@ -304,19 +260,15 @@ class NormalController:
                          self.parameters["max_grad_norm"],
                          self.parameters["use_gae"],
                          self.parameters["gae_lambda"],
+                         self.parameters["normalize_rewards"],
                          self.parameters["device"],
-                         self.loss_data,
-                         self.parameters["resume"])
+                         self.loss_data)
 
         # RLGlue used for training
         self.rlg = RLGlue(self.env, self.agent)
-        self.rlg_statistics = {"num_episodes": 0, "num_steps": 0, "total_reward": 0}
-
-        # resume experiment - load data, seed state, env, agent, and rlg
-
-        if args.resume:
-
-            self.load()
+        self.rlg_statistics = {"num_episodes": 0,
+                               "num_steps": 0,
+                               "total_reward": 0}
 
         # print summary info
 
@@ -355,7 +307,6 @@ class NormalController:
         print("normal time steps:", highlight_non_default_values("n_time_steps"))
         print("lr:", highlight_non_default_values("lr"))
         print("linear lr decay:", highlight_non_default_values("linear_lr_decay"))
-        print("slow linear lr decay:", highlight_non_default_values("slow_lrd"))
         print("gamma:", highlight_non_default_values("gamma"))
         print("number of samples:", highlight_non_default_values("num_samples"))
         print("mini-batch size:", highlight_non_default_values("mini_batch_size"))
@@ -367,11 +318,11 @@ class NormalController:
         print("max norm of gradients:", highlight_non_default_values("max_grad_norm"))
         print("use generalized advantage estimation:", highlight_non_default_values("use_gae"))
         print("gae smoothing coefficient (lambda):", highlight_non_default_values("gae_lambda"))
+        print("normalize rewards:", highlight_non_default_values("normalize_rewards"))
         print("hidden dimension:", highlight_non_default_values("hidden_dim"))
         print("log_std:", highlight_non_default_values("log_std"))
         print("time step evaluation frequency:", highlight_non_default_values("time_step_eval_frequency"))
         print("evaluation episodes:", highlight_non_default_values("eval_episodes"))
-        print("time step model save frequency:", highlight_non_default_values("time_step_model_save_frequency"))
         if self.parameters["device"] == "cuda":
             print("device:", self.parameters["device"])
             if "CUDA_VISIBLE_DEVICES" in os.environ:
@@ -381,10 +332,8 @@ class NormalController:
         else:
             print("device:", colored(self.parameters["device"], "red"))
         print("seed:", colored(self.parameters["seed"], "red"))
-        if self.parameters["param_search"]:
-            print("param search:", colored(self.parameters["param_search"], "red"))
-            print("param search seed:", colored(self.parameters["param_search_seed"], "red"))
-        print("resumable:", highlight_non_default_values("resumable"))
+        if self.parameters["optuna"]:
+            print("optuna:", colored(self.parameters["optuna"], "red"))
 
         print(self.LINE)
         print(self.LINE)
@@ -399,32 +348,14 @@ class NormalController:
                          num_episodes=self.rlg_statistics["num_episodes"])
 
         # save the agent model and evaluate the model before any learning
-        if not args.resume:
-            self.rlg.rl_agent_message("save_model, {}, {}".format(self.data_dir, 0))
-            self.evaluate_model(self.rlg.num_steps())
+        self.rlg.rl_agent_message(f"save_model, {self.data_dir}, {0}")
+        self.evaluate_model(self.rlg.num_steps())
 
         for _ in itertools.count(1):
-
-            # Compute Canada limits time usage; this prevents data loss
-            run_time = (time.time() - self.start) / 3600  # units: hours
-            allowed_time = (args.time_limit * 24) - 6 + (self.parameters["seed"] / 6)  # allow the last 6 hours to be used to save data for each seed (saving cannot happen at the same time or memory will run out)
-
-            if run_time > allowed_time:
-                print("allowed time of {} exceeded at a runtime of {}\nstopping experiment".format(str(timedelta(hours=allowed_time))[:-7], str(timedelta(hours=run_time))[:-7]))
-                print(self.LINE)
-                self.parameters["resumable"] = True
-                self.parameters["completed_time_steps"] = self.rlg.num_steps()
-                break
 
             # episode time steps are limited to 1000 (set below)
             # this is used to ensure that once self.parameters["n_time_steps"] is reached, the experiment is terminated
             max_steps_this_episode = min(1000, self.parameters["n_time_steps"] - self.rlg.num_steps())
-
-            # if we want to make an experiment resumable, we must save after the last possible episode
-            # since episodes are limited to be a maximum of 1000 time steps, we can save when the max_steps_this_episode is less than 1000
-            if args.resumable and max_steps_this_episode < 1000:
-                self.parameters["completed_time_steps"] = self.rlg.num_steps()
-                break
 
             # run an episode
             self.rlg.rl_start()
@@ -434,13 +365,11 @@ class NormalController:
             while not terminal and ((max_steps_this_episode <= 0) or (self.rlg.num_ep_steps() < max_steps_this_episode)):
                 _, _, terminal, _ = self.rlg.rl_step()
 
-                # save the agent model each 'self.parameters["time_step_model_save_frequency"]' time steps
-                # policy model will be used for videos demonstrating learning progress
-                if self.rlg.num_steps() % self.parameters["time_step_model_save_frequency"] == 0:
-                    self.rlg.rl_agent_message("save_model, {}, {}".format(self.data_dir, self.rlg.num_steps()))
-
-                # evaluate the model every 'self.parameters["time_step_eval_frequency"]' time steps
+                # save and evaluate the model every
+                # 'self.parameters["time_step_eval_frequency"]' time
+                # steps
                 if self.rlg.num_steps() % self.parameters["time_step_eval_frequency"] == 0:
+                    self.rlg.rl_agent_message(f"save_model, {self.data_dir}, {self.rlg.num_steps()}")
                     self.evaluate_model(self.rlg.num_steps())
 
             # index = self.rlg.num_episodes() - 1
@@ -448,12 +377,6 @@ class NormalController:
 
             # learning complete
             if self.rlg.num_steps() == self.parameters["n_time_steps"]:
-                if self.parameters["resumable"]:
-                    self.parameters["completed_time_steps"] = self.rlg.num_steps()
-                else:
-                    if "completed_time_steps" in self.parameters:
-                        del self.parameters["completed_time_steps"]  # we no longer need this information
-                    self.parameters["complete"] = True
                 break
 
         self.save()
@@ -471,15 +394,13 @@ class NormalController:
         self.rlg.rl_env_message("close")
 
         run_time = str(timedelta(seconds=time.time() - self.start))[:-7]
+
         print("time to complete one run:", run_time, "h:m:s")
         print(self.LINE)
 
-        # if not self.computecanada:
-        #     self.send_email(run_time)
-
         text_file = open(self.data_dir + "/run_summary.txt", "w")
         text_file.write(date.today().strftime("%m/%d/%y"))
-        text_file.write("\n\nExperiment {}/seed{} complete.\n\nTime to complete: {} h:m:s".format(self.experiment, self.parameters["seed"], run_time))
+        text_file.write(f"\n\nExperiment {self.experiment}/seed{self.parameters['seed']} complete.\n\nTime to complete: {run_time} h:m:s")
         text_file.close()
 
     def evaluate_model(self, num_time_steps):
@@ -499,150 +420,53 @@ class NormalController:
 
         if self.parameters["eval_episodes"] != 0:
 
-            agent_eval = copy(self.agent)
-            env_eval = copy(self.env)
-            env_eval.env_seed(self.parameters["seed"])
+            eval_agent = deepcopy(self.agent)
 
-            rlg_eval = RLGlue(env_eval, agent_eval)
+            eval_rlg = RLGlue(self.eval_env, eval_agent)
 
-            rlg_eval.rl_agent_message("mode, eval")
+            eval_rlg.rl_agent_message("mode, eval")
 
             returns = []
 
-            rlg_eval.rl_init()
+            eval_rlg.rl_init()
 
             for e in range(self.parameters["eval_episodes"]):
 
-                rlg_eval.rl_start()
+                eval_rlg.rl_start()
 
                 terminal = False
 
                 max_steps_this_episode = 1000
-                while not terminal and ((max_steps_this_episode <= 0) or (rlg_eval.num_ep_steps() < max_steps_this_episode)):
-                    _, _, terminal, _ = rlg_eval.rl_step()
+                while not terminal and ((max_steps_this_episode <= 0) or (eval_rlg.num_ep_steps() < max_steps_this_episode)):
+                    _, _, terminal, _ = eval_rlg.rl_step()
 
-                returns.append(rlg_eval.episode_reward())
+                returns.append(eval_rlg.episode_reward())
 
             average_return = np.average(returns)
 
             num_updates = num_time_steps // self.parameters["num_samples"]
             num_epoch_updates = num_updates * self.parameters["epochs"]
-            num_mini_batch_updates = num_epoch_updates * (self.parameters["num_samples"] // self.parameters["mini_batch_size"])
+            num_mini_batch_updates = num_epoch_updates * (
+                    self.parameters["num_samples"] // self.parameters["mini_batch_size"])
 
             num_samples = num_mini_batch_updates * self.parameters["mini_batch_size"]
 
             real_time = int(time.time() - self.start)
 
             index = num_time_steps // self.parameters["time_step_eval_frequency"]
-            self.eval_data[index] = [num_time_steps, num_updates, num_epoch_updates, num_mini_batch_updates, num_samples, average_return, real_time]
+            self.eval_data[index] = [num_time_steps,
+                                     num_updates,
+                                     num_epoch_updates,
+                                     num_mini_batch_updates,
+                                     num_samples,
+                                     average_return,
+                                     real_time]
 
-            print("evaluation at {} time steps: {}".format(num_time_steps, average_return))
+            print(f"evaluation at {num_time_steps} time steps: {average_return}")
 
             run_time = str(timedelta(seconds=time.time() - self.start))[:-7]
             print("runtime:", run_time, "h:m:s")
             print(self.LINE)
-
-    def load(self):
-        """
-        Note: Experiment parameters already loaded.
-        Load seed state: random, torch, and numpy seed states.
-        Load experiment data.
-        Load environment data: OpenAI seed states.
-        Load agent data: models, number of updates of models, and replay buffer.
-        Load rlg statistics: num_episodes, num_steps, and total_reward.
-        """
-
-        self.load_seed_state()
-
-        self.load_data()
-
-        self.rlg.rl_env_message("load, {}".format(self.load_data_dir))  # load environment data
-
-        self.rlg.rl_agent_message("load, {}, {}".format(self.load_data_dir, self.parameters["completed_time_steps"]))  # load agent data
-        self.agent.loss_data = self.loss_data
-
-        self.load_rlg_statistics()  # load rlg data
-
-    def load_data(self):
-        """
-        Load experiment data.
-
-        File format: .csv
-        """
-
-        csv_foldername = self.load_data_dir + "/csv"
-
-        self.eval_data = pd.read_csv(csv_foldername + "/eval_data.csv").to_numpy().copy()[:, 1:]
-        num_rows = (self.parameters["n_time_steps"] // self.parameters["time_step_eval_frequency"]) + 1 - self.eval_data.shape[0]
-        num_columns = self.eval_data.shape[1]
-        if num_rows > 0:
-            self.eval_data = np.append(self.eval_data, np.zeros((num_rows, num_columns)), axis=0)
-
-        # self.train_data = pd.read_csv(csv_foldername + "/train_data.csv").to_numpy().copy()[:, 1:]
-        # num_rows = self.parameters["n_time_steps"] - self.train_data.shape[0]  # always larger than needed; will remove extra entries later
-        # num_columns = self.train_data.shape[1]
-        # if num_rows > 0:
-        #     self.train_data = np.append(self.train_data, np.zeros((num_rows, num_columns)), axis=0)
-
-        self.loss_data = pd.read_csv(csv_foldername + "/loss_data.csv").to_numpy().copy()[:, 1:]
-        num_rows = (self.parameters["n_time_steps"] // self.parameters["num_samples"]) - self.loss_data.shape[0]
-        num_columns = self.loss_data.shape[1]
-        if num_rows > 0:
-            self.loss_data = np.append(self.loss_data, np.zeros((num_rows, num_columns)), axis=0)
-
-    def load_parameters(self):
-        """
-        Load normal experiment parameters.
-
-        File format: .pickle
-        """
-
-        pickle_foldername = self.load_data_dir + "/pickle"
-
-        with open(pickle_foldername + "/parameters.pickle", "rb") as f:
-            self.parameters = pickle.load(f)
-
-    def load_rlg_statistics(self):
-        """
-        Load rlg statistics: num_episodes, num_steps, and total_reward.
-
-        File format: .pickle
-        """
-
-        pickle_foldername = self.load_data_dir + "/pickle"
-
-        with open(pickle_foldername + "/rlg_statistics.pickle", "rb") as f:
-            self.rlg_statistics = pickle.load(f)
-
-    def load_seed_state(self):
-        """
-        Load state of the random number generators used by random, numpy, and pytorch.
-
-        File format: .pickle and .pt
-        """
-
-        pickle_foldername = self.load_data_dir + "/pickle"
-
-        with open(pickle_foldername + "/random_random_state.pickle", "rb") as f:
-            random_random_state = pickle.load(f)
-
-        with open(pickle_foldername + "/numpy_random_state.pickle", "rb") as f:
-            numpy_random_state = pickle.load(f)
-
-        random.setstate(random_random_state)
-        np.random.set_state(numpy_random_state)
-
-        pt_filename = self.load_data_dir + "/pt"
-
-        torch_random_state = torch.load(pt_filename + "/torch_random_state.pt")
-        torch.set_rng_state(torch_random_state)
-
-        if self.parameters["device"] == "cuda":
-            if os.path.exists(pt_filename + "/torch_cuda_random_state.pt"):
-                torch_cuda_random_state = torch.load(pt_filename + "/torch_cuda_random_state.pt")
-                torch.cuda.set_rng_state(torch_cuda_random_state)
-            else:
-                torch.cuda.manual_seed(self.parameters["seed"])
 
     def plot(self):
         """
@@ -654,6 +478,7 @@ class NormalController:
         print("plotting...")
 
         csv_foldername = self.data_dir + "/csv"
+        os.makedirs(csv_foldername, exist_ok=True)
 
         jpg_foldername = self.data_dir + "/jpg"
         os.makedirs(jpg_foldername, exist_ok=True)
@@ -686,17 +511,6 @@ class NormalController:
         pss.plot_settings()
         plt.savefig(jpg_foldername + "/evaluation_samples.jpg")
         plt.close()
-
-        # df = pd.read_csv(csv_foldername + "/train_data.csv")
-        #
-        # # training: episode_return vs num_episodes
-        # df.plot(x="num_episodes", y="episode_return", color="blue", legend=False)
-        # plt.xlabel("episodes")
-        # plt.ylabel("episode\nreturn", rotation="horizontal", labelpad=30)
-        # plt.title("Training")
-        # pss.plot_settings()
-        # plt.savefig(jpg_foldername + "/train_episodes.jpg")
-        # plt.close()
 
         df = pd.read_csv(csv_foldername + "/loss_data.csv")
 
@@ -769,11 +583,14 @@ class NormalController:
 
         self.save_data()
 
-        self.save_rlg_statistics()  # save rlg data
+        # save rlg data
+        self.save_rlg_statistics()
 
-        self.rlg.rl_env_message("save, {}".format(self.data_dir))  # save environment data
+        # save environment data
+        self.rlg.rl_env_message(f"save, {self.data_dir}")
 
-        self.rlg.rl_agent_message("save, {}, {}".format(self.data_dir, self.rlg.num_steps()))  # save agent data
+        # save agent data
+        self.rlg.rl_agent_message(f"save, {self.data_dir}, {self.rlg.num_steps()}")
 
         print("saving complete")
 
@@ -795,20 +612,8 @@ class NormalController:
                                      "num_mini_batch_updates": self.eval_data[:, 3],
                                      "num_samples": self.eval_data[:, 4],
                                      "average_return": self.eval_data[:, 5],
-                                     "real_time": self.eval_data[:, 6]})
+                                     "run_time": self.eval_data[:, 6]})
         eval_data_df.to_csv(csv_foldername + "/eval_data.csv", float_format="%f")
-
-        # # remove zero entries
-        # index = None
-        # for i in range(self.train_data.shape[0]):
-        #     if (self.train_data[i] == np.zeros(3)).all() and (self.train_data[i+1] == np.zeros(3)).all():
-        #         index = i
-        #         break
-        # self.train_data = self.train_data[:index]
-        # train_data_df = pd.DataFrame({"num_episodes": self.train_data[:, 0],
-        #                               "num_time_steps": self.train_data[:, 1],
-        #                               "episode_return": self.train_data[:, 2]})
-        # train_data_df.to_csv(csv_foldername + "/train_data.csv", float_format="%f")
 
         loss_data_df = pd.DataFrame({"num_updates": self.loss_data[:, 0],
                                      "num_epoch_updates": self.loss_data[:, 1],
@@ -892,76 +697,171 @@ class NormalController:
             torch_cuda_random_state = torch.cuda.get_rng_state()
             torch.save(torch_cuda_random_state, pt_foldername + "/torch_cuda_random_state.pt")
 
-    def send_email(self, run_time):
-        """
-        Send email to indicate that the experiment is complete.
 
-        @param run_time: string
-            the time to complete a single run of the experiment (h:m:s)
-        """
+def objective(trial):
+    """
+    Optuna objective function for hyperparameter tuning of the PPO
+    agent.
 
-        gmail_email = "mynewbfnao@gmail.com"
-        gmail_password = "k!1t8qL(YQO%labr}kS%"
+    Parameters:
+        trial (optuna.trial.Trial): An Optuna trial object that provides
+        parameter suggestions.
 
-        recipient = "sschoepp@ualberta.ca"
+    Returns:
+        float: The average return after training for the specified
+        number of time steps.
+    """
+    
+    # Set the learning rate.
+    lr = trial.suggest_float(name="lr",
+                             low=0.00001,
+                             high=0.001,
+                             step=0.00000001)
 
-        from_ = gmail_email
-        to = recipient if type(recipient) is list else [recipient]
-        subject = "Experiment Complete"
-        text = "Experiment {}/seed{} complete.\n\nTime to complete: \n{} h:m:s\n\nThis message is sent from Python.".format(self.experiment, self.parameters["seed"], run_time)
+    # Set the linear learning rate decay flag.
+    linear_lr_decay_choices = [True, False]
+    linear_lr_decay = trial.suggest_categorical(name="linear_lr_decay",
+                                                choices=linear_lr_decay_choices)
 
-        message = """\From: %s\nTo: %s\nSubject: %s\n\n%s""" % (from_, ", ".join(to), subject, text)
+    # Set the gamma parameter.
+    gamma = trial.suggest_float(name="gamma",
+                                low=0.8,
+                                high=0.9999,
+                                step=0.0001)
 
-        server = smtplib.SMTP("smtp.gmail.com", 587)
-        server.ehlo()
-        server.starttls()
-        server.login(gmail_email, gmail_password)
-        server.sendmail(from_, to, message)
-        server.close()
+    # Set the number of samples.
+    num_samples_choices = [1024, 2048, 4096, 8192]
+    num_samples = trial.suggest_categorical(name="num_samples",
+                                            choices=num_samples_choices)
+
+    # Set the mini-batch size.
+    mini_batch_size_choices = [32, 64, 128, 256, 512]
+    mini_batch_size = trial.suggest_categorical(name="mini_batch_size",
+                                                choices=mini_batch_size_choices)
+
+    # If mini_batch_size is greater than num_samples, prune the trial.
+    if mini_batch_size > num_samples:
+        raise optuna.TrialPruned()
+
+    # Set the number of epochs.
+    epochs = trial.suggest_int(name="num_epochs",
+                               low=3,
+                               high=10)
+
+    # Set the epsilon parameter.
+    epsilon = trial.suggest_float(name="epsilon",
+                                  low=0.1,
+                                  high=0.4,
+                                  step=0.0001)
+
+    # Set the value function loss coefficient.
+    vf_loss_coef = trial.suggest_float(name="vf_loss_coef",
+                                       low=0.1,
+                                       high=1.0,
+                                       step=0.0001)
+
+    # Set the policy entropy coefficient.
+    policy_entropy_coef = trial.suggest_float(name="policy_entropy_coef",
+                                              low=0.0001,
+                                              high=0.1,
+                                              step=0.0000001)
+
+    # Set the GAE lambda parameter.
+    gae_lambda = trial.suggest_float(name="gae_lambda",
+                                     low=0.9,
+                                     high=1.0,
+                                     step=0.0001)
+
+    # Set the normalize rewards flag.
+    normalize_rewards_choices = [True, False]
+    normalize_rewards = trial.suggest_categorical(name="normalize_rewards",
+                                                  choices=normalize_rewards_choices)
+
+
+    # Set the hyperparameters directly in `args`.
+    args.lr = round(lr, 8)
+    args.linear_lr_decay = linear_lr_decay
+    args.gamma = round(gamma, 4)
+    args.num_samples = num_samples
+    args.mini_batch_size = mini_batch_size
+    args.epochs = epochs
+    args.epsilon = round(epsilon, 4)
+    args.vf_loss_coef = round(vf_loss_coef, 4)
+    args.policy_entropy_coef = round(policy_entropy_coef, 7)
+    args.gae_lambda = round(gae_lambda, 4)
+    args.normalize_rewards = normalize_rewards
+
+    # Define the seeds for the experiment.
+    seeds = [0, 1, 2, 3, 4]
+
+    cumulative_returns = []
+    for seed in seeds:
+
+        # Set the random seed for the experiment.
+        args.seed = seed
+
+        # Create a new controller object.
+        controller = NormalController()
+
+        # Run training.
+        controller.run()
+
+        # Compute the cumulative return.
+        seed_returns = [x[-2] for x in controller.eval_data]
+        seed_cumulative_return = np.sum(seed_returns)
+
+        # Append the cumulative return to the list.
+        cumulative_returns.append(seed_cumulative_return)
+
+    # Compute the average cumulative return across the seeds.
+    average_cumulative_returns = np.average(cumulative_returns)
+
+    return average_cumulative_returns
 
 
 def main():
 
-    if args.param_search:
-        param_search()
+    if args.optuna:
 
-    nc = NormalController()
+        optuna_folder = f"{os.getenv('HOME')}/Documents/openai/optuna"
+        os.makedirs(optuna_folder, exist_ok=True)
 
-    try:
+        study_name = "ppo_study"
+        storage = f"sqlite:///{optuna_folder}/optuna_study.db"
+        sampler = optuna.samplers.TPESampler(n_startup_trials=200)
+        study = optuna.create_study(study_name=study_name,
+                                    storage=storage,
+                                    direction="maximize",
+                                    load_if_exists=True,
+                                    sampler=sampler)
 
-        nc.run()
+        def print_trial_count(study, trial):
+            print(f"Trial {trial.number} completed. Total trials so far: {len(study.trials)}\n")
 
-    except KeyboardInterrupt as e:
+        study.optimize(
+            objective,
+            n_trials=1,
+            callbacks=[print_trial_count]
+        )
 
-        print("keyboard interrupt")
+        with open(f"{optuna_folder}/optuna.txt", "w") as f:
+            print(f"Best hyperparameters found:", file=f)
+            for key, value in study.best_params.items():
+                print(f"{key}: {value}", file=f)
+            print("\n", file=f)
+            print(f"Best average return:\n{study.best_value}", file=f)
 
+    else:
 
-def param_search():
-    """
-    Conduct a random parameter search for PPOv2 using parameter ranges from https://medium.com/aureliantactics/ppo-hyperparameters-and-ranges-6fc2d29bccbe.
-    """
+        nc = NormalController()
 
-    np.random.seed(args.param_search_seed)
+        try:
 
-    args.num_samples = np.random.randint(32, 5001)  # upper bound excluded
+            nc.run()
 
-    args.mini_batch_size = int(np.random.choice([2**x for x in range(2, 13)]))  # powers of two
-    while args.mini_batch_size > args.num_samples:
-        args.mini_batch_size = int(np.random.choice([2 ** x for x in range(2, 13)]))
+        except KeyboardInterrupt as e:
 
-    args.epochs = np.random.randint(3, 31)  # upper bound excluded
-
-    args.epsilon = float(np.random.choice([0.1, 0.2, 0.3]))
-
-    args.gamma = round(np.random.uniform(0.8, 0.9997), 4)
-
-    args.gae_lambda = round(np.random.uniform(0.9, 1.0), 4)
-
-    args.vf_loss_coef = float(np.random.choice([0.5, 1.0]))
-
-    args.policy_entropy_coef = round(np.random.uniform(0, 0.01), 4)
-
-    args.lr = round(np.random.uniform(0.000005, 0.006), 6)
+            print("keyboard interrupt")
 
 
 if __name__ == "__main__":

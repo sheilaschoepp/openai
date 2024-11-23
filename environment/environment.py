@@ -1,25 +1,24 @@
 import os
 import pickle
 
-import gym
+import gymnasium as gym
 
-from environment.fetchreach_observation_wrapper import FetchReachObservationWrapper
 from utils.rl_glue import BaseEnvironment
 
 
 class Environment(BaseEnvironment):
     """
-    print(state)
     OpenAI environment.
 
-    The environment class implements the dynamics of the task and generates the observations and rewards.  -Brian Tanner & Adam White
+    The environment class implements the dynamics of the task and
+    generates the observations and rewards. -Brian Tanner & Adam White
     """
 
     def __init__(self, env_name, seed, render=False):
         """
         Initialize environment variables.
 
-        @param env_name: string
+        @param env_name: str
             name of OpenAI environment
         @param seed: int
             seed for random number generator
@@ -29,65 +28,61 @@ class Environment(BaseEnvironment):
 
         super(Environment, self).__init__()
 
-        self.env_name = env_name
-        self.render = render
+        self.seed = seed
 
-        if "FetchReach" in self.env_name:
-            self.env = FetchReachObservationWrapper(gym.make(self.env_name, reward_type="dense"))
-        else:
-            self.env = gym.make(self.env_name)
+        render_mode = None
+        if render:
+            render_mode = "human"
 
-        self.env_seed(seed)
+        self.env = gym.make(env_name, render_mode=render_mode)
 
     def env_init(self):
         """
-        Initialize the environment variables that you want to reset before starting a new run.
+        Initialize the environment variables that you want to reset
+        before starting a new run.
         """
 
-        pass
+        observation, info = self.env.reset(seed=self.seed)
+        self.env.action_space.seed(seed=self.seed)
 
     def env_start(self):
         """
-        Initialize the variables that you want to reset before starting a new episode.
-        Determine the initial state.
+        Initialize the variables that you want to reset before starting
+        a new episode.
 
-        @return state: float64 numpy array with shape (state_dim,)
-            state of the environment
+        @return observation: np.ndarray
+            a float64 numpy array with shape (observation_dim,)
+            representing the observation of the environment
         """
 
-        state = self.env.reset()
+        observation, info = self.env.reset()
 
-        if self.render:
-            self.env.render()
-
-        return state
+        return observation
 
     def env_step(self, action):
         """
         A step taken by the environment.
 
-        At the start of a run, some number of random actions may be executed as defined by the 'random_steps' argument.
-        After all random steps are taken, the agent's selected action is executed.  When an action is executed, the
-        resultant reward, next_state, and terminal status are returned.
+        @param action: np.ndarray
+            a float64 numpy array with shape (action_dim,) representing
+            the action selected by the agent
 
-        @param action: float64 numpy array with shape (action_dim,)
-            action selected by the agent
-
-        @return (reward, next_state, terminal):
-        reward: float64
-            reward received for taking action
-        next_state: float64 numpy array with shape (state_dim,)
-            the state of the environment after taking action
-        terminal: boolean
-            true if the goal state has been reached; otherwise false
+        @return (reward, observation, terminated):
+        reward: np.ndarray
+            a float64 representing the reward received for taking action
+        observation: np.darray
+            a float64 numpy array with shape (observation_dim,)
+            representing the observation of the environment after
+            taking an action
+        terminated: boolean
+            true if the goal has been reached; otherwise false
         """
 
-        if self.render:
-            self.env.render()
+        observation, reward, terminated, truncated, info = self.env.step(action)
 
-        next_state, reward, terminal, _ = self.env.step(action)
+        terminal = terminated or truncated
 
-        return reward, next_state, terminal
+        return reward, observation, terminal
 
     def env_message(self, message):
         """
@@ -126,6 +121,18 @@ class Environment(BaseEnvironment):
 
         return action_dim
 
+    def env_observation_dim(self):
+        """
+        Retrieve the observation dimension.
+
+        @return observation_dim: int
+            the observation dimension
+        """
+
+        observation_dim = self.env.observation_space.shape[0]
+
+        return observation_dim
+
     def env_close(self):
         """
         Close the environment.
@@ -135,22 +142,51 @@ class Environment(BaseEnvironment):
 
     def env_load(self, dir_):
         """
-        Load environment's data.
+        Restore the environment's state and random number generator
+        (RNG) settings to reproduce a previously saved environment
+        configuration.
 
-        @param dir_: string
+        @param dir_: str
             load directory
         """
 
+        self.env_load_state(dir_)
         self.env_load_rng(dir_)
 
-    def env_load_rng(self, dir_):
+    def env_load_state(self, dir_):
         """
-        Load the state of the random number generators used by OpenAI Gym:
-        self.env.np_random and self.env.action_space.np_random
+        Restore the state of the MuJoCo simulator, including the saved
+        observation and the simulator's position and velocity data
+        (qpos and qvel), to reproduce a previously saved environment
+        state.
 
         File format: .pickle
 
-        @param dir_: string
+        @param dir_: str
+            load directory
+        """
+
+        pickle_foldername = dir_ + "/pickle"
+
+        with open(pickle_foldername + "/mujoco_qpos.pickle", "rb") as handle:
+            mujoco_qpos = pickle.load(handle)
+        with open(pickle_foldername + "/mujoco_qvel.pickle", "rb") as handle:
+            mujoco_qvel = pickle.load(handle)
+
+        self.env.unwrapped.set_state(mujoco_qpos, mujoco_qvel)
+
+    def env_load_rng(self, dir_):
+        """
+        Restore the state of the Gymnasium environment's random number
+        generators (RNGs) to ensure reproducible results.
+
+        Loads the saved RNG states for both the main environment and its
+        action space, allowing for consistent sampling of actions and
+        environment dynamics.
+
+        File format: .pickle
+
+        @param dir_: str
             load directory
         """
 
@@ -158,65 +194,75 @@ class Environment(BaseEnvironment):
 
         with open(pickle_foldername + "/env_np_random_state.pickle", "rb") as handle:
             env_np_random_state = pickle.load(handle)
-
         with open(pickle_foldername + "/env_action_space_np_random_state.pickle", "rb") as handle:
             env_action_space_np_random_state = pickle.load(handle)
 
-        self.env.np_random.set_state(env_np_random_state)
-        self.env.action_space.np_random.set_state(env_action_space_np_random_state)
+        self.env.np_random.bit_generator.state = env_np_random_state
+        self.env.action_space.np_random.bit_generator.state = env_action_space_np_random_state
 
     def env_save(self, dir_):
         """
-        Save environment's data.
+        Save the current state of the environment to ensure
+        reproducibility.
 
-        @param dir_: string
+        This method saves both the simulator's physical state (such as
+        positions and velocities) and the random number generator (RNG)
+        states used by the environment.
+
+        @param dir_: str
             save directory
         """
 
+        self.env_save_state(dir_)
         self.env_save_rng(dir_)
 
-    def env_save_rng(self, dir_):
+    def env_save_state(self, dir_):
         """
-        Save the state of the random number generators used by OpenAI Gym:
-        self.env.np_random and self.env.action_space.np_random
+        Save the current state of the MuJoCo simulator, including the
+        observation, and the simulator's position and velocity data
+        (qpos and qvel).
+
+        This method captures:
+        - The current observation as perceived by the environment.
+        - qpos: The simulator's internal state of positions.
+        - qvel: The simulator's internal state of velocities.
 
         File format: .pickle
 
-        @param dir_: string
+        @param dir_: str
             save directory
         """
 
-        env_np_random_state = self.env.np_random.get_state()
-        env_action_space_np_random_state = self.env.action_space.np_random.get_state()
+        mujoco_qpos = self.env.unwrapped.data.qpos.copy()
+        mujoco_qvel = self.env.unwrapped.data.qvel.copy()
+
+        pickle_foldername = dir_ + "/pickle"
+        os.makedirs(pickle_foldername, exist_ok=True)
+
+        with open(pickle_foldername + "/mujoco_qpos.pickle", "wb") as f:
+            pickle.dump(mujoco_qpos, f)
+        with open(pickle_foldername + "/mujoco_qvel.pickle", "wb") as f:
+            pickle.dump(mujoco_qvel, f)
+
+    def env_save_rng(self, dir_):
+        """
+        Save the state of the random number generators (RNGs) used by
+        the Gymnasium environment, including the environment's main RNG
+        and the action space's RNG.
+
+        File format: .pickle
+
+        @param dir_: str
+            save directory
+        """
+
+        env_np_random_state = self.env.np_random.bit_generator.state
+        env_action_space_np_random_state = self.env.action_space.np_random.bit_generator.state
 
         pickle_foldername = dir_ + "/pickle"
         os.makedirs(pickle_foldername, exist_ok=True)
 
         with open(pickle_foldername + "/env_np_random_state.pickle", "wb") as f:
             pickle.dump(env_np_random_state, f)
-
         with open(pickle_foldername + "/env_action_space_np_random_state.pickle", "wb") as f:
             pickle.dump(env_action_space_np_random_state, f)
-
-    def env_seed(self, seed):
-        """
-        Seed the environment.
-
-        @param seed: int
-            seed for random number generator
-        """
-
-        self.env.seed(seed)
-        self.env.action_space.np_random.seed(seed)  # to ensure deterministic sampling from action space
-
-    def env_state_dim(self):
-        """
-        Retrieve the state dimension.
-
-        @return state_dim: int
-            the state dimension
-        """
-
-        state_dim = self.env.observation_space.shape[0]
-
-        return state_dim

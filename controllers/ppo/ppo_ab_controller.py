@@ -7,7 +7,6 @@ os.environ["NUMEXPR_NUM_THREADS"] = "1"
 os.environ["OMP_NUM_THREADS"] = "1"
 import pickle
 import random
-import smtplib
 import sys
 import time
 from copy import copy
@@ -30,10 +29,10 @@ import custom_gym_envs  # do not delete; required for custom gym environments
 
 parser = argparse.ArgumentParser(description="PyTorch Proximal Policy Optimization Arguments")
 
-parser.add_argument("-e", "--ab_env_name", default="Ant-v2",
-                    help="name of abnormal (malfunctioning) MuJoCo Gym environment (default: Ant-v2)")
-parser.add_argument("-t", "--ab_time_steps", type=int, default=400000000, metavar="N",
-                    help="number of time steps in abnormal (malfunctioning) MuJoCo Gym environment (default: 400000000)")
+parser.add_argument("-e", "--ab_env_name", default="Ant-v5",
+                    help="name of abnormal (malfunctioning) MuJoCo Gym environment (default: Ant-v5)")
+parser.add_argument("-t", "--ab_time_steps", type=int, default=10000, metavar="N", # todo
+                    help="number of time steps in abnormal (malfunctioning) MuJoCo Gym environment (default: 10000)") # todo
 
 parser.add_argument("-cm", "--clear_memory", default=False, action="store_true",
                     help="if true, clear the memory (default: False)")
@@ -48,18 +47,6 @@ parser.add_argument("-f", "--file",
 
 parser.add_argument("-d", "--delete", default=False, action="store_true",
                     help="if true, delete previously saved data and restart training (default: False)")
-
-parser.add_argument("--resumable", default=False, action="store_true",
-                    help="if true, make experiment resumable (i.e. save data at the end of the last possible episode)")
-
-parser.add_argument("--resume", default=False, action="store_true",
-                    help="if true, resume experiment starting with data from last possible episode")
-
-parser.add_argument("-rf", "--resume_file", default="",
-                    help="absolute path of the seedX folder containing data from previous checkpoint")
-
-parser.add_argument("-tl", "--time_limit", type=float, default=100000000000.0, metavar="N",
-                    help="run time limit for use on Compute Canada (units: days)")
 
 args = parser.parse_args()
 
@@ -80,53 +67,20 @@ class AbnormalController:
 
         self.start = time.time()
 
-        # hostname
-
-        self.hostname = os.uname()[1]
-        self.localhosts = ["melco", "Legion", "amii", "remaining20seeds"]
-        self.computecanada = not any(host in self.hostname for host in self.localhosts)
-
         # experiment parameters
 
         self.parameters = None
 
-        if not args.resume:
+        self.load_data_dir = args.file
 
-            self.load_data_dir = args.file
-
-            self.load_parameters()
-            self.parameters["ab_env_name"] = args.ab_env_name  # addition
-            self.parameters["ab_time_steps"] = args.ab_time_steps  # addition
-            self.parameters["clear_memory"] = args.clear_memory  # addition
-            self.parameters["reinitialize_networks"] = args.reinitialize_networks  # addition
-            self.parameters["cuda"] = args.cuda  # update
-            self.parameters["file"] = args.file  # addition
-            self.parameters["device"] = "cuda" if args.cuda and torch.cuda.is_available() else "cpu"  # update
-
-            self.parameters["resumable"] = args.resumable  # update
-            self.parameters["resume"] = args.resume  # update
-            self.parameters["resume_file"] = args.resume_file  # update
-            self.parameters["complete"] = False  # update
-
-        else:
-
-            self.load_data_dir = args.resume_file
-
-            # load old parameters to make sure we are running the same experiment
-            self.load_parameters()
-
-            # overwrite parameters that need to be updated
-            if not self.parameters["linear_lr_decay"]:  # ONLY experiments with no linear lr decay are properly resumable for a longer number of time steps than originally passed
-                self.parameters["ab_time_steps"] = args.ab_time_steps  # overwrite
-            self.parameters["cuda"] = args.cuda  # update
-            self.parameters["device"] = "cuda" if args.cuda and torch.cuda.is_available() else "cpu"  # update
-
-            self.parameters["resumable"] = args.resumable  # update
-            self.parameters["resume"] = args.resume  # update
-            self.parameters["resume_file"] = args.resume_file  # update
-            self.parameters["complete"] = False  # update
-
-        self.parameters["slow_lrd"] = 1.0  # todo
+        self.load_parameters()
+        self.parameters["ab_env_name"] = args.ab_env_name  # addition
+        self.parameters["ab_time_steps"] = args.ab_time_steps  # addition
+        self.parameters["clear_memory"] = args.clear_memory  # addition
+        self.parameters["reinitialize_networks"] = args.reinitialize_networks  # addition
+        self.parameters["cuda"] = args.cuda  # update
+        self.parameters["file"] = args.file  # addition
+        self.parameters["device"] = "cuda" if args.cuda and torch.cuda.is_available() else "cpu"  # update
 
         # experiment data directory
 
@@ -134,7 +88,6 @@ class AbnormalController:
                  + "_" + self.parameters["n_env_name"] + ":" + str(self.parameters["n_time_steps"]) \
                  + "_lr:" + str(self.parameters["lr"]) \
                  + "_lrd:" + str(self.parameters["linear_lr_decay"]) \
-                 + "_slrd:" + str(self.parameters["slow_lrd"]) \
                  + "_g:" + str(self.parameters["gamma"]) \
                  + "_ns:" + str(self.parameters["num_samples"]) \
                  + "_mbs:" + str(self.parameters["mini_batch_size"]) \
@@ -150,52 +103,42 @@ class AbnormalController:
                  + "_lstd:" + str(self.parameters["log_std"]) \
                  + "_tef:" + str(self.parameters["time_step_eval_frequency"]) \
                  + "_ee:" + str(self.parameters["eval_episodes"]) \
-                 + "_tmsf:" + str(self.parameters["time_step_model_save_frequency"]) \
                  + "_cm:" + str(self.parameters["clear_memory"]) \
                  + "_rn:" + str(self.parameters["reinitialize_networks"]) \
-                 + "_d:" + str(self.parameters["device"]) \
-                 + ("_r" if self.parameters["resumable"] else "") \
-                 + ("_resumed" if self.parameters["resume"] else "")
+                 + "_d:" + str(self.parameters["device"])
 
         self.experiment = "PPO_" + suffix
 
-        if self.computecanada:
-            # path for compute canada
-            self.data_dir = os.getenv("HOME") + "/scratch/openai/data/" + self.experiment + "/seed" + str(self.parameters["seed"])
-        else:
-            # path for servers and local machines
-            self.data_dir = os.getenv("HOME") + "/Documents/openai/data/" + self.experiment + "/seed" + str(self.parameters["seed"])
+        self.data_dir = os.getenv("HOME") + "/Documents/openai/data/" + self.experiment + "/seed" + str(self.parameters["seed"])
 
-        # old data
+        # are we restarting training?  do the data files for the
+        # selected seed already exist?
+        if path.exists(self.data_dir):
 
-        if not self.computecanada:
-            # are we restarting training?  do the data files for the selected seed already exist?
-            if path.exists(self.data_dir):
+            print(self.LINE)
+            print(self.LINE)
 
-                print(self.LINE)
-                print(self.LINE)
-
-                if args.delete:
-                    # yes; argument flag present to indicate data deletion
-                    print(colored("argument indicates DATA DELETION", "red"))
+            if args.delete:
+                # yes; argument flag present to indicate data deletion
+                print(colored("argument indicates DATA DELETION", "red"))
+                print(colored("deleting data...", "red"))
+                rmtree(self.data_dir, ignore_errors=True)
+                print(colored("data deletion complete", "red"))
+            else:
+                # yes; argument flag not present; get confirmation of data deletion from user input
+                print(colored("You are about to delete saved data and restart training.", "red"))
+                s = input(colored("Are you sure you want to continue?  Hit 'y' then 'Enter' to continue.\n", "red"))
+                if s == "y":
+                    # delete old data; rewrite new data to same location
+                    print(colored("user input indicates DATA DELETION", "red"))
                     print(colored("deleting data...", "red"))
                     rmtree(self.data_dir, ignore_errors=True)
                     print(colored("data deletion complete", "red"))
                 else:
-                    # yes; argument flag not present; get confirmation of data deletion from user input
-                    print(colored("You are about to delete saved data and restart training.", "red"))
-                    s = input(colored("Are you sure you want to continue?  Hit 'y' then 'Enter' to continue.\n", "red"))
-                    if s == "y":
-                        # delete old data; rewrite new data to same location
-                        print(colored("user input indicates DATA DELETION", "red"))
-                        print(colored("deleting data...", "red"))
-                        rmtree(self.data_dir, ignore_errors=True)
-                        print(colored("data deletion complete", "red"))
-                    else:
-                        # do not delete old data; system exit
-                        print(colored("user input indicates NO DATA DELETION", "red"))
-                        print(self.LINE)
-                        sys.exit("\nexiting...")
+                    # do not delete old data; system exit
+                    print(colored("user input indicates NO DATA DELETION", "red"))
+                    print(self.LINE)
+                    sys.exit("\nexiting...")
 
         # data
 
@@ -210,7 +153,7 @@ class AbnormalController:
         # Note: we load the seeds after all rl problem elements are created because the creation of the agent
         # network(s) uses xavier initialization, thereby altering the torch seed state
 
-        # env is seeded in Environment __init__() method
+        # env is seeded in Environment __init__ method
 
         # rl problem
 
@@ -219,13 +162,12 @@ class AbnormalController:
                                self.parameters["seed"])
 
         # agent
-        self.agent = PPO(self.env.env_state_dim(),
+        self.agent = PPO(self.env.env_observation_dim(),
                          self.env.env_action_dim(),
                          self.parameters["hidden_dim"],
                          self.parameters["log_std"],
                          self.parameters["lr"],
                          self.parameters["linear_lr_decay"],
-                         self.parameters["slow_lrd"],
                          self.parameters["gamma"],
                          self.parameters["ab_time_steps"],
                          self.parameters["num_samples"],
@@ -239,8 +181,7 @@ class AbnormalController:
                          self.parameters["use_gae"],
                          self.parameters["gae_lambda"],
                          self.parameters["device"],
-                         self.loss_data,
-                         self.parameters["resume"])
+                         self.loss_data)
 
         # RLGlue used for training
         self.rlg = RLGlue(self.env, self.agent)
@@ -250,11 +191,11 @@ class AbnormalController:
         self.load()
 
         # clear the memory if indicated by argument
-        if not self.parameters["resume"] and self.parameters["clear_memory"]:
+        if self.parameters["clear_memory"]:
             self.rlg.rl_agent_message("clear_memory")
 
         # reinitialize the networks if indicated by argument
-        if not self.parameters["resume"] and self.parameters["reinitialize_networks"]:
+        if self.parameters["reinitialize_networks"]:
             self.rlg.rl_agent_message("reinitialize_networks")
 
         # print summary info
@@ -296,7 +237,6 @@ class AbnormalController:
         print("normal time steps:", self.parameters["n_time_steps"])
         print("lr:", self.parameters["lr"])
         print("linear lr decay:", self.parameters["linear_lr_decay"])
-        print("slow linear lr decay:", self.parameters["slow_lrd"])
         print("gamma:", self.parameters["gamma"])
         print("number of samples:", self.parameters["num_samples"])
         print("mini-batch size:", self.parameters["mini_batch_size"])
@@ -312,7 +252,6 @@ class AbnormalController:
         print("log_std:", self.parameters["log_std"])
         print("time step evaluation frequency:", self.parameters["time_step_eval_frequency"])
         print("evaluation episodes:", self.parameters["eval_episodes"])
-        print("time step model save frequency:", self.parameters["time_step_model_save_frequency"])
         print("clear memory:", highlight_non_default_values("clear_memory"))
         print("reinitialize networks:", highlight_non_default_values("reinitialize_networks"))
         if self.parameters["device"] == "cuda":
@@ -324,7 +263,6 @@ class AbnormalController:
         else:
             print("device:", colored(self.parameters["device"], "red"))
         print("seed:", colored(self.parameters["seed"], "red"))
-        print("resumable:", highlight_non_default_values("resumable"))
 
         print(self.LINE)
         print(self.LINE)
@@ -339,32 +277,17 @@ class AbnormalController:
                          num_episodes=self.rlg_statistics["num_episodes"])
 
         # save the agent model and evaluate the model before any learning
-        if not args.resume:
-            self.rlg.rl_agent_message("save_model, {}, {}".format(self.data_dir, self.parameters["n_time_steps"]))  # not needed as we already have this model saved
-            self.evaluate_model(self.rlg.num_steps())
+        self.rlg.rl_agent_message(f"save_model, {self.data_dir}, {self.parameters['n_time_steps']}")
+        self.evaluate_model(self.rlg.num_steps())
 
         for _ in itertools.count(1):
 
-            # Compute Canada limits time usage; this prevents data loss
-            run_time = (time.time() - self.start) / 3600  # units: hours
-            allowed_time = (args.time_limit * 24) - 6 + (self.parameters["seed"] / 6)  # allow the last 6 hours to be used to save data for each seed (saving cannot happen at the same time or memory will run out)
-
-            if run_time > allowed_time:
-                print("allowed time of {} exceeded at a runtime of {}\nstopping experiment".format(str(timedelta(hours=allowed_time))[:-7], str(timedelta(hours=run_time))[:-7]))
-                print(self.LINE)
-                self.parameters["resumable"] = True
-                self.parameters["completed_time_steps"] = self.rlg.num_steps()
-                break
-
             # episode time steps are limited to 1000 (set below)
-            # this is used to ensure that once self.parameters["n_time_steps"] + self.parameters["ab_time_steps"] is reached, the experiment is terminated
-            max_steps_this_episode = min(1000, self.parameters["n_time_steps"] + 300000 - self.rlg.num_steps())  # todo
-
-            # if we want to make an experiment resumable, we must save after the last possible episode
-            # since episodes are limited to be a maximum of 1000 time steps, we can save when the max_steps_this_episode is less than 1000
-            if args.resumable and max_steps_this_episode < 1000:
-                self.parameters["completed_time_steps"] = self.rlg.num_steps()
-                break
+            # this is used to ensure that once
+            # self.parameters["n_time_steps"] +
+            # self.parameters["ab_time_steps"] is reached, the
+            # experiment is terminated
+            max_steps_this_episode = min(1000, self.parameters["n_time_steps"] + self.parameters["ab_time_steps"] - self.rlg.num_steps())
 
             # run an episode
             self.rlg.rl_start()
@@ -374,28 +297,18 @@ class AbnormalController:
             while not terminal and ((max_steps_this_episode <= 0) or (self.rlg.num_ep_steps() < max_steps_this_episode)):
                 _, _, terminal, _ = self.rlg.rl_step()
 
-                # save the agent model each 'self.parameters["time_step_model_save_frequency"]' time steps
-                # policy model will be used for videos demonstrating learning progress
-                if self.rlg.num_steps() % self.parameters["time_step_model_save_frequency"] == 0:
-                    self.rlg.rl_agent_message("save_model, {}, {}".format(self.data_dir, self.rlg.num_steps()))
-
-                # evaluate the model every 'self.parameters["time_step_eval_frequency"]' time steps
-                # if self.rlg.num_steps() % self.parameters["time_step_eval_frequency"] == 0:
-                if self.rlg.num_steps() % 100000 == 0:  # todo
+                # save and evaluate the model every
+                # 'self.parameters["time_step_eval_frequency"]' time
+                # steps
+                if self.rlg.num_steps() % self.parameters["time_step_eval_frequency"] == 0:
+                    self.rlg.rl_agent_message(f"save_model, {self.data_dir}, {self.rlg.num_steps()}")
                     self.evaluate_model(self.rlg.num_steps())
 
             # index = self.rlg.num_episodes() - 1
             # self.train_data[index] = [self.rlg.num_episodes(), self.rlg.num_steps(), self.rlg.episode_reward()]
 
             # learning complete
-            # if self.rlg.num_steps() == self.parameters["n_time_steps"] + self.parameters["ab_time_steps"]:
-            if self.rlg.num_steps() == self.parameters["n_time_steps"] + 300000:  # todo
-                if self.parameters["resumable"]:
-                    self.parameters["completed_time_steps"] = self.rlg.num_steps()
-                else:
-                    if "completed_time_steps" in self.parameters:
-                        del self.parameters["completed_time_steps"]  # we no longer need this information
-                    self.parameters["complete"] = True
+            if self.rlg.num_steps() == self.parameters["n_time_steps"] + self.parameters["ab_time_steps"]:
                 break
 
         self.save()
@@ -416,12 +329,9 @@ class AbnormalController:
         print("time to complete one run:", run_time, "h:m:s")
         print(self.LINE)
 
-        # if not self.computecanada:
-        #     self.send_email(run_time)
-
         text_file = open(self.data_dir + "/run_summary.txt", "w")
         text_file.write(date.today().strftime("%m/%d/%y"))
-        text_file.write("\n\nExperiment {}/seed{} complete.\n\nTime to complete: {} h:m:s".format(self.experiment, self.parameters["seed"], run_time))
+        text_file.write(f"\n\nExperiment {self.experiment}/seed{self.parameters['seed']} complete.\n\nTime to complete: {run_time} h:m:s")
         text_file.close()
 
     def evaluate_model(self, num_time_steps):
@@ -443,7 +353,6 @@ class AbnormalController:
 
             agent_eval = copy(self.agent)
             env_eval = copy(self.env)
-            env_eval.env_seed(self.parameters["seed"])
 
             rlg_eval = RLGlue(env_eval, agent_eval)
 
@@ -481,12 +390,12 @@ class AbnormalController:
 
             num_samples = num_mini_batch_updates * self.parameters["mini_batch_size"]
 
-            real_time = int(time.time() - self.start)
+            run_time = int(time.time() - self.start)
 
             index = (num_time_steps // self.parameters["time_step_eval_frequency"]) + 1  # add 1 because we evaluate policy before learning
-            self.eval_data[index] = [num_time_steps, num_updates, num_epoch_updates, num_mini_batch_updates, num_samples, average_return, real_time]
+            self.eval_data[index] = [num_time_steps, num_updates, num_epoch_updates, num_mini_batch_updates, num_samples, average_return, run_time]
 
-            print("evaluation at {} time steps: {}".format(num_time_steps, average_return))
+            print(f"evaluation at {num_time_steps} time steps: {average_return}")
 
             run_time = str(timedelta(seconds=time.time() - self.start))[:-7]
             print("runtime:", run_time, "h:m:s")
@@ -497,25 +406,27 @@ class AbnormalController:
         Note: Experiment parameters already loaded.
         Load seed state: random, torch, and numpy seed states.
         Load experiment data.
-        Load environment data: OpenAI seed states.
+        Load environment data: OpenAI seed states. # todo
         Load agent data: models, number of updates of models, and memory.
         Load rlg statistics: num_episodes, num_steps, and total_reward.
         """
 
+        # load random, numpy and torch seed states
         self.load_seed_state()
 
+        # load eval_data and loss_data
         self.load_data()
 
-        self.rlg.rl_env_message("load, {}".format(self.load_data_dir))  # load environment data
+        # load environment data
+        self.rlg.rl_env_message(f"load, {self.load_data_dir}")
 
-        if not self.parameters["resume"]:
-            self.rlg.rl_agent_message("load, {}, {}".format(self.load_data_dir, self.parameters["n_time_steps"]))  # load agent data
-            self.rlg.rl_agent_message("reset_lr")  # reset learning rate to its full value
-        else:
-            self.rlg.rl_agent_message("load, {}, {}".format(self.load_data_dir, self.parameters["completed_time_steps"]))
+        # load agent data and reset learning rate to its full value
+        self.rlg.rl_agent_message(f"load, {self.load_data_dir}, {self.parameters['n_time_steps']}")
+        self.rlg.rl_agent_message("reset_lr")
         self.agent.loss_data = self.loss_data
 
-        self.load_rlg_statistics()  # load rlg data
+        # load rlg data
+        self.load_rlg_statistics()
 
     def load_data(self):
         """
@@ -526,48 +437,23 @@ class AbnormalController:
 
         csv_foldername = self.load_data_dir + "/csv"
 
-        if not args.resume:
+        num_rows = int(self.parameters["ab_time_steps"] / self.parameters["time_step_eval_frequency"]) + 1  # add 1 for evaluation before any learning (0th entry)
+        num_columns = 7
+        self.eval_data = pd.read_csv(csv_foldername + "/eval_data.csv").to_numpy().copy()[:, 1:]
+        self.eval_data = np.append(self.eval_data, np.zeros((num_rows, num_columns)), axis=0)
 
-            num_rows = int(self.parameters["ab_time_steps"] / self.parameters["time_step_eval_frequency"]) + 1  # add 1 for evaluation before any learning (0th entry)
-            num_columns = 7
-            self.eval_data = pd.read_csv(csv_foldername + "/eval_data.csv").to_numpy().copy()[:, 1:]
-            self.eval_data = np.append(self.eval_data, np.zeros((num_rows, num_columns)), axis=0)
+        # num_rows = self.parameters["ab_time_steps"]  # always larger than needed; will remove extra entries later
+        # num_columns = 3
+        # self.train_data = pd.read_csv(csv_foldername + "/train_data.csv").to_numpy().copy()[:, 1:]
+        # self.train_data = np.append(self.train_data, np.zeros((num_rows, num_columns)), axis=0)
 
-            # num_rows = self.parameters["ab_time_steps"]  # always larger than needed; will remove extra entries later
-            # num_columns = 3
-            # self.train_data = pd.read_csv(csv_foldername + "/train_data.csv").to_numpy().copy()[:, 1:]
-            # self.train_data = np.append(self.train_data, np.zeros((num_rows, num_columns)), axis=0)
-
-            if self.parameters["clear_memory"]:
-                num_rows = self.parameters["ab_time_steps"] // self.parameters["num_samples"]
-            else:
-                num_rows = ((self.parameters["n_time_steps"] + self.parameters["ab_time_steps"]) // self.parameters["num_samples"]) - (self.parameters["n_time_steps"] // self.parameters["num_samples"])
-            num_columns = 8
-            self.loss_data = pd.read_csv(csv_foldername + "/loss_data.csv").to_numpy().copy()[:, 1:]
-            self.loss_data = np.append(self.loss_data, np.zeros((num_rows, num_columns)), axis=0)
-
+        if self.parameters["clear_memory"]:
+            num_rows = self.parameters["ab_time_steps"] // self.parameters["num_samples"]
         else:
-
-            self.eval_data = pd.read_csv(csv_foldername + "/eval_data.csv").to_numpy().copy()[:, 1:]
-            num_rows = ((self.parameters["n_time_steps"] + self.parameters["ab_time_steps"]) // self.parameters["time_step_eval_frequency"]) + 2 - self.eval_data.shape[0]
-            num_columns = self.eval_data.shape[1]
-            if num_rows > 0:
-                self.eval_data = np.append(self.eval_data, np.zeros((num_rows, num_columns)), axis=0)
-
-            # self.train_data = pd.read_csv(csv_foldername + "/train_data.csv").to_numpy().copy()[:, 1:]
-            # num_rows = (self.parameters["n_time_steps"] + self.parameters["ab_time_steps"]) - self.train_data.shape[0]  # always larger than needed; will remove extra entries later
-            # num_columns = self.train_data.shape[1]
-            # if num_rows > 0:
-            #     self.train_data = np.append(self.train_data, np.zeros((num_rows, num_columns)), axis=0)
-
-            self.loss_data = pd.read_csv(csv_foldername + "/loss_data.csv").to_numpy().copy()[:, 1:]
-            if self.parameters["clear_memory"]:
-                num_rows = (self.parameters["n_time_steps"] // self.parameters["num_samples"]) + (self.parameters["ab_time_steps"] // self.parameters["num_samples"]) - self.loss_data.shape[0]
-            else:
-                num_rows = ((self.parameters["n_time_steps"] + self.parameters["ab_time_steps"]) // self.parameters["num_samples"]) - self.loss_data.shape[0]
-            num_columns = self.loss_data.shape[1]
-            if num_rows > 0:
-                self.loss_data = np.append(self.loss_data, np.zeros((num_rows, num_columns)), axis=0)
+            num_rows = ((self.parameters["n_time_steps"] + self.parameters["ab_time_steps"]) // self.parameters["num_samples"]) - (self.parameters["n_time_steps"] // self.parameters["num_samples"])
+        num_columns = 8
+        self.loss_data = pd.read_csv(csv_foldername + "/loss_data.csv").to_numpy().copy()[:, 1:]
+        self.loss_data = np.append(self.loss_data, np.zeros((num_rows, num_columns)), axis=0)
 
     def load_parameters(self):
         """
@@ -613,7 +499,7 @@ class AbnormalController:
 
         pt_filename = self.load_data_dir + "/pt"
 
-        torch_random_state = torch.load(pt_filename + "/torch_random_state.pt")
+        torch_random_state = torch.load(pt_filename + "/torch_random_state.pt", weights_only=False)
         torch.set_rng_state(torch_random_state)
 
         if self.parameters["device"] == "cuda":
@@ -633,6 +519,7 @@ class AbnormalController:
         print("plotting...")
 
         csv_foldername = self.data_dir + "/csv"
+        os.makedirs(csv_foldername, exist_ok=True)
 
         jpg_foldername = self.data_dir + "/jpg"
         os.makedirs(jpg_foldername, exist_ok=True)
@@ -756,11 +643,14 @@ class AbnormalController:
 
         self.save_data()
 
-        self.save_rlg_statistics()  # save rlg data
+        # save rlg data
+        self.save_rlg_statistics()
 
-        self.rlg.rl_env_message("save, {}".format(self.data_dir))  # save environment data
+        # save environment data
+        self.rlg.rl_env_message(f"save, {self.data_dir}")
 
-        self.rlg.rl_agent_message("save, {}, {}".format(self.data_dir, self.rlg.num_steps()))  # save agent data
+        # save agent data
+        self.rlg.rl_agent_message(f"save, {self.data_dir}, {self.rlg.num_steps()}")
 
         print("saving complete")
 
@@ -782,7 +672,7 @@ class AbnormalController:
                                      "num_mini_batch_updates": self.eval_data[:, 3],
                                      "num_samples": self.eval_data[:, 4],
                                      "average_return": self.eval_data[:, 5],
-                                     "real_time": self.eval_data[:, 6]})
+                                     "run_time": self.eval_data[:, 6]})
         eval_data_df.to_csv(csv_foldername + "/eval_data.csv", float_format="%f")
 
         # # remove zero entries
@@ -878,33 +768,6 @@ class AbnormalController:
         if self.parameters["device"] == "cuda":
             torch_cuda_random_state = torch.cuda.get_rng_state()
             torch.save(torch_cuda_random_state, pt_foldername + "/torch_cuda_random_state.pt")
-
-    def send_email(self, run_time):
-        """
-        Send email to indicate that the experiment is complete.
-
-        @param run_time: string
-            the time to complete a single run of the experiment (h:m:s)
-        """
-
-        gmail_email = "mynewbfnao@gmail.com"
-        gmail_password = "k!1t8qL(YQO%labr}kS%"
-
-        recipient = "sschoepp@ualberta.ca"
-
-        from_ = gmail_email
-        to = recipient if type(recipient) is list else [recipient]
-        subject = "Experiment Complete"
-        text = "Experiment {}/seed{} complete.\n\nTime to complete: \n{} h:m:s\n\nThis message is sent from Python.".format(self.experiment, self.parameters["seed"], run_time)
-
-        message = """\From: %s\nTo: %s\nSubject: %s\n\n%s""" % (from_, ", ".join(to), subject, text)
-
-        server = smtplib.SMTP("smtp.gmail.com", 587)
-        server.ehlo()
-        server.starttls()
-        server.login(gmail_email, gmail_password)
-        server.sendmail(from_, to, message)
-        server.close()
 
 
 def main():

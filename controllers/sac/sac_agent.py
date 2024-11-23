@@ -1,6 +1,7 @@
 import numpy as np
 import os
 import pickle
+
 import torch
 import torch.nn as nn
 from torch.optim import Adam
@@ -65,7 +66,7 @@ class SAC(BaseAgent):
             number of target value network updates per number gradient steps (network updates)
         @param automatic_entropy_tuning: bool
             if True, automatically tune the temperature
-        @param device: string
+        @param device: str
             indicates whether using 'cuda' or 'cpu'
         @param loss_data: float64 numpy zeros array with shape (n_time_steps - batch_size, 5)
             numpy array to store agent loss data
@@ -123,10 +124,6 @@ class SAC(BaseAgent):
         # replay buffer
         self.replay_buffer = ReplayBuffer(self.replay_buffer_size)
 
-        # RL problem
-        self.state = None
-        self.action = None
-
         # mode - learn or evaluation
         # if train, select an action using a policy distribution; add experience to the replay buffer; policy model mode is 'train'
         # if eval, select a deterministic action (distribution mean); do not add experience to the replay buffer; policy mode is 'eval'
@@ -137,7 +134,9 @@ class SAC(BaseAgent):
         Initialize the variables that you want to reset before starting a new run.
         """
 
-        pass
+        # RL problem
+        self.state = None
+        self.action = None
 
     def agent_start(self, state):
         """
@@ -277,7 +276,7 @@ class SAC(BaseAgent):
         """
         Load agent's data.
 
-        @param dir_: string
+        @param dir_: str
             load directory
         @param t: int
             number of time steps into training
@@ -294,7 +293,7 @@ class SAC(BaseAgent):
 
         File format: .npy
 
-        @param dir_: string
+        @param dir_: str
             save directory
         """
 
@@ -315,7 +314,7 @@ class SAC(BaseAgent):
 
         File format: .tar
 
-        @param dir_: string
+        @param dir_: str
             load directory
         @param t: int
             number of time steps into training
@@ -326,7 +325,8 @@ class SAC(BaseAgent):
         if self.device == "cuda":
 
             # send to gpu
-            checkpoint = torch.load(tar_foldername + "/{}.tar".format(t))
+            checkpoint = torch.load(f"{tar_foldername}/{t}.tar",
+                                    weights_only=False)
 
             # load neural network(s)
             self.q_network.load_state_dict(checkpoint["q_network_state_dict"])
@@ -341,7 +341,7 @@ class SAC(BaseAgent):
         else:
 
             # send to CPU
-            checkpoint = torch.load(tar_foldername + "/{}.tar".format(t), map_location=torch.device(self.device))
+            checkpoint = torch.load(f"{tar_foldername}/{t}.tar", map_location=torch.device(self.device))
 
             # load neural network(s)
             self.q_network.load_state_dict(checkpoint["q_network_state_dict"])
@@ -368,7 +368,7 @@ class SAC(BaseAgent):
 
         File format: .npy
 
-        @param dir_: string
+        @param dir_: str
             load directory
         """
 
@@ -383,7 +383,7 @@ class SAC(BaseAgent):
 
         File format: .pickle
 
-        @param dir_: string
+        @param dir_: str
             load directory
         """
 
@@ -421,7 +421,7 @@ class SAC(BaseAgent):
         """
         Save agent's data.
 
-        @param dir_: string
+        @param dir_: str
             save directory
         @param t: int
             number of time steps into training
@@ -438,7 +438,7 @@ class SAC(BaseAgent):
 
         File format: .pt
 
-        @param dir_: string
+        @param dir_: str
             save directory
         """
 
@@ -457,7 +457,7 @@ class SAC(BaseAgent):
 
         File format: .tar
 
-        @param dir_: string
+        @param dir_: str
             save directory
         @param t: int
             number of time steps into training
@@ -476,7 +476,7 @@ class SAC(BaseAgent):
                 "q_optimizer_2_state_dict": self.q_optimizer_2.state_dict(),
                 "policy_optimizer_state_dict": self.policy_optimizer.state_dict(),
                 "alpha_optimizer_state_dict": self.alpha_optimizer.state_dict()
-            }, foldername + "/{}.tar".format(t))
+            }, f"{foldername}/{t}.tar")
 
         else:
 
@@ -487,7 +487,7 @@ class SAC(BaseAgent):
                 "q_optimizer_1_state_dict": self.q_optimizer_1.state_dict(),
                 "q_optimizer_2_state_dict": self.q_optimizer_2.state_dict(),
                 "policy_optimizer_state_dict": self.policy_optimizer.state_dict()
-            }, foldername + "/{}.tar".format(t))
+            }, f"{foldername}/{t}.tar")
 
     def agent_save_num_updates(self, dir_):
         """
@@ -495,7 +495,7 @@ class SAC(BaseAgent):
 
         File format: .npy
 
-        @param dir_: string
+        @param dir_: str
             save directory
         """
 
@@ -511,7 +511,7 @@ class SAC(BaseAgent):
 
         File format: .pickle
 
-        @param dir_: string
+        @param dir_: str
             save directory
         """
 
@@ -564,7 +564,7 @@ class SAC(BaseAgent):
         - network parameters are updated (see self.agent_set_policy_mode() method)
         - set policy model to training mode
 
-        @param mode: string
+        @param mode: str
             mode: training mode ('train') during learning, evaluation mode ('eval') during inference
         """
 

@@ -723,7 +723,7 @@ def objective(trial):
     linear_lr_decay = trial.suggest_categorical(name="linear_lr_decay",
                                                 choices=linear_lr_decay_choices)
 
-    # Set the gamma parameter.
+    # Set gamma.
     gamma = trial.suggest_float(name="gamma",
                                 low=0.8,
                                 high=0.9999,
@@ -748,7 +748,7 @@ def objective(trial):
                                low=3,
                                high=10)
 
-    # Set the epsilon parameter.
+    # Set epsilon.
     epsilon = trial.suggest_float(name="epsilon",
                                   low=0.1,
                                   high=0.4,

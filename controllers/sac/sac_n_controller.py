@@ -35,8 +35,8 @@ parser = argparse.ArgumentParser(description="PyTorch Soft Actor-Critic Argument
 
 parser.add_argument("-e", "--n_env_name", default="Ant-v5",
                     help="name of normal (non-malfunctioning) MuJoCo Gym environment (default: Ant-v5)")
-parser.add_argument("-t", "--n_time_steps", type=int, default=5000000, metavar="N",
-                    help="number of time steps in normal (non-malfunctioning) MuJoCo Gym environment (default: 5000000)")
+parser.add_argument("-t", "--n_time_steps", type=int, default=3000000, metavar="N",
+                    help="number of time steps in normal (non-malfunctioning) MuJoCo Gym environment (default: 3000000)")
 
 parser.add_argument("--gamma", type=float, default=0.99, metavar="G",
                     help="discount factor (default: 0.99)")
@@ -63,8 +63,8 @@ parser.add_argument("--target_update_interval", type=int, default=1, metavar="N"
 parser.add_argument("-a", "--automatic_entropy_tuning", default=True, action="store_true",
                     help="if true, automatically tune the temperature (default: True)")
 
-parser.add_argument("-tef", "--time_step_eval_frequency", type=int, default=10000, metavar="N",
-                    help="frequency of policy evaluation during learning (default: 10000)")
+parser.add_argument("-tef", "--time_step_eval_frequency", type=int, default=7500, metavar="N",
+                    help="frequency of policy evaluation during learning (default: 7500)")
 parser.add_argument("-ee", "--eval_episodes", type=int, default=10, metavar="N",
                     help="number of episodes in policy evaluation roll-out (default: 10)")
 
@@ -703,18 +703,24 @@ def objective(trial):
                               high=0.1,
                               step=0.0000001)
 
+    # Set alpha.
+    alpha = trial.suggest_float(name="alpha",
+                                low=0.0001,
+                                high=0.2,
+                                step=0.0000001)
+
     # Set the learning rate.
     lr = trial.suggest_float(name="lr",
                              low=0.00001,
                              high=0.001,
                              step=0.00000001)
 
-    # Set the hidden dimension.
-    hidden_dim_choices = [256, 512, 1024]
-    hidden_dim = trial.suggest_categorical(
-        name="hidden_dim",
-        choices=hidden_dim_choices
-    )
+    # # Set the hidden dimension.
+    # hidden_dim_choices = [256, 512, 1024]
+    # hidden_dim = trial.suggest_categorical(
+    #     name="hidden_dim",
+    #     choices=hidden_dim_choices
+    # )
 
     # Set the replay buffer size.
     replay_buffer_size_choices = [10000, 25000, 50000, 75000, 100000, 250000, 500000, 750000, 1000000]
@@ -724,9 +730,9 @@ def objective(trial):
     )
 
     # Set the batch size.
-    batch_size_choices = [512, 1024, 2048, 4096, 8192]
+    automatic_entropy_tuning_choices = [512, 1024, 2048, 4096, 8192]
     batch_size = trial.suggest_categorical(name="batch_size",
-                                           choices=batch_size_choices)
+                                           choices=automatic_entropy_tuning_choices)
 
     # # Set the model updates per step.
     # model_updates_per_step_choices = [1, 2, 3, 4, 5]
@@ -742,15 +748,24 @@ def objective(trial):
     #     choices=target_update_interval_choices
     # )
 
+    # Set the automatic entropy tuning flag.
+    automatic_entropy_tuning_choices = [True, False]
+    automatic_entropy_tuning = trial.suggest_categorical(
+        name="automatic_entropy_tuning",
+        choices=automatic_entropy_tuning_choices
+    )
+
     # Set the hyperparameters directly in `args`.
     args.gamma = round(gamma, 4)
     args.tau = round(tau, 7)
+    args.alpha = round(alpha, 7)
     args.lr = round(lr, 8)
-    args.hidden_dim = hidden_dim
+    # args.hidden_dim = hidden_dim
     args.replay_buffer_size = replay_buffer_size
     args.batch_size = batch_size
     # args.model_updates_per_step = model_updates_per_step
     # args.target_update_interval = target_update_interval
+    args.automatic_entropy_tuning = automatic_entropy_tuning
 
     # Define the seeds for the experiment.
     seeds = [0, 1, 2, 3, 4]

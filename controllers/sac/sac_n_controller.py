@@ -18,7 +18,7 @@ import sys
 import time
 import torch
 
-from copy import deepcopy
+from copy import copy, deepcopy
 from datetime import date, timedelta
 from os import path
 from shutil import rmtree
@@ -60,16 +60,16 @@ parser.add_argument("--model_updates_per_step", type=int, default=1, metavar="N"
 parser.add_argument("--target_update_interval", type=int, default=1, metavar="N",
                     help="number of target value network updates per number of gradient steps (network updates) (default: 1)")
 
-parser.add_argument("-a", "--automatic_entropy_tuning", default=False, action="store_true",
-                    help="if true, automatically tune the temperature (default: False)")
+parser.add_argument("-a", "--automatic_entropy_tuning", default=True, action="store_true",
+                    help="if true, automatically tune the temperature (default: True)")
 
-parser.add_argument("-tef", "--time_step_eval_frequency", type=int, default=25000, metavar="N",
+parser.add_argument("-tef", "--time_step_eval_frequency", type=int, default=10000, metavar="N",
                     help="frequency of policy evaluation during learning (default: 10000)")
 parser.add_argument("-ee", "--eval_episodes", type=int, default=10, metavar="N",
                     help="number of episodes in policy evaluation roll-out (default: 10)")
 
-parser.add_argument("-c", "--cuda", default=False, action="store_true",
-                    help="if true, run on GPU (default: False)")
+parser.add_argument("-c", "--cuda", default=True, action="store_false",
+                    help="if true, run on GPU (default: True)")
 
 parser.add_argument("-s", "--seed", type=int, default=0, metavar="N",
                     help="random seed (default: 0)")
@@ -279,7 +279,7 @@ class NormalController:
         print("replay buffer size:", highlight_non_default_values("replay_buffer_size"))
         print("batch size:", highlight_non_default_values("batch_size"))
         print("model updates per step:", highlight_non_default_values("model_updates_per_step"))
-        print("target updates interval:", highlight_non_default_values("target_update_interval"))
+        print("target update interval:", highlight_non_default_values("target_update_interval"))
         print("automatic entropy tuning:", highlight_non_default_values("automatic_entropy_tuning"))
         print("time step evaluation frequency:", highlight_non_default_values("time_step_eval_frequency"))
         print("evaluation episodes:", highlight_non_default_values("eval_episodes"))
@@ -390,7 +390,7 @@ class NormalController:
             else:
                 rng_state_cuda = None
 
-            eval_agent = deepcopy(self.agent)
+            eval_agent = copy(self.agent)
 
             eval_rlg = RLGlue(self.eval_env, eval_agent)
 
@@ -676,7 +676,132 @@ class NormalController:
             torch_cuda_random_state = torch.cuda.get_rng_state()
             torch.save(torch_cuda_random_state, pt_foldername + "/torch_cuda_random_state.pt")
 
+
+def objective(trial):
+    """
+    Optuna objective function for hyperparameter tuning of the SAC
+    agent.
+
+    Parameters:
+        trial (optuna.trial.Trial): An Optuna trial object that provides
+        parameter suggestions.
+
+    Returns:
+        float: The average return after training for the specified
+        number of time steps.
+    """
+
+    # Set gamma.
+    gamma = trial.suggest_float(name="gamma",
+                                low=0.8,
+                                high=0.9999,
+                                step=0.0001)
+
+    # Set tau.
+    tau = trial.suggest_float(name="tau",
+                              low=0.001,
+                              high=0.1,
+                              step=0.0000001)
+
+    # Set the learning rate.
+    lr = trial.suggest_float(name="lr",
+                             low=0.00001,
+                             high=0.001,
+                             step=0.00000001)
+
+    # Set the replay buffer size.
+    replay_buffer_size_choices = [10000, 25000, 50000, 75000, 100000, 250000, 500000, 750000, 1000000]
+    replay_buffer_size = trial.suggest_categorical(
+        name="replay_buffer_size",
+        choices=replay_buffer_size_choices
+    )
+
+    # Set the batch size.
+    batch_size_choices = [512, 1024, 2048, 4096, 8192]
+    batch_size = trial.suggest_categorical(name="batch_size",
+                                           choices=batch_size_choices)
+
+    # Set the model updates per step.
+    model_updates_per_step_choices = [1, 2, 3, 4, 5]
+    model_updates_per_step = trial.suggest_categorical(
+        name="model_updates_per_step",
+        choices=model_updates_per_step_choices
+    )
+
+    # Set the target update interval.
+    target_update_interval_choices = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    target_update_interval = trial.suggest_categorical(
+        name="time_step_evaluation_frequency",
+        choices=target_update_interval_choices
+    )
+
+    # Set the hyperparameters directly in `args`.
+    args.gamma = round(gamma, 4)
+    args.tau = round(tau, 7)
+    args.lr = round(lr, 8)
+    args.replay_buffer_size = replay_buffer_size
+    args.batch_size = batch_size
+    args.model_updates_per_step = model_updates_per_step
+    args.target_update_interval = target_update_interval
+
+    # Define the seeds for the experiment.
+    seeds = [0, 1, 2, 3, 4]
+
+    cumulative_returns = []
+    for seed in seeds:
+
+        # Set the random seed for the experiment.
+        args.seed = seed
+
+        # Create a new controller object.
+        controller = NormalController()
+
+        # Run training.
+        controller.run()
+
+        # Compute the cumulative return.
+        seed_returns = [x[-2] for x in controller.eval_data]
+        seed_cumulative_return = np.sum(seed_returns)
+
+        # Append the cumulative return to the list.
+        cumulative_returns.append(seed_cumulative_return)
+
+    # Compute the average cumulative return across the seeds.
+    average_cumulative_returns = np.average(cumulative_returns)
+
+    return average_cumulative_returns
+
 def main():
+
+    if args.optuna:
+
+        optuna_folder = f"{os.getenv('HOME')}/Documents/openai/optuna"
+        os.makedirs(optuna_folder, exist_ok=True)
+
+        study_name = "sac_optuna_study"
+        storage = f"sqlite:///{optuna_folder}/sac_optuna_study.db"
+        sampler = optuna.samplers.TPESampler(n_startup_trials=200)
+        study = optuna.create_study(study_name=study_name,
+                                    storage=storage,
+                                    direction="maximize",
+                                    load_if_exists=True,
+                                    sampler=sampler)
+
+        def print_trial_count(study, trial):
+            print(f"Trial {trial.number} completed. Total trials so far: {len(study.trials)}\n")
+
+        study.optimize(
+            objective,
+            n_trials=1,
+            callbacks=[print_trial_count]
+        )
+
+        with open(f"{optuna_folder}/sac_optuna.txt", "w") as f:
+            print(f"Best hyperparameters found:", file=f)
+            for key, value in study.best_params.items():
+                print(f"{key}: {value}", file=f)
+            print("\n", file=f)
+            print(f"Best average return:\n{study.best_value}", file=f)
 
     nc = NormalController()
 
@@ -687,24 +812,6 @@ def main():
     except KeyboardInterrupt as e:
 
         print("keyboard interrupt")
-
-
-def param_search():
-    """
-    Conduct a random parameter search for SAC using parameter ranges.
-    """
-
-    np.random.seed(args.param_search_seed)
-
-    args.gamma = round(np.random.uniform(0.8, 0.9997), 4)
-
-    args.lr = round(np.random.uniform(0.000005, 0.006), 6)
-
-    args.tau = round(np.random.uniform(0.0001, 0.1), 4)
-
-    args.replay_buffer_size = int(np.random.choice([10000, 100000, 500000, 1000000]))
-
-    args.batch_size = int(np.random.choice([16, 64, 256, 512]))
 
 
 if __name__ == "__main__":

@@ -777,7 +777,6 @@ def objective(trial):
     normalize_rewards = trial.suggest_categorical(name="normalize_rewards",
                                                   choices=normalize_rewards_choices)
 
-
     # Set the hyperparameters directly in `args`.
     args.lr = round(lr, 8)
     args.linear_lr_decay = linear_lr_decay

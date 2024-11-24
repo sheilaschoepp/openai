@@ -831,7 +831,7 @@ def main():
         if not database_url:
             raise ValueError("Database URL not found in environment. Make sure SAC_OPTUNA_DB_URL is set.")
 
-        sampler = optuna.samplers.TPESampler(seed=0)
+        sampler = optuna.samplers.TPESampler()
         study = optuna.create_study(study_name=study_name,
                                     storage=database_url,
                                     direction="maximize",

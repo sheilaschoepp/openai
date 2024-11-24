@@ -1,5 +1,6 @@
 import os
 import pickle
+import wandb
 
 import torch
 import torch.nn as nn
@@ -684,7 +685,7 @@ class PPO(BaseAgent):
                 surr1 = ratios * advantages_batch
                 surr2 = torch.clamp(ratios, 1 - self.epsilon, 1 + self.epsilon) * advantages_batch
 
-                clip_loss = -1 * torch.min(surr1, surr2).mean()
+                clip_loss = torch.min(surr1, surr2).mean()
 
                 clipped = ratios.lt(1 - self.epsilon) | ratios.gt(1 + self.epsilon)
                 num_clips = int(clipped.float().sum())
@@ -695,15 +696,15 @@ class PPO(BaseAgent):
                     values_batch_clipped = values_batch + (new_values_batch - values_batch).clamp(-self.epsilon, self.epsilon)
                     values_loss = (new_values_batch - returns_batch).pow(2)
                     clip_values_loss = (values_batch_clipped - returns_batch).pow(2)
-                    vf_loss = -1 * torch.max(values_loss, clip_values_loss).mean()
+                    vf_loss = torch.max(values_loss, clip_values_loss).mean()
 
                 else:
 
-                    vf_loss = -1 * self.actor_critic_criterion(returns_batch, new_values_batch)
+                    vf_loss = self.actor_critic_criterion(returns_batch, new_values_batch)
 
-                new_dist_entropy = -1 * new_dist_entropies_batch.mean()
+                new_dist_entropy = new_dist_entropies_batch.mean()
 
-                clip_vf_s_loss = clip_loss - self.vf_loss_coef * vf_loss + self.policy_entropy_coef * new_dist_entropy
+                clip_vf_s_loss = -1 * (clip_loss - self.vf_loss_coef * vf_loss + self.policy_entropy_coef * new_dist_entropy)
 
                 self.actor_critic_optimizer.zero_grad()
                 clip_vf_s_loss.backward()
@@ -712,7 +713,7 @@ class PPO(BaseAgent):
 
                 avg_clip_loss += clip_loss.item()
                 avg_vf_loss += vf_loss.item()
-                avg_entropy += -1 * new_dist_entropy.item()
+                avg_entropy += new_dist_entropy.item()
                 avg_clip_vf_s_loss += clip_vf_s_loss.item()
 
         num_updates = self.epochs * (self.num_samples // self.mini_batch_size)
@@ -722,7 +723,13 @@ class PPO(BaseAgent):
         avg_entropy /= num_updates
         avg_clip_vf_s_loss /= num_updates
 
-        clip_fraction = total_num_clips / (self.num_epoch_updates * self.mini_batch_size * (self.num_samples // self.mini_batch_size))
+        clip_fraction = total_num_clips / (num_updates * self.mini_batch_size)
 
         self.loss_data[self.loss_index] = [self.num_updates, self.num_epoch_updates, self.num_mini_batch_updates, avg_clip_loss, avg_vf_loss, avg_entropy, avg_clip_vf_s_loss, clip_fraction]
         self.loss_index += 1
+
+        wandb.log(data={"Loss Metrics/Average CLIP VF S Loss": avg_clip_vf_s_loss,
+                        "Loss Metrics/Average CLIP Loss": avg_clip_loss,
+                        "Loss Metrics/Average VF Loss": avg_vf_loss,
+                        "Loss Metrics/Average Entropy": avg_entropy,
+                        "Loss Metrics/Clip Fraction": clip_fraction})

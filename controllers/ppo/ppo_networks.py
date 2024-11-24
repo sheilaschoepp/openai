@@ -5,7 +5,7 @@ from torch.distributions import MultivariateNormal, Normal
 
 def init_weights(m):
     if type(m) == nn.Linear:
-        gain = nn.init.calculate_gain("relu")
+        gain = nn.init.calculate_gain("tanh")
         nn.init.orthogonal_(m.weight, gain=gain)
         nn.init.constant_(m.bias, 0.0)
 

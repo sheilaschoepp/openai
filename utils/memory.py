@@ -116,11 +116,7 @@ class Memory:
 
         if self.normalize_rewards:
 
-            mean_rewards = self.rewards.mean()
-            # Add small epsilon to prevent division by zero.
-            std_rewards = self.rewards.std() + 1e-8
-
-            self.rewards.sub_(mean_rewards).div_(std_rewards)
+            self.rewards = (self.rewards - self.rewards.mean()) / (self.rewards.std() + 1e-5)
 
         # compute returns
 
@@ -142,6 +138,9 @@ class Memory:
 
         self.advantages = self.returns[:-1] - self.values[:-1]
         self.advantages = (self.advantages - self.advantages.mean()) / (self.advantages.std() + 1e-5)
+
+        # normalize returns
+        # self.returns = (self.returns - self.returns.mean()) / (self.returns.std() + 1e-5)
 
     def generate_mini_batches(self):
         """

@@ -827,11 +827,11 @@ def main():
 
         study_name = "ppo_optuna_study"
 
-        database_url = os.environ.get("SAC_OPTUNA_DB_URL")
+        database_url = os.environ.get("PPO_OPTUNA_DB_URL")
         if not database_url:
             raise ValueError("Database URL not found in environment. Make sure SAC_OPTUNA_DB_URL is set.")
 
-        sampler = optuna.samplers.TPESampler(n_startup_trials=200)
+        sampler = optuna.samplers.TPESampler(seed=0)
         study = optuna.create_study(study_name=study_name,
                                     storage=database_url,
                                     direction="maximize",
@@ -841,17 +841,31 @@ def main():
         def print_trial_count(study, trial):
             print(f"Trial {trial.number} completed. Total trials so far: {len(study.trials)}\n")
 
+        study.enqueue_trial(
+            {"lr": 0.00058328,
+             "linear_lr_decay": True,
+             "gamma": 0.9785,
+             "num_samples": 2048,
+             "mini_batch_size": 512,
+             "num_epochs": 5,
+             "epsilon": 0.2885,
+             "vf_loss_coef": 0.4932,
+             "policy_entropy_coef": 0.0055157,
+             "gae_lambda": 0.9463,
+             "normalize_rewards": False},
+        )
+
         # study.enqueue_trial(
-        #     {"lr": 0.00058328,
+        #     {"lr": 0.00016626,
         #      "linear_lr_decay": True,
-        #      "gamma": 0.9785,
+        #      "gamma": 0.9627,
         #      "num_samples": 2048,
-        #      "mini_batch_size": 512,
-        #      "num_epochs": 5,
-        #      "epsilon": 0.2885,
-        #      "vf_loss_coef": 0.4932,
-        #      "policy_entropy_coef": 0.0055157,
-        #      "gae_lambda": 0.9463,
+        #      "mini_batch_size": 32,
+        #      "num_epochs": 3,
+        #      "epsilon": 0.2642,
+        #      "vf_loss_coef": 0.8955,
+        #      "policy_entropy_coef": 0.012144,
+        #      "gae_lambda": 0.9459,
         #      "normalize_rewards": False},
         # )
 
@@ -861,7 +875,7 @@ def main():
             callbacks=[print_trial_count]
         )
 
-        with open(f"{optuna_folder}/optuna.txt", "w") as f:
+        with open(f"{optuna_folder}/ppo_optuna.txt", "w") as f:
             print(f"Best hyperparameters found:", file=f)
             for key, value in study.best_params.items():
                 print(f"{key}: {value}", file=f)

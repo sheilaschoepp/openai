@@ -17,6 +17,7 @@ import random
 import sys
 import time
 import torch
+import wandb
 
 from copy import deepcopy
 from datetime import date, timedelta
@@ -142,6 +143,13 @@ class NormalController:
                            "device": "cuda" if args.cuda and torch.cuda.is_available() else "cpu",
                            "seed": args.seed,
                            "optuna": args.optuna}
+
+        # W&B initialization
+
+        wandb.init(
+            project="ppo_antv5",
+            config=self.parameters
+        )
 
         # experiment data directory
 
@@ -461,6 +469,10 @@ class NormalController:
                                      num_samples,
                                      average_return,
                                      real_time]
+
+            wandb.log(data={"Key Metrics/Average Return": average_return,
+                            "Real Time": real_time},
+                      step=num_time_steps)
 
             print(f"evaluation at {num_time_steps} time steps: {average_return}")
 

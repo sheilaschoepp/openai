@@ -855,19 +855,19 @@ def main():
         #      "normalize_rewards": False},
         # )
 
-        study.enqueue_trial(
-            {"lr": 0.00016626,
-             "linear_lr_decay": True,
-             "gamma": 0.9627,
-             "num_samples": 2048,
-             "mini_batch_size": 32,
-             "num_epochs": 3,
-             "epsilon": 0.2642,
-             "vf_loss_coef": 0.8955,
-             "policy_entropy_coef": 0.012144,
-             "gae_lambda": 0.9459,
-             "normalize_rewards": False},
-        )
+        # study.enqueue_trial(
+        #     {"lr": 0.00016626,
+        #      "linear_lr_decay": True,
+        #      "gamma": 0.9627,
+        #      "num_samples": 2048,
+        #      "mini_batch_size": 32,
+        #      "num_epochs": 3,
+        #      "epsilon": 0.2642,
+        #      "vf_loss_coef": 0.8955,
+        #      "policy_entropy_coef": 0.012144,
+        #      "gae_lambda": 0.9459,
+        #      "normalize_rewards": False},
+        # )
 
         study.optimize(
             objective,

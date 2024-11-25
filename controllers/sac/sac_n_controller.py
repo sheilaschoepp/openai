@@ -802,6 +802,7 @@ def objective(trial):
     # args.model_updates_per_step = model_updates_per_step
     args.target_update_interval = target_update_interval
     args.automatic_entropy_tuning = automatic_entropy_tuning
+    args.wandb = True
 
     # Define the seeds for the experiment.
     seeds = [0, 1, 2, 3, 4]

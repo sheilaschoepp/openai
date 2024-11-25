@@ -735,9 +735,11 @@ class PPO(BaseAgent):
 
         if self.wandb:
 
-            wandb.log(data={"Loss Metrics/Average CLIP VF S Loss": avg_clip_vf_s_loss,
-                            "Loss Metrics/Average CLIP Loss": avg_clip_loss,
-                            "Loss Metrics/Average VF Loss": avg_vf_loss,
-                            "Loss Metrics/Average Entropy": avg_entropy,
-                            "Loss Metrics/Clip Fraction": clip_fraction},
-                      step=self.num_updates)
+            wandb.log(data={
+                "Loss Metrics/Average CLIP VF S Loss": avg_clip_vf_s_loss,
+                "Loss Metrics/Average CLIP Loss": avg_clip_loss,
+                "Loss Metrics/Average VF Loss": avg_vf_loss,
+                "Loss Metrics/Average Entropy": avg_entropy,
+                "Loss Metrics/Clip Fraction": clip_fraction,
+                "Number of Updates": self.num_updates
+            })

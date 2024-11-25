@@ -140,6 +140,16 @@ class NormalController:
                 config=self.parameters
             )
 
+            wandb.define_metric(
+                name="Key Metrics/*",
+                step_metric="Time Steps"
+            )
+
+            wandb.define_metric(
+                name="Loss Metrics/*",
+                step_metric="Number of Updates"
+            )
+
         # experiment data directory
 
         suffix = self.parameters["n_env_name"] + ":" + str(self.parameters["n_time_steps"]) \
@@ -459,10 +469,11 @@ class NormalController:
                                      real_time]
 
             if self.parameters["wandb"]:
-
-                wandb.log(data={"Key Metrics/Average Return": average_return,
-                                "Real Time": real_time},
-                          step=num_time_steps)
+                wandb.log(data={
+                    "Key Metrics/Average Return": average_return,
+                    "Real Time": real_time,
+                    "Time Steps": num_time_steps
+                })
 
             print(f"evaluation at {num_time_steps} time steps: {average_return}")
 

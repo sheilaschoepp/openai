@@ -57,20 +57,19 @@ parser.add_argument("--epsilon", type=float, default=0.3, metavar="G",
                     help="clip parameter (default: 0.3)")
 parser.add_argument("--vf_loss_coef", type=float, default=1.0, metavar="G",
                     help=" c1 - coefficient for the squared error loss term (default: 1.0)")
-parser.add_argument("--policy_entropy_coef", type=float, default=0.0007,
-                    metavar="G",
+parser.add_argument("--policy_entropy_coef", type=float, default=0.0007,metavar="G",
                     help=" c2 - coefficient for the entropy bonus term (default: 0.0007)")
-parser.add_argument("--clipped_value_fn", default=False, action="store_true", # todo
+parser.add_argument("--clipped_value_fn", default=False, action="store_true",
                     help="if true, clip value function (default: False)")
 parser.add_argument("--max_grad_norm", type=float, default=0.5, metavar="G",
                     help=" max norm of gradients (default: 0.5)")
 
-parser.add_argument("--use_gae", default=False, action="store_true", # todo
+parser.add_argument("--use_gae", default=False, action="store_true",
                     help=" if true, use generalized advantage estimation (default: False)")
 parser.add_argument("--gae_lambda", type=float, default=0.9327, metavar="G",
                     help="generalized advantage estimation smoothing parameter (default: 0.9327)")
 
-parser.add_argument("-nr", "--normalize_rewards", default=False, action="store_true", # todo
+parser.add_argument("-nr", "--normalize_rewards", default=False, action="store_true",
                     help="if true, normalize rewards in memory (default: False)")
 
 parser.add_argument("--hidden_dim", type=int, default=64, metavar="N",
@@ -792,6 +791,21 @@ def objective(trial):
                                               high=0.1,
                                               step=0.0000001)
 
+    # Set the clipped value function flag.
+    clipped_value_fn_choices = [True, False]
+    clipped_value_fn = trial.suggest_categorical(name="clipped_value_fn",
+                                                 choices=clipped_value_fn_choices)
+
+    # Set max grad norm.
+    max_grad_norm_choices = [0.5, 1.0]
+    max_grad_norm = trial.suggest_categorical(name="max_grad_norm",
+                                                 choices=max_grad_norm_choices)
+
+    # Set the use gae flag.
+    use_gae_choices = [True, False]
+    use_gae = trial.suggest_categorical(name="use_gae",
+                                        choices=use_gae_choices)
+
     # Set the GAE lambda parameter.
     gae_lambda = trial.suggest_float(name="gae_lambda",
                                      low=0.9,
@@ -813,8 +827,12 @@ def objective(trial):
     args.epsilon = round(epsilon, 4)
     args.vf_loss_coef = round(vf_loss_coef, 4)
     args.policy_entropy_coef = round(policy_entropy_coef, 7)
+    args.clipped_value_fn = clipped_value_fn
+    args.max_grad_norm = max_grad_norm
+    args.use_gae = use_gae
     args.gae_lambda = round(gae_lambda, 4)
     args.normalize_rewards = normalize_rewards
+    args.wandb = True
 
     # Define the seeds for the experiment.
     seeds = [0, 1, 2, 3, 4]

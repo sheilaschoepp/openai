@@ -56,13 +56,16 @@ parser.add_argument("-rbs", "--replay_buffer_size", type=int, default=1000000, m
 parser.add_argument("--batch_size", type=int, default=256, metavar="N",
                     help="number of samples per batch (default: 256)")
 
+parser.add_argument("-nr", "--normalize_rewards", default=False, action="store_true",
+                    help="if true, normalize rewards in memory (default: False)")
+
 parser.add_argument("--model_updates_per_step", type=int, default=1, metavar="N",
                     help="number of model updates per simulator step (default: 1)")
 parser.add_argument("--target_update_interval", type=int, default=1, metavar="N",
                     help="number of target value network updates per number of gradient steps (network updates) (default: 1)")
 
-parser.add_argument("-a", "--automatic_entropy_tuning", default=True, action="store_true",
-                    help="if true, automatically tune the temperature (default: True)")
+parser.add_argument("-a", "--automatic_entropy_tuning", default=False, action="store_true",
+                    help="if true, automatically tune the temperature (default: False)")
 
 parser.add_argument("-tef", "--time_step_eval_frequency", type=int, default=7500, metavar="N",
                     help="frequency of policy evaluation during learning (default: 7500)")
@@ -77,6 +80,9 @@ parser.add_argument("-s", "--seed", type=int, default=0, metavar="N",
 
 parser.add_argument("-d", "--delete", default=False, action="store_true",
                     help="if true, delete previously saved data and restart training (default: False)")
+
+parser.add_argument("-wb", "--wandb", default=False, action="store_true",
+                    help="if true, log to weights & biases")
 
 parser.add_argument("-o", "--optuna", default=False, action="store_true",
                     help="if true, run a parameter search with optuna")
@@ -113,6 +119,7 @@ class NormalController:
                            "hidden_dim": args.hidden_dim,
                            "replay_buffer_size": args.replay_buffer_size,
                            "batch_size": args.batch_size,
+                           "normalize_rewards": args.normalize_rewards,
                            "model_updates_per_step": args.model_updates_per_step,
                            "target_update_interval": args.target_update_interval,
                            "automatic_entropy_tuning": args.automatic_entropy_tuning,
@@ -121,14 +128,17 @@ class NormalController:
                            "cuda": args.cuda,
                            "device": "cuda" if args.cuda and torch.cuda.is_available() else "cpu",
                            "seed": args.seed,
+                           "wandb": args.wandb,
                            "optuna": args.optuna}
 
         # W&B initialization
 
-        wandb.init(
-            project="sac_antv5",
-            config=self.parameters
-        )
+        if self.parameters["wandb"]:
+
+            wandb.init(
+                project="sac_antv5",
+                config=self.parameters
+            )
 
         # experiment data directory
 
@@ -140,12 +150,14 @@ class NormalController:
                  + "_hd:" + str(self.parameters["hidden_dim"]) \
                  + "_rbs:" + str(self.parameters["replay_buffer_size"]) \
                  + "_bs:" + str(self.parameters["batch_size"]) \
+                 + "_nr:" + str(self.parameters["normalize_rewards"]) \
                  + "_mups:" + str(self.parameters["model_updates_per_step"]) \
                  + "_tui:" + str(self.parameters["target_update_interval"]) \
                  + "_a:" + str(self.parameters["automatic_entropy_tuning"]) \
                  + "_tef:" + str(self.parameters["time_step_eval_frequency"]) \
                  + "_ee:" + str(self.parameters["eval_episodes"]) \
                  + "_d:" + str(self.parameters["device"]) \
+                 + ("_wb" if self.parameters["wandb"] else "") \
                  + ("_o" if self.parameters["optuna"] else "")
 
         self.experiment = "SAC_" + suffix
@@ -232,10 +244,12 @@ class NormalController:
                          self.parameters["hidden_dim"],
                          self.parameters["replay_buffer_size"],
                          self.parameters["batch_size"],
+                         self.parameters["normalize_rewards"],
                          self.parameters["model_updates_per_step"],
                          self.parameters["target_update_interval"],
                          self.parameters["automatic_entropy_tuning"],
                          self.parameters["device"],
+                         self.parameters["wandb"],
                          self.loss_data)
 
         # RLGlue used for training
@@ -286,6 +300,7 @@ class NormalController:
         print("hidden dimension:", highlight_non_default_values("hidden_dim"))
         print("replay buffer size:", highlight_non_default_values("replay_buffer_size"))
         print("batch size:", highlight_non_default_values("batch_size"))
+        print("normalize rewards:", highlight_non_default_values("normalize_rewards"))
         print("model updates per step:", highlight_non_default_values("model_updates_per_step"))
         print("target update interval:", highlight_non_default_values("target_update_interval"))
         print("automatic entropy tuning:", highlight_non_default_values("automatic_entropy_tuning"))
@@ -300,8 +315,8 @@ class NormalController:
         else:
             print("device:", colored(self.parameters["device"], "red"))
         print("seed:", colored(self.parameters["seed"], "red"))
-        if self.parameters["optuna"]:
-            print("optuna:", colored(self.parameters["optuna"], "red"))
+        print("wandb:", highlight_non_default_values("wandb"))
+        print("optuna:", highlight_non_default_values("optuna"))
 
         print(self.LINE)
         print(self.LINE)
@@ -357,6 +372,7 @@ class NormalController:
         Compute runtime.
         Send completion email.
         Save file with run information.
+        Close wandb.
         """
 
         self.rlg.rl_env_message("close")
@@ -370,6 +386,10 @@ class NormalController:
         text_file.write(date.today().strftime("%m/%d/%y"))
         text_file.write(f"\n\nExperiment {self.experiment}/seed{self.parameters['seed']} complete.\n\nTime to complete: {run_time} h:m:s")
         text_file.close()
+
+        if self.parameters["wandb"]:
+
+            wandb.finish()
 
     def evaluate_model(self, num_time_steps):
         """
@@ -438,9 +458,11 @@ class NormalController:
                                      average_return,
                                      real_time]
 
-            wandb.log(data={"Key Metrics/Average Return": average_return,
-                            "Real Time": real_time},
-                      step=num_time_steps)
+            if self.parameters["wandb"]:
+
+                wandb.log(data={"Key Metrics/Average Return": average_return,
+                                "Real Time": real_time},
+                          step=num_time_steps)
 
             print(f"evaluation at {num_time_steps} time steps: {average_return}")
 
@@ -741,6 +763,13 @@ def objective(trial):
         choices=batch_size_choices
     )
 
+    # Set the normalize rewards flag.
+    normalize_rewards_choices = [True, False]
+    normalize_rewards = trial.suggest_categorical(
+        name="normalize_rewards",
+        choices=normalize_rewards_choices
+    )
+
     # # Set the model updates per step.
     # model_updates_per_step_choices = [1, 2, 3, 4, 5]
     # model_updates_per_step = trial.suggest_categorical(
@@ -769,6 +798,7 @@ def objective(trial):
     args.lr = round(lr, 8)
     args.replay_buffer_size = replay_buffer_size
     args.batch_size = batch_size
+    args.normalize_rewards = normalize_rewards
     # args.model_updates_per_step = model_updates_per_step
     args.target_update_interval = target_update_interval
     args.automatic_entropy_tuning = automatic_entropy_tuning

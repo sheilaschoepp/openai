@@ -678,4 +678,5 @@ class SAC(BaseAgent):
                             "Loss Metrics/Average Policy Loss": policy_loss.item(),
                             "Loss Metrics/Average Alpha Loss": alpha_loss.item(),
                             "Loss Metrics/Alpha": self.alpha.item(),
-                            "Loss Metrics/Average Entropy": entropy.item()})
+                            "Loss Metrics/Average Entropy": entropy.item()},
+                      step=self.num_updates)

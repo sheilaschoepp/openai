@@ -739,4 +739,5 @@ class PPO(BaseAgent):
                             "Loss Metrics/Average CLIP Loss": avg_clip_loss,
                             "Loss Metrics/Average VF Loss": avg_vf_loss,
                             "Loss Metrics/Average Entropy": avg_entropy,
-                            "Loss Metrics/Clip Fraction": clip_fraction})
+                            "Loss Metrics/Clip Fraction": clip_fraction},
+                      step=self.num_updates)

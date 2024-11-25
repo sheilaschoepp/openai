@@ -41,15 +41,14 @@ parser.add_argument("-t", "--n_time_steps", type=int, default=10000000, metavar=
 
 parser.add_argument("--lr", type=float, default=0.000275, metavar="G",
                     help="learning rate (default: 0.000275)")
-parser.add_argument("-lrd", "--linear_lr_decay", default=True, action="store_true",
-                    help="if true, decrease learning rate linearly (default: True)")
+parser.add_argument("-lrd", "--linear_lr_decay", default=False, action="store_true",
+                    help="if true, decrease learning rate linearly (default: False)")
 parser.add_argument("--gamma", type=float, default=0.848, metavar="G",
                     help="discount factor (default: 0.848)")
 
 parser.add_argument("-ns", "--num_samples", type=int, default=3424, metavar="N",
                     help="number of samples used to update the network(s) (default: 3424)")
-parser.add_argument("-mbs", "--mini_batch_size", type=int, default=8,
-                    metavar="N",
+parser.add_argument("-mbs", "--mini_batch_size", type=int, default=8, metavar="N",
                     help=" number of samples per mini-batch (default: 8)")
 parser.add_argument("--epochs", type=int, default=24, metavar="N",
                     help="number of epochs when updating the network(s) (default: 24)")
@@ -58,28 +57,27 @@ parser.add_argument("--epsilon", type=float, default=0.3, metavar="G",
                     help="clip parameter (default: 0.3)")
 parser.add_argument("--vf_loss_coef", type=float, default=1.0, metavar="G",
                     help=" c1 - coefficient for the squared error loss term (default: 1.0)")
-parser.add_argument("--policy_entropy_coef", type=float, default=0.0007,
-                    metavar="G",
+parser.add_argument("--policy_entropy_coef", type=float, default=0.0007,metavar="G",
                     help=" c2 - coefficient for the entropy bonus term (default: 0.0007)")
 parser.add_argument("--clipped_value_fn", default=False, action="store_true",
                     help="if true, clip value function (default: False)")
 parser.add_argument("--max_grad_norm", type=float, default=0.5, metavar="G",
                     help=" max norm of gradients (default: 0.5)")
 
-parser.add_argument("--use_gae", default=True, action="store_false",
-                    help=" if true, use generalized advantage estimation (default: True)")
+parser.add_argument("--use_gae", default=False, action="store_true",
+                    help=" if true, use generalized advantage estimation (default: False)")
 parser.add_argument("--gae_lambda", type=float, default=0.9327, metavar="G",
                     help="generalized advantage estimation smoothing parameter (default: 0.9327)")
 
-parser.add_argument("-nr", "--normalize_rewards", default=True, action="store_false",
-                    help="if true, normalize rewards in memory (default: True)")
+parser.add_argument("-nr", "--normalize_rewards", default=False, action="store_true",
+                    help="if true, normalize rewards in memory (default: False)")
 
 parser.add_argument("--hidden_dim", type=int, default=64, metavar="N",
                     help="hidden dimension (default: 64)")
 parser.add_argument("--log_std", type=float, default=0.0, metavar="G",
                     help="log standard deviation of the policy distribution (default: 0.0)")
 
-parser.add_argument("-tef", "--time_step_eval_frequency", type=int, default=25000, metavar="N",
+parser.add_argument("-tef", "--time_step_eval_frequency", type=int, default=50000, metavar="N",
                     help="frequency of policy evaluation during learning (default: 10000)")
 parser.add_argument("-ee", "--eval_episodes", type=int, default=10, metavar="N",
                     help="number of episodes in policy evaluation roll-out (default: 10)")
@@ -93,8 +91,11 @@ parser.add_argument("-s", "--seed", type=int, default=0, metavar="N",
 parser.add_argument("-d", "--delete", default=False, action="store_true",
                     help="if true, delete previously saved data and restart training (default: False)")
 
+parser.add_argument("-wb", "--wandb", default=False, action="store_true",
+                    help="if true, log to weights & biases (default: False)")
+
 parser.add_argument("-o", "--optuna", default=False, action="store_true",
-                    help="if true, run a parameter search with optuna")
+                    help="if true, run a parameter search with optuna (default: False)")
 
 args = parser.parse_args()
 
@@ -142,14 +143,17 @@ class NormalController:
                            "cuda": args.cuda,
                            "device": "cuda" if args.cuda and torch.cuda.is_available() else "cpu",
                            "seed": args.seed,
+                           "wandb": args.wandb,
                            "optuna": args.optuna}
 
         # W&B initialization
 
-        wandb.init(
-            project="ppo_antv5",
-            config=self.parameters
-        )
+        if self.parameters["wandb"]:
+
+            wandb.init(
+                project="ppo_antv5",
+                config=self.parameters
+            )
 
         # experiment data directory
 
@@ -173,6 +177,7 @@ class NormalController:
                  + "_tef:" + str(self.parameters["time_step_eval_frequency"]) \
                  + "_ee:" + str(self.parameters["eval_episodes"]) \
                  + "_d:" + str(self.parameters["device"]) \
+                 + ("_wb" if self.parameters["wandb"] else "") \
                  + ("_o" if self.parameters["optuna"] else "")
 
         self.experiment = "PPO_" + suffix
@@ -270,6 +275,7 @@ class NormalController:
                          self.parameters["gae_lambda"],
                          self.parameters["normalize_rewards"],
                          self.parameters["device"],
+                         self.parameters["wandb"],
                          self.loss_data)
 
         # RLGlue used for training
@@ -340,8 +346,8 @@ class NormalController:
         else:
             print("device:", colored(self.parameters["device"], "red"))
         print("seed:", colored(self.parameters["seed"], "red"))
-        if self.parameters["optuna"]:
-            print("optuna:", colored(self.parameters["optuna"], "red"))
+        print("wandb:", highlight_non_default_values("wandb"))
+        print("optuna:", highlight_non_default_values("optuna"))
 
         print(self.LINE)
         print(self.LINE)
@@ -397,6 +403,7 @@ class NormalController:
         Compute runtime.
         Send completion email.
         Save file with run information.
+        Close wandb.
         """
 
         self.rlg.rl_env_message("close")
@@ -410,6 +417,10 @@ class NormalController:
         text_file.write(date.today().strftime("%m/%d/%y"))
         text_file.write(f"\n\nExperiment {self.experiment}/seed{self.parameters['seed']} complete.\n\nTime to complete: {run_time} h:m:s")
         text_file.close()
+
+        if self.parameters["wandb"]:
+
+            wandb.finish()
 
     def evaluate_model(self, num_time_steps):
         """
@@ -470,9 +481,11 @@ class NormalController:
                                      average_return,
                                      real_time]
 
-            wandb.log(data={"Key Metrics/Average Return": average_return,
-                            "Real Time": real_time},
-                      step=num_time_steps)
+            if self.parameters["wandb"]:
+
+                wandb.log(data={"Key Metrics/Average Return": average_return,
+                                "Real Time": real_time},
+                          step=num_time_steps)
 
             print(f"evaluation at {num_time_steps} time steps: {average_return}")
 
@@ -778,6 +791,21 @@ def objective(trial):
                                               high=0.1,
                                               step=0.0000001)
 
+    # Set the clipped value function flag.
+    clipped_value_fn_choices = [True, False]
+    clipped_value_fn = trial.suggest_categorical(name="clipped_value_fn",
+                                                 choices=clipped_value_fn_choices)
+
+    # Set max grad norm.
+    max_grad_norm_choices = [0.5, 1.0]
+    max_grad_norm = trial.suggest_categorical(name="max_grad_norm",
+                                                 choices=max_grad_norm_choices)
+
+    # Set the use gae flag.
+    use_gae_choices = [True, False]
+    use_gae = trial.suggest_categorical(name="use_gae",
+                                        choices=use_gae_choices)
+
     # Set the GAE lambda parameter.
     gae_lambda = trial.suggest_float(name="gae_lambda",
                                      low=0.9,
@@ -799,8 +827,12 @@ def objective(trial):
     args.epsilon = round(epsilon, 4)
     args.vf_loss_coef = round(vf_loss_coef, 4)
     args.policy_entropy_coef = round(policy_entropy_coef, 7)
+    args.clipped_value_fn = clipped_value_fn
+    args.max_grad_norm = max_grad_norm
+    args.use_gae = use_gae
     args.gae_lambda = round(gae_lambda, 4)
     args.normalize_rewards = normalize_rewards
+    args.wandb = True
 
     # Define the seeds for the experiment.
     seeds = [0, 1, 2, 3, 4]

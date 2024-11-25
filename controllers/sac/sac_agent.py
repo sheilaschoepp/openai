@@ -1,6 +1,7 @@
 import numpy as np
 import os
 import pickle
+import wandb
 
 import torch
 import torch.nn as nn
@@ -28,10 +29,12 @@ class SAC(BaseAgent):
                  hidden_dim,
                  replay_buffer_size,
                  batch_size,
+                 normalize_rewards,
                  model_updates_per_step,
                  target_update_interval,
                  automatic_entropy_tuning,
                  device,
+                 wandb,
                  loss_data):
         """
         Initialize agent variables.
@@ -60,6 +63,8 @@ class SAC(BaseAgent):
             size of the replay buffer
         @param batch_size: int
             number of samples per minibatch
+        @param normalize_rewards: bool
+            if true, normalize rewards in memory
         @param model_updates_per_step: int
             number of NN model updates per time step
         @param target_update_interval: int
@@ -68,6 +73,8 @@ class SAC(BaseAgent):
             if True, automatically tune the temperature
         @param device: str
             indicates whether using 'cuda' or 'cpu'
+        @param wandb: bool
+            if true, log to weights & biases
         @param loss_data: float64 numpy zeros array with shape (n_time_steps - batch_size, 5)
             numpy array to store agent loss data
         """
@@ -80,13 +87,18 @@ class SAC(BaseAgent):
         self.tau = tau
         self.lr = lr
         self.hidden_dim = hidden_dim
-        self.batch_size = batch_size
-        self.model_updates_per_step = model_updates_per_step
         self.replay_buffer_size = replay_buffer_size
+        self.batch_size = batch_size
+        self.normalize_rewards = normalize_rewards
+        self.model_updates_per_step = model_updates_per_step
         self.target_update_interval = target_update_interval
         self.automatic_entropy_tuning = automatic_entropy_tuning
         self.device = device
-        self.alpha = torch.Tensor([alpha]).to(device=self.device)  # must come after self.device
+        self.wandb = wandb
+
+        # must come after self.device
+        self.alpha = torch.Tensor([alpha]).to(device=self.device)
+
         self.loss_data = loss_data
 
         self.loss_index = 0
@@ -122,7 +134,10 @@ class SAC(BaseAgent):
             self.alpha_optimizer = Adam([self.log_alpha], lr=self.lr)
 
         # replay buffer
-        self.replay_buffer = ReplayBuffer(self.replay_buffer_size)
+        self.replay_buffer = ReplayBuffer(
+            self.replay_buffer_size,
+            self.normalize_rewards
+        )
 
         # mode - learn or evaluation
         # if train, select an action using a policy distribution; add experience to the replay buffer; policy model mode is 'train'
@@ -270,7 +285,10 @@ class SAC(BaseAgent):
         Clear the replay buffer.
         """
 
-        self.replay_buffer = ReplayBuffer(self.replay_buffer_size)
+        self.replay_buffer = ReplayBuffer(
+            self.replay_buffer_size,
+            self.normalize_rewards
+        )
 
     def agent_load(self, dir_, t):
         """
@@ -652,3 +670,12 @@ class SAC(BaseAgent):
 
         self.loss_data[self.loss_index] = [self.num_updates, q_value_loss_1.item(), q_value_loss_2.item(), policy_loss.item(), alpha_loss.item(), self.alpha.item(), entropy.item()]
         self.loss_index += 1
+
+        if self.wandb:
+
+            wandb.log(data={"Loss Metrics/Average Q1 Loss": q_value_loss_1.item(),
+                            "Loss Metrics/Average Q2 Loss": q_value_loss_2.item(),
+                            "Loss Metrics/Average Policy Loss": policy_loss.item(),
+                            "Loss Metrics/Average Alpha Loss": alpha_loss.item(),
+                            "Loss Metrics/Alpha": self.alpha.item(),
+                            "Loss Metrics/Average Entropy": entropy.item()})

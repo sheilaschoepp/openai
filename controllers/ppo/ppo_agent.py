@@ -39,6 +39,7 @@ class PPO(BaseAgent):
                  gae_lambda,
                  normalize_rewards,
                  device,
+                 wandb,
                  loss_data):
         """
         Initialize agent variables.
@@ -84,6 +85,8 @@ class PPO(BaseAgent):
             if true, normalize rewards in memory
         @param device: str
             indicates whether using 'cuda' or 'cpu'
+        @param wandb: bool
+            if true, log to weights & biases
         @param loss_data: float64 numpy zeros array with shape (n_timesteps / num_samples * epochs, 3)
             numpy array to store agent loss data
         """
@@ -111,6 +114,8 @@ class PPO(BaseAgent):
         self.max_grad_norm = max_grad_norm
 
         self.device = device
+        self.wandb = wandb
+
         self.loss_data = loss_data
 
         # network
@@ -728,8 +733,10 @@ class PPO(BaseAgent):
         self.loss_data[self.loss_index] = [self.num_updates, self.num_epoch_updates, self.num_mini_batch_updates, avg_clip_loss, avg_vf_loss, avg_entropy, avg_clip_vf_s_loss, clip_fraction]
         self.loss_index += 1
 
-        wandb.log(data={"Loss Metrics/Average CLIP VF S Loss": avg_clip_vf_s_loss,
-                        "Loss Metrics/Average CLIP Loss": avg_clip_loss,
-                        "Loss Metrics/Average VF Loss": avg_vf_loss,
-                        "Loss Metrics/Average Entropy": avg_entropy,
-                        "Loss Metrics/Clip Fraction": clip_fraction})
+        if self.wandb:
+
+            wandb.log(data={"Loss Metrics/Average CLIP VF S Loss": avg_clip_vf_s_loss,
+                            "Loss Metrics/Average CLIP Loss": avg_clip_loss,
+                            "Loss Metrics/Average VF Loss": avg_vf_loss,
+                            "Loss Metrics/Average Entropy": avg_entropy,
+                            "Loss Metrics/Clip Fraction": clip_fraction})

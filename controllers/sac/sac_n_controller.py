@@ -82,10 +82,10 @@ parser.add_argument("-d", "--delete", default=False, action="store_true",
                     help="if true, delete previously saved data and restart training (default: False)")
 
 parser.add_argument("-wb", "--wandb", default=False, action="store_true",
-                    help="if true, log to weights & biases")
+                    help="if true, log to weights & biases (default: False)")
 
 parser.add_argument("-o", "--optuna", default=False, action="store_true",
-                    help="if true, run a parameter search with optuna")
+                    help="if true, run a parameter search with optuna (default: False)")
 
 args = parser.parse_args()
 

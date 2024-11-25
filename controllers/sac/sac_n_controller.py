@@ -67,7 +67,7 @@ parser.add_argument("--target_update_interval", type=int, default=1, metavar="N"
 parser.add_argument("-a", "--automatic_entropy_tuning", default=False, action="store_true",
                     help="if true, automatically tune the temperature (default: False)")
 
-parser.add_argument("-tef", "--time_step_eval_frequency", type=int, default=7500, metavar="N",
+parser.add_argument("-tef", "--time_step_eval_frequency", type=int, default=15000, metavar="N",
                     help="frequency of policy evaluation during learning (default: 7500)")
 parser.add_argument("-ee", "--eval_episodes", type=int, default=10, metavar="N",
                     help="number of episodes in policy evaluation roll-out (default: 10)")

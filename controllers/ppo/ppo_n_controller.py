@@ -32,23 +32,27 @@ from utils.rl_glue import RLGlue
 
 import custom_gym_envs  # do not delete; required for custom gym environments
 
-parser = argparse.ArgumentParser(description="PyTorch Proximal Policy Optimization Arguments")
+parser = argparse.ArgumentParser(
+    description="PyTorch Proximal Policy Optimization Arguments")
 
 parser.add_argument("-e", "--n_env_name", default="Ant-v5",
                     help="name of normal (non-malfunctioning) MuJoCo Gym environment (default: Ant-v5)")
-parser.add_argument("-t", "--n_time_steps", type=int, default=10000000, metavar="N",
+parser.add_argument("-t", "--n_time_steps", type=int, default=10000000,
+                    metavar="N",
                     help="number of time steps in normal (non-malfunctioning) MuJoCo Gym environment (default: 5000000)")
 
 parser.add_argument("--lr", type=float, default=0.000275, metavar="G",
                     help="learning rate (default: 0.000275)")
-parser.add_argument("-lrd", "--linear_lr_decay", default=False, action="store_true",
+parser.add_argument("-lrd", "--linear_lr_decay", default=False,
+                    action="store_true",
                     help="if true, decrease learning rate linearly (default: False)")
 parser.add_argument("--gamma", type=float, default=0.848, metavar="G",
                     help="discount factor (default: 0.848)")
 
 parser.add_argument("-ns", "--num_samples", type=int, default=3424, metavar="N",
                     help="number of samples used to update the network(s) (default: 3424)")
-parser.add_argument("-mbs", "--mini_batch_size", type=int, default=8, metavar="N",
+parser.add_argument("-mbs", "--mini_batch_size", type=int, default=8,
+                    metavar="N",
                     help=" number of samples per mini-batch (default: 8)")
 parser.add_argument("--epochs", type=int, default=24, metavar="N",
                     help="number of epochs when updating the network(s) (default: 24)")
@@ -57,7 +61,8 @@ parser.add_argument("--epsilon", type=float, default=0.3, metavar="G",
                     help="clip parameter (default: 0.3)")
 parser.add_argument("--vf_loss_coef", type=float, default=1.0, metavar="G",
                     help=" c1 - coefficient for the squared error loss term (default: 1.0)")
-parser.add_argument("--policy_entropy_coef", type=float, default=0.0007,metavar="G",
+parser.add_argument("--policy_entropy_coef", type=float, default=0.0007,
+                    metavar="G",
                     help=" c2 - coefficient for the entropy bonus term (default: 0.0007)")
 parser.add_argument("--clipped_value_fn", default=False, action="store_true",
                     help="if true, clip value function (default: False)")
@@ -69,7 +74,8 @@ parser.add_argument("--use_gae", default=False, action="store_true",
 parser.add_argument("--gae_lambda", type=float, default=0.9327, metavar="G",
                     help="generalized advantage estimation smoothing parameter (default: 0.9327)")
 
-parser.add_argument("-nr", "--normalize_rewards", default=False, action="store_true",
+parser.add_argument("-nr", "--normalize_rewards", default=False,
+                    action="store_true",
                     help="if true, normalize rewards in memory (default: False)")
 
 parser.add_argument("--hidden_dim", type=int, default=64, metavar="N",
@@ -77,7 +83,8 @@ parser.add_argument("--hidden_dim", type=int, default=64, metavar="N",
 parser.add_argument("--log_std", type=float, default=0.0, metavar="G",
                     help="log standard deviation of the policy distribution (default: 0.0)")
 
-parser.add_argument("-tef", "--time_step_eval_frequency", type=int, default=50000, metavar="N",
+parser.add_argument("-tef", "--time_step_eval_frequency", type=int,
+                    default=50000, metavar="N",
                     help="frequency of policy evaluation during learning (default: 10000)")
 parser.add_argument("-ee", "--eval_episodes", type=int, default=10, metavar="N",
                     help="number of episodes in policy evaluation roll-out (default: 10)")
@@ -149,7 +156,6 @@ class NormalController:
         # W&B initialization
 
         if self.parameters["wandb"]:
-
             wandb.init(
                 project="ppo_antv5",
                 config=self.parameters
@@ -167,7 +173,8 @@ class NormalController:
 
         # experiment data directory
 
-        suffix = self.parameters["n_env_name"] + ":" + str(self.parameters["n_time_steps"]) \
+        suffix = self.parameters["n_env_name"] + ":" + str(
+            self.parameters["n_time_steps"]) \
                  + "_lr:" + str(self.parameters["lr"]) \
                  + "_lrd:" + str(self.parameters["linear_lr_decay"]) \
                  + "_g:" + str(self.parameters["gamma"]) \
@@ -177,7 +184,7 @@ class NormalController:
                  + "_eps:" + str(self.parameters["epsilon"]) \
                  + "_c1:" + str(self.parameters["vf_loss_coef"]) \
                  + "_c2:" + str(self.parameters["policy_entropy_coef"]) \
-                 + "_cvl:" + str(self.parameters["clipped_value_fn"]) \
+                 + "_cvf:" + str(self.parameters["clipped_value_fn"]) \
                  + "_mgn:" + str(self.parameters["max_grad_norm"]) \
                  + "_gae:" + str(self.parameters["use_gae"]) \
                  + "_lam:" + str(self.parameters["gae_lambda"]) \
@@ -216,8 +223,12 @@ class NormalController:
                 print(colored("data deletion complete", "red"))
             else:
                 # yes; argument flag not present; get confirmation of data deletion from user input
-                print(colored("You are about to delete saved data and restart training.", "red"))
-                s = input(colored("Are you sure you want to continue?  Hit 'y' then 'Enter' to continue.\n", "red"))
+                print(colored(
+                    "You are about to delete saved data and restart training.",
+                    "red"))
+                s = input(colored(
+                    "Are you sure you want to continue?  Hit 'y' then 'Enter' to continue.\n",
+                    "red"))
                 if s == "y":
                     # delete old data; rewrite new data to same location
                     print(colored("user input indicates DATA DELETION", "red"))
@@ -226,13 +237,15 @@ class NormalController:
                     print(colored("data deletion complete", "red"))
                 else:
                     # do not delete old data; system exit
-                    print(colored("user input indicates NO DATA DELETION", "red"))
+                    print(
+                        colored("user input indicates NO DATA DELETION", "red"))
                     print(self.LINE)
                     sys.exit("\nexiting...")
 
         # data
 
-        num_rows = int(self.parameters["n_time_steps"] / self.parameters["time_step_eval_frequency"]) + 1  # add 1 for evaluation before any learning (0th entry)
+        num_rows = int(self.parameters["n_time_steps"] / self.parameters[
+            "time_step_eval_frequency"]) + 1  # add 1 for evaluation before any learning (0th entry)
         num_columns = 7
         self.eval_data = np.zeros((num_rows, num_columns))
 
@@ -240,7 +253,8 @@ class NormalController:
         # num_columns = 3
         # self.train_data = np.zeros((num_rows, num_columns))
 
-        num_rows = (self.parameters["n_time_steps"] // self.parameters["num_samples"])
+        num_rows = (self.parameters["n_time_steps"] // self.parameters[
+            "num_samples"])
         num_columns = 8
         self.loss_data = np.zeros((num_rows, num_columns))
 
@@ -327,30 +341,44 @@ class NormalController:
             else:
                 return self.parameters[argument]
 
-        print("normal environment name:", highlight_non_default_values("n_env_name"))
-        print("normal time steps:", highlight_non_default_values("n_time_steps"))
+        print("normal environment name:",
+              highlight_non_default_values("n_env_name"))
+        print("normal time steps:",
+              highlight_non_default_values("n_time_steps"))
         print("lr:", highlight_non_default_values("lr"))
-        print("linear lr decay:", highlight_non_default_values("linear_lr_decay"))
+        print("linear lr decay:",
+              highlight_non_default_values("linear_lr_decay"))
         print("gamma:", highlight_non_default_values("gamma"))
         print("number of samples:", highlight_non_default_values("num_samples"))
-        print("mini-batch size:", highlight_non_default_values("mini_batch_size"))
+        print("mini-batch size:",
+              highlight_non_default_values("mini_batch_size"))
         print("epochs:", highlight_non_default_values("epochs"))
         print("epsilon:", highlight_non_default_values("epsilon"))
-        print("value function loss coefficient:", highlight_non_default_values("vf_loss_coef"))
-        print("policy entropy coefficient:", highlight_non_default_values("policy_entropy_coef"))
-        print("clipped value function:", highlight_non_default_values("clipped_value_fn"))
-        print("max norm of gradients:", highlight_non_default_values("max_grad_norm"))
-        print("use generalized advantage estimation:", highlight_non_default_values("use_gae"))
-        print("gae smoothing coefficient (lambda):", highlight_non_default_values("gae_lambda"))
-        print("normalize rewards:", highlight_non_default_values("normalize_rewards"))
+        print("value function loss coefficient:",
+              highlight_non_default_values("vf_loss_coef"))
+        print("policy entropy coefficient:",
+              highlight_non_default_values("policy_entropy_coef"))
+        print("clipped value function:",
+              highlight_non_default_values("clipped_value_fn"))
+        print("max norm of gradients:",
+              highlight_non_default_values("max_grad_norm"))
+        print("use generalized advantage estimation:",
+              highlight_non_default_values("use_gae"))
+        print("gae smoothing coefficient (lambda):",
+              highlight_non_default_values("gae_lambda"))
+        print("normalize rewards:",
+              highlight_non_default_values("normalize_rewards"))
         print("hidden dimension:", highlight_non_default_values("hidden_dim"))
         print("log_std:", highlight_non_default_values("log_std"))
-        print("time step evaluation frequency:", highlight_non_default_values("time_step_eval_frequency"))
-        print("evaluation episodes:", highlight_non_default_values("eval_episodes"))
+        print("time step evaluation frequency:",
+              highlight_non_default_values("time_step_eval_frequency"))
+        print("evaluation episodes:",
+              highlight_non_default_values("eval_episodes"))
         if self.parameters["device"] == "cuda":
             print("device:", self.parameters["device"])
             if "CUDA_VISIBLE_DEVICES" in os.environ:
-                print("cuda visible device(s):", colored(os.environ["CUDA_VISIBLE_DEVICES"], "red"))
+                print("cuda visible device(s):",
+                      colored(os.environ["CUDA_VISIBLE_DEVICES"], "red"))
             else:
                 print(colored("cuda visible device(s): N/A", "red"))
         else:
@@ -379,21 +407,25 @@ class NormalController:
 
             # episode time steps are limited to 1000 (set below)
             # this is used to ensure that once self.parameters["n_time_steps"] is reached, the experiment is terminated
-            max_steps_this_episode = min(1000, self.parameters["n_time_steps"] - self.rlg.num_steps())
+            max_steps_this_episode = min(1000, self.parameters[
+                "n_time_steps"] - self.rlg.num_steps())
 
             # run an episode
             self.rlg.rl_start()
 
             terminal = False
 
-            while not terminal and ((max_steps_this_episode <= 0) or (self.rlg.num_ep_steps() < max_steps_this_episode)):
+            while not terminal and ((max_steps_this_episode <= 0) or (
+                    self.rlg.num_ep_steps() < max_steps_this_episode)):
                 _, _, terminal, _ = self.rlg.rl_step()
 
                 # save and evaluate the model every
                 # 'self.parameters["time_step_eval_frequency"]' time
                 # steps
-                if self.rlg.num_steps() % self.parameters["time_step_eval_frequency"] == 0:
-                    self.rlg.rl_agent_message(f"save_model, {self.data_dir}, {self.rlg.num_steps()}")
+                if self.rlg.num_steps() % self.parameters[
+                    "time_step_eval_frequency"] == 0:
+                    self.rlg.rl_agent_message(
+                        f"save_model, {self.data_dir}, {self.rlg.num_steps()}")
                     self.evaluate_model(self.rlg.num_steps())
 
             # index = self.rlg.num_episodes() - 1
@@ -425,11 +457,11 @@ class NormalController:
 
         text_file = open(self.data_dir + "/run_summary.txt", "w")
         text_file.write(date.today().strftime("%m/%d/%y"))
-        text_file.write(f"\n\nExperiment {self.experiment}/seed{self.parameters['seed']} complete.\n\nTime to complete: {run_time} h:m:s")
+        text_file.write(
+            f"\n\nExperiment {self.experiment}/seed{self.parameters['seed']} complete.\n\nTime to complete: {run_time} h:m:s")
         text_file.close()
 
         if self.parameters["wandb"]:
-
             wandb.finish()
 
     def evaluate_model(self, num_time_steps):
@@ -466,7 +498,8 @@ class NormalController:
                 terminal = False
 
                 max_steps_this_episode = 1000
-                while not terminal and ((max_steps_this_episode <= 0) or (eval_rlg.num_ep_steps() < max_steps_this_episode)):
+                while not terminal and ((max_steps_this_episode <= 0) or (
+                        eval_rlg.num_ep_steps() < max_steps_this_episode)):
                     _, _, terminal, _ = eval_rlg.rl_step()
 
                 returns.append(eval_rlg.episode_reward())
@@ -476,13 +509,16 @@ class NormalController:
             num_updates = num_time_steps // self.parameters["num_samples"]
             num_epoch_updates = num_updates * self.parameters["epochs"]
             num_mini_batch_updates = num_epoch_updates * (
-                    self.parameters["num_samples"] // self.parameters["mini_batch_size"])
+                    self.parameters["num_samples"] // self.parameters[
+                "mini_batch_size"])
 
-            num_samples = num_mini_batch_updates * self.parameters["mini_batch_size"]
+            num_samples = num_mini_batch_updates * self.parameters[
+                "mini_batch_size"]
 
             real_time = int(time.time() - self.start)
 
-            index = num_time_steps // self.parameters["time_step_eval_frequency"]
+            index = num_time_steps // self.parameters[
+                "time_step_eval_frequency"]
             self.eval_data[index] = [num_time_steps,
                                      num_updates,
                                      num_epoch_updates,
@@ -492,14 +528,14 @@ class NormalController:
                                      real_time]
 
             if self.parameters["wandb"]:
-
                 wandb.log(data={
                     "Key Metrics/Average Return": average_return,
                     "Real Time": real_time,
                     "Time Steps": num_time_steps
                 })
 
-            print(f"evaluation at {num_time_steps} time steps: {average_return}")
+            print(
+                f"evaluation at {num_time_steps} time steps: {average_return}")
 
             run_time = str(timedelta(seconds=time.time() - self.start))[:-7]
             print("runtime:", run_time, "h:m:s")
@@ -523,7 +559,8 @@ class NormalController:
         df = pd.read_csv(csv_foldername + "/eval_data.csv")
 
         # evaluation: average_return vs num_time_steps
-        df.plot(x="num_time_steps", y="average_return", color="blue", legend=False)
+        df.plot(x="num_time_steps", y="average_return", color="blue",
+                legend=False)
         plt.xlabel("time_steps")
         plt.ylabel("average\nreturn", rotation="horizontal", labelpad=30)
         plt.title("Policy Evaluation")
@@ -627,7 +664,8 @@ class NormalController:
         self.rlg.rl_env_message(f"save, {self.data_dir}")
 
         # save agent data
-        self.rlg.rl_agent_message(f"save, {self.data_dir}, {self.rlg.num_steps()}")
+        self.rlg.rl_agent_message(
+            f"save, {self.data_dir}, {self.rlg.num_steps()}")
 
         print("saving complete")
 
@@ -646,21 +684,25 @@ class NormalController:
         eval_data_df = pd.DataFrame({"num_time_steps": self.eval_data[:, 0],
                                      "num_updates": self.eval_data[:, 1],
                                      "num_epoch_updates": self.eval_data[:, 2],
-                                     "num_mini_batch_updates": self.eval_data[:, 3],
+                                     "num_mini_batch_updates": self.eval_data[:,
+                                                               3],
                                      "num_samples": self.eval_data[:, 4],
                                      "average_return": self.eval_data[:, 5],
                                      "run_time": self.eval_data[:, 6]})
-        eval_data_df.to_csv(csv_foldername + "/eval_data.csv", float_format="%f")
+        eval_data_df.to_csv(csv_foldername + "/eval_data.csv",
+                            float_format="%f")
 
         loss_data_df = pd.DataFrame({"num_updates": self.loss_data[:, 0],
                                      "num_epoch_updates": self.loss_data[:, 1],
-                                     "num_mini_batch_updates": self.loss_data[:, 2],
+                                     "num_mini_batch_updates": self.loss_data[:,
+                                                               2],
                                      "clip_loss": self.loss_data[:, 3],
                                      "vf_loss": self.loss_data[:, 4],
                                      "entropy": self.loss_data[:, 5],
                                      "clip_vf_s_loss": self.loss_data[:, 6],
                                      "clip_fraction": self.loss_data[:, 7]})
-        loss_data_df.to_csv(csv_foldername + "/loss_data.csv", float_format="%f")
+        loss_data_df.to_csv(csv_foldername + "/loss_data.csv",
+                            float_format="%f")
 
     def save_parameters(self):
         """
@@ -732,7 +774,8 @@ class NormalController:
 
         if self.parameters["device"] == "cuda":
             torch_cuda_random_state = torch.cuda.get_rng_state()
-            torch.save(torch_cuda_random_state, pt_foldername + "/torch_cuda_random_state.pt")
+            torch.save(torch_cuda_random_state,
+                       pt_foldername + "/torch_cuda_random_state.pt")
 
 
 def objective(trial):
@@ -748,7 +791,7 @@ def objective(trial):
         float: The average return after training for the specified
         number of time steps.
     """
-    
+
     # Set the learning rate.
     lr = trial.suggest_float(name="lr",
                              low=0.00001,
@@ -811,7 +854,7 @@ def objective(trial):
     # Set max grad norm.
     max_grad_norm_choices = [0.5, 1.0]
     max_grad_norm = trial.suggest_categorical(name="max_grad_norm",
-                                                 choices=max_grad_norm_choices)
+                                              choices=max_grad_norm_choices)
 
     # Set the use gae flag.
     use_gae_choices = [True, False]
@@ -851,7 +894,6 @@ def objective(trial):
 
     cumulative_returns = []
     for seed in seeds:
-
         # Set the random seed for the experiment.
         args.seed = seed
 
@@ -875,7 +917,6 @@ def objective(trial):
 
 
 def main():
-
     if args.optuna:
 
         optuna_folder = f"{os.getenv('HOME')}/Documents/openai/optuna"
@@ -885,7 +926,8 @@ def main():
 
         database_url = os.environ.get("PPO_OPTUNA_DB_URL")
         if not database_url:
-            raise ValueError("Database URL not found in environment. Make sure SAC_OPTUNA_DB_URL is set.")
+            raise ValueError(
+                "Database URL not found in environment. Make sure SAC_OPTUNA_DB_URL is set.")
 
         sampler = optuna.samplers.TPESampler()
         study = optuna.create_study(study_name=study_name,
@@ -895,8 +937,10 @@ def main():
                                     sampler=sampler)
 
         def print_trial_count(study, trial):
-            print(f"Trial {trial.number} completed. Total trials so far: {len(study.trials)}\n")
+            print(
+                f"Trial {trial.number} completed. Total trials so far: {len(study.trials)}\n")
 
+        # trial 201
         # study.enqueue_trial(
         #     {"lr": 0.00058328,
         #      "linear_lr_decay": True,
@@ -907,10 +951,14 @@ def main():
         #      "epsilon": 0.2885,
         #      "vf_loss_coef": 0.4932,
         #      "policy_entropy_coef": 0.0055157,
+        #      "clipped_value_fn": False,
+        #      "max_grad_norm": 0.5,
+        #      "use_gae": True,
         #      "gae_lambda": 0.9463,
         #      "normalize_rewards": False},
         # )
 
+        # trial 202
         # study.enqueue_trial(
         #     {"lr": 0.00016626,
         #      "linear_lr_decay": True,
@@ -921,7 +969,28 @@ def main():
         #      "epsilon": 0.2642,
         #      "vf_loss_coef": 0.8955,
         #      "policy_entropy_coef": 0.012144,
+        #      "clipped_value_fn": False,
+        #      "max_grad_norm": 0.5,
+        #      "use_gae": True,
         #      "gae_lambda": 0.9459,
+        #      "normalize_rewards": False},
+        # )
+
+        # trial 203
+        # study.enqueue_trial(
+        #     {"lr": 0.000123,
+        #      "linear_lr_decay": True,
+        #      "gamma": 0.9839,
+        #      "num_samples": 2471,
+        #      "mini_batch_size": 1024,
+        #      "num_epochs": 5,
+        #      "epsilon": 0.3,
+        #      "vf_loss_coef": 1.0,
+        #      "policy_entropy_coef": 0.0019,
+        #      "clipped_value_fn": False,
+        #      "max_grad_norm": 0.5,
+        #      "use_gae": True,
+        #      "gae_lambda": 0.911,
         #      "normalize_rewards": False},
         # )
 
@@ -952,5 +1021,4 @@ def main():
 
 
 if __name__ == "__main__":
-
     main()

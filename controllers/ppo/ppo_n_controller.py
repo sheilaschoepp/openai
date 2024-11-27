@@ -177,7 +177,7 @@ class NormalController:
                  + "_eps:" + str(self.parameters["epsilon"]) \
                  + "_c1:" + str(self.parameters["vf_loss_coef"]) \
                  + "_c2:" + str(self.parameters["policy_entropy_coef"]) \
-                 + "_cvl:" + str(self.parameters["clipped_value_fn"]) \
+                 + "_cvf:" + str(self.parameters["clipped_value_fn"]) \
                  + "_mgn:" + str(self.parameters["max_grad_norm"]) \
                  + "_gae:" + str(self.parameters["use_gae"]) \
                  + "_lam:" + str(self.parameters["gae_lambda"]) \
@@ -908,24 +908,48 @@ def main():
         #      "epsilon": 0.2885,
         #      "vf_loss_coef": 0.4932,
         #      "policy_entropy_coef": 0.0055157,
+        #      "clipped_value_fn": False,
+        #      "max_grad_norm": 0.5,
+        #      "use_gae": True,
         #      "gae_lambda": 0.9463,
         #      "normalize_rewards": False},
         # )
 
         # trial 202
-        study.enqueue_trial(
-            {"lr": 0.00016626,
-             "linear_lr_decay": True,
-             "gamma": 0.9627,
-             "num_samples": 2048,
-             "mini_batch_size": 32,
-             "num_epochs": 3,
-             "epsilon": 0.2642,
-             "vf_loss_coef": 0.8955,
-             "policy_entropy_coef": 0.012144,
-             "gae_lambda": 0.9459,
-             "normalize_rewards": False},
-        )
+        # study.enqueue_trial(
+        #     {"lr": 0.00016626,
+        #      "linear_lr_decay": True,
+        #      "gamma": 0.9627,
+        #      "num_samples": 2048,
+        #      "mini_batch_size": 32,
+        #      "num_epochs": 3,
+        #      "epsilon": 0.2642,
+        #      "vf_loss_coef": 0.8955,
+        #      "policy_entropy_coef": 0.012144,
+        #      "clipped_value_fn": False,
+        #      "max_grad_norm": 0.5,
+        #      "use_gae": True,
+        #      "gae_lambda": 0.9459,
+        #      "normalize_rewards": False},
+        # )
+
+        # trial 203
+        # study.enqueue_trial(
+        #     {"lr": 0.000123,
+        #      "linear_lr_decay": True,
+        #      "gamma": 0.9839,
+        #      "num_samples": 2471,
+        #      "mini_batch_size": 1024,
+        #      "num_epochs": 5,
+        #      "epsilon": 0.3,
+        #      "vf_loss_coef": 1.0,
+        #      "policy_entropy_coef": 0.0019,
+        #      "clipped_value_fn": False,
+        #      "max_grad_norm": 0.5,
+        #      "use_gae": True,
+        #      "gae_lambda": 0.911,
+        #      "normalize_rewards": False},
+        # )
 
         study.optimize(
             objective,

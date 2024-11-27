@@ -941,22 +941,22 @@ def main():
                 f"Trial {trial.number} completed. Total trials so far: {len(study.trials)}\n")
 
         # trial 201
-        # study.enqueue_trial(
-        #     {"lr": 0.00058328,
-        #      "linear_lr_decay": True,
-        #      "gamma": 0.9785,
-        #      "num_samples": 2048,
-        #      "mini_batch_size": 512,
-        #      "num_epochs": 5,
-        #      "epsilon": 0.2885,
-        #      "vf_loss_coef": 0.4932,
-        #      "policy_entropy_coef": 0.0055157,
-        #      "clipped_value_fn": False,
-        #      "max_grad_norm": 0.5,
-        #      "use_gae": True,
-        #      "gae_lambda": 0.9463,
-        #      "normalize_rewards": False},
-        # )
+        study.enqueue_trial(
+            {"lr": 0.00058328,
+             "linear_lr_decay": True,
+             "gamma": 0.9785,
+             "num_samples": 2048,
+             "mini_batch_size": 512,
+             "num_epochs": 5,
+             "epsilon": 0.2885,
+             "vf_loss_coef": 0.4932,
+             "policy_entropy_coef": 0.0055157,
+             "clipped_value_fn": False,
+             "max_grad_norm": 0.5,
+             "use_gae": True,
+             "gae_lambda": 0.9463,
+             "normalize_rewards": False},
+        )
 
         # trial 202
         # study.enqueue_trial(

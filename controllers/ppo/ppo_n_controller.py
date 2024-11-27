@@ -981,7 +981,7 @@ def main():
             {"lr": 0.000123,
              "linear_lr_decay": True,
              "gamma": 0.9839,
-             "num_samples": 2471,
+             "num_samples": 2048,
              "mini_batch_size": 1024,
              "num_epochs": 5,
              "epsilon": 0.3,

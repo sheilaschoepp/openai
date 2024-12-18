@@ -32,8 +32,7 @@ from utils.rl_glue import RLGlue
 
 import custom_gym_envs  # do not delete; required for custom gym environments
 
-parser = argparse.ArgumentParser(
-    description="PyTorch Proximal Policy Optimization Arguments")
+parser = argparse.ArgumentParser(description="PyTorch Proximal Policy Optimization Arguments")
 
 parser.add_argument("-e", "--n_env_name", default="Ant-v5",
                     help="name of normal (non-malfunctioning) MuJoCo Gym environment (default: Ant-v5)")
@@ -977,22 +976,22 @@ def main():
         # )
 
         # trial 203
-        study.enqueue_trial(
-            {"lr": 0.000123,
-             "linear_lr_decay": True,
-             "gamma": 0.9839,
-             "num_samples": 2048,
-             "mini_batch_size": 1024,
-             "num_epochs": 5,
-             "epsilon": 0.3,
-             "vf_loss_coef": 1.0,
-             "policy_entropy_coef": 0.0019,
-             "clipped_value_fn": False,
-             "max_grad_norm": 0.5,
-             "use_gae": True,
-             "gae_lambda": 0.911,
-             "normalize_rewards": False},
-        )
+        # study.enqueue_trial(
+        #     {"lr": 0.000123,
+        #      "linear_lr_decay": True,
+        #      "gamma": 0.9839,
+        #      "num_samples": 2471,
+        #      "mini_batch_size": 1024,
+        #      "num_epochs": 5,
+        #      "epsilon": 0.3,
+        #      "vf_loss_coef": 1.0,
+        #      "policy_entropy_coef": 0.0019,
+        #      "clipped_value_fn": False,
+        #      "max_grad_norm": 0.5,
+        #      "use_gae": True,
+        #      "gae_lambda": 0.911,
+        #      "normalize_rewards": False},
+        # )
 
         study.optimize(
             objective,

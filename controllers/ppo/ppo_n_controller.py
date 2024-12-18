@@ -32,8 +32,7 @@ from utils.rl_glue import RLGlue
 
 import custom_gym_envs  # do not delete; required for custom gym environments
 
-parser = argparse.ArgumentParser(
-    description="PyTorch Proximal Policy Optimization Arguments")
+parser = argparse.ArgumentParser(description="PyTorch Proximal Policy Optimization Arguments")
 
 parser.add_argument("-e", "--n_env_name", default="Ant-v5",
                     help="name of normal (non-malfunctioning) MuJoCo Gym environment (default: Ant-v5)")
@@ -923,22 +922,16 @@ def main():
         os.makedirs(optuna_folder, exist_ok=True)
 
         study_name = "ppo_optuna_study"
-
-        database_url = os.environ.get("PPO_OPTUNA_DB_URL")
-        if not database_url:
-            raise ValueError(
-                "Database URL not found in environment. Make sure SAC_OPTUNA_DB_URL is set.")
-
-        sampler = optuna.samplers.TPESampler()
+        storage = f"sqlite:///{optuna_folder}/ppo_optuna_study.db"
+        sampler = optuna.samplers.TPESampler(n_startup_trials=50)
         study = optuna.create_study(study_name=study_name,
-                                    storage=database_url,
+                                    storage=storage,
                                     direction="maximize",
                                     load_if_exists=True,
                                     sampler=sampler)
 
         def print_trial_count(study, trial):
-            print(
-                f"Trial {trial.number} completed. Total trials so far: {len(study.trials)}\n")
+            print(f"Trial {trial.number} completed. Total trials so far: {len(study.trials)}\n")
 
         # trial 201
         # study.enqueue_trial(
@@ -976,12 +969,12 @@ def main():
         #      "normalize_rewards": False},
         # )
 
-        # trial 203
+        # # trial 203
         # study.enqueue_trial(
         #     {"lr": 0.000123,
         #      "linear_lr_decay": True,
         #      "gamma": 0.9839,
-        #      "num_samples": 2471,
+        #      "num_samples": 2048,
         #      "mini_batch_size": 1024,
         #      "num_epochs": 5,
         #      "epsilon": 0.3,

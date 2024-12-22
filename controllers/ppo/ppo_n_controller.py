@@ -922,7 +922,7 @@ def main():
         optuna_folder = f'{os.getenv("HOME")}/Documents/openai/optuna'
         os.makedirs(optuna_folder, exist_ok=True)
 
-        study_name = "ppo_optuna_study"
+        study_name = 'ppo_optuna_study'
         storage = f'sqlite:///{optuna_folder}/ppo_optuna_study.db'
         sampler = optuna.samplers.TPESampler(n_startup_trials=50)
         study = optuna.create_study(study_name=study_name,

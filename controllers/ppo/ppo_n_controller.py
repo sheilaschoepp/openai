@@ -399,7 +399,7 @@ class NormalController:
                          num_episodes=self.rlg_statistics["num_episodes"])
 
         # save the agent model and evaluate the model before any learning
-        self.rlg.rl_agent_message(f"save_model, {self.data_dir}, {0}")
+        self.rlg.rl_agent_message(f'save_model, {self.data_dir}, {0}')
         self.evaluate_model(self.rlg.num_steps())
 
         for _ in itertools.count(1):
@@ -424,7 +424,7 @@ class NormalController:
                 if self.rlg.num_steps() % self.parameters[
                     "time_step_eval_frequency"] == 0:
                     self.rlg.rl_agent_message(
-                        f"save_model, {self.data_dir}, {self.rlg.num_steps()}")
+                        f'save_model, {self.data_dir}, {self.rlg.num_steps()}')
                     self.evaluate_model(self.rlg.num_steps())
 
             # index = self.rlg.num_episodes() - 1
@@ -457,7 +457,7 @@ class NormalController:
         text_file = open(self.data_dir + "/run_summary.txt", "w")
         text_file.write(date.today().strftime("%m/%d/%y"))
         text_file.write(
-            f"\n\nExperiment {self.experiment}/seed{self.parameters['seed']} complete.\n\nTime to complete: {run_time} h:m:s")
+            f'\n\nExperiment {self.experiment}/seed{self.parameters["seed"]} complete.\n\nTime to complete: {run_time} h:m:s')
         text_file.close()
 
         if self.parameters["wandb"]:
@@ -533,8 +533,7 @@ class NormalController:
                     "Time Steps": num_time_steps
                 })
 
-            print(
-                f"evaluation at {num_time_steps} time steps: {average_return}")
+            print(f'evaluation at {num_time_steps} time steps: {average_return}')
 
             run_time = str(timedelta(seconds=time.time() - self.start))[:-7]
             print("runtime:", run_time, "h:m:s")
@@ -660,11 +659,11 @@ class NormalController:
         self.save_rlg_statistics()
 
         # save environment data
-        self.rlg.rl_env_message(f"save, {self.data_dir}")
+        self.rlg.rl_env_message(f'save, {self.data_dir}')
 
         # save agent data
         self.rlg.rl_agent_message(
-            f"save, {self.data_dir}, {self.rlg.num_steps()}")
+            f'save, {self.data_dir}, {self.rlg.num_steps()}')
 
         print("saving complete")
 
@@ -920,11 +919,11 @@ def main():
 
     if args.optuna:
 
-        optuna_folder = f"{os.getenv('HOME')}/Documents/openai/optuna"
+        optuna_folder = f'{os.getenv("HOME")}/Documents/openai/optuna'
         os.makedirs(optuna_folder, exist_ok=True)
 
         study_name = "ppo_optuna_study"
-        storage = f"sqlite:///{optuna_folder}/ppo_optuna_study.db"
+        storage = f'sqlite:///{optuna_folder}/ppo_optuna_study.db'
         sampler = optuna.samplers.TPESampler(n_startup_trials=50)
         study = optuna.create_study(study_name=study_name,
                                     storage=storage,
@@ -933,7 +932,7 @@ def main():
                                     sampler=sampler)
 
         def print_trial_count(study, trial):
-            print(f"Trial {trial.number} completed. Total trials so far: {len(study.trials)}\n")
+            print(f'Trial {trial.number} completed. Total trials so far: {len(study.trials)}\n')
 
         study.optimize(
             objective,
@@ -941,12 +940,12 @@ def main():
             callbacks=[print_trial_count]
         )
 
-        with open(f"{optuna_folder}/ppo_optuna.txt", "w") as f:
-            print(f"Best hyperparameters found:", file=f)
+        with open(f'{optuna_folder}/ppo_optuna.txt', "w") as f:
+            print(f'Best hyperparameters found:', file=f)
             for key, value in study.best_params.items():
-                print(f"{key}: {value}", file=f)
-            print("\n", file=f)
-            print(f"Best average return:\n{study.best_value}", file=f)
+                print(f'{key}: {value}', file=f)
+            print('\n', file=f)
+            print(f'Best average return:\n{study.best_value}', file=f)
 
     else:
 

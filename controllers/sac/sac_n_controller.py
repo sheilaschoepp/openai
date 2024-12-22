@@ -852,7 +852,7 @@ def main():
 
         study_name = "sac_optuna_study"
         storage = f"sqlite:///{optuna_folder}/sac_optuna_study.db"
-        sampler = optuna.samplers.TPESampler()
+        sampler = optuna.samplers.TPESampler(n_startup_trials=50)
         study = optuna.create_study(study_name=study_name,
                                     storage=storage,
                                     direction="maximize",

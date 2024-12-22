@@ -830,7 +830,7 @@ def objective(trial):
     # Set epsilon.
     epsilon = trial.suggest_float(name="epsilon",
                                   low=0.1,
-                                  high=0.4,
+                                  high=0.3,
                                   step=0.0001)
 
     # Set the value function loss coefficient.
@@ -893,6 +893,7 @@ def objective(trial):
 
     cumulative_returns = []
     for seed in seeds:
+
         # Set the random seed for the experiment.
         args.seed = seed
 
@@ -916,6 +917,7 @@ def objective(trial):
 
 
 def main():
+
     if args.optuna:
 
         optuna_folder = f"{os.getenv('HOME')}/Documents/openai/optuna"
@@ -1014,4 +1016,5 @@ def main():
 
 
 if __name__ == "__main__":
+
     main()

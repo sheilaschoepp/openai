@@ -174,15 +174,9 @@ class NormalController:
             f'{"_o" if self.parameters["optuna"] else ""}'
         )
 
-        self.experiment = "SAC_" + suffix
+        self.experiment = f'SAC_{suffix}'
 
-        self.data_dir = (
-                os.getenv("HOME")
-                + "/Documents/openai/data/"
-                + self.experiment
-                + "/seed"
-                + str(self.parameters["seed"])
-        )
+        self.data_dir = f'{os.getenv("HOME")}/Documents/openai/data/{self.experiment}/seed{self.parameters["seed"]}'
 
         # are we restarting training?  do the data files for the
         # selected seed already exist?

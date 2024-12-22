@@ -151,6 +151,7 @@ class NormalController:
         # W&B initialization
 
         if self.parameters["wandb"]:
+
             wandb.init(
                 project="ppo_antv5",
                 config=self.parameters
@@ -206,36 +207,39 @@ class NormalController:
             print(self.LINE)
 
             if args.delete:
-                # yes; argument flag present to indicate data deletion
-                print(colored("argument indicates DATA DELETION", "red"))
-                print(colored("deleting data...", "red"))
-                rmtree(self.data_dir, ignore_errors=True)
-                print(colored("data deletion complete", "red"))
+                # argument flag present to indicate data deletion
+                print(colored(text="argument indicates DATA DELETION",
+                              color="red"))
+                print(colored(text="deleting data...", color="red"))
+                rmtree(path=self.data_dir, ignore_errors=True)
+                print(colored(text="data deletion complete", color="red"))
             else:
-                # yes; argument flag not present; get confirmation of data deletion from user input
+                # argument flag not present; get confirmation of data deletion from user input
                 print(colored(
-                    "You are about to delete saved data and restart training.",
-                    "red"))
+                    text="You are about to delete saved data and restart training.",
+                    color="red"
+                ))
                 s = input(colored(
-                    "Are you sure you want to continue?  Hit 'y' then 'Enter' to continue.\n",
-                    "red"))
+                    text="Are you sure you want to continue? Hit 'y' then 'Enter' to continue.\n",
+                    color="red"
+                ))
                 if s == "y":
                     # delete old data; rewrite new data to same location
-                    print(colored("user input indicates DATA DELETION", "red"))
-                    print(colored("deleting data...", "red"))
-                    rmtree(self.data_dir, ignore_errors=True)
-                    print(colored("data deletion complete", "red"))
+                    print(colored(text="user input indicates DATA DELETION",
+                                  color="red"))
+                    print(colored(text="deleting data...", color="red"))
+                    rmtree(path=self.data_dir, ignore_errors=True)
+                    print(colored(text="data deletion complete", color="red"))
                 else:
                     # do not delete old data; system exit
-                    print(
-                        colored("user input indicates NO DATA DELETION", "red"))
+                    print(colored(text="user input indicates NO DATA DELETION",
+                                  color="red"))
                     print(self.LINE)
                     sys.exit("\nexiting...")
 
         # data
 
-        num_rows = int(self.parameters["n_time_steps"] / self.parameters[
-            "time_step_eval_frequency"]) + 1  # add 1 for evaluation before any learning (0th entry)
+        num_rows = int(self.parameters["n_time_steps"] / self.parameters["time_step_eval_frequency"]) + 1  # add 1 for evaluation before any learning (0th entry)
         num_columns = 7
         self.eval_data = np.zeros((num_rows, num_columns))
 
@@ -243,8 +247,7 @@ class NormalController:
         # num_columns = 3
         # self.train_data = np.zeros((num_rows, num_columns))
 
-        num_rows = (self.parameters["n_time_steps"] // self.parameters[
-            "num_samples"])
+        num_rows = (self.parameters["n_time_steps"] // self.parameters["num_samples"])
         num_columns = 8
         self.loss_data = np.zeros((num_rows, num_columns))
 

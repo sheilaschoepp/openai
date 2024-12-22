@@ -110,26 +110,28 @@ class NormalController:
 
         self.parameters = None
 
-        self.parameters = {"n_env_name": args.n_env_name,
-                           "n_time_steps": args.n_time_steps,
-                           "gamma": args.gamma,
-                           "tau": args.tau,
-                           "alpha": args.alpha,
-                           "lr": args.lr,
-                           "hidden_dim": args.hidden_dim,
-                           "replay_buffer_size": args.replay_buffer_size,
-                           "batch_size": args.batch_size,
-                           "normalize_rewards": args.normalize_rewards,
-                           "model_updates_per_step": args.model_updates_per_step,
-                           "target_update_interval": args.target_update_interval,
-                           "automatic_entropy_tuning": args.automatic_entropy_tuning,
-                           "time_step_eval_frequency": args.time_step_eval_frequency,
-                           "eval_episodes": args.eval_episodes,
-                           "cuda": args.cuda,
-                           "device": "cuda" if args.cuda and torch.cuda.is_available() else "cpu",
-                           "seed": args.seed,
-                           "wandb": args.wandb,
-                           "optuna": args.optuna}
+        self.parameters = {
+            "n_env_name": args.n_env_name,
+            "n_time_steps": args.n_time_steps,
+            "gamma": args.gamma,
+            "tau": args.tau,
+            "alpha": args.alpha,
+            "lr": args.lr,
+            "hidden_dim": args.hidden_dim,
+            "replay_buffer_size": args.replay_buffer_size,
+            "batch_size": args.batch_size,
+            "normalize_rewards": args.normalize_rewards,
+            "model_updates_per_step": args.model_updates_per_step,
+            "target_update_interval": args.target_update_interval,
+            "automatic_entropy_tuning": args.automatic_entropy_tuning,
+            "time_step_eval_frequency": args.time_step_eval_frequency,
+            "eval_episodes": args.eval_episodes,
+            "cuda": args.cuda,
+            "device": "cuda" if args.cuda and torch.cuda.is_available() else "cpu",
+            "seed": args.seed,
+            "wandb": args.wandb,
+            "optuna": args.optuna
+        }
 
         # W&B initialization
 
@@ -152,23 +154,25 @@ class NormalController:
 
         # experiment data directory
 
-        suffix = self.parameters["n_env_name"] + ":" + str(self.parameters["n_time_steps"]) \
-                 + "_g:" + str(self.parameters["gamma"]) \
-                 + "_t:" + str(self.parameters["tau"]) \
-                 + "_a:" + str(self.parameters["alpha"]) \
-                 + "_lr:" + str(self.parameters["lr"]) \
-                 + "_hd:" + str(self.parameters["hidden_dim"]) \
-                 + "_rbs:" + str(self.parameters["replay_buffer_size"]) \
-                 + "_bs:" + str(self.parameters["batch_size"]) \
-                 + "_nr:" + str(self.parameters["normalize_rewards"]) \
-                 + "_mups:" + str(self.parameters["model_updates_per_step"]) \
-                 + "_tui:" + str(self.parameters["target_update_interval"]) \
-                 + "_a:" + str(self.parameters["automatic_entropy_tuning"]) \
-                 + "_tef:" + str(self.parameters["time_step_eval_frequency"]) \
-                 + "_ee:" + str(self.parameters["eval_episodes"]) \
-                 + "_d:" + str(self.parameters["device"]) \
-                 + ("_wb" if self.parameters["wandb"] else "") \
-                 + ("_o" if self.parameters["optuna"] else "")
+        suffix = (
+            f'{self.parameters["n_env_name"]}:{self.parameters["n_time_steps"]}'
+            f'_g:{self.parameters["gamma"]}'
+            f'_t:{self.parameters["tau"]}'
+            f'_a:{self.parameters["alpha"]}'
+            f'_lr:{self.parameters["lr"]}'
+            f'_hd:{self.parameters["hidden_dim"]}'
+            f'_rbs:{self.parameters["replay_buffer_size"]}'
+            f'_bs:{self.parameters["batch_size"]}'
+            f'_nr:{self.parameters["normalize_rewards"]}'
+            f'_mups:{self.parameters["model_updates_per_step"]}'
+            f'_tui:{self.parameters["target_update_interval"]}'
+            f'_a:{self.parameters["automatic_entropy_tuning"]}'
+            f'_tef:{self.parameters["time_step_eval_frequency"]}'
+            f'_ee:{self.parameters["eval_episodes"]}'
+            f'_d:{self.parameters["device"]}'
+            f'{"_wb" if self.parameters["wandb"] else ""}'
+            f'{"_o" if self.parameters["optuna"] else ""}'
+        )
 
         self.experiment = "SAC_" + suffix
 
@@ -341,7 +345,7 @@ class NormalController:
                          num_episodes=self.rlg_statistics["num_episodes"])
 
         # save the agent model and evaluate the model before any learning
-        self.rlg.rl_agent_message(f"save_model, {self.data_dir}, {0}")
+        self.rlg.rl_agent_message(f'save_model, {self.data_dir}, {0}')
         self.evaluate_model(self.rlg.num_steps())
 
         for _ in itertools.count(1):
@@ -362,7 +366,7 @@ class NormalController:
                 # 'self.parameters["time_step_eval_frequency"]' time
                 # steps
                 if self.rlg.num_steps() % self.parameters["time_step_eval_frequency"] == 0:
-                    self.rlg.rl_agent_message(f"save_model, {self.data_dir}, {self.rlg.num_steps()}")
+                    self.rlg.rl_agent_message(f'save_model, {self.data_dir}, {self.rlg.num_steps()}')
                     self.evaluate_model(self.rlg.num_steps())
 
             # index = self.rlg.num_episodes() - 1
@@ -394,7 +398,7 @@ class NormalController:
 
         text_file = open(self.data_dir + "/run_summary.txt", "w")
         text_file.write(date.today().strftime("%m/%d/%y"))
-        text_file.write(f"\n\nExperiment {self.experiment}/seed{self.parameters['seed']} complete.\n\nTime to complete: {run_time} h:m:s")
+        text_file.write(f'\n\nExperiment {self.experiment}/seed{self.parameters["seed"]} complete.\n\nTime to complete: {run_time} h:m:s')
         text_file.close()
 
         if self.parameters["wandb"]:
@@ -475,7 +479,7 @@ class NormalController:
                     "Time Steps": num_time_steps
                 })
 
-            print(f"evaluation at {num_time_steps} time steps: {average_return}")
+            print(f'evaluation at {num_time_steps} time steps: {average_return}')
 
             run_time = str(timedelta(seconds=time.time() - self.start))[:-7]
             print("runtime:", run_time, "h:m:s")
@@ -614,10 +618,10 @@ class NormalController:
         self.save_rlg_statistics()
 
         # save environment data
-        self.rlg.rl_env_message(f"save, {self.data_dir}")
+        self.rlg.rl_env_message(f'save, {self.data_dir}')
 
         # save agent data
-        self.rlg.rl_agent_message(f"save, {self.data_dir}, {self.rlg.num_steps()}")
+        self.rlg.rl_agent_message(f'save, {self.data_dir}, {self.rlg.num_steps()}')
 
         print("saving complete")
 
@@ -847,12 +851,12 @@ def main():
 
     if args.optuna:
 
-        optuna_folder = f"{os.getenv('HOME')}/Documents/openai/optuna"
+        optuna_folder = f'{os.getenv("HOME")}/Documents/openai/optuna'
         os.makedirs(optuna_folder, exist_ok=True)
 
-        study_name = "sac_optuna_study"
-        storage = f"sqlite:///{optuna_folder}/sac_optuna_study.db"
-        sampler = optuna.samplers.TPESampler()
+        study_name = 'sac_optuna_study'
+        storage = f'sqlite:///{optuna_folder}/sac_optuna_study.db'
+        sampler = optuna.samplers.TPESampler(n_startup_trials=50)
         study = optuna.create_study(study_name=study_name,
                                     storage=storage,
                                     direction="maximize",
@@ -860,18 +864,7 @@ def main():
                                     sampler=sampler)
 
         def print_trial_count(study, trial):
-            print(f"Trial {trial.number} completed. Total trials so far: {len(study.trials)}\n")
-
-        # study.enqueue_trial(
-        #     {"gamma": 0.00058328,
-        #      "tau": True,
-        #      "alpha": 0.9785,
-        #      "lr": 2048,
-        #      "replay_buffer_size": 512,
-        #      "batch_size": 5,
-        #      "target_update_interval": 0.4932,
-        #      "automatic_entropy_tuning": 0.0055157},
-        # )
+            print(f'Trial {trial.number} completed. Total trials so far: {len(study.trials)}\n')
 
         study.optimize(
             objective,
@@ -879,12 +872,12 @@ def main():
             callbacks=[print_trial_count]
         )
 
-        with open(f"{optuna_folder}/sac_optuna.txt", "w") as f:
-            print(f"Best hyperparameters found:", file=f)
+        with open(f'{optuna_folder}/sac_optuna.txt', "w") as f:
+            print(f'Best hyperparameters found:', file=f)
             for key, value in study.best_params.items():
-                print(f"{key}: {value}", file=f)
-            print("\n", file=f)
-            print(f"Best average return:\n{study.best_value}", file=f)
+                print(f'{key}: {value}', file=f)
+            print('\n', file=f)
+            print(f'Best average return:\n{study.best_value}', file=f)
 
     else:
 

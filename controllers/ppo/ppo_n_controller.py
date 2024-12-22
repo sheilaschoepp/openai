@@ -36,22 +36,19 @@ parser = argparse.ArgumentParser(description="PyTorch Proximal Policy Optimizati
 
 parser.add_argument("-e", "--n_env_name", default="Ant-v5",
                     help="name of normal (non-malfunctioning) MuJoCo Gym environment (default: Ant-v5)")
-parser.add_argument("-t", "--n_time_steps", type=int, default=10000000,
-                    metavar="N",
+parser.add_argument("-t", "--n_time_steps", type=int, default=10000000, metavar="N",
                     help="number of time steps in normal (non-malfunctioning) MuJoCo Gym environment (default: 5000000)")
 
 parser.add_argument("--lr", type=float, default=0.000275, metavar="G",
                     help="learning rate (default: 0.000275)")
-parser.add_argument("-lrd", "--linear_lr_decay", default=False,
-                    action="store_true",
+parser.add_argument("-lrd", "--linear_lr_decay", default=False, action="store_true",
                     help="if true, decrease learning rate linearly (default: False)")
 parser.add_argument("--gamma", type=float, default=0.848, metavar="G",
                     help="discount factor (default: 0.848)")
 
 parser.add_argument("-ns", "--num_samples", type=int, default=3424, metavar="N",
                     help="number of samples used to update the network(s) (default: 3424)")
-parser.add_argument("-mbs", "--mini_batch_size", type=int, default=8,
-                    metavar="N",
+parser.add_argument("-mbs", "--mini_batch_size", type=int, default=8, metavar="N",
                     help=" number of samples per mini-batch (default: 8)")
 parser.add_argument("--epochs", type=int, default=24, metavar="N",
                     help="number of epochs when updating the network(s) (default: 24)")
@@ -60,8 +57,7 @@ parser.add_argument("--epsilon", type=float, default=0.3, metavar="G",
                     help="clip parameter (default: 0.3)")
 parser.add_argument("--vf_loss_coef", type=float, default=1.0, metavar="G",
                     help=" c1 - coefficient for the squared error loss term (default: 1.0)")
-parser.add_argument("--policy_entropy_coef", type=float, default=0.0007,
-                    metavar="G",
+parser.add_argument("--policy_entropy_coef", type=float, default=0.0007, metavar="G",
                     help=" c2 - coefficient for the entropy bonus term (default: 0.0007)")
 parser.add_argument("--clipped_value_fn", default=False, action="store_true",
                     help="if true, clip value function (default: False)")
@@ -73,8 +69,7 @@ parser.add_argument("--use_gae", default=False, action="store_true",
 parser.add_argument("--gae_lambda", type=float, default=0.9327, metavar="G",
                     help="generalized advantage estimation smoothing parameter (default: 0.9327)")
 
-parser.add_argument("-nr", "--normalize_rewards", default=False,
-                    action="store_true",
+parser.add_argument("-nr", "--normalize_rewards", default=False, action="store_true",
                     help="if true, normalize rewards in memory (default: False)")
 
 parser.add_argument("--hidden_dim", type=int, default=64, metavar="N",
@@ -82,8 +77,7 @@ parser.add_argument("--hidden_dim", type=int, default=64, metavar="N",
 parser.add_argument("--log_std", type=float, default=0.0, metavar="G",
                     help="log standard deviation of the policy distribution (default: 0.0)")
 
-parser.add_argument("-tef", "--time_step_eval_frequency", type=int,
-                    default=50000, metavar="N",
+parser.add_argument("-tef", "--time_step_eval_frequency", type=int, default=50000, metavar="N",
                     help="frequency of policy evaluation during learning (default: 10000)")
 parser.add_argument("-ee", "--eval_episodes", type=int, default=10, metavar="N",
                     help="number of episodes in policy evaluation roll-out (default: 10)")
@@ -126,31 +120,33 @@ class NormalController:
 
         self.parameters = None
 
-        self.parameters = {"n_env_name": args.n_env_name,
-                           "n_time_steps": args.n_time_steps,
-                           "lr": args.lr,
-                           "linear_lr_decay": args.linear_lr_decay,
-                           "gamma": args.gamma,
-                           "num_samples": args.num_samples,
-                           "mini_batch_size": args.mini_batch_size,
-                           "epochs": args.epochs,
-                           "epsilon": args.epsilon,
-                           "vf_loss_coef": args.vf_loss_coef,
-                           "policy_entropy_coef": args.policy_entropy_coef,
-                           "clipped_value_fn": args.clipped_value_fn,
-                           "max_grad_norm": args.max_grad_norm,
-                           "use_gae": args.use_gae,
-                           "gae_lambda": args.gae_lambda,
-                           "normalize_rewards": args.normalize_rewards,
-                           "hidden_dim": args.hidden_dim,
-                           "log_std": args.log_std,
-                           "time_step_eval_frequency": args.time_step_eval_frequency,
-                           "eval_episodes": args.eval_episodes,
-                           "cuda": args.cuda,
-                           "device": "cuda" if args.cuda and torch.cuda.is_available() else "cpu",
-                           "seed": args.seed,
-                           "wandb": args.wandb,
-                           "optuna": args.optuna}
+        self.parameters = {
+            "n_env_name": args.n_env_name,
+            "n_time_steps": args.n_time_steps,
+            "lr": args.lr,
+            "linear_lr_decay": args.linear_lr_decay,
+            "gamma": args.gamma,
+            "num_samples": args.num_samples,
+            "mini_batch_size": args.mini_batch_size,
+            "epochs": args.epochs,
+            "epsilon": args.epsilon,
+            "vf_loss_coef": args.vf_loss_coef,
+            "policy_entropy_coef": args.policy_entropy_coef,
+            "clipped_value_fn": args.clipped_value_fn,
+            "max_grad_norm": args.max_grad_norm,
+            "use_gae": args.use_gae,
+            "gae_lambda": args.gae_lambda,
+            "normalize_rewards": args.normalize_rewards,
+            "hidden_dim": args.hidden_dim,
+            "log_std": args.log_std,
+            "time_step_eval_frequency": args.time_step_eval_frequency,
+            "eval_episodes": args.eval_episodes,
+            "cuda": args.cuda,
+            "device": "cuda" if args.cuda and torch.cuda.is_available() else "cpu",
+            "seed": args.seed,
+            "wandb": args.wandb,
+            "optuna": args.optuna
+        }
 
         # W&B initialization
 
@@ -172,39 +168,34 @@ class NormalController:
 
         # experiment data directory
 
-        suffix = self.parameters["n_env_name"] + ":" + str(
-            self.parameters["n_time_steps"]) \
-                 + "_lr:" + str(self.parameters["lr"]) \
-                 + "_lrd:" + str(self.parameters["linear_lr_decay"]) \
-                 + "_g:" + str(self.parameters["gamma"]) \
-                 + "_ns:" + str(self.parameters["num_samples"]) \
-                 + "_mbs:" + str(self.parameters["mini_batch_size"]) \
-                 + "_epo:" + str(self.parameters["epochs"]) \
-                 + "_eps:" + str(self.parameters["epsilon"]) \
-                 + "_c1:" + str(self.parameters["vf_loss_coef"]) \
-                 + "_c2:" + str(self.parameters["policy_entropy_coef"]) \
-                 + "_cvf:" + str(self.parameters["clipped_value_fn"]) \
-                 + "_mgn:" + str(self.parameters["max_grad_norm"]) \
-                 + "_gae:" + str(self.parameters["use_gae"]) \
-                 + "_lam:" + str(self.parameters["gae_lambda"]) \
-                 + "_nr:" + str(self.parameters["normalize_rewards"]) \
-                 + "_hd:" + str(self.parameters["hidden_dim"]) \
-                 + "_lstd:" + str(self.parameters["log_std"]) \
-                 + "_tef:" + str(self.parameters["time_step_eval_frequency"]) \
-                 + "_ee:" + str(self.parameters["eval_episodes"]) \
-                 + "_d:" + str(self.parameters["device"]) \
-                 + ("_wb" if self.parameters["wandb"] else "") \
-                 + ("_o" if self.parameters["optuna"] else "")
-
-        self.experiment = "PPO_" + suffix
-
-        self.data_dir = (
-                os.getenv("HOME")
-                + "/Documents/openai/data/"
-                + self.experiment
-                + "/seed"
-                + str(self.parameters["seed"])
+        suffix = (
+            f'{self.parameters["n_env_name"]}:{self.parameters["n_time_steps"]}'
+            f'_lr:{self.parameters["lr"]}'
+            f'_lrd:{self.parameters["linear_lr_decay"]}'
+            f'_g:{self.parameters["gamma"]}'
+            f'_ns:{self.parameters["num_samples"]}'
+            f'_mbs:{self.parameters["mini_batch_size"]}'
+            f'_epo:{self.parameters["epochs"]}'
+            f'_eps:{self.parameters["epsilon"]}'
+            f'_c1:{self.parameters["vf_loss_coef"]}'
+            f'_c2:{self.parameters["policy_entropy_coef"]}'
+            f'_cvf:{self.parameters["clipped_value_fn"]}'
+            f'_mgn:{self.parameters["max_grad_norm"]}'
+            f'_gae:{self.parameters["use_gae"]}'
+            f'_lam:{self.parameters["gae_lambda"]}'
+            f'_nr:{self.parameters["normalize_rewards"]}'
+            f'_hd:{self.parameters["hidden_dim"]}'
+            f'_lstd:{self.parameters["log_std"]}'
+            f'_tef:{self.parameters["time_step_eval_frequency"]}'
+            f'_ee:{self.parameters["eval_episodes"]}'
+            f'_d:{self.parameters["device"]}'
+            f'{"_wb" if self.parameters["wandb"] else ""}'
+            f'{"_o" if self.parameters["optuna"] else ""}'
         )
+
+        self.experiment = f'PPO_{suffix}'
+
+        self.data_dir = f'{os.getenv("HOME")}/Documents/openai/data/{self.experiment}/seed{self.parameters["seed"]}'
 
         # are we restarting training?  do the data files for the
         # selected seed already exist?
@@ -399,7 +390,7 @@ class NormalController:
                          num_episodes=self.rlg_statistics["num_episodes"])
 
         # save the agent model and evaluate the model before any learning
-        self.rlg.rl_agent_message(f"save_model, {self.data_dir}, {0}")
+        self.rlg.rl_agent_message(f'save_model, {self.data_dir}, {0}')
         self.evaluate_model(self.rlg.num_steps())
 
         for _ in itertools.count(1):
@@ -424,7 +415,7 @@ class NormalController:
                 if self.rlg.num_steps() % self.parameters[
                     "time_step_eval_frequency"] == 0:
                     self.rlg.rl_agent_message(
-                        f"save_model, {self.data_dir}, {self.rlg.num_steps()}")
+                        f'save_model, {self.data_dir}, {self.rlg.num_steps()}')
                     self.evaluate_model(self.rlg.num_steps())
 
             # index = self.rlg.num_episodes() - 1
@@ -457,7 +448,7 @@ class NormalController:
         text_file = open(self.data_dir + "/run_summary.txt", "w")
         text_file.write(date.today().strftime("%m/%d/%y"))
         text_file.write(
-            f"\n\nExperiment {self.experiment}/seed{self.parameters['seed']} complete.\n\nTime to complete: {run_time} h:m:s")
+            f'\n\nExperiment {self.experiment}/seed{self.parameters["seed"]} complete.\n\nTime to complete: {run_time} h:m:s')
         text_file.close()
 
         if self.parameters["wandb"]:
@@ -533,8 +524,7 @@ class NormalController:
                     "Time Steps": num_time_steps
                 })
 
-            print(
-                f"evaluation at {num_time_steps} time steps: {average_return}")
+            print(f'evaluation at {num_time_steps} time steps: {average_return}')
 
             run_time = str(timedelta(seconds=time.time() - self.start))[:-7]
             print("runtime:", run_time, "h:m:s")
@@ -660,11 +650,11 @@ class NormalController:
         self.save_rlg_statistics()
 
         # save environment data
-        self.rlg.rl_env_message(f"save, {self.data_dir}")
+        self.rlg.rl_env_message(f'save, {self.data_dir}')
 
         # save agent data
         self.rlg.rl_agent_message(
-            f"save, {self.data_dir}, {self.rlg.num_steps()}")
+            f'save, {self.data_dir}, {self.rlg.num_steps()}')
 
         print("saving complete")
 
@@ -830,7 +820,7 @@ def objective(trial):
     # Set epsilon.
     epsilon = trial.suggest_float(name="epsilon",
                                   low=0.1,
-                                  high=0.4,
+                                  high=0.3,
                                   step=0.0001)
 
     # Set the value function loss coefficient.
@@ -893,6 +883,7 @@ def objective(trial):
 
     cumulative_returns = []
     for seed in seeds:
+
         # Set the random seed for the experiment.
         args.seed = seed
 
@@ -916,82 +907,23 @@ def objective(trial):
 
 
 def main():
+
     if args.optuna:
 
-        optuna_folder = f"{os.getenv('HOME')}/Documents/openai/optuna"
+        optuna_folder = f'{os.getenv("HOME")}/Documents/openai/optuna'
         os.makedirs(optuna_folder, exist_ok=True)
 
-        study_name = "ppo_optuna_study"
-
-        database_url = os.environ.get("PPO_OPTUNA_DB_URL")
-        if not database_url:
-            raise ValueError(
-                "Database URL not found in environment. Make sure SAC_OPTUNA_DB_URL is set.")
-
-        sampler = optuna.samplers.TPESampler()
+        study_name = 'ppo_optuna_study'
+        storage = f'sqlite:///{optuna_folder}/ppo_optuna_study.db'
+        sampler = optuna.samplers.TPESampler(n_startup_trials=50)
         study = optuna.create_study(study_name=study_name,
-                                    storage=database_url,
+                                    storage=storage,
                                     direction="maximize",
                                     load_if_exists=True,
                                     sampler=sampler)
 
         def print_trial_count(study, trial):
-            print(
-                f"Trial {trial.number} completed. Total trials so far: {len(study.trials)}\n")
-
-        # trial 201
-        # study.enqueue_trial(
-        #     {"lr": 0.00058328,
-        #      "linear_lr_decay": True,
-        #      "gamma": 0.9785,
-        #      "num_samples": 2048,
-        #      "mini_batch_size": 512,
-        #      "num_epochs": 5,
-        #      "epsilon": 0.2885,
-        #      "vf_loss_coef": 0.4932,
-        #      "policy_entropy_coef": 0.0055157,
-        #      "clipped_value_fn": False,
-        #      "max_grad_norm": 0.5,
-        #      "use_gae": True,
-        #      "gae_lambda": 0.9463,
-        #      "normalize_rewards": False},
-        # )
-
-        # trial 202
-        # study.enqueue_trial(
-        #     {"lr": 0.00016626,
-        #      "linear_lr_decay": True,
-        #      "gamma": 0.9627,
-        #      "num_samples": 2048,
-        #      "mini_batch_size": 32,
-        #      "num_epochs": 3,
-        #      "epsilon": 0.2642,
-        #      "vf_loss_coef": 0.8955,
-        #      "policy_entropy_coef": 0.012144,
-        #      "clipped_value_fn": False,
-        #      "max_grad_norm": 0.5,
-        #      "use_gae": True,
-        #      "gae_lambda": 0.9459,
-        #      "normalize_rewards": False},
-        # )
-
-        # trial 203
-        # study.enqueue_trial(
-        #     {"lr": 0.000123,
-        #      "linear_lr_decay": True,
-        #      "gamma": 0.9839,
-        #      "num_samples": 2471,
-        #      "mini_batch_size": 1024,
-        #      "num_epochs": 5,
-        #      "epsilon": 0.3,
-        #      "vf_loss_coef": 1.0,
-        #      "policy_entropy_coef": 0.0019,
-        #      "clipped_value_fn": False,
-        #      "max_grad_norm": 0.5,
-        #      "use_gae": True,
-        #      "gae_lambda": 0.911,
-        #      "normalize_rewards": False},
-        # )
+            print(f'Trial {trial.number} completed. Total trials so far: {len(study.trials)}\n')
 
         study.optimize(
             objective,
@@ -999,12 +931,12 @@ def main():
             callbacks=[print_trial_count]
         )
 
-        with open(f"{optuna_folder}/ppo_optuna.txt", "w") as f:
-            print(f"Best hyperparameters found:", file=f)
+        with open(f'{optuna_folder}/ppo_optuna.txt', "w") as f:
+            print(f'Best hyperparameters found:', file=f)
             for key, value in study.best_params.items():
-                print(f"{key}: {value}", file=f)
-            print("\n", file=f)
-            print(f"Best average return:\n{study.best_value}", file=f)
+                print(f'{key}: {value}', file=f)
+            print('\n', file=f)
+            print(f'Best average return:\n{study.best_value}', file=f)
 
     else:
 
@@ -1020,4 +952,5 @@ def main():
 
 
 if __name__ == "__main__":
+
     main()

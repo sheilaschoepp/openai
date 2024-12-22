@@ -110,26 +110,28 @@ class NormalController:
 
         self.parameters = None
 
-        self.parameters = {"n_env_name": args.n_env_name,
-                           "n_time_steps": args.n_time_steps,
-                           "gamma": args.gamma,
-                           "tau": args.tau,
-                           "alpha": args.alpha,
-                           "lr": args.lr,
-                           "hidden_dim": args.hidden_dim,
-                           "replay_buffer_size": args.replay_buffer_size,
-                           "batch_size": args.batch_size,
-                           "normalize_rewards": args.normalize_rewards,
-                           "model_updates_per_step": args.model_updates_per_step,
-                           "target_update_interval": args.target_update_interval,
-                           "automatic_entropy_tuning": args.automatic_entropy_tuning,
-                           "time_step_eval_frequency": args.time_step_eval_frequency,
-                           "eval_episodes": args.eval_episodes,
-                           "cuda": args.cuda,
-                           "device": "cuda" if args.cuda and torch.cuda.is_available() else "cpu",
-                           "seed": args.seed,
-                           "wandb": args.wandb,
-                           "optuna": args.optuna}
+        self.parameters = {
+            "n_env_name": args.n_env_name,
+            "n_time_steps": args.n_time_steps,
+            "gamma": args.gamma,
+            "tau": args.tau,
+            "alpha": args.alpha,
+            "lr": args.lr,
+            "hidden_dim": args.hidden_dim,
+            "replay_buffer_size": args.replay_buffer_size,
+            "batch_size": args.batch_size,
+            "normalize_rewards": args.normalize_rewards,
+            "model_updates_per_step": args.model_updates_per_step,
+            "target_update_interval": args.target_update_interval,
+            "automatic_entropy_tuning": args.automatic_entropy_tuning,
+            "time_step_eval_frequency": args.time_step_eval_frequency,
+            "eval_episodes": args.eval_episodes,
+            "cuda": args.cuda,
+            "device": "cuda" if args.cuda and torch.cuda.is_available() else "cpu",
+            "seed": args.seed,
+            "wandb": args.wandb,
+            "optuna": args.optuna
+        }
 
         # W&B initialization
 

@@ -520,9 +520,12 @@ class NormalController:
                                      average_return,
                                      real_time]
 
+            cumulative_return = self.eval_data[:, -2].sum()
+
             if self.parameters["wandb"]:
                 wandb.log(data={
                     "Key Metrics/Average Return": average_return,
+                    "Key Metrics/Cumulative Return": cumulative_return,
                     "Real Time": real_time,
                     "Time Steps": num_time_steps
                 })

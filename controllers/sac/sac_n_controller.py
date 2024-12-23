@@ -753,7 +753,7 @@ def objective(trial):
                                 step=0.00001)
 
     # Set the learning rate.
-    lr = trial.suggest_float(name="lr", # todo
+    lr = trial.suggest_float(name="lr",
                              low=0.0001,
                              high=0.001,
                              step=0.000001)

@@ -736,7 +736,7 @@ def objective(trial):
 
     # Set gamma.
     gamma = trial.suggest_float(name="gamma",
-                                low=0.8,
+                                low=0.9,
                                 high=0.9999,
                                 step=0.0001)
 
@@ -744,19 +744,19 @@ def objective(trial):
     tau = trial.suggest_float(name="tau",
                               low=0.001,
                               high=0.1,
-                              step=0.0000001)
+                              step=0.00001)
 
     # Set alpha.
     alpha = trial.suggest_float(name="alpha",
                                 low=0.0001,
                                 high=0.2,
-                                step=0.0000001)
+                                step=0.00001)
 
     # Set the learning rate.
-    lr = trial.suggest_float(name="lr",
-                             low=0.00001,
+    lr = trial.suggest_float(name="lr", # todo
+                             low=0.0001,
                              high=0.001,
-                             step=0.00000001)
+                             step=0.000001)
 
     # Set the replay buffer size.
     replay_buffer_size_choices = [100000, 250000, 500000, 750000, 1000000]
@@ -766,7 +766,7 @@ def objective(trial):
     )
 
     # Set the batch size.
-    batch_size_choices = [64, 128, 256]
+    batch_size_choices = [64, 128, 256, 512]
     batch_size = trial.suggest_categorical(
         name="batch_size",
         choices=batch_size_choices
@@ -802,9 +802,9 @@ def objective(trial):
 
     # Set the hyperparameters directly in `args`.
     args.gamma = round(gamma, 4)
-    args.tau = round(tau, 7)
-    args.alpha = round(alpha, 7)
-    args.lr = round(lr, 8)
+    args.tau = round(tau, 5)
+    args.alpha = round(alpha, 5)
+    args.lr = round(lr, 6)
     args.replay_buffer_size = replay_buffer_size
     args.batch_size = batch_size
     args.normalize_rewards = normalize_rewards

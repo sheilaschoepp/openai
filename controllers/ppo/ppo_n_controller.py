@@ -151,6 +151,7 @@ class NormalController:
         # W&B initialization
 
         if self.parameters["wandb"]:
+
             wandb.init(
                 project="ppo_antv5",
                 config=self.parameters
@@ -206,36 +207,39 @@ class NormalController:
             print(self.LINE)
 
             if args.delete:
-                # yes; argument flag present to indicate data deletion
-                print(colored("argument indicates DATA DELETION", "red"))
-                print(colored("deleting data...", "red"))
-                rmtree(self.data_dir, ignore_errors=True)
-                print(colored("data deletion complete", "red"))
+                # argument flag present to indicate data deletion
+                print(colored(text="argument indicates DATA DELETION",
+                              color="red"))
+                print(colored(text="deleting data...", color="red"))
+                rmtree(path=self.data_dir, ignore_errors=True)
+                print(colored(text="data deletion complete", color="red"))
             else:
-                # yes; argument flag not present; get confirmation of data deletion from user input
+                # argument flag not present; get confirmation of data deletion from user input
                 print(colored(
-                    "You are about to delete saved data and restart training.",
-                    "red"))
+                    text="You are about to delete saved data and restart training.",
+                    color="red"
+                ))
                 s = input(colored(
-                    "Are you sure you want to continue?  Hit 'y' then 'Enter' to continue.\n",
-                    "red"))
+                    text="Are you sure you want to continue? Hit 'y' then 'Enter' to continue.\n",
+                    color="red"
+                ))
                 if s == "y":
                     # delete old data; rewrite new data to same location
-                    print(colored("user input indicates DATA DELETION", "red"))
-                    print(colored("deleting data...", "red"))
-                    rmtree(self.data_dir, ignore_errors=True)
-                    print(colored("data deletion complete", "red"))
+                    print(colored(text="user input indicates DATA DELETION",
+                                  color="red"))
+                    print(colored(text="deleting data...", color="red"))
+                    rmtree(path=self.data_dir, ignore_errors=True)
+                    print(colored(text="data deletion complete", color="red"))
                 else:
                     # do not delete old data; system exit
-                    print(
-                        colored("user input indicates NO DATA DELETION", "red"))
+                    print(colored(text="user input indicates NO DATA DELETION",
+                                  color="red"))
                     print(self.LINE)
                     sys.exit("\nexiting...")
 
         # data
 
-        num_rows = int(self.parameters["n_time_steps"] / self.parameters[
-            "time_step_eval_frequency"]) + 1  # add 1 for evaluation before any learning (0th entry)
+        num_rows = int(self.parameters["n_time_steps"] / self.parameters["time_step_eval_frequency"]) + 1  # add 1 for evaluation before any learning (0th entry)
         num_columns = 7
         self.eval_data = np.zeros((num_rows, num_columns))
 
@@ -243,8 +247,7 @@ class NormalController:
         # num_columns = 3
         # self.train_data = np.zeros((num_rows, num_columns))
 
-        num_rows = (self.parameters["n_time_steps"] // self.parameters[
-            "num_samples"])
+        num_rows = (self.parameters["n_time_steps"] // self.parameters["num_samples"])
         num_columns = 8
         self.loss_data = np.zeros((num_rows, num_columns))
 
@@ -397,8 +400,7 @@ class NormalController:
 
             # episode time steps are limited to 1000 (set below)
             # this is used to ensure that once self.parameters["n_time_steps"] is reached, the experiment is terminated
-            max_steps_this_episode = min(1000, self.parameters[
-                "n_time_steps"] - self.rlg.num_steps())
+            max_steps_this_episode = min(1000, self.parameters["n_time_steps"] - self.rlg.num_steps())
 
             # run an episode
             self.rlg.rl_start()
@@ -517,9 +519,12 @@ class NormalController:
                                      average_return,
                                      real_time]
 
+            cumulative_average_return = self.eval_data[:, -2].sum()
+
             if self.parameters["wandb"]:
                 wandb.log(data={
                     "Key Metrics/Average Return": average_return,
+                    "Key Metrics/Cumulative Average Return": cumulative_average_return,
                     "Real Time": real_time,
                     "Time Steps": num_time_steps
                 })
@@ -673,8 +678,7 @@ class NormalController:
         eval_data_df = pd.DataFrame({"num_time_steps": self.eval_data[:, 0],
                                      "num_updates": self.eval_data[:, 1],
                                      "num_epoch_updates": self.eval_data[:, 2],
-                                     "num_mini_batch_updates": self.eval_data[:,
-                                                               3],
+                                     "num_mini_batch_updates": self.eval_data[:, 3],
                                      "num_samples": self.eval_data[:, 4],
                                      "average_return": self.eval_data[:, 5],
                                      "run_time": self.eval_data[:, 6]})
@@ -783,9 +787,9 @@ def objective(trial):
 
     # Set the learning rate.
     lr = trial.suggest_float(name="lr",
-                             low=0.00001,
+                             low=0.0001,
                              high=0.001,
-                             step=0.00000001)
+                             step=0.000001)
 
     # Set the linear learning rate decay flag.
     linear_lr_decay_choices = [True, False]
@@ -794,7 +798,7 @@ def objective(trial):
 
     # Set gamma.
     gamma = trial.suggest_float(name="gamma",
-                                low=0.8,
+                                low=0.9,
                                 high=0.9999,
                                 step=0.0001)
 
@@ -833,7 +837,7 @@ def objective(trial):
     policy_entropy_coef = trial.suggest_float(name="policy_entropy_coef",
                                               low=0.0001,
                                               high=0.1,
-                                              step=0.0000001)
+                                              step=0.000001)
 
     # Set the clipped value function flag.
     clipped_value_fn_choices = [True, False]
@@ -862,7 +866,7 @@ def objective(trial):
                                                   choices=normalize_rewards_choices)
 
     # Set the hyperparameters directly in `args`.
-    args.lr = round(lr, 8)
+    args.lr = round(lr, 6)
     args.linear_lr_decay = linear_lr_decay
     args.gamma = round(gamma, 4)
     args.num_samples = num_samples
@@ -870,7 +874,7 @@ def objective(trial):
     args.epochs = epochs
     args.epsilon = round(epsilon, 4)
     args.vf_loss_coef = round(vf_loss_coef, 4)
-    args.policy_entropy_coef = round(policy_entropy_coef, 7)
+    args.policy_entropy_coef = round(policy_entropy_coef, 6)
     args.clipped_value_fn = clipped_value_fn
     args.max_grad_norm = max_grad_norm
     args.use_gae = use_gae

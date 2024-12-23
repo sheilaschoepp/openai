@@ -174,15 +174,9 @@ class NormalController:
             f'{"_o" if self.parameters["optuna"] else ""}'
         )
 
-        self.experiment = "SAC_" + suffix
+        self.experiment = f'SAC_{suffix}'
 
-        self.data_dir = (
-                os.getenv("HOME")
-                + "/Documents/openai/data/"
-                + self.experiment
-                + "/seed"
-                + str(self.parameters["seed"])
-        )
+        self.data_dir = f'{os.getenv("HOME")}/Documents/openai/data/{self.experiment}/seed{self.parameters["seed"]}'
 
         # are we restarting training?  do the data files for the
         # selected seed already exist?
@@ -472,9 +466,12 @@ class NormalController:
                                      average_return,
                                      real_time]
 
+            cumulative_average_return = self.eval_data[:, -2].sum()
+
             if self.parameters["wandb"]:
                 wandb.log(data={
                     "Key Metrics/Average Return": average_return,
+                    "Key Metrics/Cumulative Average Return": cumulative_average_return,
                     "Real Time": real_time,
                     "Time Steps": num_time_steps
                 })
@@ -742,7 +739,7 @@ def objective(trial):
 
     # Set gamma.
     gamma = trial.suggest_float(name="gamma",
-                                low=0.8,
+                                low=0.9,
                                 high=0.9999,
                                 step=0.0001)
 
@@ -750,19 +747,19 @@ def objective(trial):
     tau = trial.suggest_float(name="tau",
                               low=0.001,
                               high=0.1,
-                              step=0.0000001)
+                              step=0.00001)
 
     # Set alpha.
     alpha = trial.suggest_float(name="alpha",
                                 low=0.0001,
                                 high=0.2,
-                                step=0.0000001)
+                                step=0.00001)
 
     # Set the learning rate.
     lr = trial.suggest_float(name="lr",
-                             low=0.00001,
+                             low=0.0001,
                              high=0.001,
-                             step=0.00000001)
+                             step=0.000001)
 
     # Set the replay buffer size.
     replay_buffer_size_choices = [100000, 250000, 500000, 750000, 1000000]
@@ -772,7 +769,7 @@ def objective(trial):
     )
 
     # Set the batch size.
-    batch_size_choices = [64, 128, 256]
+    batch_size_choices = [64, 128, 256, 512]
     batch_size = trial.suggest_categorical(
         name="batch_size",
         choices=batch_size_choices
@@ -808,9 +805,9 @@ def objective(trial):
 
     # Set the hyperparameters directly in `args`.
     args.gamma = round(gamma, 4)
-    args.tau = round(tau, 7)
-    args.alpha = round(alpha, 7)
-    args.lr = round(lr, 8)
+    args.tau = round(tau, 5)
+    args.alpha = round(alpha, 5)
+    args.lr = round(lr, 6)
     args.replay_buffer_size = replay_buffer_size
     args.batch_size = batch_size
     args.normalize_rewards = normalize_rewards

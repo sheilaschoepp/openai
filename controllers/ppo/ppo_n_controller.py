@@ -400,8 +400,7 @@ class NormalController:
 
             # episode time steps are limited to 1000 (set below)
             # this is used to ensure that once self.parameters["n_time_steps"] is reached, the experiment is terminated
-            max_steps_this_episode = min(1000, self.parameters[
-                "n_time_steps"] - self.rlg.num_steps())
+            max_steps_this_episode = min(1000, self.parameters["n_time_steps"] - self.rlg.num_steps())
 
             # run an episode
             self.rlg.rl_start()
@@ -520,12 +519,12 @@ class NormalController:
                                      average_return,
                                      real_time]
 
-            cumulative_return = self.eval_data[:, -2].sum()
+            cumulative_average_return = self.eval_data[:, -2].sum()
 
             if self.parameters["wandb"]:
                 wandb.log(data={
                     "Key Metrics/Average Return": average_return,
-                    "Key Metrics/Cumulative Return": cumulative_return,
+                    "Key Metrics/Cumulative Average Return": cumulative_average_return,
                     "Real Time": real_time,
                     "Time Steps": num_time_steps
                 })
@@ -679,8 +678,7 @@ class NormalController:
         eval_data_df = pd.DataFrame({"num_time_steps": self.eval_data[:, 0],
                                      "num_updates": self.eval_data[:, 1],
                                      "num_epoch_updates": self.eval_data[:, 2],
-                                     "num_mini_batch_updates": self.eval_data[:,
-                                                               3],
+                                     "num_mini_batch_updates": self.eval_data[:, 3],
                                      "num_samples": self.eval_data[:, 4],
                                      "average_return": self.eval_data[:, 5],
                                      "run_time": self.eval_data[:, 6]})

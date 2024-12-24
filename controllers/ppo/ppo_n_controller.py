@@ -154,7 +154,12 @@ class NormalController:
 
             wandb.init(
                 project="ppo_antv5",
-                config=self.parameters
+                config=self.parameters,
+                dir = "/home/sschoepp/Documents/openai/wandb",
+                settings = wandb.Settings(
+                    _disable_stats=True,  # disable system stats logging
+                    _disable_meta=True  # disable metadata logging
+                )
             )
 
             wandb.define_metric(

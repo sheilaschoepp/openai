@@ -1,6 +1,9 @@
 # ignore data folder
 data/**
 
+# ignore wandb folder
+wandb/**
+
 # ignore optuna folder
 optuna/*.db
 

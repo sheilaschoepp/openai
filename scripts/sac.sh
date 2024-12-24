@@ -22,7 +22,7 @@ do
     while [ $(get_active_tmux_sessions) -ge $MAX_ACTIVE_SESSIONS ]
     do
         echo "Maximum active sessions reached. Waiting..."
-        sleep 300  # Check again every 300 seconds
+#        sleep 300  # Check again every 300 seconds
     done
 
     # Create a new tmux session

@@ -672,7 +672,7 @@ class SAC(BaseAgent):
         self.loss_index += 1
 
         if self.wandb:
-            wandb.log(data={
+            data = {
                 "Loss Metrics/Average Q1 Loss": q_value_loss_1.item(),
                 "Loss Metrics/Average Q2 Loss": q_value_loss_2.item(),
                 "Loss Metrics/Average Policy Loss": policy_loss.item(),
@@ -680,4 +680,5 @@ class SAC(BaseAgent):
                 "Loss Metrics/Alpha": self.alpha.item(),
                 "Loss Metrics/Average Entropy": entropy.item(),
                 "Number of Updates": self.num_updates
-            })
+            }
+            wandb.log(data=data)

@@ -138,9 +138,6 @@ class PPO(BaseAgent):
                              device=self.device)
         self.memory_init_samples = 0
 
-        # loss_index
-        self.loss_index = 0
-
         # total number of network updates that will occur
         self.total_num_updates = self.time_steps // self.num_samples
 
@@ -387,7 +384,6 @@ class PPO(BaseAgent):
         with open(pickle_foldername + "/num_updates.pickle", "rb") as f:
             update_dic = pickle.load(f)
 
-        self.loss_index = update_dic["loss_index"]
         self.total_num_updates = update_dic["total_num_updates"]
         self.num_updates = update_dic["num_updates"]
 
@@ -567,8 +563,7 @@ class PPO(BaseAgent):
         pickle_foldername = dir_ + "/pickle"
         os.makedirs(pickle_foldername, exist_ok=True)
 
-        update_dic = {"loss_index": self.loss_index,
-                      "total_num_updates": self.total_num_updates,
+        update_dic = {"total_num_updates": self.total_num_updates,
                       "num_updates": self.num_updates,
                       "num_old_updates": self.num_old_updates,
                       "num_epoch_updates": self.num_epoch_updates,
@@ -662,8 +657,6 @@ class PPO(BaseAgent):
             for param_group in self.actor_critic_optimizer.param_groups:
                 param_group["lr"] = lr
 
-        self.num_updates += 1
-
         avg_clip_loss = 0
         avg_vf_loss = 0
         avg_entropy = 0
@@ -672,13 +665,9 @@ class PPO(BaseAgent):
 
         for _ in range(self.epochs):
 
-            self.num_epoch_updates += 1
-
             mini_batches = self.memory.generate_mini_batches()
 
             for mb in mini_batches:
-
-                self.num_mini_batch_updates += 1
 
                 states_batch, values_batch, actions_batch, old_log_probs_batch, returns_batch, advantages_batch = mb
 
@@ -721,17 +710,20 @@ class PPO(BaseAgent):
                 avg_entropy += new_dist_entropy.item()
                 avg_clip_vf_s_loss += clip_vf_s_loss.item()
 
-        num_updates = self.epochs * (self.num_samples // self.mini_batch_size)
+                self.num_mini_batch_updates += 1
 
-        avg_clip_loss /= num_updates
-        avg_vf_loss /= num_updates
-        avg_entropy /= num_updates
-        avg_clip_vf_s_loss /= num_updates
+            self.num_epoch_updates += 1
 
-        clip_fraction = total_num_clips / (num_updates * self.mini_batch_size)
+        num_mini_batch_updates = self.epochs * (self.num_samples // self.mini_batch_size)
 
-        self.loss_data[self.loss_index] = [self.num_updates, self.num_epoch_updates, self.num_mini_batch_updates, avg_clip_loss, avg_vf_loss, avg_entropy, avg_clip_vf_s_loss, clip_fraction]
-        self.loss_index += 1
+        avg_clip_loss /= num_mini_batch_updates
+        avg_vf_loss /= num_mini_batch_updates
+        avg_entropy /= num_mini_batch_updates
+        avg_clip_vf_s_loss /= num_mini_batch_updates
+
+        clip_fraction = total_num_clips / (num_mini_batch_updates * self.mini_batch_size)
+
+        self.loss_data[self.num_updates] = [self.num_updates, self.num_epoch_updates, self.num_mini_batch_updates, avg_clip_loss, avg_vf_loss, avg_entropy, avg_clip_vf_s_loss, clip_fraction]
 
         if self.wandb and self.num_updates % 100 == 0:
 
@@ -743,3 +735,5 @@ class PPO(BaseAgent):
                 "Loss Metrics/Clip Fraction": clip_fraction,
                 "Number of Updates": self.num_updates
             })
+
+        self.num_updates += 1

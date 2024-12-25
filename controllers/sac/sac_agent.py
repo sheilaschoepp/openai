@@ -671,7 +671,7 @@ class SAC(BaseAgent):
         self.loss_data[self.loss_index] = [self.num_updates, q_value_loss_1.item(), q_value_loss_2.item(), policy_loss.item(), alpha_loss.item(), self.alpha.item(), entropy.item()]
         self.loss_index += 1
 
-        if self.wandb:
+        if self.wandb and self.num_updates % 30 == 0:
             data = {
                 "Loss Metrics/Average Q1 Loss": q_value_loss_1.item(),
                 "Loss Metrics/Average Q2 Loss": q_value_loss_2.item(),

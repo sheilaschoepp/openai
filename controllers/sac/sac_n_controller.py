@@ -473,7 +473,7 @@ class NormalController:
                 data = {
                     "Key Metrics/Average Return": average_return,
                     "Key Metrics/Cumulative Average Return": cumulative_average_return,
-                    "Real Time": real_time,
+                    "Key Metrics/Real Time": real_time,
                     "Time Steps": num_time_steps
                 }
                 wandb.log(data=data)

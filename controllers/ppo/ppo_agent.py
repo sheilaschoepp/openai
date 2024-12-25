@@ -733,7 +733,7 @@ class PPO(BaseAgent):
         self.loss_data[self.loss_index] = [self.num_updates, self.num_epoch_updates, self.num_mini_batch_updates, avg_clip_loss, avg_vf_loss, avg_entropy, avg_clip_vf_s_loss, clip_fraction]
         self.loss_index += 1
 
-        if self.wandb:
+        if self.wandb and self.num_updates % 100 == 0:
 
             wandb.log(data={
                 "Loss Metrics/Average CLIP VF S Loss": avg_clip_vf_s_loss,

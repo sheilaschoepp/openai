@@ -154,7 +154,8 @@ class NormalController:
 
             wandb.init(
                 project="ppo_antv5",
-                config=self.parameters
+                config=self.parameters,
+                dir=f'{os.getenv("HOME")}/Documents/openai'
             )
 
             wandb.define_metric(

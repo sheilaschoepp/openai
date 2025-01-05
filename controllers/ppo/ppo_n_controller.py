@@ -450,8 +450,7 @@ class NormalController:
 
         text_file = open(self.data_dir + "/run_summary.txt", "w")
         text_file.write(date.today().strftime("%m/%d/%y"))
-        text_file.write(
-            f'\n\nExperiment {self.experiment}/seed{self.parameters["seed"]} complete.\n\nTime to complete: {run_time} h:m:s')
+        text_file.write(f'\n\nExperiment {self.experiment}/seed{self.parameters["seed"]} complete.\n\nTime to complete: {run_time} h:m:s')
         text_file.close()
 
         if self.parameters["wandb"]:
@@ -526,7 +525,7 @@ class NormalController:
                 wandb.log(data={
                     "Key Metrics/Average Return": average_return,
                     "Key Metrics/Cumulative Average Return": cumulative_average_return,
-                    "Real Time": real_time,
+                    "Key Metrics/Real Time": real_time,
                     "Time Steps": num_time_steps
                 })
 
@@ -788,9 +787,9 @@ def objective(trial):
 
     # Set the learning rate.
     lr = trial.suggest_float(name="lr",
-                             low=0.0001,
+                             low=0.00001,
                              high=0.001,
-                             step=0.000001)
+                             step=0.00000001)
 
     # Set the linear learning rate decay flag.
     linear_lr_decay_choices = [True, False]
@@ -799,7 +798,7 @@ def objective(trial):
 
     # Set gamma.
     gamma = trial.suggest_float(name="gamma",
-                                low=0.9,
+                                low=0.8,
                                 high=0.9999,
                                 step=0.0001)
 
@@ -838,7 +837,7 @@ def objective(trial):
     policy_entropy_coef = trial.suggest_float(name="policy_entropy_coef",
                                               low=0.0001,
                                               high=0.1,
-                                              step=0.000001)
+                                              step=0.0000001)
 
     # Set the clipped value function flag.
     clipped_value_fn_choices = [True, False]
@@ -867,7 +866,7 @@ def objective(trial):
                                                   choices=normalize_rewards_choices)
 
     # Set the hyperparameters directly in `args`.
-    args.lr = round(lr, 6)
+    args.lr = round(lr, 8)
     args.linear_lr_decay = linear_lr_decay
     args.gamma = round(gamma, 4)
     args.num_samples = num_samples
@@ -875,7 +874,7 @@ def objective(trial):
     args.epochs = epochs
     args.epsilon = round(epsilon, 4)
     args.vf_loss_coef = round(vf_loss_coef, 4)
-    args.policy_entropy_coef = round(policy_entropy_coef, 6)
+    args.policy_entropy_coef = round(policy_entropy_coef, 7)
     args.clipped_value_fn = clipped_value_fn
     args.max_grad_norm = max_grad_norm
     args.use_gae = use_gae
@@ -929,6 +928,60 @@ def main():
 
         def print_trial_count(study, trial):
             print(f'Trial {trial.number} completed. Total trials so far: {len(study.trials)}\n')
+
+        # trial 201
+        # study.enqueue_trial(
+        #     {"lr": 0.00058328,
+        #      "linear_lr_decay": True,
+        #      "gamma": 0.9785,
+        #      "num_samples": 2048,
+        #      "mini_batch_size": 512,
+        #      "num_epochs": 5,
+        #      "epsilon": 0.2885,
+        #      "vf_loss_coef": 0.4932,
+        #      "policy_entropy_coef": 0.0055157,
+        #      "clipped_value_fn": False,
+        #      "max_grad_norm": 0.5,
+        #      "use_gae": True,
+        #      "gae_lambda": 0.9463,
+        #      "normalize_rewards": False},
+        # )
+
+        # trial 202
+        # study.enqueue_trial(
+        #     {"lr": 0.00016626,
+        #      "linear_lr_decay": True,
+        #      "gamma": 0.9627,
+        #      "num_samples": 2048,
+        #      "mini_batch_size": 32,
+        #      "num_epochs": 3,
+        #      "epsilon": 0.2642,
+        #      "vf_loss_coef": 0.8955,
+        #      "policy_entropy_coef": 0.012144,
+        #      "clipped_value_fn": False,
+        #      "max_grad_norm": 0.5,
+        #      "use_gae": True,
+        #      "gae_lambda": 0.9459,
+        #      "normalize_rewards": False},
+        # )
+
+        # # trial 203
+        # study.enqueue_trial(
+        #     {"lr": 0.000123,
+        #      "linear_lr_decay": True,
+        #      "gamma": 0.9839,
+        #      "num_samples": 2048,
+        #      "mini_batch_size": 1024,
+        #      "num_epochs": 5,
+        #      "epsilon": 0.3,
+        #      "vf_loss_coef": 1.0,
+        #      "policy_entropy_coef": 0.0019,
+        #      "clipped_value_fn": False,
+        #      "max_grad_norm": 0.5,
+        #      "use_gae": True,
+        #      "gae_lambda": 0.911,
+        #      "normalize_rewards": False},
+        # )
 
         study.optimize(
             objective,

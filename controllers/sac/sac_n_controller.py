@@ -473,7 +473,7 @@ class NormalController:
                 data = {
                     "Key Metrics/Average Return": average_return,
                     "Key Metrics/Cumulative Average Return": cumulative_average_return,
-                    "Real Time": real_time,
+                    "Key Metrics/Real Time": real_time,
                     "Time Steps": num_time_steps
                 }
                 wandb.log(data=data)
@@ -741,7 +741,7 @@ def objective(trial):
 
     # Set gamma.
     gamma = trial.suggest_float(name="gamma",
-                                low=0.9,
+                                low=0.8,
                                 high=0.9999,
                                 step=0.0001)
 
@@ -749,19 +749,19 @@ def objective(trial):
     tau = trial.suggest_float(name="tau",
                               low=0.001,
                               high=0.1,
-                              step=0.00001)
+                              step=0.0000001)
 
     # Set alpha.
     alpha = trial.suggest_float(name="alpha",
                                 low=0.0001,
                                 high=0.2,
-                                step=0.00001)
+                                step=0.0000001)
 
     # Set the learning rate.
     lr = trial.suggest_float(name="lr",
-                             low=0.0001,
+                             low=0.00001,
                              high=0.001,
-                             step=0.000001)
+                             step=0.00000001)
 
     # Set the replay buffer size.
     replay_buffer_size_choices = [100000, 250000, 500000, 750000, 1000000]
@@ -807,9 +807,9 @@ def objective(trial):
 
     # Set the hyperparameters directly in `args`.
     args.gamma = round(gamma, 4)
-    args.tau = round(tau, 5)
-    args.alpha = round(alpha, 5)
-    args.lr = round(lr, 6)
+    args.tau = round(tau, 7)
+    args.alpha = round(alpha, 7)
+    args.lr = round(lr, 8)
     args.replay_buffer_size = replay_buffer_size
     args.batch_size = batch_size
     args.normalize_rewards = normalize_rewards
@@ -864,6 +864,17 @@ def main():
 
         def print_trial_count(study, trial):
             print(f'Trial {trial.number} completed. Total trials so far: {len(study.trials)}\n')
+
+        # study.enqueue_trial(
+        #     {"gamma": 0.00058328,
+        #      "tau": True,
+        #      "alpha": 0.9785,
+        #      "lr": 2048,
+        #      "replay_buffer_size": 512,
+        #      "batch_size": 5,
+        #      "target_update_interval": 0.4932,
+        #      "automatic_entropy_tuning": 0.0055157},
+        # )
 
         study.optimize(
             objective,

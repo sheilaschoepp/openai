@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Define session range and maximum active sessions
-SESSION_START=51
-SESSION_END=200
+SESSION_START=1
+SESSION_END=50
 MAX_ACTIVE_SESSIONS=21
 
 # Define command to run in each session

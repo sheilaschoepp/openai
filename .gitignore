@@ -1,8 +1,14 @@
 # ignore data folder
 data/**
 
-# ignore conda tar file
-openai3.9.tar.gz
+# ignore wandb folder
+wandb/**
+
+# ignore optuna folder
+optuna/*.db
+
+# ignore conda tar files
+~virtualenv/*
 
 # ignore histogram data
 **/plot/histogram/data/*

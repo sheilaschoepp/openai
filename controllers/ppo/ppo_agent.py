@@ -1,5 +1,6 @@
 import os
 import pickle
+import wandb
 
 import torch
 import torch.nn as nn
@@ -24,7 +25,6 @@ class PPO(BaseAgent):
                  log_std,
                  lr,
                  linear_lr_decay,
-                 slow_lrd,
                  gamma,
                  time_steps,
                  num_samples,
@@ -37,9 +37,10 @@ class PPO(BaseAgent):
                  max_grad_norm,
                  use_gae,
                  gae_lambda,
+                 normalize_rewards,
                  device,
-                 loss_data,
-                 resume):
+                 wandb,
+                 loss_data):
         """
         Initialize agent variables.
         Initialize agent neural network.
@@ -56,8 +57,6 @@ class PPO(BaseAgent):
             learning rate
         @param linear_lr_decay: bool
             if true, decrease the learning rate linearly
-        @param slow_lrd: float
-            slow linear learning rate decay by this percentage
         @param gamma: float
             discount factor
         @param time_steps: int
@@ -82,12 +81,14 @@ class PPO(BaseAgent):
             if true, use generalized advantage estimation
         @param gae_lambda: float
             generalized advantage estimation smoothing parameter
-        @param device: string
+        @param normalize_rewards: bool
+            if true, normalize rewards in memory
+        @param device: str
             indicates whether using 'cuda' or 'cpu'
+        @param wandb: bool
+            if true, log to weights & biases
         @param loss_data: float64 numpy zeros array with shape (n_timesteps / num_samples * epochs, 3)
             numpy array to store agent loss data
-        @param resume: bool
-            if true, we are resuming the experiment
         """
 
         super(PPO, self).__init__()
@@ -100,7 +101,6 @@ class PPO(BaseAgent):
         self.log_std = log_std
         self.lr = lr
         self.linear_lr_decay = linear_lr_decay
-        self.slow_lrd = slow_lrd
 
         self.time_steps = time_steps
         self.num_samples = num_samples
@@ -114,9 +114,9 @@ class PPO(BaseAgent):
         self.max_grad_norm = max_grad_norm
 
         self.device = device
-        self.loss_data = loss_data
+        self.wandb = wandb
 
-        self.resume = resume
+        self.loss_data = loss_data
 
         # network
         self.actor_critic_network = ActorCriticNetwork(self.state_dim, self.action_dim, self.hidden_dim, self.log_std).to(device=self.device)
@@ -128,11 +128,15 @@ class PPO(BaseAgent):
         self.actor_critic_criterion = nn.MSELoss()
 
         # memory
-        self.memory = Memory(num_samples, self.state_dim, self.action_dim, gamma, use_gae, gae_lambda, mini_batch_size, device=self.device)
+        self.memory = Memory(num_samples,
+                             self.state_dim,
+                             self.action_dim,
+                             gamma, use_gae,
+                             gae_lambda,
+                             normalize_rewards,
+                             mini_batch_size,
+                             device=self.device)
         self.memory_init_samples = 0
-
-        # loss_index
-        self.loss_index = 0
 
         # total number of network updates that will occur
         self.total_num_updates = self.time_steps // self.num_samples
@@ -147,11 +151,6 @@ class PPO(BaseAgent):
         # number of mini batch updates of the networks
         self.num_mini_batch_updates = 0
 
-        # RL problem
-        self.state = None
-        self.action = None
-        self.log_prob = None
-
         # mode - learn or evaluation
         # if train, select an action using a policy distribution; add experience to the memory; policy model mode is 'train'
         # if eval, select a deterministic action (distribution mean); do not add experience to the memory; policy mode is 'eval'
@@ -162,18 +161,23 @@ class PPO(BaseAgent):
         Initialize the variables that you want to reset before starting a new run.
         """
 
-        pass
+        # RL problem
+        self.state = None
+        self.action = None
+        self.log_prob = None
 
     def agent_start(self, state):
         """
         Initialize the variables that you want to reset before starting a new episode.
         Agent selects an action.
 
-        @param state: float64 numpy array with shape (state_dim,)
-            state of the environment
+        @param state: np.ndarray
+            a float64 numpy array with shape (state_dim,) representing
+            the state of the environment
 
-        @return action: float64 numpy array with shape (action_dim,)
-            action selected by the agent
+        @return action: np.ndarray
+            a float64 numpy array with shape (action_dim,) representing
+            the action selected by the agent
         """
 
         action = self.agent_select_action(state)
@@ -194,13 +198,15 @@ class PPO(BaseAgent):
 
         @param reward: float64
             reward received for taking action
-        @param next_state: float64 numpy array with shape (state_dim,)
+        @param next_state: np.ndarray
+            a float64 numpy array with shape (state_dim,) representing
             the state of the environment after taking action
         @param terminal: boolean
-            true if the goal state has been reached after taking action; otherwise false
+            true if the goal state has been reached; otherwise false
 
-        @return action: float64 numpy array with shape (action_dim,)
-            action selected by the agent
+        @return action: np.ndarray
+            a float64 numpy array with shape (action_dim,) representing
+            the action selected by the agent
         """
 
         if self.mode == "train":
@@ -228,10 +234,11 @@ class PPO(BaseAgent):
 
         @param reward: float64
             reward received for taking action
-        @param next_state: float64 numpy array with shape (state_dim,)
+        @param next_state: np.ndarray
+            a float64 numpy array with shape (state_dim,) representing
             the state of the environment after taking action
         @param terminal: boolean
-            true if the goal state has been reached after taking action; otherwise false
+            true if the goal state has been reached; otherwise false
 
         @return self.action: None
         """
@@ -312,8 +319,11 @@ class PPO(BaseAgent):
         self.agent_load_models(dir_, t)
         self.agent_load_num_updates(dir_)
         self.agent_load_memory(dir_)
-        self.agent_load_memory_inti_samples(dir_)  # must come after agent_load_memory
-        self.agent_load_total_num_updates()  # must come after agent_load_memory
+
+        # the following two method calls must come after
+        # agent_load_memory
+        self.agent_load_memory_inti_samples(dir_)
+        self.agent_load_total_num_updates()
 
     def agent_load_models(self, dir_, t):
         """
@@ -334,7 +344,8 @@ class PPO(BaseAgent):
         if self.device == "cuda":
 
             # send to gpu
-            checkpoint = torch.load(tar_foldername + "/{}.tar".format(t))
+            checkpoint = torch.load(f"{tar_foldername}/{t}.tar",
+                                    weights_only=False)
 
             # load neural network(s)
             self.actor_critic_network.load_state_dict(checkpoint["actor_critic_network_state_dict"])
@@ -345,7 +356,9 @@ class PPO(BaseAgent):
         else:
 
             # send to CPU
-            checkpoint = torch.load(tar_foldername + "/{}.tar".format(t), map_location=torch.device(self.device))
+            checkpoint = torch.load(f"{tar_foldername}/{t}.tar",
+                                    map_location=torch.device(self.device),
+                                    weights_only=False)
 
             # load neural network(s)
             self.actor_critic_network.load_state_dict(checkpoint["actor_critic_network_state_dict"])
@@ -371,14 +384,11 @@ class PPO(BaseAgent):
         with open(pickle_foldername + "/num_updates.pickle", "rb") as f:
             update_dic = pickle.load(f)
 
-        self.loss_index = update_dic["loss_index"]
         self.total_num_updates = update_dic["total_num_updates"]
         self.num_updates = update_dic["num_updates"]
 
-        if self.resume:
-            self.num_old_updates = update_dic["num_old_updates"]
-        else:
-            self.num_old_updates = update_dic["num_updates"]  # number of updates with n_controller
+        # number of updates with n_controller
+        self.num_old_updates = update_dic["num_updates"]
 
         self.num_epoch_updates = update_dic["num_epoch_updates"]
         self.num_mini_batch_updates = update_dic["num_mini_batch_updates"]
@@ -408,40 +418,33 @@ class PPO(BaseAgent):
             load directory
         """
 
-        if self.resume:
-
-            pickle_foldername = dir_ + "/pickle"
-
-            with open(pickle_foldername + "/memory_init_samples.pickle", "rb") as f:
-                memory_dic = pickle.load(f)
-
-            self.memory_init_samples = memory_dic["memory_init_samples"]
-
-        else:
-
-            self.memory_init_samples = self.memory.step
+        self.memory_init_samples = self.memory.step
 
     def agent_load_total_num_updates(self):
         """
-        Update instance attribute total_num_updates - the number of updates that will occur in this experiment.
-        This value is used to linearly decay the learning rate in the agent_update_network_parameters method.
+        Update instance attribute total_num_updates - the number of
+        updates that will occur in this experiment.
 
-        Note: If we load the memory, there may be samples stored within the memory.
-        Note: If we clear the memory, any samples are no longer stored within the memory.
+        This value is used to linearly decay the learning rate in the
+        agent_update_network_parameters method.
+
+        Note: If we load the memory, there may be samples stored within
+        the memory.
+
+        Note: If we clear the memory, any samples are no longer stored
+        within the memory.
         """
 
-        if self.resume:
-            pass
-        else:
-            self.total_num_updates = (self.memory.step + self.time_steps) // self.num_samples
+        self.total_num_updates = (self.memory.step + self.time_steps) // self.num_samples
 
     def agent_memory_compute(self, next_state):
         """
         Compute the values of all states in memory and save them to memory.
         Update the memory by computing returns and (normalized) advantages for the collected samples.
 
-        @param next_state: float64 numpy array with shape (state_dim,)
-            state of the environment
+        @param next_state: np.ndarray
+            a float64 numpy array with shape (state_dim,) representing
+            the state of the environment
         """
 
         # save next state and terminal to memory
@@ -481,7 +484,7 @@ class PPO(BaseAgent):
         """
         Save agent's data.
 
-        @param dir_: string
+        @param dir_: str
             save directory
         @param t: int
             number of time steps into training
@@ -498,7 +501,7 @@ class PPO(BaseAgent):
 
         File format: .pickle
 
-        @param dir_: string
+        @param dir_: str
             save directory
         """
 
@@ -510,11 +513,12 @@ class PPO(BaseAgent):
 
     def agent_save_memory_init_samples(self, dir_):
         """
-        Save number of samples in memory at the start of learning with the ab_controller..
+        Save number of samples in memory at the start of learning with
+        the ab_controller.
 
         File format: .pickle
 
-        @param dir_: string
+        @param dir_: str
             save directory
         """
 
@@ -532,7 +536,7 @@ class PPO(BaseAgent):
 
         File format: .tar
 
-        @param dir_: string
+        @param dir_: str
             save directory
         @param t: int
             number of time steps into training
@@ -544,7 +548,7 @@ class PPO(BaseAgent):
         torch.save({
             "actor_critic_network_state_dict": self.actor_critic_network.state_dict(),
             "actor_critic_optimizer_state_dict": self.actor_critic_optimizer.state_dict()
-        }, foldername + "/{}.tar".format(t))
+        }, f"{foldername}/{t}.tar")
 
     def agent_save_num_updates(self, dir_):
         """
@@ -552,15 +556,14 @@ class PPO(BaseAgent):
 
         File format: .pickle
 
-        @param dir_: string
+        @param dir_: str
             save directory
         """
 
         pickle_foldername = dir_ + "/pickle"
         os.makedirs(pickle_foldername, exist_ok=True)
 
-        update_dic = {"loss_index": self.loss_index,
-                      "total_num_updates": self.total_num_updates,
+        update_dic = {"total_num_updates": self.total_num_updates,
                       "num_updates": self.num_updates,
                       "num_old_updates": self.num_old_updates,
                       "num_epoch_updates": self.num_epoch_updates,
@@ -578,11 +581,13 @@ class PPO(BaseAgent):
         deterministic=False: an action is sampled from a multivariate normal distribution.
         deterministic=True: action is mean of multivariate normal distribution.
 
-        @param state: float64 numpy array with shape (state_dim,)
-            state of the environment
+        @param state: np.ndarray
+            a float64 numpy array with shape (state_dim,) representing
+            the state of the environment
 
-        @return action: float64 numpy array with shape (action_dim,)
-            action selected by the agent
+        @return action: np.ndarray
+            a float64 numpy array with shape (action_dim,) representing
+            the action selected by the agent
         """
 
         if self.mode == "train":
@@ -601,26 +606,18 @@ class PPO(BaseAgent):
 
     def agent_set_policy_mode(self, mode):
         """
-        Set the policy mode (deterministic or stochastic).
-        Set policy model mode (train or eval).
+        Sets the policy mode for action selection.
 
-        Note: Summary of effects of this method
+        Options:
+        - "train": uses a stochastic policy for action selection, adds
+        new experiences to memory, and updates network parameters.
+        - "eval": uses a deterministic policy for action selection,
+        does not add experiences to memory, and does not update network
+        parameters.
 
-        'eval':
-        - deterministic policy (see self.agent_select_action() method)
-        - no new experiences added to the memory (see self.agent_step() and self.agent_end() methods)
-        - network parameters not updated (see self.agent_set_policy_mode() method)
-        - set policy model to evaluation mode - output of policy network may be changed if it contains dropout and
-          batch normalization layers
-
-        'train':
-        - stochastic policy (see self.agent_select_action() method)
-        - new experiences added to the memory (see self.agent_step() and self.agent_end() methods)
-        - network parameters are updated (see self.agent_set_policy_mode() method)
-        - set policy model to training mode
-
-        @param mode: string
-            mode: training mode ('train') during learning, evaluation mode ('eval') during inference
+        @param mode: str
+            mode: training ('train') during learning, evaluation
+            ('eval') during inference
         """
 
         assert (mode == "train" or mode == "eval"), "ppo_agent.agent_set_policy_mode: mode must be either 'train' or 'eval'"
@@ -637,20 +634,28 @@ class PPO(BaseAgent):
         Update the learning rate.
         Update the parameters for the NN(s).
 
-        Note: The learning rate starts at its full value (as passed by the argument 'lr').  The learning rate is
-        gradually decreased by an equal amount each update until it reaches 0.0.
-        Note: At the start of learning in the normal environment, the learning rate has its full value.  At the start of
-        learning in the abnormal environment, the learning rate has its full value.
+        Note: The learning rate starts at its full value (as specified
+        by the 'lr' argument) and decreases linearly with each update,
+        reaching 10% of the initial learning rate by the end of the
+        total updates (total_num_updates).
+
+        Note: At the start of learning in the normal environment, the
+        learning rate has its full value.  At the start of learning in
+        the abnormal environment, the learning rate has its full value.
         """
 
         if self.linear_lr_decay:
 
-            lr = self.lr - (self.lr * ((self.num_updates - self.num_old_updates) / self.total_num_updates) * self.slow_lrd)  # self.num_old_updates is > 0 only if we loaded data from normal environment
+            # Note: self.num_old_updates is > 0 only if we loaded data
+            # from normal environment.
+            # Note: We subtract 1 from self.total_num_updates since we
+            # start at 0 and increment to self.total_num_updates - 1;
+            # at self.total_num_updates - 1 our lr should be 10% of the
+            # original learning rate.
+            lr = self.lr * (1 - 0.9 * ((self.num_updates - self.num_old_updates) / (self.total_num_updates - 1)))
 
             for param_group in self.actor_critic_optimizer.param_groups:
                 param_group["lr"] = lr
-
-        self.num_updates += 1
 
         avg_clip_loss = 0
         avg_vf_loss = 0
@@ -660,13 +665,9 @@ class PPO(BaseAgent):
 
         for _ in range(self.epochs):
 
-            self.num_epoch_updates += 1
-
             mini_batches = self.memory.generate_mini_batches()
 
             for mb in mini_batches:
-
-                self.num_mini_batch_updates += 1
 
                 states_batch, values_batch, actions_batch, old_log_probs_batch, returns_batch, advantages_batch = mb
 
@@ -678,7 +679,7 @@ class PPO(BaseAgent):
                 surr1 = ratios * advantages_batch
                 surr2 = torch.clamp(ratios, 1 - self.epsilon, 1 + self.epsilon) * advantages_batch
 
-                clip_loss = -1 * torch.min(surr1, surr2).mean()
+                clip_loss = torch.min(surr1, surr2).mean()
 
                 clipped = ratios.lt(1 - self.epsilon) | ratios.gt(1 + self.epsilon)
                 num_clips = int(clipped.float().sum())
@@ -689,15 +690,15 @@ class PPO(BaseAgent):
                     values_batch_clipped = values_batch + (new_values_batch - values_batch).clamp(-self.epsilon, self.epsilon)
                     values_loss = (new_values_batch - returns_batch).pow(2)
                     clip_values_loss = (values_batch_clipped - returns_batch).pow(2)
-                    vf_loss = -1 * torch.max(values_loss, clip_values_loss).mean()
+                    vf_loss = torch.max(values_loss, clip_values_loss).mean()
 
                 else:
 
-                    vf_loss = -1 * self.actor_critic_criterion(returns_batch, new_values_batch)
+                    vf_loss = self.actor_critic_criterion(returns_batch, new_values_batch)
 
-                new_dist_entropy = -1 * new_dist_entropies_batch.mean()
+                new_dist_entropy = new_dist_entropies_batch.mean()
 
-                clip_vf_s_loss = clip_loss - self.vf_loss_coef * vf_loss + self.policy_entropy_coef * new_dist_entropy
+                clip_vf_s_loss = -1 * (clip_loss - self.vf_loss_coef * vf_loss + self.policy_entropy_coef * new_dist_entropy)
 
                 self.actor_critic_optimizer.zero_grad()
                 clip_vf_s_loss.backward()
@@ -706,17 +707,33 @@ class PPO(BaseAgent):
 
                 avg_clip_loss += clip_loss.item()
                 avg_vf_loss += vf_loss.item()
-                avg_entropy += -1 * new_dist_entropy.item()
+                avg_entropy += new_dist_entropy.item()
                 avg_clip_vf_s_loss += clip_vf_s_loss.item()
 
-        num_updates = self.epochs * (self.num_samples // self.mini_batch_size)
+                self.num_mini_batch_updates += 1
 
-        avg_clip_loss /= num_updates
-        avg_vf_loss /= num_updates
-        avg_entropy /= num_updates
-        avg_clip_vf_s_loss /= num_updates
+            self.num_epoch_updates += 1
 
-        clip_fraction = total_num_clips / (self.num_epoch_updates * self.mini_batch_size * (self.num_samples // self.mini_batch_size))
+        num_mini_batch_updates = self.epochs * (self.num_samples // self.mini_batch_size)
 
-        self.loss_data[self.loss_index] = [self.num_updates, self.num_epoch_updates, self.num_mini_batch_updates, avg_clip_loss, avg_vf_loss, avg_entropy, avg_clip_vf_s_loss, clip_fraction]
-        self.loss_index += 1
+        avg_clip_loss /= num_mini_batch_updates
+        avg_vf_loss /= num_mini_batch_updates
+        avg_entropy /= num_mini_batch_updates
+        avg_clip_vf_s_loss /= num_mini_batch_updates
+
+        clip_fraction = total_num_clips / (num_mini_batch_updates * self.mini_batch_size)
+
+        self.loss_data[self.num_updates] = [self.num_updates, self.num_epoch_updates, self.num_mini_batch_updates, avg_clip_loss, avg_vf_loss, avg_entropy, avg_clip_vf_s_loss, clip_fraction]
+
+        if self.wandb and self.num_updates % 100 == 0:
+
+            wandb.log(data={
+                "Loss Metrics/Average CLIP VF S Loss": avg_clip_vf_s_loss,
+                "Loss Metrics/Average CLIP Loss": avg_clip_loss,
+                "Loss Metrics/Average VF Loss": avg_vf_loss,
+                "Loss Metrics/Average Entropy": avg_entropy,
+                "Loss Metrics/Clip Fraction": clip_fraction,
+                "Number of Updates": self.num_updates
+            })
+
+        self.num_updates += 1

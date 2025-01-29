@@ -7,7 +7,16 @@ class Memory:
     Memory.
     """
 
-    def __init__(self, num_samples, state_dim, action_dim, gamma, use_gae, gae_lambda, mini_batch_size, device):
+    def __init__(self,
+                 num_samples,
+                 state_dim,
+                 action_dim,
+                 gamma,
+                 use_gae,
+                 gae_lambda,
+                 normalize_rewards,
+                 mini_batch_size,
+                 device):
         """
         Initialize memory.
 
@@ -23,6 +32,8 @@ class Memory:
             use generalized advantage estimation
         @param gae_lambda: float
             generalized advantage estimation smoothing parameter
+        @param normalize_rewards: bool
+            if true, normalize rewards in memory
         @param mini_batch_size: int
             number of samples per mini-batch
         """
@@ -31,6 +42,7 @@ class Memory:
 
         self.use_gae = use_gae
         self.gae_lambda = gae_lambda
+        self.normalize_rewards = normalize_rewards
 
         self.mini_batch_size = mini_batch_size
 
@@ -95,9 +107,16 @@ class Memory:
 
     def compute_returns_and_advantages(self):
         """
+        Normalize rewards.
         Compute returns and advantages.
         Save to memory.
         """
+
+        # normalize rewards
+
+        if self.normalize_rewards:
+
+            self.rewards = (self.rewards - self.rewards.mean()) / (self.rewards.std() + 1e-5)
 
         # compute returns
 
@@ -119,6 +138,9 @@ class Memory:
 
         self.advantages = self.returns[:-1] - self.values[:-1]
         self.advantages = (self.advantages - self.advantages.mean()) / (self.advantages.std() + 1e-5)
+
+        # normalize returns
+        # self.returns = (self.returns - self.returns.mean()) / (self.returns.std() + 1e-5)
 
     def generate_mini_batches(self):
         """

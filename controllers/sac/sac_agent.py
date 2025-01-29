@@ -1,6 +1,8 @@
 import numpy as np
 import os
 import pickle
+import wandb
+
 import torch
 import torch.nn as nn
 from torch.optim import Adam
@@ -27,10 +29,12 @@ class SAC(BaseAgent):
                  hidden_dim,
                  replay_buffer_size,
                  batch_size,
+                 normalize_rewards,
                  model_updates_per_step,
                  target_update_interval,
                  automatic_entropy_tuning,
                  device,
+                 wandb,
                  loss_data):
         """
         Initialize agent variables.
@@ -59,14 +63,18 @@ class SAC(BaseAgent):
             size of the replay buffer
         @param batch_size: int
             number of samples per minibatch
+        @param normalize_rewards: bool
+            if true, normalize rewards in memory
         @param model_updates_per_step: int
             number of NN model updates per time step
         @param target_update_interval: int
             number of target value network updates per number gradient steps (network updates)
         @param automatic_entropy_tuning: bool
             if True, automatically tune the temperature
-        @param device: string
+        @param device: str
             indicates whether using 'cuda' or 'cpu'
+        @param wandb: bool
+            if true, log to weights & biases
         @param loss_data: float64 numpy zeros array with shape (n_time_steps - batch_size, 5)
             numpy array to store agent loss data
         """
@@ -79,16 +87,19 @@ class SAC(BaseAgent):
         self.tau = tau
         self.lr = lr
         self.hidden_dim = hidden_dim
-        self.batch_size = batch_size
-        self.model_updates_per_step = model_updates_per_step
         self.replay_buffer_size = replay_buffer_size
+        self.batch_size = batch_size
+        self.normalize_rewards = normalize_rewards
+        self.model_updates_per_step = model_updates_per_step
         self.target_update_interval = target_update_interval
         self.automatic_entropy_tuning = automatic_entropy_tuning
         self.device = device
-        self.alpha = torch.Tensor([alpha]).to(device=self.device)  # must come after self.device
-        self.loss_data = loss_data
+        self.wandb = wandb
 
-        self.loss_index = 0
+        # must come after self.device
+        self.alpha = torch.Tensor([alpha]).to(device=self.device)
+
+        self.loss_data = loss_data
 
         self.num_updates = 0
 
@@ -121,11 +132,10 @@ class SAC(BaseAgent):
             self.alpha_optimizer = Adam([self.log_alpha], lr=self.lr)
 
         # replay buffer
-        self.replay_buffer = ReplayBuffer(self.replay_buffer_size)
-
-        # RL problem
-        self.state = None
-        self.action = None
+        self.replay_buffer = ReplayBuffer(
+            self.replay_buffer_size,
+            self.normalize_rewards
+        )
 
         # mode - learn or evaluation
         # if train, select an action using a policy distribution; add experience to the replay buffer; policy model mode is 'train'
@@ -137,7 +147,9 @@ class SAC(BaseAgent):
         Initialize the variables that you want to reset before starting a new run.
         """
 
-        pass
+        # RL problem
+        self.state = None
+        self.action = None
 
     def agent_start(self, state):
         """
@@ -271,13 +283,16 @@ class SAC(BaseAgent):
         Clear the replay buffer.
         """
 
-        self.replay_buffer = ReplayBuffer(self.replay_buffer_size)
+        self.replay_buffer = ReplayBuffer(
+            self.replay_buffer_size,
+            self.normalize_rewards
+        )
 
     def agent_load(self, dir_, t):
         """
         Load agent's data.
 
-        @param dir_: string
+        @param dir_: str
             load directory
         @param t: int
             number of time steps into training
@@ -294,7 +309,7 @@ class SAC(BaseAgent):
 
         File format: .npy
 
-        @param dir_: string
+        @param dir_: str
             save directory
         """
 
@@ -315,7 +330,7 @@ class SAC(BaseAgent):
 
         File format: .tar
 
-        @param dir_: string
+        @param dir_: str
             load directory
         @param t: int
             number of time steps into training
@@ -326,7 +341,8 @@ class SAC(BaseAgent):
         if self.device == "cuda":
 
             # send to gpu
-            checkpoint = torch.load(tar_foldername + "/{}.tar".format(t))
+            checkpoint = torch.load(f"{tar_foldername}/{t}.tar",
+                                    weights_only=False)
 
             # load neural network(s)
             self.q_network.load_state_dict(checkpoint["q_network_state_dict"])
@@ -341,7 +357,7 @@ class SAC(BaseAgent):
         else:
 
             # send to CPU
-            checkpoint = torch.load(tar_foldername + "/{}.tar".format(t), map_location=torch.device(self.device))
+            checkpoint = torch.load(f"{tar_foldername}/{t}.tar", map_location=torch.device(self.device))
 
             # load neural network(s)
             self.q_network.load_state_dict(checkpoint["q_network_state_dict"])
@@ -368,13 +384,12 @@ class SAC(BaseAgent):
 
         File format: .npy
 
-        @param dir_: string
+        @param dir_: str
             load directory
         """
 
         numpy_foldername = dir_ + "/npy"
 
-        self.loss_index = int(np.load(numpy_foldername + "/loss_index.npy"))
         self.num_updates = int(np.load(numpy_foldername + "/num_updates.npy"))
 
     def agent_load_replay_buffer(self, dir_):
@@ -383,7 +398,7 @@ class SAC(BaseAgent):
 
         File format: .pickle
 
-        @param dir_: string
+        @param dir_: str
             load directory
         """
 
@@ -421,7 +436,7 @@ class SAC(BaseAgent):
         """
         Save agent's data.
 
-        @param dir_: string
+        @param dir_: str
             save directory
         @param t: int
             number of time steps into training
@@ -438,7 +453,7 @@ class SAC(BaseAgent):
 
         File format: .pt
 
-        @param dir_: string
+        @param dir_: str
             save directory
         """
 
@@ -457,7 +472,7 @@ class SAC(BaseAgent):
 
         File format: .tar
 
-        @param dir_: string
+        @param dir_: str
             save directory
         @param t: int
             number of time steps into training
@@ -476,7 +491,7 @@ class SAC(BaseAgent):
                 "q_optimizer_2_state_dict": self.q_optimizer_2.state_dict(),
                 "policy_optimizer_state_dict": self.policy_optimizer.state_dict(),
                 "alpha_optimizer_state_dict": self.alpha_optimizer.state_dict()
-            }, foldername + "/{}.tar".format(t))
+            }, f"{foldername}/{t}.tar")
 
         else:
 
@@ -487,7 +502,7 @@ class SAC(BaseAgent):
                 "q_optimizer_1_state_dict": self.q_optimizer_1.state_dict(),
                 "q_optimizer_2_state_dict": self.q_optimizer_2.state_dict(),
                 "policy_optimizer_state_dict": self.policy_optimizer.state_dict()
-            }, foldername + "/{}.tar".format(t))
+            }, f"{foldername}/{t}.tar")
 
     def agent_save_num_updates(self, dir_):
         """
@@ -495,14 +510,13 @@ class SAC(BaseAgent):
 
         File format: .npy
 
-        @param dir_: string
+        @param dir_: str
             save directory
         """
 
         npy_foldername = dir_ + "/npy"
         os.makedirs(npy_foldername, exist_ok=True)
 
-        np.save(npy_foldername + "/loss_index.npy", self.loss_index)
         np.save(npy_foldername + "/num_updates.npy", self.num_updates)
 
     def agent_save_replay_buffer(self, dir_):
@@ -511,7 +525,7 @@ class SAC(BaseAgent):
 
         File format: .pickle
 
-        @param dir_: string
+        @param dir_: str
             save directory
         """
 
@@ -564,7 +578,7 @@ class SAC(BaseAgent):
         - network parameters are updated (see self.agent_set_policy_mode() method)
         - set policy model to training mode
 
-        @param mode: string
+        @param mode: str
             mode: training mode ('train') during learning, evaluation mode ('eval') during inference
         """
 
@@ -586,8 +600,6 @@ class SAC(BaseAgent):
         - both q value network's
         - policy network
         """
-
-        self.num_updates += 1
 
         state, action, reward, next_state, terminal = self.replay_buffer.sample(self.batch_size)
 
@@ -650,5 +662,18 @@ class SAC(BaseAgent):
             for target_param, param in zip(self.target_q_network.parameters(), self.q_network.parameters()):
                 target_param.data.copy_(self.tau * param.data + (1.0 - self.tau) * target_param.data)
 
-        self.loss_data[self.loss_index] = [self.num_updates, q_value_loss_1.item(), q_value_loss_2.item(), policy_loss.item(), alpha_loss.item(), self.alpha.item(), entropy.item()]
-        self.loss_index += 1
+        self.loss_data[self.num_updates] = [self.num_updates, q_value_loss_1.item(), q_value_loss_2.item(), policy_loss.item(), alpha_loss.item(), self.alpha.item(), entropy.item()]
+
+        if self.wandb and self.num_updates % 30 == 0:
+            data = {
+                "Loss Metrics/Average Q1 Loss": q_value_loss_1.item(),
+                "Loss Metrics/Average Q2 Loss": q_value_loss_2.item(),
+                "Loss Metrics/Average Policy Loss": policy_loss.item(),
+                "Loss Metrics/Average Alpha Loss": alpha_loss.item(),
+                "Loss Metrics/Alpha": self.alpha.item(),
+                "Loss Metrics/Average Entropy": entropy.item(),
+                "Number of Updates": self.num_updates
+            }
+            wandb.log(data=data)
+
+        self.num_updates += 1

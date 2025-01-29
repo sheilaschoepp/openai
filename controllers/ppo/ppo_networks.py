@@ -5,14 +5,14 @@ from torch.distributions import MultivariateNormal, Normal
 
 def init_weights(m):
     if type(m) == nn.Linear:
-        gain = nn.init.calculate_gain("relu")
+        gain = nn.init.calculate_gain("tanh")
         nn.init.orthogonal_(m.weight, gain=gain)
         nn.init.constant_(m.bias, 0.0)
 
 
 class ValueNetwork(nn.Module):
     """
-    Value function.
+    Value network that predicts the value of a given state.
     """
 
     def __init__(self, state_dim, hidden_dim):
@@ -37,23 +37,28 @@ class ValueNetwork(nn.Module):
         """
         Calculate the value of a state.
 
-        @param state: torch.float32 tensor with shape torch.Size([num_samples + 1, state_dim]) or torch.Size([mini_batch_size, 1])
-            state of the environment
+        @param state: torch.Tensor (torch.float32)
+            a tensor with shape torch.Size([num_samples + 1, state_dim])
+            or torch.Size([mini_batch_size, 1]) representing the state
+            of the environment
 
-        @return x: torch.float32 tensor with shape torch.Size([num_samples + 1, 1]) or torch.Size([mini_batch_size, 1])
-            value of the given state
+        @return value: torch.Tensor (torch.float32)
+            a tensor with shape torch.Size([num_samples + 1, 1]) or
+            torch.Size([mini_batch_size, 1]) representing the value of
+            the given state
         """
 
-        x = torch.tanh(self.linear1(state))
-        x = torch.tanh(self.linear2(x))
-        x = self.linear3(x)
+        value = torch.tanh(self.linear1(state))
+        value = torch.tanh(self.linear2(value))
+        value = self.linear3(value)
 
-        return x
+        return value
 
 
 class PolicyNetwork(nn.Module):
     """
-    Agent policy.
+    Policy network that defines the agent's action distribution
+    for a given state.
     """
 
     def __init__(self, state_dim, action_dim, hidden_dim, log_std):
@@ -85,10 +90,14 @@ class PolicyNetwork(nn.Module):
         """
         Calculate the mean of policy.
 
-        @param state: torch.float32 tensor with shape torch.Size([1, state_dim]) or torch.Size([mini_batch_size, state_dim])
+        @param state: torch.Tensor (torch.float32)
+            a tensor with shape torch.Size([1, state_dim]) or
+            torch.Size([mini_batch_size, state_dim]) representing the
             state of the environment
 
-        @return mean: torch.float32 tensor with shape torch.Size([1, action_dim]) or torch.Size([mini_batch_size, action_dim])
+        @return mean: torch.Tensor (torch.float32)
+            a tensor with shape torch.Size([1, action_dim]) or
+            torch.Size([mini_batch_size, action_dim]) representing the
             mean of the policy distribution
         """
 
@@ -136,16 +145,20 @@ class ActorCriticNetwork(nn.Module):
 
         Note: torch.diag_embed works on one or more samples.
 
-        @param state: torch.float32 tensor with shape torch.Size([mini_batch_size, state_dim])
-            state of the environment
-        @param action: torch.float32 tensor with shape torch.Size([mini_batch_size, action_dim])
-            action selected by the agent
+        @param state: torch.Tensor (torch.float32)
+            a tensor with shape torch.Size([mini_batch_size, state_dim])
+            representing the state of the environment
+        @param action: torch.Tensor (torch.float32)
+            a tensor with shape torch.Size([mini_batch_size, action_dim])
+            representing the action selected by the agent
 
         @return (log_prob, entropy):
-        log_prob: torch.float32 tensor with shape torch.Size([mini_batch_size, 1])
-            log probability of action
-        entropy: torch.float32 tensor with shape torch.Size([mini_batch_size, 1])
-            entropy of the policy
+        log_prob: torch.Tensor (torch.float32)
+            a tensor with shape torch.Size([mini_batch_size, 1])
+            representing the log probability of an action
+        entropy: torch.Tensor (torch.float32)
+            a tensor with shape torch.Size([mini_batch_size, 1])
+            representing the entropy of the policy
         """
 
         # mean = self.policy_network(state)
@@ -176,11 +189,15 @@ class ActorCriticNetwork(nn.Module):
         """
         Calculate the value of a state.
 
-        @param state: torch.float32 tensor with shape torch.Size([num_samples + 1, state_dim]) or torch.Size([mini_batch_size, 1])
-            state of the environment
+        @param state: torch.Tensor (torch.float32)
+            a tensor with shape torch.Size([num_samples + 1, state_dim])
+            or torch.Size([mini_batch_size, 1]) representing the state
+            of the environment
 
-        @return value: torch.float32 tensor with shape torch.Size([num_samples + 1, 1]) or torch.Size([mini_batch_size, 1])
-            value of the given state
+        @return value: torch.Tensor (torch.float32)
+            a tensor with shape torch.Size([num_samples + 1, 1]) or
+            torch.Size([mini_batch_size, 1]) representing the value of
+            the given state
         """
 
         value = self.value_network(state)
@@ -193,15 +210,20 @@ class ActorCriticNetwork(nn.Module):
 
         Note: torch.diag only works on a single sample.
 
-        @param state: torch.float32 tensor with shape torch.Size([1, state_dim])
-            state of the environment
+        @param state: torch.Tensor (torch.float32)
+            a tensor with shape torch.Size([1, state_dim])
+            representing the state of the environment
         @param deterministic: bool
-            use deterministic policy
+            if True, use the mean of the policy distribution for action
+            selection (deterministic); if False, sample stochastically
+            from the policy distribution
 
         @return (action, log_prob):
-        action: torch.float32 tensor with shape torch.Size([1, action_dim])
-            action selected by the agent
-        log_prob: torch.float32 tensor with shape torch.Size([1, 1])
+        action: torch.Tensor (torch.float32)
+            a tensor with shape torch.Size([1, action_dim])
+            representing the action selected by the agent
+        log_prob: torch.Tensor (torch.float32)
+            a tensor with shape torch.Size([1, 1]) representing the
             log probability of the action selected by the agent
         """
 

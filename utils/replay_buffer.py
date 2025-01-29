@@ -8,7 +8,9 @@ class ReplayBuffer:
     Replay Buffer.
     """
 
-    def __init__(self, capacity):
+    def __init__(self,
+                 capacity,
+                 normalize_rewards):
         """
         Initialize or set replay buffer attributes.
 
@@ -17,6 +19,8 @@ class ReplayBuffer:
         """
 
         self.capacity = capacity
+        self.normalize_rewards = normalize_rewards
+
         self.buffer = []
         self.position = 0
 
@@ -77,6 +81,11 @@ class ReplayBuffer:
             rewards.append(reward)
             next_states.append(np.array(next_state, copy=False))
             terminals.append(terminal)
+
+        if self.normalize_rewards:
+
+            rewards = np.array(rewards)
+            rewards = (rewards - rewards.mean()) / (rewards.std() + 1e-5)
 
         return np.array(states), np.array(actions), np.array(rewards), np.array(next_states), np.array(terminals)
 

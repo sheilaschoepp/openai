@@ -1,9 +1,9 @@
 #!/bin/bash
 
 # Define session range and maximum active sessions
-SESSION_START=275
+SESSION_START=276
 SESSION_END=400
-MAX_ACTIVE_SESSIONS=41
+MAX_ACTIVE_SESSIONS=51
 
 # Define command to run in each session
 COMMAND="python controllers/sac/sac_n_controller.py -o"

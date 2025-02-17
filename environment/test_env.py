@@ -1,6 +1,14 @@
 import gymnasium as gym
 import gymnasium_robotics
 
-gym.register_envs(gymnasium_robotics)
+from gymnasium.wrappers import FlattenObservation
 
-env = gym.make('FetchReach-v3', max_episode_steps=100)
+# gym.register_envs(gymnasium_robotics)
+
+env = gym.make('FetchReach-v3')
+obs, _ = env.reset(seed=0)
+print(obs)
+
+env = FlattenObservation(env)
+obs, _ = env.reset(seed=0)
+print(obs)

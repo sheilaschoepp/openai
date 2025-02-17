@@ -6,9 +6,9 @@ import optuna
 import os
 
 # The following three lines must come before numpy import.
-os.environ["MKL_NUM_THREADS"] = "1"
-os.environ["NUMEXPR_NUM_THREADS"] = "1"
-os.environ["OMP_NUM_THREADS"] = "1"
+os.environ["MKL_NUM_THREADS"] = '1'
+os.environ["NUMEXPR_NUM_THREADS"] = '1'
+os.environ["OMP_NUM_THREADS"] = '1'
 
 import numpy as np
 import pandas as pd
@@ -32,60 +32,60 @@ from utils.rl_glue import RLGlue
 
 import custom_gym_envs  # do not delete; required for custom gym environments
 
-parser = argparse.ArgumentParser(description="PyTorch Soft Actor-Critic Arguments")
+parser = argparse.ArgumentParser(description='PyTorch Soft Actor-Critic Arguments')
 
-parser.add_argument("-e", "--n_env_name", default="Ant-v5",
-                    help="name of normal (non-malfunctioning) MuJoCo Gym environment (default: Ant-v5)")
-parser.add_argument("-t", "--n_time_steps", type=int, default=3000000, metavar="N",
-                    help="number of time steps in normal (non-malfunctioning) MuJoCo Gym environment (default: 3000000)")
+parser.add_argument('-e', '--n_env_name', default='Ant-v5',
+                    help='name of normal (non-malfunctioning) MuJoCo Gym environment (default: Ant-v5)')
+parser.add_argument('-t', '--n_time_steps', type=int, default=3000000, metavar='N',
+                    help='number of time steps in normal (non-malfunctioning) MuJoCo Gym environment (default: 3000000)')
 
-parser.add_argument("--gamma", type=float, default=0.99, metavar="G",
-                    help="discount factor (default: 0.99)")
-parser.add_argument("--tau", type=float, default=0.01, metavar="G",
-                    help="target smoothing coefficient (default: 0.01)")
-parser.add_argument("--alpha", type=float, default=0.2, metavar="G",
-                    help="temperature parameter that determines the relative importance of the entropy term against the reward (default: 0.2)")
-parser.add_argument("--lr", type=float, default=0.0003, metavar="G",
-                    help="learning rate (default: 0.0003)")
+parser.add_argument('--gamma', type=float, default=0.99, metavar='G',
+                    help='discount factor (default: 0.99)')
+parser.add_argument('--tau', type=float, default=0.01, metavar='G',
+                    help='target smoothing coefficient (default: 0.01)')
+parser.add_argument('--alpha', type=float, default=0.2, metavar='G',
+                    help='temperature parameter that determines the relative importance of the entropy term against the reward (default: 0.2)')
+parser.add_argument('--lr', type=float, default=0.0003, metavar='G',
+                    help='learning rate (default: 0.0003)')
 
-parser.add_argument("--hidden_dim", type=int, default=256, metavar="N",
-                    help="hidden dimension (default: 256)")
+parser.add_argument('--hidden_dim', type=int, default=256, metavar='N',
+                    help='hidden dimension (default: 256)')
 
-parser.add_argument("-rbs", "--replay_buffer_size", type=int, default=1000000, metavar="N",
-                    help="size of replay buffer (default: 1000000)")
-parser.add_argument("--batch_size", type=int, default=256, metavar="N",
-                    help="number of samples per batch (default: 256)")
+parser.add_argument('-rbs', '--replay_buffer_size', type=int, default=1000000, metavar='N',
+                    help='size of replay buffer (default: 1000000)')
+parser.add_argument('--batch_size', type=int, default=256, metavar='N',
+                    help='number of samples per batch (default: 256)')
 
-parser.add_argument("-nr", "--normalize_rewards", default=False, action="store_true",
-                    help="if true, normalize rewards in memory (default: False)")
+parser.add_argument('-nr', '--normalize_rewards', default=False, action='store_true',
+                    help='if true, normalize rewards in memory (default: False)')
 
-parser.add_argument("--model_updates_per_step", type=int, default=1, metavar="N",
-                    help="number of model updates per simulator step (default: 1)")
-parser.add_argument("--target_update_interval", type=int, default=1, metavar="N",
-                    help="number of target value network updates per number of gradient steps (network updates) (default: 1)")
+parser.add_argument('--model_updates_per_step', type=int, default=1, metavar='N',
+                    help='number of model updates per simulator step (default: 1)')
+parser.add_argument('--target_update_interval', type=int, default=1, metavar='N',
+                    help='number of target value network updates per number of gradient steps (network updates) (default: 1)')
 
-parser.add_argument("-a", "--automatic_entropy_tuning", default=False, action="store_true",
-                    help="if true, automatically tune the temperature (default: False)")
+parser.add_argument('-a', '--automatic_entropy_tuning', default=False, action='store_true',
+                    help='if true, automatically tune the temperature (default: False)')
 
-parser.add_argument("-tef", "--time_step_eval_frequency", type=int, default=15000, metavar="N",
-                    help="frequency of policy evaluation during learning (default: 7500)")
-parser.add_argument("-ee", "--eval_episodes", type=int, default=10, metavar="N",
-                    help="number of episodes in policy evaluation roll-out (default: 10)")
+parser.add_argument('-tef', '--time_step_eval_frequency', type=int, default=15000, metavar='N',
+                    help='frequency of policy evaluation during learning (default: 7500)')
+parser.add_argument('-ee', '--eval_episodes', type=int, default=10, metavar='N',
+                    help='number of episodes in policy evaluation roll-out (default: 10)')
 
-parser.add_argument("-c", "--cuda", default=False, action="store_true",
-                    help="if true, run on GPU (default: False)")
+parser.add_argument('-c', '--cuda', default=False, action='store_true',
+                    help='if true, run on GPU (default: False)')
 
-parser.add_argument("-s", "--seed", type=int, default=0, metavar="N",
-                    help="random seed (default: 0)")
+parser.add_argument('-s', '--seed', type=int, default=0, metavar='N',
+                    help='random seed (default: 0)')
 
-parser.add_argument("-d", "--delete", default=False, action="store_true",
-                    help="if true, delete previously saved data and restart training (default: False)")
+parser.add_argument('-d', '--delete', default=False, action='store_true',
+                    help='if true, delete previously saved data and restart training (default: False)')
 
-parser.add_argument("-wb", "--wandb", default=False, action="store_true",
-                    help="if true, log to weights & biases (default: False)")
+parser.add_argument('-wb', '--wandb', default=False, action='store_true',
+                    help='if true, log to weights & biases (default: False)')
 
-parser.add_argument("-o", "--optuna", default=False, action="store_true",
-                    help="if true, run a parameter search with optuna (default: False)")
+parser.add_argument('-o', '--optuna', default=False, action='store_true',
+                    help='if true, run a parameter search with optuna (default: False)')
 
 args = parser.parse_args()
 
@@ -98,7 +98,7 @@ class NormalController:
     and agent performance evaluation.  -Brian Tanner & Adam White
     """
 
-    LINE = "--------------------------------------------------------------------------------"
+    LINE = '--------------------------------------------------------------------------------'
 
     def __init__(self):
 
@@ -111,46 +111,50 @@ class NormalController:
         self.parameters = None
 
         self.parameters = {
-            "n_env_name": args.n_env_name,
-            "n_time_steps": args.n_time_steps,
-            "gamma": args.gamma,
-            "tau": args.tau,
-            "alpha": args.alpha,
-            "lr": args.lr,
-            "hidden_dim": args.hidden_dim,
-            "replay_buffer_size": args.replay_buffer_size,
-            "batch_size": args.batch_size,
-            "normalize_rewards": args.normalize_rewards,
-            "model_updates_per_step": args.model_updates_per_step,
-            "target_update_interval": args.target_update_interval,
-            "automatic_entropy_tuning": args.automatic_entropy_tuning,
-            "time_step_eval_frequency": args.time_step_eval_frequency,
-            "eval_episodes": args.eval_episodes,
-            "cuda": args.cuda,
-            "device": "cuda" if args.cuda and torch.cuda.is_available() else "cpu",
-            "seed": args.seed,
-            "wandb": args.wandb,
-            "optuna": args.optuna
+            'n_env_name': args.n_env_name,
+            'n_time_steps': args.n_time_steps,
+            'gamma': args.gamma,
+            'tau': args.tau,
+            'alpha': args.alpha,
+            'lr': args.lr,
+            'hidden_dim': args.hidden_dim,
+            'replay_buffer_size': args.replay_buffer_size,
+            'batch_size': args.batch_size,
+            'normalize_rewards': args.normalize_rewards,
+            'model_updates_per_step': args.model_updates_per_step,
+            'target_update_interval': args.target_update_interval,
+            'automatic_entropy_tuning': args.automatic_entropy_tuning,
+            'time_step_eval_frequency': args.time_step_eval_frequency,
+            'eval_episodes': args.eval_episodes,
+            'cuda': args.cuda,
+            'device': 'cuda' if args.cuda and torch.cuda.is_available() else 'cpu',
+            'seed': args.seed,
+            'wandb': args.wandb,
+            'optuna': args.optuna
         }
 
         # W&B initialization
 
         if self.parameters["wandb"]:
 
+            env = args.n_env_name.split('-')[0].lower()
+            version = args.n_env_name.split('-')[1].lower()
+            prefix = f'{env}{version}'
+
             wandb.init(
-                project="sac_antv5",
+                project=f'{prefix}_sac',
                 config=self.parameters,
                 dir=f'{os.getenv("HOME")}/Documents/openai'
             )
 
             wandb.define_metric(
-                name="Key Metrics/*",
-                step_metric="Time Steps"
+                name='Key Metrics/*',
+                step_metric='Time Steps'
             )
 
             wandb.define_metric(
-                name="Loss Metrics/*",
-                step_metric="Number of Updates"
+                name='Loss Metrics/*',
+                step_metric='Number of Updates'
             )
 
         # experiment data directory
@@ -189,25 +193,25 @@ class NormalController:
 
             if args.delete:
                 # yes; argument flag present to indicate data deletion
-                print(colored("argument indicates DATA DELETION", "red"))
-                print(colored("deleting data...", "red"))
-                rmtree(self.data_dir, ignore_errors=True)
-                print(colored("data deletion complete", "red"))
+                print(colored(text='argument indicates DATA DELETION', color='red'))
+                print(colored(text='deleting data...', color='red'))
+                rmtree(path=self.data_dir, ignore_errors=True)
+                print(colored(text='data deletion complete', color='red'))
             else:
                 # yes; argument flag not present; get confirmation of data deletion from user input
-                print(colored("You are about to delete saved data and restart training.", "red"))
-                s = input(colored("Are you sure you want to continue?  Hit 'y' then 'Enter' to continue.\n", "red"))
-                if s == "y":
+                print(colored(text='You are about to delete saved data and restart training.', color='red'))
+                s = input(colored(text='Are you sure you want to continue? Hit "y" then "Enter" to continue.\n', color='red'))
+                if s == 'y':
                     # delete old data; rewrite new data to same location
-                    print(colored("user input indicates DATA DELETION", "red"))
-                    print(colored("deleting data...", "red"))
-                    rmtree(self.data_dir, ignore_errors=True)
-                    print(colored("data deletion complete", "red"))
+                    print(colored(text='user input indicates DATA DELETION', color='red'))
+                    print(colored(text='deleting data...', color='red'))
+                    rmtree(path=self.data_dir, ignore_errors=True)
+                    print(colored(text='data deletion complete', color='red'))
                 else:
                     # do not delete old data; system exit
-                    print(colored("user input indicates NO DATA DELETION", "red"))
+                    print(colored(text='user input indicates NO DATA DELETION', color='red'))
                     print(self.LINE)
-                    sys.exit("\nexiting...")
+                    sys.exit('\nexiting...')
 
         # data
 
@@ -228,7 +232,7 @@ class NormalController:
         random.seed(self.parameters["seed"])
         np.random.seed(self.parameters["seed"])
         torch.manual_seed(self.parameters["seed"])
-        if self.parameters["device"] == "cuda":
+        if self.parameters["device"] == 'cuda':
             torch.cuda.manual_seed(self.parameters["seed"])
 
         # env is seeded in Environment env_init() method
@@ -263,9 +267,9 @@ class NormalController:
 
         # RLGlue used for training
         self.rlg = RLGlue(self.env, self.agent)
-        self.rlg_statistics = {"num_episodes": 0,
-                               "num_steps": 0,
-                               "total_reward": 0}
+        self.rlg_statistics = {'num_episodes': 0,
+                               'num_steps': 0,
+                               'total_reward': 0}
 
         # print summary info
 
@@ -273,10 +277,10 @@ class NormalController:
 
         print(self.LINE)
 
-        if self.parameters["device"] == "cuda":
-            print("NOTE: GPU is being used for this experiment.")
+        if self.parameters["device"] == 'cuda':
+            print('NOTE: GPU is being used for this experiment.')
         else:
-            print("NOTE: GPU is not being used for this experiment.  CPU only.")
+            print('NOTE: GPU is not being used for this experiment.  CPU only.')
 
         # what are the experiment parameters?
 
@@ -296,36 +300,36 @@ class NormalController:
             """
             default = parser.get_default(argument)
             if self.parameters[argument] != default:
-                return colored(self.parameters[argument], "red")
+                return colored(self.parameters[argument], 'red')
             else:
                 return self.parameters[argument]
 
-        print("normal environment name:", highlight_non_default_values("n_env_name"))
-        print("normal time steps:", highlight_non_default_values("n_time_steps"))
-        print("gamma:", highlight_non_default_values("gamma"))
-        print("tau:", highlight_non_default_values("tau"))
-        print("alpha:", highlight_non_default_values("alpha"))
-        print("learning rate:", highlight_non_default_values("lr"))
-        print("hidden dimension:", highlight_non_default_values("hidden_dim"))
-        print("replay buffer size:", highlight_non_default_values("replay_buffer_size"))
-        print("batch size:", highlight_non_default_values("batch_size"))
-        print("normalize rewards:", highlight_non_default_values("normalize_rewards"))
-        print("model updates per step:", highlight_non_default_values("model_updates_per_step"))
-        print("target update interval:", highlight_non_default_values("target_update_interval"))
-        print("automatic entropy tuning:", highlight_non_default_values("automatic_entropy_tuning"))
-        print("time step evaluation frequency:", highlight_non_default_values("time_step_eval_frequency"))
-        print("evaluation episodes:", highlight_non_default_values("eval_episodes"))
-        if self.parameters["device"] == "cuda":
-            print("device:", self.parameters["device"])
-            if "CUDA_VISIBLE_DEVICES" in os.environ:
-                print("cuda visible device(s):", colored(os.environ["CUDA_VISIBLE_DEVICES"], "red"))
+        print('normal environment name:', highlight_non_default_values('n_env_name'))
+        print('normal time steps:', highlight_non_default_values('n_time_steps'))
+        print('gamma:', highlight_non_default_values('gamma'))
+        print('tau:', highlight_non_default_values('tau'))
+        print('alpha:', highlight_non_default_values('alpha'))
+        print('learning rate:', highlight_non_default_values('lr'))
+        print('hidden dimension:', highlight_non_default_values('hidden_dim'))
+        print('replay buffer size:', highlight_non_default_values('replay_buffer_size'))
+        print('batch size:', highlight_non_default_values('batch_size'))
+        print('normalize rewards:', highlight_non_default_values('normalize_rewards'))
+        print('model updates per step:', highlight_non_default_values('model_updates_per_step'))
+        print('target update interval:', highlight_non_default_values('target_update_interval'))
+        print('automatic entropy tuning:', highlight_non_default_values('automatic_entropy_tuning'))
+        print('time step evaluation frequency:', highlight_non_default_values('time_step_eval_frequency'))
+        print('evaluation episodes:', highlight_non_default_values('eval_episodes'))
+        if self.parameters["device"] == 'cuda':
+            print('device:', self.parameters["device"])
+            if 'CUDA_VISIBLE_DEVICES' in os.environ:
+                print('cuda visible device(s):', colored(os.environ["CUDA_VISIBLE_DEVICES"], 'red'))
             else:
-                print(colored("cuda visible device(s): N/A", "red"))
+                print(colored('cuda visible device(s): N/A', 'red'))
         else:
-            print("device:", colored(self.parameters["device"], "red"))
-        print("seed:", colored(self.parameters["seed"], "red"))
-        print("wandb:", highlight_non_default_values("wandb"))
-        print("optuna:", highlight_non_default_values("optuna"))
+            print('device:', colored(self.parameters["device"], 'red'))
+        print('seed:', colored(self.parameters["seed"], 'red'))
+        print('wandb:', highlight_non_default_values('wandb'))
+        print('optuna:', highlight_non_default_values('optuna'))
 
         print(self.LINE)
         print(self.LINE)
@@ -384,15 +388,15 @@ class NormalController:
         Close wandb.
         """
 
-        self.rlg.rl_env_message("close")
+        self.rlg.rl_env_message('close')
 
         run_time = str(timedelta(seconds=time.time() - self.start))[:-7]
 
-        print("time to complete one run:", run_time, "h:m:s")
+        print('time to complete one run:', run_time, 'h:m:s')
         print(self.LINE)
 
-        text_file = open(self.data_dir + "/run_summary.txt", "w")
-        text_file.write(date.today().strftime("%m/%d/%y"))
+        text_file = open(self.data_dir + '/run_summary.txt', 'w')
+        text_file.write(date.today().strftime('%m/%d/%y'))
         text_file.write(f'\n\nExperiment {self.experiment}/seed{self.parameters["seed"]} complete.\n\nTime to complete: {run_time} h:m:s')
         text_file.close()
 
@@ -431,7 +435,7 @@ class NormalController:
 
             eval_rlg = RLGlue(self.eval_env, eval_agent)
 
-            eval_rlg.rl_agent_message("mode, eval")
+            eval_rlg.rl_agent_message('mode, eval')
 
             returns = []
 
@@ -470,18 +474,17 @@ class NormalController:
             cumulative_average_return = self.eval_data[:, -2].sum()
 
             if self.parameters["wandb"]:
-                data = {
-                    "Key Metrics/Average Return": average_return,
-                    "Key Metrics/Cumulative Average Return": cumulative_average_return,
-                    "Key Metrics/Real Time": real_time,
-                    "Time Steps": num_time_steps
-                }
-                wandb.log(data=data)
+                wandb.log(data={
+                    'Key Metrics/Average Return': average_return,
+                    'Key Metrics/Cumulative Average Return': cumulative_average_return,
+                    'Key Metrics/Real Time': real_time,
+                    'Time Steps': num_time_steps
+                })
 
             print(f'evaluation at {num_time_steps} time steps: {average_return}')
 
             run_time = str(timedelta(seconds=time.time() - self.start))[:-7]
-            print("runtime:", run_time, "h:m:s")
+            print('runtime:', run_time, 'h:m:s')
             print(self.LINE)
 
             # reload the torch RNG state(s)
@@ -496,100 +499,100 @@ class NormalController:
         File format: .jpg
         """
 
-        print("plotting...")
+        print('plotting...')
 
-        csv_foldername = self.data_dir + "/csv"
+        csv_foldername = self.data_dir + '/csv'
         os.makedirs(csv_foldername, exist_ok=True)
 
-        jpg_foldername = self.data_dir + "/jpg"
+        jpg_foldername = self.data_dir + '/jpg'
         os.makedirs(jpg_foldername, exist_ok=True)
 
-        df = pd.read_csv(csv_foldername + "/eval_data.csv")
+        df = pd.read_csv(csv_foldername + '/eval_data.csv')
 
         # evaluation: average_return vs num_time_steps
-        df.plot(x="num_time_steps", y="average_return", color="blue", legend=False)
-        plt.xlabel("time_steps")
-        plt.ylabel("average\nreturn", rotation="horizontal", labelpad=30)
-        plt.title("Policy Evaluation")
+        df.plot(x='num_time_steps', y='average_return', color='blue', legend=False)
+        plt.xlabel('time_steps')
+        plt.ylabel('average\nreturn', rotation='horizontal', labelpad=30)
+        plt.title('Policy Evaluation')
         pss.plot_settings()
-        plt.savefig(jpg_foldername + "/evaluation_time_steps.jpg")
+        plt.savefig(jpg_foldername + '/evaluation_time_steps.jpg')
         plt.close()
 
         # evaluation: average_return vs num_updates
-        df.plot(x="num_updates", y="average_return", color="blue", legend=False)
-        plt.xlabel("updates")
-        plt.ylabel("average\nreturn", rotation="horizontal", labelpad=30)
-        plt.title("Policy Evaluation")
+        df.plot(x='num_updates', y='average_return', color='blue', legend=False)
+        plt.xlabel('updates')
+        plt.ylabel('average\nreturn', rotation='horizontal', labelpad=30)
+        plt.title('Policy Evaluation')
         pss.plot_settings()
-        plt.savefig(jpg_foldername + "/evaluation_updates.jpg")
+        plt.savefig(jpg_foldername + '/evaluation_updates.jpg')
         plt.close()
 
         # evaluation: average_return vs num_samples
-        df.plot(x="num_samples", y="average_return", color="blue", legend=False)
-        plt.xlabel("samples")
-        plt.ylabel("average\nreturn", rotation="horizontal", labelpad=30)
-        plt.title("Policy Evaluation")
+        df.plot(x='num_samples', y='average_return', color='blue', legend=False)
+        plt.xlabel('samples')
+        plt.ylabel('average\nreturn', rotation='horizontal', labelpad=30)
+        plt.title('Policy Evaluation')
         pss.plot_settings()
-        plt.savefig(jpg_foldername + "/evaluation_samples.jpg")
+        plt.savefig(jpg_foldername + '/evaluation_samples.jpg')
         plt.close()
 
-        df = pd.read_csv(csv_foldername + "/loss_data.csv")
+        df = pd.read_csv(csv_foldername + '/loss_data.csv')
 
         # training: q_value_loss_1 vs num_updates
-        df.plot(x="num_updates", y="q_value_loss_1", color="blue", legend=False)
-        plt.xlabel("updates")
-        plt.ylabel("loss", rotation="horizontal", labelpad=30)
-        plt.title("Q Value Loss 1")
+        df.plot(x='num_updates', y='q_value_loss_1', color='blue', legend=False)
+        plt.xlabel('updates')
+        plt.ylabel('loss', rotation='horizontal', labelpad=30)
+        plt.title('Q Value Loss 1')
         pss.plot_settings()
-        plt.savefig(jpg_foldername + "/q_value_loss_1.jpg")
+        plt.savefig(jpg_foldername + '/q_value_loss_1.jpg')
         plt.close()
 
         # training: q_value_loss_2 vs num_updates
-        df.plot(x="num_updates", y="q_value_loss_2", color="blue", legend=False)
-        plt.xlabel("updates")
-        plt.ylabel("loss", rotation="horizontal", labelpad=30)
-        plt.title("Q Value Loss 2")
+        df.plot(x='num_updates', y='q_value_loss_2', color='blue', legend=False)
+        plt.xlabel('updates')
+        plt.ylabel('loss', rotation='horizontal', labelpad=30)
+        plt.title('Q Value Loss 2')
         pss.plot_settings()
-        plt.savefig(jpg_foldername + "/q_value_loss_2.jpg")
+        plt.savefig(jpg_foldername + '/q_value_loss_2.jpg')
         plt.close()
 
         # training: policy_loss vs num_updates
-        df.plot(x="num_updates", y="policy_loss", color="blue", legend=False)
-        plt.xlabel("updates")
-        plt.ylabel("loss", rotation="horizontal", labelpad=30)
-        plt.title("Policy Loss")
+        df.plot(x='num_updates', y='policy_loss', color='blue', legend=False)
+        plt.xlabel('updates')
+        plt.ylabel('loss', rotation='horizontal', labelpad=30)
+        plt.title('Policy Loss')
         pss.plot_settings()
-        plt.savefig(jpg_foldername + "/policy_loss.jpg")
+        plt.savefig(jpg_foldername + '/policy_loss.jpg')
         plt.close()
 
         # training: alpha_loss vs num_updates
-        df.plot(x="num_updates", y="alpha_loss", color="blue", legend=False)
-        plt.xlabel("updates")
-        plt.ylabel("loss", rotation="horizontal", labelpad=30)
-        plt.title("Alpha Loss")
+        df.plot(x='num_updates', y='alpha_loss', color='blue', legend=False)
+        plt.xlabel('updates')
+        plt.ylabel('loss', rotation='horizontal', labelpad=30)
+        plt.title('Alpha Loss')
         pss.plot_settings()
-        plt.savefig(jpg_foldername + "/alpha_loss.jpg")
+        plt.savefig(jpg_foldername + '/alpha_loss.jpg')
         plt.close()
 
         # training: alpha_value vs num_updates
-        df.plot(x="num_updates", y="alpha_value", color="blue", legend=False)
-        plt.xlabel("updates")
-        plt.ylabel("alpha", rotation="horizontal", labelpad=30)
-        plt.title("Alpha Value")
+        df.plot(x='num_updates', y='alpha_value', color='blue', legend=False)
+        plt.xlabel('updates')
+        plt.ylabel('alpha', rotation='horizontal', labelpad=30)
+        plt.title('Alpha Value')
         pss.plot_settings()
-        plt.savefig(jpg_foldername + "/alpha_value.jpg")
+        plt.savefig(jpg_foldername + '/alpha_value.jpg')
         plt.close()
 
         # training: entropy vs num_updates
-        df.plot(x="num_updates", y="entropy", color="blue", legend=False)
-        plt.xlabel("updates")
-        plt.ylabel("entropy", rotation="horizontal", labelpad=30)
-        plt.title("Entropy")
+        df.plot(x='num_updates', y='entropy', color='blue', legend=False)
+        plt.xlabel('updates')
+        plt.ylabel('entropy', rotation='horizontal', labelpad=30)
+        plt.title('Entropy')
         pss.plot_settings()
-        plt.savefig(jpg_foldername + "/entropy_updates.jpg")
+        plt.savefig(jpg_foldername + '/entropy_updates.jpg')
         plt.close()
 
-        print("plotting complete")
+        print('plotting complete')
 
         print(self.LINE)
 
@@ -605,7 +608,7 @@ class NormalController:
         Save agent data: models, number of updates of models, and replay buffer.
         """
 
-        print("saving...")
+        print('saving...')
 
         self.save_seed_state()
 
@@ -622,7 +625,7 @@ class NormalController:
         # save agent data
         self.rlg.rl_agent_message(f'save, {self.data_dir}, {self.rlg.num_steps()}')
 
-        print("saving complete")
+        print('saving complete')
 
         print(self.LINE)
 
@@ -633,24 +636,24 @@ class NormalController:
         File format: .csv
         """
 
-        csv_foldername = self.data_dir + "/csv"
+        csv_foldername = self.data_dir + '/csv'
         os.makedirs(csv_foldername, exist_ok=True)
 
-        eval_data_df = pd.DataFrame({"num_time_steps": self.eval_data[:, 0],
-                                     "num_updates": self.eval_data[:, 1],
-                                     "num_samples": self.eval_data[:, 2],
-                                     "average_return": self.eval_data[:, 3],
-                                     "real_time": self.eval_data[:, 4]})
-        eval_data_df.to_csv(csv_foldername + "/eval_data.csv", float_format="%f")
+        eval_data_df = pd.DataFrame({'num_time_steps': self.eval_data[:, 0],
+                                     'num_updates': self.eval_data[:, 1],
+                                     'num_samples': self.eval_data[:, 2],
+                                     'average_return': self.eval_data[:, 3],
+                                     'real_time': self.eval_data[:, 4]})
+        eval_data_df.to_csv(csv_foldername + '/eval_data.csv', float_format='%f')
 
-        loss_data_df = pd.DataFrame({"num_updates": self.loss_data[:, 0],
-                                     "q_value_loss_1": self.loss_data[:, 1],
-                                     "q_value_loss_2": self.loss_data[:, 2],
-                                     "policy_loss": self.loss_data[:, 3],
-                                     "alpha_loss": self.loss_data[:, 4],
-                                     "alpha_value": self.loss_data[:, 5],
-                                     "entropy": self.loss_data[:, 6]})
-        loss_data_df.to_csv(csv_foldername + "/loss_data.csv", float_format="%f")
+        loss_data_df = pd.DataFrame({'num_updates': self.loss_data[:, 0],
+                                     'q_value_loss_1': self.loss_data[:, 1],
+                                     'q_value_loss_2': self.loss_data[:, 2],
+                                     'policy_loss': self.loss_data[:, 3],
+                                     'alpha_loss': self.loss_data[:, 4],
+                                     'alpha_value': self.loss_data[:, 5],
+                                     'entropy': self.loss_data[:, 6]})
+        loss_data_df.to_csv(csv_foldername + '/loss_data.csv', float_format='%f')
 
     def save_parameters(self):
         """
@@ -659,23 +662,23 @@ class NormalController:
         File format: .csv and .pickle
         """
 
-        csv_foldername = self.data_dir + "/csv"
+        csv_foldername = self.data_dir + '/csv'
         os.makedirs(csv_foldername, exist_ok=True)
 
-        csv_filename = csv_foldername + "/parameters.csv"
+        csv_filename = csv_foldername + '/parameters.csv'
 
-        f = open(csv_filename, "w")
+        f = open(csv_filename, 'w')
         writer = csv.writer(f)
         for key, val in self.parameters.items():
             writer.writerow([key, val])
         f.close()
 
-        pickle_foldername = self.data_dir + "/pickle"
+        pickle_foldername = self.data_dir + '/pickle'
         os.makedirs(pickle_foldername, exist_ok=True)
 
-        pickle_filename = pickle_foldername + "/parameters.pickle"
+        pickle_filename = pickle_foldername + '/parameters.pickle'
 
-        with open(pickle_filename, "wb") as f:
+        with open(pickle_filename, 'wb') as f:
             pickle.dump(self.parameters, f, protocol=pickle.HIGHEST_PROTOCOL)
 
     def save_rlg_statistics(self):
@@ -689,10 +692,10 @@ class NormalController:
         self.rlg_statistics["num_steps"] = self.rlg.num_steps()
         self.rlg_statistics["total_reward"] = self.rlg.total_reward()
 
-        pickle_foldername = self.data_dir + "/pickle"
+        pickle_foldername = self.data_dir + '/pickle'
         os.makedirs(pickle_foldername, exist_ok=True)
 
-        with open(pickle_foldername + "/rlg_statistics.pickle", "wb") as f:
+        with open(pickle_foldername + '/rlg_statistics.pickle', 'wb') as f:
             pickle.dump(self.rlg_statistics, f)
 
     def save_seed_state(self):
@@ -702,27 +705,27 @@ class NormalController:
         File format: .pickle (random and numpy) and .pt (pytorch)
         """
 
-        pickle_foldername = self.data_dir + "/pickle"
+        pickle_foldername = self.data_dir + '/pickle'
         os.makedirs(pickle_foldername, exist_ok=True)
 
         random_random_state = random.getstate()
         numpy_random_state = np.random.get_state()
 
-        with open(pickle_foldername + "/random_random_state.pickle", "wb") as f:
+        with open(pickle_foldername + '/random_random_state.pickle', 'wb') as f:
             pickle.dump(random_random_state, f)
 
-        with open(pickle_foldername + "/numpy_random_state.pickle", "wb") as f:
+        with open(pickle_foldername + '/numpy_random_state.pickle', 'wb') as f:
             pickle.dump(numpy_random_state, f)
 
-        pt_foldername = self.data_dir + "/pt"
+        pt_foldername = self.data_dir + '/pt'
         os.makedirs(pt_foldername, exist_ok=True)
 
         torch_random_state = torch.get_rng_state()
-        torch.save(torch_random_state, pt_foldername + "/torch_random_state.pt")
+        torch.save(torch_random_state, pt_foldername + '/torch_random_state.pt')
 
-        if self.parameters["device"] == "cuda":
+        if self.parameters["device"] == 'cuda':
             torch_cuda_random_state = torch.cuda.get_rng_state()
-            torch.save(torch_cuda_random_state, pt_foldername + "/torch_cuda_random_state.pt")
+            torch.save(torch_cuda_random_state, pt_foldername + '/torch_cuda_random_state.pt')
 
 
 def objective(trial):
@@ -740,70 +743,58 @@ def objective(trial):
     """
 
     # Set gamma.
-    gamma = trial.suggest_float(name="gamma",
+    gamma = trial.suggest_float(name='gamma',
                                 low=0.8,
                                 high=0.9999,
                                 step=0.0001)
 
     # Set tau.
-    tau = trial.suggest_float(name="tau",
+    tau = trial.suggest_float(name='tau',
                               low=0.001,
                               high=0.1,
                               step=0.0000001)
 
     # Set alpha.
-    alpha = trial.suggest_float(name="alpha",
+    alpha = trial.suggest_float(name='alpha',
                                 low=0.0001,
                                 high=0.2,
                                 step=0.0000001)
 
     # Set the learning rate.
-    lr = trial.suggest_float(name="lr",
+    lr = trial.suggest_float(name='lr',
                              low=0.00001,
                              high=0.001,
                              step=0.00000001)
 
     # Set the replay buffer size.
     replay_buffer_size_choices = [100000, 250000, 500000, 750000, 1000000]
-    replay_buffer_size = trial.suggest_categorical(
-        name="replay_buffer_size",
-        choices=replay_buffer_size_choices
-    )
+    replay_buffer_size = trial.suggest_categorical(name='replay_buffer_size',
+                                                   choices=replay_buffer_size_choices)
 
     # Set the batch size.
     batch_size_choices = [64, 128, 256, 512]
-    batch_size = trial.suggest_categorical(
-        name="batch_size",
-        choices=batch_size_choices
-    )
+    batch_size = trial.suggest_categorical(name='batch_size',
+                                           choices=batch_size_choices)
 
     # Set the normalize rewards flag.
     normalize_rewards_choices = [True, False]
-    normalize_rewards = trial.suggest_categorical(
-        name="normalize_rewards",
-        choices=normalize_rewards_choices
-    )
+    normalize_rewards = trial.suggest_categorical(name='normalize_rewards',
+                                                  choices=normalize_rewards_choices)
 
     # # Set the model updates per step.
     # model_updates_per_step_choices = [1, 2, 3, 4, 5]
-    # model_updates_per_step = trial.suggest_categorical(
-    #     name="model_updates_per_step",
-    #     choices=model_updates_per_step_choices
-    # )
+    # model_updates_per_step = trial.suggest_categorical(name='model_updates_per_step',
+    #                                                    choices=model_updates_per_step_choices)
 
     # Set the target update interval.
     target_update_interval_choices = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-    target_update_interval = trial.suggest_categorical(
-        name="time_step_evaluation_frequency",
-        choices=target_update_interval_choices
-    )
+    target_update_interval = trial.suggest_categorical(name='time_step_evaluation_frequency',
+                                                       choices=target_update_interval_choices)
 
     # Set the automatic entropy tuning flag.
     automatic_entropy_tuning_choices = [True, False]
-    automatic_entropy_tuning = trial.suggest_categorical(
-        name="automatic_entropy_tuning",
-        choices=automatic_entropy_tuning_choices
-    )
+    automatic_entropy_tuning = trial.suggest_categorical(name='automatic_entropy_tuning',
+                                                         choices=automatic_entropy_tuning_choices)
 
     # Set the hyperparameters directly in `args`.
     args.gamma = round(gamma, 4)
@@ -850,15 +841,19 @@ def main():
 
     if args.optuna:
 
+        env = args.n_env_name.split('-')[0].lower()
+        version = args.n_env_name.split('-')[1].lower()
+        prefix = f'{env}{version}'
+
         optuna_folder = f'{os.getenv("HOME")}/Documents/openai/optuna'
         os.makedirs(optuna_folder, exist_ok=True)
 
-        study_name = 'sac_optuna_study'
-        storage = f'sqlite:///{optuna_folder}/sac_optuna_study.db'
+        study_name = f'{prefix}_sac_optuna_study'
+        storage = f'sqlite:///{optuna_folder}/{prefix}_sac_optuna_study.db'
         sampler = optuna.samplers.TPESampler(n_startup_trials=50)
         study = optuna.create_study(study_name=study_name,
                                     storage=storage,
-                                    direction="maximize",
+                                    direction='maximize',
                                     load_if_exists=True,
                                     sampler=sampler)
 
@@ -871,7 +866,7 @@ def main():
             callbacks=[print_trial_count]
         )
 
-        with open(f'{optuna_folder}/sac_optuna.txt', "w") as f:
+        with open(f'{optuna_folder}/{prefix}_sac_optuna.txt', 'w') as f:
             print(f'Best hyperparameters found:', file=f)
             for key, value in study.best_params.items():
                 print(f'{key}: {value}', file=f)
@@ -888,9 +883,9 @@ def main():
 
         except KeyboardInterrupt as e:
 
-            print("keyboard interrupt")
+            print('keyboard interrupt')
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
 
     main()

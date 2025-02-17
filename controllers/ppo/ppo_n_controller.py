@@ -6,9 +6,9 @@ import optuna
 import os
 
 # The following three lines must come before numpy import.
-os.environ["MKL_NUM_THREADS"] = "1"
-os.environ["NUMEXPR_NUM_THREADS"] = "1"
-os.environ["OMP_NUM_THREADS"] = "1"
+os.environ["MKL_NUM_THREADS"] = '1'
+os.environ["NUMEXPR_NUM_THREADS"] = '1'
+os.environ["OMP_NUM_THREADS"] = '1'
 
 import numpy as np
 import pandas as pd
@@ -19,7 +19,7 @@ import time
 import torch
 import wandb
 
-from copy import deepcopy
+from copy import copy, deepcopy
 from datetime import date, timedelta
 from os import path
 from shutil import rmtree
@@ -212,33 +212,24 @@ class NormalController:
             print(self.LINE)
 
             if args.delete:
-                # argument flag present to indicate data deletion
-                print(colored(text='argument indicates DATA DELETION',
-                              color='red'))
+                # yes; argument flag present to indicate data deletion
+                print(colored(text='argument indicates DATA DELETION', color='red'))
                 print(colored(text='deleting data...', color='red'))
                 rmtree(path=self.data_dir, ignore_errors=True)
                 print(colored(text='data deletion complete', color='red'))
             else:
-                # argument flag not present; get confirmation of data deletion from user input
-                print(colored(
-                    text='You are about to delete saved data and restart training.',
-                    color='red'
-                ))
-                s = input(colored(
-                    text='Are you sure you want to continue? Hit "y" then "Enter" to continue.\n',
-                    color='red'
-                ))
+                # yes; argument flag not present; get confirmation of data deletion from user input
+                print(colored(text='You are about to delete saved data and restart training.', color='red'))
+                s = input(colored(text='Are you sure you want to continue? Hit "y" then "Enter" to continue.\n', color='red'))
                 if s == 'y':
                     # delete old data; rewrite new data to same location
-                    print(colored(text='user input indicates DATA DELETION',
-                                  color='red'))
+                    print(colored(text='user input indicates DATA DELETION', color='red'))
                     print(colored(text='deleting data...', color='red'))
                     rmtree(path=self.data_dir, ignore_errors=True)
                     print(colored(text='data deletion complete', color='red'))
                 else:
                     # do not delete old data; system exit
-                    print(colored(text='user input indicates NO DATA DELETION',
-                                  color='red'))
+                    print(colored(text='user input indicates NO DATA DELETION', color='red'))
                     print(self.LINE)
                     sys.exit('\nexiting...')
 
@@ -261,7 +252,7 @@ class NormalController:
         random.seed(self.parameters["seed"])
         np.random.seed(self.parameters["seed"])
         torch.manual_seed(self.parameters["seed"])
-        if self.parameters["device"] == "cuda":
+        if self.parameters["device"] == 'cuda':
             torch.cuda.manual_seed(self.parameters["seed"])
 
         # env is seeded in Environment env_init() method
@@ -327,10 +318,10 @@ class NormalController:
 
             Note: Non-default values are printed in red.
 
-            @param argument: string
+            @param argument: str
                 the argument name
 
-            @return: string
+            @return: str
                 the value of the argument
             """
             default = parser.get_default(argument)
@@ -339,44 +330,30 @@ class NormalController:
             else:
                 return self.parameters[argument]
 
-        print('normal environment name:',
-              highlight_non_default_values('n_env_name'))
-        print('normal time steps:',
-              highlight_non_default_values('n_time_steps'))
+        print('normal environment name:', highlight_non_default_values('n_env_name'))
+        print('normal time steps:', highlight_non_default_values('n_time_steps'))
         print('lr:', highlight_non_default_values('lr'))
-        print('linear lr decay:',
-              highlight_non_default_values('linear_lr_decay'))
+        print('linear lr decay:', highlight_non_default_values('linear_lr_decay'))
         print('gamma:', highlight_non_default_values('gamma'))
         print('number of samples:', highlight_non_default_values('num_samples'))
-        print('mini-batch size:',
-              highlight_non_default_values('mini_batch_size'))
+        print('mini-batch size:', highlight_non_default_values('mini_batch_size'))
         print('epochs:', highlight_non_default_values('epochs'))
         print('epsilon:', highlight_non_default_values('epsilon'))
-        print('value function loss coefficient:',
-              highlight_non_default_values('vf_loss_coef'))
-        print('policy entropy coefficient:',
-              highlight_non_default_values('policy_entropy_coef'))
-        print('clipped value function:',
-              highlight_non_default_values('clipped_value_fn'))
-        print('max norm of gradients:',
-              highlight_non_default_values('max_grad_norm'))
-        print('use generalized advantage estimation:',
-              highlight_non_default_values('use_gae'))
-        print('gae smoothing coefficient (lambda):',
-              highlight_non_default_values('gae_lambda'))
-        print('normalize rewards:',
-              highlight_non_default_values('normalize_rewards'))
+        print('value function loss coefficient:', highlight_non_default_values('vf_loss_coef'))
+        print('policy entropy coefficient:', highlight_non_default_values('policy_entropy_coef'))
+        print('clipped value function:', highlight_non_default_values('clipped_value_fn'))
+        print('max norm of gradients:', highlight_non_default_values('max_grad_norm'))
+        print('use generalized advantage estimation:', highlight_non_default_values('use_gae'))
+        print('gae smoothing coefficient (lambda):', highlight_non_default_values('gae_lambda'))
+        print('normalize rewards:', highlight_non_default_values('normalize_rewards'))
         print('hidden dimension:', highlight_non_default_values('hidden_dim'))
         print('log_std:', highlight_non_default_values('log_std'))
-        print('time step evaluation frequency:',
-              highlight_non_default_values('time_step_eval_frequency'))
-        print('evaluation episodes:',
-              highlight_non_default_values('eval_episodes'))
+        print('time step evaluation frequency:', highlight_non_default_values('time_step_eval_frequency'))
+        print('evaluation episodes:', highlight_non_default_values('eval_episodes'))
         if self.parameters["device"] == 'cuda':
-            print('device:', self.parameters['device'])
+            print('device:', self.parameters["device"])
             if 'CUDA_VISIBLE_DEVICES' in os.environ:
-                print('cuda visible device(s):',
-                      colored(os.environ["CUDA_VISIBLE_DEVICES"], 'red'))
+                print('cuda visible device(s):', colored(os.environ["CUDA_VISIBLE_DEVICES"], 'red'))
             else:
                 print(colored('cuda visible device(s): N/A', 'red'))
         else:
@@ -412,8 +389,7 @@ class NormalController:
 
             terminal = False
 
-            while not terminal and ((max_steps_this_episode <= 0) or (
-                    self.rlg.num_ep_steps() < max_steps_this_episode)):
+            while not terminal and ((max_steps_this_episode <= 0) or (self.rlg.num_ep_steps() < max_steps_this_episode)):
                 _, _, terminal, _ = self.rlg.rl_step()
 
                 # save and evaluate the model every
@@ -443,7 +419,7 @@ class NormalController:
         Close wandb.
         """
 
-        self.rlg.rl_env_message("close")
+        self.rlg.rl_env_message('close')
 
         run_time = str(timedelta(seconds=time.time() - self.start))[:-7]
 
@@ -456,6 +432,7 @@ class NormalController:
         text_file.close()
 
         if self.parameters["wandb"]:
+
             wandb.finish()
 
     def evaluate_model(self, num_time_steps):
@@ -492,8 +469,7 @@ class NormalController:
                 terminal = False
 
                 max_steps_this_episode = 1000
-                while not terminal and ((max_steps_this_episode <= 0) or (
-                        eval_rlg.num_ep_steps() < max_steps_this_episode)):
+                while not terminal and ((max_steps_this_episode <= 0) or (eval_rlg.num_ep_steps() < max_steps_this_episode)):
                     _, _, terminal, _ = eval_rlg.rl_step()
 
                 returns.append(eval_rlg.episode_reward())
@@ -502,11 +478,9 @@ class NormalController:
 
             num_updates = num_time_steps // self.parameters["num_samples"]
             num_epoch_updates = num_updates * self.parameters["epochs"]
-            num_mini_batch_updates = num_epoch_updates * (
-                    self.parameters["num_samples"] // self.parameters["mini_batch_size"])
+            num_mini_batch_updates = num_epoch_updates * (self.parameters["num_samples"] // self.parameters["mini_batch_size"])
 
-            num_samples = num_mini_batch_updates * self.parameters[
-                "mini_batch_size"]
+            num_samples = num_mini_batch_updates * self.parameters["mini_batch_size"]
 
             real_time = int(time.time() - self.start)
 
@@ -553,8 +527,7 @@ class NormalController:
         df = pd.read_csv(csv_foldername + '/eval_data.csv')
 
         # evaluation: average_return vs num_time_steps
-        df.plot(x='num_time_steps', y='average_return', color='blue',
-                legend=False)
+        df.plot(x='num_time_steps', y='average_return', color='blue', legend=False)
         plt.xlabel('time_steps')
         plt.ylabel('average\nreturn', rotation='horizontal', labelpad=30)
         plt.title('Policy Evaluation')
@@ -658,8 +631,7 @@ class NormalController:
         self.rlg.rl_env_message(f'save, {self.data_dir}')
 
         # save agent data
-        self.rlg.rl_agent_message(
-            f'save, {self.data_dir}, {self.rlg.num_steps()}')
+        self.rlg.rl_agent_message(f'save, {self.data_dir}, {self.rlg.num_steps()}')
 
         print('saving complete')
 
@@ -682,20 +654,17 @@ class NormalController:
                                      'num_samples': self.eval_data[:, 4],
                                      'average_return': self.eval_data[:, 5],
                                      'run_time': self.eval_data[:, 6]})
-        eval_data_df.to_csv(csv_foldername + '/eval_data.csv',
-                            float_format='%f')
+        eval_data_df.to_csv(csv_foldername + '/eval_data.csv', float_format='%f')
 
         loss_data_df = pd.DataFrame({'num_updates': self.loss_data[:, 0],
                                      'num_epoch_updates': self.loss_data[:, 1],
-                                     'num_mini_batch_updates': self.loss_data[:,
-                                                               2],
+                                     'num_mini_batch_updates': self.loss_data[:, 2],
                                      'clip_loss': self.loss_data[:, 3],
                                      'vf_loss': self.loss_data[:, 4],
                                      'entropy': self.loss_data[:, 5],
                                      'clip_vf_s_loss': self.loss_data[:, 6],
                                      'clip_fraction': self.loss_data[:, 7]})
-        loss_data_df.to_csv(csv_foldername + '/loss_data.csv',
-                            float_format='%f')
+        loss_data_df.to_csv(csv_foldername + '/loss_data.csv', float_format='%f')
 
     def save_parameters(self):
         """
@@ -767,8 +736,7 @@ class NormalController:
 
         if self.parameters["device"] == 'cuda':
             torch_cuda_random_state = torch.cuda.get_rng_state()
-            torch.save(torch_cuda_random_state,
-                       pt_foldername + '/torch_cuda_random_state.pt')
+            torch.save(torch_cuda_random_state, pt_foldername + '/torch_cuda_random_state.pt')
 
 
 def objective(trial):

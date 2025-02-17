@@ -34,7 +34,13 @@ class Environment(BaseEnvironment):
         if render:
             render_mode = "human"
 
-        self.env = gym.make(env_name, render_mode=render_mode)
+        if env_name.contains("Ant"):
+            self.env = gym.make(env_name, render_mode=render_mode)
+        elif env_name.contains("Fetch"):
+            self.env = gym.make(env_name, render_mode=render_mode)
+        else:
+            exit("Environment not supported.")
+
 
     def env_init(self):
         """

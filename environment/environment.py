@@ -1,7 +1,11 @@
+import gymnasium as gym
+import gymnasium_robotics
+import numpy as np
 import os
 import pickle
 
-import gymnasium as gym
+from gymnasium import ObservationWrapper
+from gymnasium.spaces import Box
 
 from utils.rl_glue import BaseEnvironment
 
@@ -34,7 +38,15 @@ class Environment(BaseEnvironment):
         if render:
             render_mode = "human"
 
-        self.env = gym.make(env_name, render_mode=render_mode)
+        if "Ant" in env_name:
+            self.env = gym.make(env_name, render_mode=render_mode)
+        elif "Fetch" in env_name:
+            gym.register_envs(gymnasium_robotics)
+            self.env = gym.make(env_name, render_mode=render_mode)
+            self.env = CustomFetchFlattenObservation(self.env)
+        else:
+            exit("Environment not supported.")
+
 
     def env_init(self):
         """
@@ -266,3 +278,38 @@ class Environment(BaseEnvironment):
             pickle.dump(env_np_random_state, f)
         with open(pickle_foldername + "/env_action_space_np_random_state.pickle", "wb") as f:
             pickle.dump(env_action_space_np_random_state, f)
+
+
+class CustomFetchFlattenObservation(ObservationWrapper):
+    def __init__(self, env):
+
+        super().__init__(env)
+
+        self.keys_order = ["observation", "desired_goal", "achieved_goal"]
+
+        # Build a new single Box space from the chosen key order.
+        low_list, high_list = [], []
+
+        for key in self.keys_order:
+            space = self.env.observation_space.spaces[key]
+            low_list.append(space.low.flatten())
+            high_list.append(space.high.flatten())
+
+        self.observation_space = Box(
+            low=np.concatenate(low_list),
+            high=np.concatenate(high_list),
+            dtype=self.env.observation_space.spaces[self.keys_order[0]].dtype
+        )
+
+    def observation(self, observation):
+        # Concatenate in the custom order
+        return np.concatenate(
+            [observation[key].flatten() for key in self.keys_order],
+            axis=0
+        )
+
+# Example usage:
+# env = gym.make("YourEnv-v0")
+# wrapped_env = CustomFlattenObservation(env, ["observation", "desired_goal", "achieved_goal"])
+# obs = wrapped_env.reset()
+# print(obs)

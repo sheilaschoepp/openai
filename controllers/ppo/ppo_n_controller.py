@@ -36,7 +36,7 @@ parser = argparse.ArgumentParser(description='PyTorch Proximal Policy Optimizati
 
 parser.add_argument('-e', '--n_env_name', default='FetchReachDense-v3', # Ant-v5 or FetchReachDense-v3
                     help='name of normal (non-malfunctioning) MuJoCo Gym environment (default: Ant-v5)')
-parser.add_argument('-t', '--n_time_steps', type=int, default=1000000, metavar='N', # 10000000 (Ant) or 1000000 (Fetch)
+parser.add_argument('-t', '--n_time_steps', type=int, default=500000, metavar='N', # 10000000 (Ant) or 500000 (Fetch)
                     help='number of time steps in normal (non-malfunctioning) MuJoCo Gym environment (default: 10000000)')
 
 parser.add_argument('--lr', type=float, default=0.000275, metavar='G',
@@ -77,7 +77,7 @@ parser.add_argument('--hidden_dim', type=int, default=64, metavar='N',
 parser.add_argument('--log_std', type=float, default=0.0, metavar='G',
                     help='log standard deviation of the policy distribution (default: 0.0)')
 
-parser.add_argument('-tef', '--time_step_eval_frequency', type=int, default=5000, metavar='N', # 50000 (Ant) or 5000 (Fetch)
+parser.add_argument('-tef', '--time_step_eval_frequency', type=int, default=2500, metavar='N', # 50000 (Ant) or 2500 (Fetch)
                     help='frequency of policy evaluation during learning (default: 50000)')
 parser.add_argument('-ee', '--eval_episodes', type=int, default=10, metavar='N',
                     help='number of episodes in policy evaluation roll-out (default: 10)')

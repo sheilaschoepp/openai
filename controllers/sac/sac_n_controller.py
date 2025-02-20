@@ -36,7 +36,7 @@ parser = argparse.ArgumentParser(description='PyTorch Soft Actor-Critic Argument
 
 parser.add_argument('-e', '--n_env_name', default='FetchReachDense-v3', # Ant-v5 or FetchReachDense-v3
                     help='name of normal (non-malfunctioning) MuJoCo Gym environment (default: Ant-v5)')
-parser.add_argument('-t', '--n_time_steps', type=int, default=100000, metavar='N', # 3000000 (Ant) or 100000 (Fetch)
+parser.add_argument('-t', '--n_time_steps', type=int, default=30000, metavar='N', # 3000000 (Ant) or 30000 (Fetch)
                     help='number of time steps in normal (non-malfunctioning) MuJoCo Gym environment (default: 3000000)')
 
 parser.add_argument('--gamma', type=float, default=0.99, metavar='G',
@@ -67,7 +67,7 @@ parser.add_argument('--target_update_interval', type=int, default=1, metavar='N'
 parser.add_argument('-a', '--automatic_entropy_tuning', default=False, action='store_true',
                     help='if true, automatically tune the temperature (default: False)')
 
-parser.add_argument('-tef', '--time_step_eval_frequency', type=int, default=500, metavar='N', # 15000 (Ant) or 500 (Fetch)
+parser.add_argument('-tef', '--time_step_eval_frequency', type=int, default=150, metavar='N', # 15000 (Ant) or 150 (Fetch)
                     help='frequency of policy evaluation during learning (default: 15000)')
 parser.add_argument('-ee', '--eval_episodes', type=int, default=10, metavar='N',
                     help='number of episodes in policy evaluation roll-out (default: 10)')

@@ -383,7 +383,6 @@ class NormalController:
         """
         Close environment.
         Compute runtime.
-        Send completion email.
         Save file with run information.
         Close wandb.
         """
@@ -392,10 +391,10 @@ class NormalController:
 
         run_time = str(timedelta(seconds=time.time() - self.start))[:-7]
 
-        print('time to complete one run:', run_time, 'h:m:s')
+        print(f'time to complete one run: {run_time} h:m:s')
         print(self.LINE)
 
-        text_file = open(self.data_dir + '/run_summary.txt', 'w')
+        text_file = open(f'{self.data_dir}/run_summary.txt', 'w')
         text_file.write(date.today().strftime('%m/%d/%y'))
         text_file.write(f'\n\nExperiment {self.experiment}/seed{self.parameters["seed"]} complete.\n\nTime to complete: {run_time} h:m:s')
         text_file.close()

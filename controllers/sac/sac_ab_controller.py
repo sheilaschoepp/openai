@@ -466,7 +466,7 @@ class AbnormalController:
 
         self.rlg.rl_env_message("load, {}".format(self.load_data_dir))  # load environment data
 
-        self.rlg.rl_agent_message("load, {}, {}".format(self.load_data_dir, self.parameters["completed_time_steps"]))
+        self.rlg.rl_agent_message("load, {}, {}".format(self.load_data_dir, self.parameters["n_time_steps"]))
         self.agent.loss_data = self.loss_data
 
         self.load_rlg_statistics()  # load rlg data

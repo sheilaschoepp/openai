@@ -193,7 +193,7 @@ class AbnormalController:
                                self.parameters["seed"])
 
         # environment used for evaluation
-        self.eval_env = Environment(self.parameters["n_env_name"],
+        self.eval_env = Environment(self.parameters["ab_env_name"],
                                     self.parameters["seed"])
 
         # agent
@@ -307,7 +307,7 @@ class AbnormalController:
                          num_episodes=self.rlg_statistics["num_episodes"])
 
         # save the agent model and evaluate the model before any learning
-        # self.rlg.rl_agent_message(f'save_model, {self.data_dir}, {self.parameters["n_time_steps"]}')  # todo: not needed as we already have this model saved
+        # self.rlg.rl_agent_message(f'save_model, {self.data_dir}, {self.parameters["n_time_steps"]}')  # not needed as we already have this model saved
         self.evaluate_model(self.rlg.num_steps())
 
         for _ in itertools.count(1):
@@ -330,9 +330,6 @@ class AbnormalController:
                 if self.rlg.num_steps() % self.parameters["time_step_eval_frequency"] == 0:
                     self.rlg.rl_agent_message(f'save_model, {self.data_dir}, {self.rlg.num_steps()}')
                     self.evaluate_model(self.rlg.num_steps())
-
-            # index = self.rlg.num_episodes() - 1
-            # self.train_data[index] = [self.rlg.num_episodes(), self.rlg.num_steps(), self.rlg.episode_reward()]
 
             # learning complete
             if self.rlg.num_steps() == self.parameters["n_time_steps"] + self.parameters["ab_time_steps"]:
@@ -430,7 +427,7 @@ class AbnormalController:
 
             real_time = int(time.time() - self.start)
 
-            index = num_time_steps // self.parameters["time_step_eval_frequency"] + 1  # add 1 because we evaluate policy before learning
+            index = num_time_steps // self.parameters["time_step_eval_frequency"] + 1  # add 1 because we evaluate policy before learning # todo?
             self.eval_data[index] = [num_time_steps,
                                      num_updates,
                                      num_samples,
@@ -439,10 +436,18 @@ class AbnormalController:
 
             cumulative_average_return = self.eval_data[:, -2].sum()
 
+            if self.parameters["wandb"]:
+                wandb.log(data={
+                    'Key Metrics/Average Return': average_return,
+                    'Key Metrics/Cumulative Average Return': cumulative_average_return,
+                    'Key Metrics/Real Time': real_time,
+                    'Time Steps': num_time_steps
+                })
+
             print(f'evaluation at {num_time_steps} time steps: {average_return}')
 
             run_time = str(timedelta(seconds=time.time() - self.start))[:-7]
-            print('runtime:', run_time, 'h:m:s')
+            print(f'runtime: {run_time} h:m:s')
             print(self.LINE)
 
             # reload the torch RNG state(s)
@@ -561,13 +566,13 @@ class AbnormalController:
 
         print('plotting...')
 
-        csv_foldername = self.data_dir + '/csv'
+        csv_foldername = f'{self.data_dir}/csv'
         os.makedirs(csv_foldername, exist_ok=True)
 
-        jpg_foldername = self.data_dir + '/jpg'
+        jpg_foldername = f'{self.data_dir}/jpg'
         os.makedirs(jpg_foldername, exist_ok=True)
 
-        df = pd.read_csv(csv_foldername + '/eval_data.csv')
+        df = pd.read_csv(f'{csv_foldername}/eval_data.csv')
 
         # evaluation: average_return vs num_time_steps
         df.plot(x='num_time_steps', y='average_return', color='blue', legend=False)
@@ -576,7 +581,7 @@ class AbnormalController:
         plt.ylabel('average\nreturn', rotation='horizontal', labelpad=30)
         plt.title('Policy Evaluation')
         pss.plot_settings()
-        plt.savefig(jpg_foldername + '/evaluation_time_steps.jpg')
+        plt.savefig(f'{jpg_foldername}/evaluation_time_steps.jpg')
         plt.close()
 
         # evaluation: average_return vs num_updates
@@ -586,7 +591,7 @@ class AbnormalController:
         plt.ylabel('average\nreturn', rotation='horizontal', labelpad=30)
         plt.title('Policy Evaluation')
         pss.plot_settings()
-        plt.savefig(jpg_foldername + '/evaluation_updates.jpg')
+        plt.savefig(f'{jpg_foldername}/evaluation_updates.jpg')
         plt.close()
 
         # evaluation: average_return vs num_samples
@@ -596,21 +601,10 @@ class AbnormalController:
         plt.ylabel('average\nreturn', rotation='horizontal', labelpad=30)
         plt.title('Policy Evaluation')
         pss.plot_settings()
-        plt.savefig(jpg_foldername + '/evaluation_samples.jpg')
+        plt.savefig(f'{jpg_foldername}/evaluation_samples.jpg')
         plt.close()
 
-        # df = pd.read_csv(csv_foldername + "/train_data.csv")
-        #
-        # # training: episode_return vs num_episodes
-        # df.plot(x="num_episodes", y="episode_return", color="blue", legend=False)
-        # plt.xlabel("episodes")
-        # plt.ylabel("episode\nreturn", rotation="horizontal", labelpad=30)
-        # plt.title("Training")
-        # pss.plot_settings()
-        # plt.savefig(jpg_foldername + "/train_episodes.jpg")
-        # plt.close()
-
-        df = pd.read_csv(csv_foldername + '/loss_data.csv')
+        df = pd.read_csv(f'{csv_foldername}/loss_data.csv')
 
         # training: q_value_loss_1 vs num_updates
         df.plot(x='num_updates', y='q_value_loss_1', color='blue', legend=False)
@@ -619,7 +613,7 @@ class AbnormalController:
         plt.ylabel('loss', rotation='horizontal', labelpad=30)
         plt.title('Q Value Loss 1')
         pss.plot_settings()
-        plt.savefig(jpg_foldername + '/q_value_loss_1.jpg')
+        plt.savefig(f'{jpg_foldername}/q_value_loss_1.jpg')
         plt.close()
 
         # training: q_value_loss_2 vs num_updates
@@ -629,7 +623,7 @@ class AbnormalController:
         plt.ylabel('loss', rotation='horizontal', labelpad=30)
         plt.title('Q Value Loss 2')
         pss.plot_settings()
-        plt.savefig(jpg_foldername + '/q_value_loss_2.jpg')
+        plt.savefig(f'{jpg_foldername}/q_value_loss_2.jpg')
         plt.close()
 
         # training: policy_loss vs num_updates
@@ -639,7 +633,7 @@ class AbnormalController:
         plt.ylabel('loss', rotation='horizontal', labelpad=30)
         plt.title('Policy Loss')
         pss.plot_settings()
-        plt.savefig(jpg_foldername + '/policy_loss.jpg')
+        plt.savefig(f'{jpg_foldername}/policy_loss.jpg')
         plt.close()
 
         # training: alpha_loss vs num_updates
@@ -649,7 +643,7 @@ class AbnormalController:
         plt.ylabel('loss', rotation='horizontal', labelpad=30)
         plt.title('Alpha Loss')
         pss.plot_settings()
-        plt.savefig(jpg_foldername + '/alpha_loss.jpg')
+        plt.savefig(f'{jpg_foldername}/alpha_loss.jpg')
         plt.close()
 
         # training: alpha_value vs num_updates
@@ -659,7 +653,7 @@ class AbnormalController:
         plt.ylabel('alpha', rotation='horizontal', labelpad=30)
         plt.title('Alpha Value')
         pss.plot_settings()
-        plt.savefig(jpg_foldername + '/alpha_value.jpg')
+        plt.savefig(f'{jpg_foldername}/alpha_value.jpg')
         plt.close()
 
         # training: entropy vs num_updates
@@ -669,7 +663,7 @@ class AbnormalController:
         plt.ylabel('entropy', rotation='horizontal', labelpad=30)
         plt.title('Entropy')
         pss.plot_settings()
-        plt.savefig(jpg_foldername + '/entropy_updates.jpg')
+        plt.savefig(f'{jpg_foldername}/entropy_updates.jpg')
         plt.close()
 
         print('plotting complete')
@@ -716,7 +710,7 @@ class AbnormalController:
         File format: .csv
         """
 
-        csv_foldername = self.data_dir + '/csv'
+        csv_foldername = f'{self.data_dir}/csv'
         os.makedirs(csv_foldername, exist_ok=True)
 
         eval_data_df = pd.DataFrame({'num_time_steps': self.eval_data[:, 0],
@@ -724,7 +718,7 @@ class AbnormalController:
                                      'num_samples': self.eval_data[:, 2],
                                      'average_return': self.eval_data[:, 3],
                                      'real_time': self.eval_data[:, 4]})
-        eval_data_df.to_csv(csv_foldername + '/eval_data.csv', float_format='%f')
+        eval_data_df.to_csv(f'{csv_foldername}/eval_data.csv', float_format='%f')
 
         loss_data_df = pd.DataFrame({'num_updates': self.loss_data[:, 0],
                                      'q_value_loss_1': self.loss_data[:, 1],
@@ -733,7 +727,7 @@ class AbnormalController:
                                      'alpha_loss': self.loss_data[:, 4],
                                      'alpha_value': self.loss_data[:, 5],
                                      'entropy': self.loss_data[:, 6]})
-        loss_data_df.to_csv(csv_foldername + '/loss_data.csv', float_format='%f')
+        loss_data_df.to_csv(f'{csv_foldername}/loss_data.csv', float_format='%f')
 
     def save_parameters(self):
         """
@@ -742,10 +736,10 @@ class AbnormalController:
         File format: .csv and .pickle
         """
 
-        csv_foldername = self.data_dir + '/csv'
+        csv_foldername = f'{self.data_dir}/csv'
         os.makedirs(csv_foldername, exist_ok=True)
 
-        csv_filename = csv_foldername + '/parameters.csv'
+        csv_filename = f'{csv_foldername}/parameters.csv'
 
         f = open(csv_filename, 'w')
         writer = csv.writer(f)
@@ -753,10 +747,10 @@ class AbnormalController:
             writer.writerow([key, val])
         f.close()
 
-        pickle_foldername = self.data_dir + '/pickle'
+        pickle_foldername = f'{self.data_dir}/pickle'
         os.makedirs(pickle_foldername, exist_ok=True)
 
-        pickle_filename = pickle_foldername + '/parameters.pickle'
+        pickle_filename = f'{pickle_foldername}/parameters.pickle'
 
         with open(pickle_filename, 'wb') as f:
             pickle.dump(self.parameters, f, protocol=pickle.HIGHEST_PROTOCOL)
@@ -772,10 +766,10 @@ class AbnormalController:
         self.rlg_statistics["num_steps"] = self.rlg.num_steps()
         self.rlg_statistics["total_reward"] = self.rlg.total_reward()
 
-        pickle_foldername = self.data_dir + '/pickle'
+        pickle_foldername = f'{self.data_dir}/pickle'
         os.makedirs(pickle_foldername, exist_ok=True)
 
-        with open(pickle_foldername + '/rlg_statistics.pickle', 'wb') as f:
+        with open(f'{pickle_foldername}/rlg_statistics.pickle', 'wb') as f:
             pickle.dump(self.rlg_statistics, f)
 
     def save_seed_state(self):
@@ -785,27 +779,27 @@ class AbnormalController:
         File format: .pickle (random and numpy) and .pt (pytorch)
         """
 
-        pickle_foldername = self.data_dir + '/pickle'
+        pickle_foldername = f'{self.data_dir}/pickle'
         os.makedirs(pickle_foldername, exist_ok=True)
 
         random_random_state = random.getstate()
         numpy_random_state = np.random.get_state()
 
-        with open(pickle_foldername + '/random_random_state.pickle', 'wb') as f:
+        with open(f'{pickle_foldername}/random_random_state.pickle', 'wb') as f:
             pickle.dump(random_random_state, f)
 
-        with open(pickle_foldername + '/numpy_random_state.pickle', 'wb') as f:
+        with open(f'{pickle_foldername}/numpy_random_state.pickle', 'wb') as f:
             pickle.dump(numpy_random_state, f)
 
-        pt_foldername = self.data_dir + '/pt'
+        pt_foldername = f'{self.data_dir}/pt'
         os.makedirs(pt_foldername, exist_ok=True)
 
         torch_random_state = torch.get_rng_state()
-        torch.save(torch_random_state, pt_foldername + '/torch_random_state.pt')
+        torch.save(torch_random_state, f'{pt_foldername}/torch_random_state.pt')
 
         if self.parameters["device"] == 'cuda':
             torch_cuda_random_state = torch.cuda.get_rng_state()
-            torch.save(torch_cuda_random_state, pt_foldername + '/torch_cuda_random_state.pt')
+            torch.save(torch_cuda_random_state, f'{pt_foldername}/torch_cuda_random_state.pt')
 
 
 def main():

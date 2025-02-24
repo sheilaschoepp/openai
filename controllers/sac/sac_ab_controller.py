@@ -2,7 +2,6 @@ import argparse
 import csv
 import itertools
 import matplotlib.pyplot as plt
-import optuna
 import os
 
 # The following three lines must come before numpy import.
@@ -14,7 +13,6 @@ import numpy as np
 import pandas as pd
 import pickle
 import random
-import smtplib
 import sys
 import time
 import torch
@@ -33,38 +31,29 @@ from utils.rl_glue import RLGlue
 
 import custom_gym_envs  # do not delete; required for custom gym environments
 
-parser = argparse.ArgumentParser(description="PyTorch Soft Actor-Critic Arguments")
+parser = argparse.ArgumentParser(description='PyTorch Soft Actor-Critic Arguments')
 
-parser.add_argument("-e", "--ab_env_name", default="Ant-v2",
-                    help="name of abnormal (malfunctioning) MuJoCo Gym environment (default: Ant-v2)")
-parser.add_argument("-t", "--ab_time_steps", type=int, default=20000000, metavar="N",
-                    help="number of time steps in abnormal (malfunctioning) MuJoCo Gym environment (default: 20000000)")
+parser.add_argument('-e', '--ab_env_name', default='Ant-v5', # Ant-v5 or FetchReachDense-v3
+                    help='name of abnormal (malfunctioning) MuJoCo Gym environment (default: Ant-v5)')
+parser.add_argument('-t', '--ab_time_steps', type=int, default=3000000, metavar='N', # 3000000 (Ant) or 30000 (Fetch)
+                    help='number of time steps in abnormal (malfunctioning) MuJoCo Gym environment (default: 3000000)')
 
-parser.add_argument("-crb", "--clear_replay_buffer", default=False, action="store_true",
-                    help="if true, clear the replay buffer (default: False)")
-parser.add_argument("-rn", "--reinitialize_networks", default=False, action="store_true",
-                    help="if true, randomly reinitialize the networks (default: False)")
+parser.add_argument('-crb', '--clear_replay_buffer', default=False, action='store_true',
+                    help='if true, clear the replay buffer (default: False)')
+parser.add_argument('-rn', '--reinitialize_networks', default=False, action='store_true',
+                    help='if true, randomly reinitialize the networks (default: False)')
 
-parser.add_argument("-c", "--cuda", default=False, action="store_true",
-                    help="if true, run on GPU (default: False)")
+parser.add_argument('-c', '--cuda', default=False, action='store_true',
+                    help='if true, run on GPU (default: False)')
 
-parser.add_argument("-f", "--file",
-                    help="absolute path of the seedX folder containing data from normal MuJoCo environment")
+parser.add_argument('-f', '--file',
+                    help='absolute path of the seedX folder containing data from normal MuJoCo environment')
 
-parser.add_argument("-d", "--delete", default=False, action="store_true",
-                    help="if true, delete previously saved data and restart training (default: False)")
+parser.add_argument('-d', '--delete', default=False, action='store_true',
+                    help='if true, delete previously saved data and restart training (default: False)')
 
-parser.add_argument("--resumable", default=False, action="store_true",
-                    help="if true, make experiment resumable (i.e. save data at the end of the last possible episode)")
-
-parser.add_argument("--resume", default=False, action="store_true",
-                    help="if true, resume experiment starting with data from last possible episode")
-
-parser.add_argument("-rf", "--resume_file", default="",
-                    help="absolute path of the seedX folder containing data from previous checkpoint")
-
-parser.add_argument("-tl", "--time_limit", type=float, default=100000000000.0, metavar="N",
-                    help="run time limit for use on Compute Canada (units: days)")
+parser.add_argument('-wb', '--wandb', default=False, action='store_true',
+                    help='if true, log to weights & biases (default: False)')
 
 args = parser.parse_args()
 
@@ -77,7 +66,7 @@ class AbnormalController:
     and agent performance evaluation.  -Brian Tanner & Adam White
     """
 
-    LINE = "--------------------------------------------------------------------------------"
+    LINE = '--------------------------------------------------------------------------------'
 
     def __init__(self):
 
@@ -85,113 +74,102 @@ class AbnormalController:
 
         self.start = time.time()
 
-        # hostname
-
-        self.hostname = os.uname()[1]
-        self.localhosts = ["melco", "Legion", "amii", "remaining20seeds"]
-        self.computecanada = not any(host in self.hostname for host in self.localhosts)
-
         # experiment parameters
 
         self.parameters = None
 
-        if not args.resume:
+        self.load_data_dir = args.file
 
-            self.load_data_dir = args.file
+        self.load_parameters()
+        self.parameters["ab_env_name"] = args.ab_env_name  # addition
+        self.parameters["ab_time_steps"] = args.ab_time_steps  # addition
+        self.parameters["clear_replay_buffer"] = args.clear_replay_buffer  # addition
+        self.parameters["reinitialize_networks"] = args.reinitialize_networks  # addition
+        self.parameters["cuda"] = args.cuda  # update
+        self.parameters["file"] = args.file  # addition
+        self.parameters["device"] = "cuda" if args.cuda and torch.cuda.is_available() else "cpu"  # update
+        self.parameters["wandb"] = args.wandb # update
 
-            self.load_parameters()
-            self.parameters["ab_env_name"] = args.ab_env_name  # addition
-            self.parameters["ab_time_steps"] = args.ab_time_steps  # addition
-            self.parameters["clear_replay_buffer"] = args.clear_replay_buffer  # addition
-            self.parameters["reinitialize_networks"] = args.reinitialize_networks  # addition
-            self.parameters["cuda"] = args.cuda  # update
-            self.parameters["file"] = args.file  # addition
-            self.parameters["device"] = "cuda" if args.cuda and torch.cuda.is_available() else "cpu"  # update
+        # W&B initialization
+        # todo add in entire history
 
-            self.parameters["resumable"] = args.resumable  # update
-            self.parameters["resume"] = args.resume  # update
-            self.parameters["resume_file"] = args.resume_file  # update
-            self.parameters["complete"] = False  # update
+        if self.parameters["wandb"]:
 
-        else:
+            env = args.ab_env_name.split('-')[0].lower()
+            version = args.ab_env_name.split('-')[1].lower()
+            prefix = f'{env}{version}'
 
-            self.load_data_dir = args.resume_file
+            wandb.init(
+                project=f'{prefix}_sac',
+                config=self.parameters,
+                dir=f'{os.getenv("HOME")}/Documents/openai'
+            )
 
-            # load old parameters to make sure we are running the same experiment
-            self.load_parameters()
+            wandb.define_metric(
+                name='Key Metrics/*',
+                step_metric='Time Steps'
+            )
 
-            # overwrite parameters that need to be updated
-            self.parameters["ab_time_steps"] = args.ab_time_steps  # overwrite
-            self.parameters["cuda"] = args.cuda  # update
-            self.parameters["device"] = "cuda" if args.cuda and torch.cuda.is_available() else "cpu"  # update
-
-            self.parameters["resumable"] = args.resumable  # update
-            self.parameters["resume"] = args.resume  # update
-            self.parameters["resume_file"] = args.resume_file  # update
-            self.parameters["complete"] = False  # update
+            wandb.define_metric(
+                name='Loss Metrics/*',
+                step_metric='Number of Updates'
+            )
 
         # experiment data directory
 
-        suffix = self.parameters["ab_env_name"] + ":" + str(self.parameters["ab_time_steps"]) \
-                 + "_" + self.parameters["n_env_name"] + ":" + str(self.parameters["n_time_steps"]) \
-                 + "_g:" + str(self.parameters["gamma"]) \
-                 + "_t:" + str(self.parameters["tau"]) \
-                 + "_a:" + str(self.parameters["alpha"]) \
-                 + "_lr:" + str(self.parameters["lr"]) \
-                 + "_hd:" + str(self.parameters["hidden_dim"]) \
-                 + "_rbs:" + str(self.parameters["replay_buffer_size"]) \
-                 + "_bs:" + str(self.parameters["batch_size"]) \
-                 + "_mups:" + str(self.parameters["model_updates_per_step"]) \
-                 + "_tui:" + str(self.parameters["target_update_interval"]) \
-                 + "_tef:" + str(self.parameters["time_step_eval_frequency"]) \
-                 + "_ee:" + str(self.parameters["eval_episodes"]) \
-                 + "_tmsf:" + str(self.parameters["time_step_model_save_frequency"]) \
-                 + "_crb:" + str(self.parameters["clear_replay_buffer"]) \
-                 + "_rn:" + str(self.parameters["reinitialize_networks"]) \
-                 + "_a:" + str(self.parameters["automatic_entropy_tuning"]) \
-                 + "_d:" + str(self.parameters["device"]) \
-                 + ("_r" if self.parameters["resumable"] else "") \
-                 + ("_resumed" if self.parameters["resume"] else "")
+        suffix = (
+            f'{self.parameters["ab_env_name"]}:{self.parameters["ab_time_steps"]}'
+            f'_{self.parameters["n_env_name"]}:{self.parameters["n_time_steps"]}'
+            f'_g:{self.parameters["gamma"]}'
+            f'_t:{self.parameters["tau"]}'
+            f'_a:{self.parameters["alpha"]}'
+            f'_lr:{self.parameters["lr"]}'
+            f'_hd:{self.parameters["hidden_dim"]}'
+            f'_rbs:{self.parameters["replay_buffer_size"]}'
+            f'_bs:{self.parameters["batch_size"]}'
+            f'_nr:{self.parameters["normalize_rewards"]}' # todo
+            f'_mups:{self.parameters["model_updates_per_step"]}'
+            f'_tui:{self.parameters["target_update_interval"]}'
+            f'_a:{self.parameters["automatic_entropy_tuning"]}'
+            f'_tef:{self.parameters["time_step_eval_frequency"]}'
+            f'_ee:{self.parameters["eval_episodes"]}'
+            f'_crb:{self.parameters["clear_replay_buffer"]}'
+            f'_rn:{self.parameters["reinitialize_networks"]}'
+            f'_d:{self.parameters["device"]}'
+            f'{"_wb" if self.parameters["wandb"] else ""}'
+        )
 
-        self.experiment = "SAC_" + suffix
+        self.experiment = f'SAC_{suffix}'
 
-        if self.computecanada:
-            # path for compute canada
-            self.data_dir = os.getenv("HOME") + "/scratch/openai/data/" + self.experiment + "/seed" + str(self.parameters["seed"])
-        else:
-            # path for servers and local machines
-            self.data_dir = os.getenv("HOME") + "/Documents/openai/data/" + self.experiment + "/seed" + str(self.parameters["seed"])
+        self.data_dir = f'{os.getenv("HOME")}/Documents/openai/data/{self.experiment}/seed{self.parameters["seed"]}'
 
-        # old data
+        # are we restarting training?  do the data files for the selected seed already exist?
+        if path.exists(self.data_dir):
 
-        if not self.computecanada:
-            # are we restarting training?  do the data files for the selected seed already exist?
-            if path.exists(self.data_dir):
+            print(self.LINE)
+            print(self.LINE)
 
-                print(self.LINE)
-                print(self.LINE)
-
-                if args.delete:
-                    # yes; argument flag present to indicate data deletion
-                    print(colored("argument indicates DATA DELETION", "red"))
-                    print(colored("deleting data...", "red"))
-                    rmtree(self.data_dir, ignore_errors=True)
-                    print(colored("data deletion complete", "red"))
+            if args.delete:
+                # yes; argument flag present to indicate data deletion
+                print(colored(text='argument indicates DATA DELETION', color='red'))
+                print(colored(text='deleting data...', color='red'))
+                rmtree(path=self.data_dir, ignore_errors=True)
+                print(colored(text='data deletion complete', color='red'))
+            else:
+                # yes; argument flag not present; get confirmation of data deletion from user input
+                print(colored(text='You are about to delete saved data and restart training.', color='red'))
+                s = input(colored(text='Are you sure you want to continue? Hit "y" then "Enter" to continue.\n', color='red'))
+                if s == 'y':
+                    # delete old data; rewrite new data to same location
+                    print(colored(text='user input indicates DATA DELETION', color='red'))
+                    print(colored(text='deleting data...', color='red'))
+                    rmtree(path=self.data_dir, ignore_errors=True)
+                    print(colored(text='data deletion complete', color='red'))
                 else:
-                    # yes; argument flag not present; get confirmation of data deletion from user input
-                    print(colored("You are about to delete saved data and restart training.", "red"))
-                    s = input(colored("Are you sure you want to continue?  Hit 'y' then 'Enter' to continue.\n", "red"))
-                    if s == "y":
-                        # delete old data; rewrite new data to same location
-                        print(colored("user input indicates DATA DELETION", "red"))
-                        print(colored("deleting data...", "red"))
-                        rmtree(self.data_dir, ignore_errors=True)
-                        print(colored("data deletion complete", "red"))
-                    else:
-                        # do not delete old data; system exit
-                        print(colored("user input indicates NO DATA DELETION", "red"))
-                        print(self.LINE)
-                        sys.exit("\nexiting...")
+                    # do not delete old data; system exit
+                    print(colored(text='user input indicates NO DATA DELETION', color='red'))
+                    print(self.LINE)
+                    sys.exit('\nexiting...')
 
         # data
 
@@ -206,13 +184,17 @@ class AbnormalController:
         # Note: we load the seeds after all rl problem elements are created because the creation of the agent
         # network(s) uses xavier initialization, thereby altering the torch seed state
 
-        # env is seeded in Environment __init__() method
+        # env is seeded in Environment env_init() method
 
         # rl problem
 
         # abnormal environment used for training
         self.env = Environment(self.parameters["ab_env_name"],
                                self.parameters["seed"])
+
+        # environment used for evaluation
+        self.eval_env = Environment(self.parameters["n_env_name"],
+                                    self.parameters["seed"])
 
         # agent
         self.agent = SAC(self.env.env_observation_dim(),
@@ -224,10 +206,12 @@ class AbnormalController:
                          self.parameters["hidden_dim"],
                          self.parameters["replay_buffer_size"],
                          self.parameters["batch_size"],
+                         self.parameters["normalize_rewards"],
                          self.parameters["model_updates_per_step"],
                          self.parameters["target_update_interval"],
                          self.parameters["automatic_entropy_tuning"],
                          self.parameters["device"],
+                         self.parameters["wandb"],
                          self.loss_data)
 
         # RLGlue used for training
@@ -238,11 +222,11 @@ class AbnormalController:
         self.load()
 
         # clear the replay buffer if indicated by argument
-        if not self.parameters["resume"] and self.parameters["clear_replay_buffer"]:
+        if self.parameters["clear_replay_buffer"]:
             self.rlg.rl_agent_message("clear_replay_buffer")
 
         # reinitialize the networks if indicated by argument
-        if not self.parameters["resume"] and self.parameters["reinitialize_networks"]:
+        if self.parameters["reinitialize_networks"]:
             self.rlg.rl_agent_message("reinitialize_networks")
 
         # print summary info
@@ -251,10 +235,10 @@ class AbnormalController:
 
         print(self.LINE)
 
-        if self.parameters["device"] == "cuda":
-            print("NOTE: GPU is being used for this experiment.")
+        if self.parameters["device"] == 'cuda':
+            print('NOTE: GPU is being used for this experiment.')
         else:
-            print("NOTE: GPU is not being used for this experiment.  CPU only.")
+            print('NOTE: GPU is not being used for this experiment.  CPU only.')
 
         # what are the experiment parameters?
 
@@ -266,47 +250,49 @@ class AbnormalController:
 
             Note: Non-default values are printed in red.
 
-            @param argument: string
+            @param argument: str
                 the argument name
 
-            @return: string
+            @return: str
                 the value of the argument
             """
             default = parser.get_default(argument)
             if self.parameters[argument] != default:
-                return colored(self.parameters[argument], "red")
+                return colored(self.parameters[argument], 'red')
             else:
                 return self.parameters[argument]
 
-        print("abnormal environment name:", highlight_non_default_values("ab_env_name"))
-        print("abnormal time steps:", highlight_non_default_values("ab_time_steps"))
-        print("normal environment name:", self.parameters["n_env_name"])
-        print("normal time steps:", self.parameters["n_time_steps"])
-        print("gamma:", self.parameters["gamma"])
-        print("tau:", self.parameters["tau"])
-        print("alpha:", self.parameters["alpha"])
-        print("learning rate:", self.parameters["lr"])
-        print("hidden dimension:", self.parameters["hidden_dim"])
-        print("replay buffer size:", self.parameters["replay_buffer_size"])
-        print("batch size:", self.parameters["batch_size"])
-        print("model updates per step:", self.parameters["model_updates_per_step"])
-        print("target updates interval:", self.parameters["target_update_interval"])
-        print("time step evaluation frequency:", self.parameters["time_step_eval_frequency"])
-        print("evaluation episodes:", self.parameters["eval_episodes"])
-        print("time step model save frequency:", self.parameters["time_step_model_save_frequency"])
-        print("automatic entropy tuning:", self.parameters["automatic_entropy_tuning"])
-        print("clear replay buffer:", highlight_non_default_values("clear_replay_buffer"))
-        print("reinitialize networks:", highlight_non_default_values("reinitialize_networks"))
-        if self.parameters["device"] == "cuda":
-            print("device:", self.parameters["device"])
-            if "CUDA_VISIBLE_DEVICES" in os.environ:
-                print("cuda visible device(s):", colored(os.environ["CUDA_VISIBLE_DEVICES"], "red"))
+        print(f'abnormal environment name: {highlight_non_default_values("ab_env_name")}')
+        print(f'abnormal time steps: {highlight_non_default_values("ab_time_steps")}')
+        print(f'normal environment name: {self.parameters["n_env_name"]}')
+        print(f'normal time steps: {self.parameters["n_time_steps"]}')
+        print(f'gamma: {self.parameters["gamma"]}')
+        print(f'tau: {self.parameters["tau"]}')
+        print(f'alpha: {self.parameters["alpha"]}')
+        print(f'learning rate: {self.parameters["lr"]}')
+        print(f'hidden dimension: {self.parameters["hidden_dim"]}')
+        print(f'replay buffer size: {self.parameters["replay_buffer_size"]}')
+        print(f'batch size: {self.parameters["batch_size"]}')
+        print(f'normalize rewards: {self.parameters["normalize_rewards"]}')
+        print(f'model updates per step: {self.parameters["model_updates_per_step"]}')
+        print(f'target update interval: {self.parameters["target_update_interval"]}')
+        print(f'automatic entropy tuning: {self.parameters["automatic_entropy_tuning"]}')
+        print(f'time step evaluation frequency: {self.parameters["time_step_eval_frequency"]}')
+        print(f'evaluation episodes: {self.parameters["eval_episodes"]}')
+        print(f'clear replay buffer: {highlight_non_default_values("clear_replay_buffer")}')
+        print(f'reinitialize networks: {highlight_non_default_values("reinitialize_networks")}')
+
+        if self.parameters['device'] == 'cuda':
+            print(f'device: {self.parameters["device"]}')
+            if 'CUDA_VISIBLE_DEVICES' in os.environ:
+                print(f'cuda visible device(s): {colored(os.environ["CUDA_VISIBLE_DEVICES"], "red")}')
             else:
-                print(colored("cuda visible device(s): N/A", "red"))
+                print(colored('cuda visible device(s): N/A', 'red'))
         else:
-            print("device:", colored(self.parameters["device"], "red"))
-        print("seed:", colored(self.parameters["seed"], "red"))
-        print("resumable:", highlight_non_default_values("resumable"))
+            print(f'device: {colored(self.parameters["device"], "red")}')
+
+        print(f'seed: {colored(self.parameters["seed"], "red")}')
+        print(f'wandb: {highlight_non_default_values("wandb")}')
 
         print(self.LINE)
         print(self.LINE)
@@ -321,32 +307,14 @@ class AbnormalController:
                          num_episodes=self.rlg_statistics["num_episodes"])
 
         # save the agent model and evaluate the model before any learning
-        if not args.resume:
-            self.rlg.rl_agent_message("save_model, {}, {}".format(self.data_dir, self.parameters["n_time_steps"]))  # not needed as we already have this model saved
-            self.evaluate_model(self.rlg.num_steps())
+        # self.rlg.rl_agent_message(f'save_model, {self.data_dir}, {self.parameters["n_time_steps"]}')  # todo: not needed as we already have this model saved
+        self.evaluate_model(self.rlg.num_steps())
 
         for _ in itertools.count(1):
-
-            # Compute Canada limits time usage; this prevents data loss
-            run_time = (time.time() - self.start) / 3600  # units: hours
-            allowed_time = (args.time_limit * 24) - 6 + (self.parameters["seed"] / 6)  # allow the last 6 hours to be used to save data for each seed (saving cannot happen at the same time or memory will run out)
-
-            if run_time > allowed_time:
-                print("allowed time of {} exceeded at a runtime of {}\nstopping experiment".format(str(timedelta(hours=allowed_time))[:-7], str(timedelta(hours=run_time))[:-7]))
-                print(self.LINE)
-                self.parameters["resumable"] = True
-                self.parameters["completed_time_steps"] = self.rlg.num_steps()
-                break
 
             # episode time steps are limited to 1000 (set below)
             # this is used to ensure that once self.parameters["n_time_steps"] + self.parameters["ab_time_steps"] is reached, the experiment is terminated
             max_steps_this_episode = min(1000, self.parameters["n_time_steps"] + self.parameters["ab_time_steps"] - self.rlg.num_steps())
-
-            # if we want to make an experiment resumable, we must save after the last possible episode
-            # since episodes are limited to be a maximum of 1000 time steps, we can save when the max_steps_this_episode is less than 1000
-            if args.resumable and max_steps_this_episode < 1000:
-                self.parameters["completed_time_steps"] = self.rlg.num_steps()
-                break
 
             # run an episode
             self.rlg.rl_start()
@@ -356,13 +324,11 @@ class AbnormalController:
             while not terminal and ((max_steps_this_episode <= 0) or (self.rlg.num_ep_steps() < max_steps_this_episode)):
                 _, _, terminal, _ = self.rlg.rl_step()
 
-                # save the agent model each 'self.parameters["time_step_model_save_frequency"]' time steps
-                # policy model will be used for videos demonstrating learning progress
-                if self.rlg.num_steps() % self.parameters["time_step_model_save_frequency"] == 0:
-                    self.rlg.rl_agent_message("save_model, {}, {}".format(self.data_dir, self.rlg.num_steps()))
-
-                # evaluate the model every 'self.parameters["time_step_eval_frequency"]' time steps
+                # save and evaluate the model every
+                # 'self.parameters["time_step_eval_frequency"]' time
+                # steps
                 if self.rlg.num_steps() % self.parameters["time_step_eval_frequency"] == 0:
+                    self.rlg.rl_agent_message(f'save_model, {self.data_dir}, {self.rlg.num_steps()}')
                     self.evaluate_model(self.rlg.num_steps())
 
             # index = self.rlg.num_episodes() - 1
@@ -370,12 +336,6 @@ class AbnormalController:
 
             # learning complete
             if self.rlg.num_steps() == self.parameters["n_time_steps"] + self.parameters["ab_time_steps"]:
-                if self.parameters["resumable"]:
-                    self.parameters["completed_time_steps"] = self.rlg.num_steps()
-                else:
-                    if "completed_time_steps" in self.parameters:
-                        del self.parameters["completed_time_steps"]  # we no longer need this information
-                    self.parameters["complete"] = True
                 break
 
         self.save()
@@ -386,23 +346,25 @@ class AbnormalController:
         """
         Close environment.
         Compute runtime.
-        Send completion email.
         Save file with run information.
+        Close wandb.
         """
 
-        self.rlg.rl_env_message("close")
+        self.rlg.rl_env_message('close')
 
         run_time = str(timedelta(seconds=time.time() - self.start))[:-7]
-        print("time to complete one run:", run_time, "h:m:s")
+
+        print(f'time to complete one run: {run_time} h:m:s')
         print(self.LINE)
 
-        # if not self.computecanada:
-        #     self.send_email(run_time)
-
-        text_file = open(self.data_dir + "/run_summary.txt", "w")
-        text_file.write(date.today().strftime("%m/%d/%y"))
-        text_file.write("\n\nExperiment {}/seed{} complete.\n\nTime to complete: {} h:m:s".format(self.experiment, self.parameters["seed"], run_time))
+        text_file = open(f'{self.data_dir}/run_summary.txt', 'w')
+        text_file.write(date.today().strftime('%m/%d/%y'))
+        text_file.write(f'\n\nExperiment {self.experiment}/seed{self.parameters["seed"]} complete.\n\nTime to complete: {run_time} h:m:s')
         text_file.close()
+
+        if self.parameters["wandb"]:
+
+            wandb.finish()
 
     def evaluate_model(self, num_time_steps):
         """
@@ -421,29 +383,37 @@ class AbnormalController:
 
         if self.parameters["eval_episodes"] != 0:
 
-            agent_eval = copy(self.agent)
-            env_eval = copy(self.env)
-            env_eval.env_seed(self.parameters["seed"])
+            # save torch RNG state(s)
+            # this is needed because the SAC network sample() method
+            # samples from a normal distribution during evaluation,
+            # despite only needing a deterministic (mean) sample.
+            rng_state_cpu = torch.get_rng_state()
+            if torch.cuda.is_available():
+                rng_state_cuda = torch.cuda.get_rng_state()
+            else:
+                rng_state_cuda = None
 
-            rlg_eval = RLGlue(env_eval, agent_eval)
+            eval_agent = copy(self.agent)
 
-            rlg_eval.rl_agent_message("mode, eval")
+            eval_rlg = RLGlue(self.eval_env, eval_agent)
+
+            eval_rlg.rl_agent_message('mode, eval')
 
             returns = []
 
-            rlg_eval.rl_init()
+            eval_rlg.rl_init()
 
             for e in range(self.parameters["eval_episodes"]):
 
-                rlg_eval.rl_start()
+                eval_rlg.rl_start()
 
                 terminal = False
 
                 max_steps_this_episode = 1000
-                while not terminal and ((max_steps_this_episode <= 0) or (rlg_eval.num_ep_steps() < max_steps_this_episode)):
-                    _, _, terminal, _ = rlg_eval.rl_step()
+                while not terminal and ((max_steps_this_episode <= 0) or (eval_rlg.num_ep_steps() < max_steps_this_episode)):
+                    _, _, terminal, _ = eval_rlg.rl_step()
 
-                returns.append(rlg_eval.episode_reward())
+                returns.append(eval_rlg.episode_reward())
 
             average_return = np.average(returns)
 
@@ -460,14 +430,25 @@ class AbnormalController:
 
             real_time = int(time.time() - self.start)
 
-            index = int(num_time_steps / self.parameters["time_step_eval_frequency"]) + 1  # add 1 because we evaluate policy before learning
-            self.eval_data[index] = [num_time_steps, num_updates, num_samples, average_return, real_time]
+            index = num_time_steps // self.parameters["time_step_eval_frequency"] + 1  # add 1 because we evaluate policy before learning
+            self.eval_data[index] = [num_time_steps,
+                                     num_updates,
+                                     num_samples,
+                                     average_return,
+                                     real_time]
 
-            print("evaluation at {} time steps: {}".format(num_time_steps, average_return))
+            cumulative_average_return = self.eval_data[:, -2].sum()
+
+            print(f'evaluation at {num_time_steps} time steps: {average_return}')
 
             run_time = str(timedelta(seconds=time.time() - self.start))[:-7]
-            print("runtime:", run_time, "h:m:s")
+            print('runtime:', run_time, 'h:m:s')
             print(self.LINE)
+
+            # reload the torch RNG state(s)
+            torch.set_rng_state(rng_state_cpu)
+            if rng_state_cuda is not None:
+                torch.cuda.set_rng_state(rng_state_cuda)
 
     def load(self):
         """
@@ -485,10 +466,7 @@ class AbnormalController:
 
         self.rlg.rl_env_message("load, {}".format(self.load_data_dir))  # load environment data
 
-        if not self.parameters["resume"]:
-            self.rlg.rl_agent_message("load, {}, {}".format(self.load_data_dir, self.parameters["n_time_steps"]))  # load agent data
-        else:
-            self.rlg.rl_agent_message("load, {}, {}".format(self.load_data_dir, self.parameters["completed_time_steps"]))
+        self.rlg.rl_agent_message("load, {}, {}".format(self.load_data_dir, self.parameters["completed_time_steps"]))
         self.agent.loss_data = self.loss_data
 
         self.load_rlg_statistics()  # load rlg data
@@ -502,48 +480,23 @@ class AbnormalController:
 
         csv_foldername = self.load_data_dir + "/csv"
 
-        if not args.resume:
+        num_rows = int(self.parameters["ab_time_steps"] / self.parameters["time_step_eval_frequency"]) + 1  # add 1 for evaluation before any learning (0th entry)
+        num_columns = 5
+        self.eval_data = pd.read_csv(csv_foldername + "/eval_data.csv").to_numpy().copy()[:, 1:]
+        self.eval_data = np.append(self.eval_data, np.zeros((num_rows, num_columns)), axis=0)
 
-            num_rows = int(self.parameters["ab_time_steps"] / self.parameters["time_step_eval_frequency"]) + 1  # add 1 for evaluation before any learning (0th entry)
-            num_columns = 5
-            self.eval_data = pd.read_csv(csv_foldername + "/eval_data.csv").to_numpy().copy()[:, 1:]
-            self.eval_data = np.append(self.eval_data, np.zeros((num_rows, num_columns)), axis=0)
+        # num_rows = self.parameters["ab_time_steps"]  # always larger than needed; will remove extra entries later
+        # num_columns = 3
+        # self.train_data = pd.read_csv(csv_foldername + "/train_data.csv").to_numpy().copy()[:, 1:]
+        # self.train_data = np.append(self.train_data, np.zeros((num_rows, num_columns)), axis=0)
 
-            # num_rows = self.parameters["ab_time_steps"]  # always larger than needed; will remove extra entries later
-            # num_columns = 3
-            # self.train_data = pd.read_csv(csv_foldername + "/train_data.csv").to_numpy().copy()[:, 1:]
-            # self.train_data = np.append(self.train_data, np.zeros((num_rows, num_columns)), axis=0)
-
-            if self.parameters["clear_replay_buffer"]:
-                num_rows = (self.parameters["ab_time_steps"] - self.parameters["batch_size"]) * self.parameters["model_updates_per_step"]
-            else:
-                num_rows = self.parameters["ab_time_steps"] * self.parameters["model_updates_per_step"]
-            num_columns = 7
-            self.loss_data = pd.read_csv(csv_foldername + "/loss_data.csv").to_numpy().copy()[:, 1:]
-            self.loss_data = np.append(self.loss_data, np.zeros((num_rows, num_columns)), axis=0)
-
+        if self.parameters["clear_replay_buffer"]:
+            num_rows = (self.parameters["ab_time_steps"] - self.parameters["batch_size"]) * self.parameters["model_updates_per_step"]
         else:
-
-            self.eval_data = pd.read_csv(csv_foldername + "/eval_data.csv").to_numpy().copy()[:, 1:]
-            num_rows = ((self.parameters["n_time_steps"] + self.parameters["ab_time_steps"]) // self.parameters["time_step_eval_frequency"]) + 2 - self.eval_data.shape[0]
-            num_columns = self.eval_data.shape[1]
-            if num_rows > 0:
-                self.eval_data = np.append(self.eval_data, np.zeros((num_rows, num_columns)), axis=0)
-
-            # self.train_data = pd.read_csv(csv_foldername + "/train_data.csv").to_numpy().copy()[:, 1:]
-            # num_rows = (self.parameters["n_time_steps"] + self.parameters["ab_time_steps"]) - self.train_data.shape[0]  # always larger than needed; will remove extra entries later
-            # num_columns = self.train_data.shape[1]
-            # if num_rows > 0:
-            #     self.train_data = np.append(self.train_data, np.zeros((num_rows, num_columns)), axis=0)
-
-            self.loss_data = pd.read_csv(csv_foldername + "/loss_data.csv").to_numpy().copy()[:, 1:]
-            if self.parameters["clear_replay_buffer"]:
-                num_rows = (((self.parameters["n_time_steps"] + self.parameters["ab_time_steps"]) - 2 * self.parameters["batch_size"]) * self.parameters["model_updates_per_step"]) - self.loss_data.shape[0]
-            else:
-                num_rows = (((self.parameters["n_time_steps"] + self.parameters["ab_time_steps"]) - self.parameters["batch_size"]) * self.parameters["model_updates_per_step"]) - self.loss_data.shape[0]
-            num_columns = self.loss_data.shape[1]
-            if num_rows > 0:
-                self.loss_data = np.append(self.loss_data, np.zeros((num_rows, num_columns)), axis=0)
+            num_rows = self.parameters["ab_time_steps"] * self.parameters["model_updates_per_step"]
+        num_columns = 7
+        self.loss_data = pd.read_csv(csv_foldername + "/loss_data.csv").to_numpy().copy()[:, 1:]
+        self.loss_data = np.append(self.loss_data, np.zeros((num_rows, num_columns)), axis=0)
 
     def load_parameters(self):
         """
@@ -606,43 +559,44 @@ class AbnormalController:
         File format: .jpg
         """
 
-        print("plotting...")
+        print('plotting...')
 
-        csv_foldername = self.data_dir + "/csv"
+        csv_foldername = self.data_dir + '/csv'
+        os.makedirs(csv_foldername, exist_ok=True)
 
-        jpg_foldername = self.data_dir + "/jpg"
+        jpg_foldername = self.data_dir + '/jpg'
         os.makedirs(jpg_foldername, exist_ok=True)
 
-        df = pd.read_csv(csv_foldername + "/eval_data.csv")
+        df = pd.read_csv(csv_foldername + '/eval_data.csv')
 
         # evaluation: average_return vs num_time_steps
-        df.plot(x="num_time_steps", y="average_return", color="blue", legend=False)
+        df.plot(x='num_time_steps', y='average_return', color='blue', legend=False)
         plt.axvline(x=self.parameters["n_time_steps"], ymin=0, ymax=1, color="red", linewidth=2, alpha=0.3)  # malfunction marker
-        plt.xlabel("time_steps")
-        plt.ylabel("average\nreturn", rotation="horizontal", labelpad=30)
-        plt.title("Policy Evaluation")
+        plt.xlabel('time_steps')
+        plt.ylabel('average\nreturn', rotation='horizontal', labelpad=30)
+        plt.title('Policy Evaluation')
         pss.plot_settings()
-        plt.savefig(jpg_foldername + "/evaluation_time_steps.jpg")
+        plt.savefig(jpg_foldername + '/evaluation_time_steps.jpg')
         plt.close()
 
         # evaluation: average_return vs num_updates
-        df.plot(x="num_updates", y="average_return", color="blue", legend=False)
+        df.plot(x='num_updates', y='average_return', color='blue', legend=False)
         plt.axvline(x=(self.parameters["n_time_steps"] - self.parameters["batch_size"]) * self.parameters["model_updates_per_step"], ymin=0, ymax=1, color="red", linewidth=2, alpha=0.3)  # malfunction marker
-        plt.xlabel("updates")
-        plt.ylabel("average\nreturn", rotation="horizontal", labelpad=30)
-        plt.title("Policy Evaluation")
+        plt.xlabel('updates')
+        plt.ylabel('average\nreturn', rotation='horizontal', labelpad=30)
+        plt.title('Policy Evaluation')
         pss.plot_settings()
-        plt.savefig(jpg_foldername + "/evaluation_updates.jpg")
+        plt.savefig(jpg_foldername + '/evaluation_updates.jpg')
         plt.close()
 
         # evaluation: average_return vs num_samples
-        df.plot(x="num_samples", y="average_return", color="blue", legend=False)
+        df.plot(x='num_samples', y='average_return', color='blue', legend=False)
         plt.axvline(x=(self.parameters["n_time_steps"] - self.parameters["batch_size"]) * self.parameters["model_updates_per_step"] * self.parameters["batch_size"], ymin=0, ymax=1, color="red", linewidth=2, alpha=0.3)  # malfunction marker
-        plt.xlabel("samples")
-        plt.ylabel("average\nreturn", rotation="horizontal", labelpad=30)
-        plt.title("Policy Evaluation")
+        plt.xlabel('samples')
+        plt.ylabel('average\nreturn', rotation='horizontal', labelpad=30)
+        plt.title('Policy Evaluation')
         pss.plot_settings()
-        plt.savefig(jpg_foldername + "/evaluation_samples.jpg")
+        plt.savefig(jpg_foldername + '/evaluation_samples.jpg')
         plt.close()
 
         # df = pd.read_csv(csv_foldername + "/train_data.csv")
@@ -656,69 +610,69 @@ class AbnormalController:
         # plt.savefig(jpg_foldername + "/train_episodes.jpg")
         # plt.close()
 
-        df = pd.read_csv(csv_foldername + "/loss_data.csv")
+        df = pd.read_csv(csv_foldername + '/loss_data.csv')
 
         # training: q_value_loss_1 vs num_updates
-        df.plot(x="num_updates", y="q_value_loss_1", color="blue", legend=False)
+        df.plot(x='num_updates', y='q_value_loss_1', color='blue', legend=False)
         plt.axvline(x=(self.parameters["n_time_steps"] - self.parameters["batch_size"]) * self.parameters["model_updates_per_step"], ymin=0, ymax=1, color="red", linewidth=2, alpha=0.3)  # malfunction marker
-        plt.xlabel("updates")
-        plt.ylabel("loss", rotation="horizontal", labelpad=30)
-        plt.title("Q Value Loss 1")
+        plt.xlabel('updates')
+        plt.ylabel('loss', rotation='horizontal', labelpad=30)
+        plt.title('Q Value Loss 1')
         pss.plot_settings()
-        plt.savefig(jpg_foldername + "/q_value_loss_1.jpg")
+        plt.savefig(jpg_foldername + '/q_value_loss_1.jpg')
         plt.close()
 
         # training: q_value_loss_2 vs num_updates
-        df.plot(x="num_updates", y="q_value_loss_2", color="blue", legend=False)
+        df.plot(x='num_updates', y='q_value_loss_2', color='blue', legend=False)
         plt.axvline(x=(self.parameters["n_time_steps"] - self.parameters["batch_size"]) * self.parameters["model_updates_per_step"], ymin=0, ymax=1, color="red", linewidth=2, alpha=0.3)  # malfunction marker
-        plt.xlabel("updates")
-        plt.ylabel("loss", rotation="horizontal", labelpad=30)
-        plt.title("Q Value Loss 2")
+        plt.xlabel('updates')
+        plt.ylabel('loss', rotation='horizontal', labelpad=30)
+        plt.title('Q Value Loss 2')
         pss.plot_settings()
-        plt.savefig(jpg_foldername + "/q_value_loss_2.jpg")
+        plt.savefig(jpg_foldername + '/q_value_loss_2.jpg')
         plt.close()
 
         # training: policy_loss vs num_updates
-        df.plot(x="num_updates", y="policy_loss", color="blue", legend=False)
+        df.plot(x='num_updates', y='policy_loss', color='blue', legend=False)
         plt.axvline(x=(self.parameters["n_time_steps"] - self.parameters["batch_size"]) * self.parameters["model_updates_per_step"], ymin=0, ymax=1, color="red", linewidth=2, alpha=0.3)  # malfunction marker
-        plt.xlabel("updates")
-        plt.ylabel("loss", rotation="horizontal", labelpad=30)
-        plt.title("Policy Loss")
+        plt.xlabel('updates')
+        plt.ylabel('loss', rotation='horizontal', labelpad=30)
+        plt.title('Policy Loss')
         pss.plot_settings()
-        plt.savefig(jpg_foldername + "/policy_loss.jpg")
+        plt.savefig(jpg_foldername + '/policy_loss.jpg')
         plt.close()
 
         # training: alpha_loss vs num_updates
-        df.plot(x="num_updates", y="alpha_loss", color="blue", legend=False)
+        df.plot(x='num_updates', y='alpha_loss', color='blue', legend=False)
         plt.axvline(x=(self.parameters["n_time_steps"] - self.parameters["batch_size"]) * self.parameters["model_updates_per_step"], ymin=0, ymax=1, color="red", linewidth=2, alpha=0.3)  # malfunction marker
-        plt.xlabel("updates")
-        plt.ylabel("loss", rotation="horizontal", labelpad=30)
-        plt.title("Alpha Loss")
+        plt.xlabel('updates')
+        plt.ylabel('loss', rotation='horizontal', labelpad=30)
+        plt.title('Alpha Loss')
         pss.plot_settings()
-        plt.savefig(jpg_foldername + "/alpha_loss.jpg")
+        plt.savefig(jpg_foldername + '/alpha_loss.jpg')
         plt.close()
 
         # training: alpha_value vs num_updates
-        df.plot(x="num_updates", y="alpha_value", color="blue", legend=False)
+        df.plot(x='num_updates', y='alpha_value', color='blue', legend=False)
         plt.axvline(x=(self.parameters["n_time_steps"] - self.parameters["batch_size"]) * self.parameters["model_updates_per_step"], ymin=0, ymax=1, color="red", linewidth=2, alpha=0.3)  # malfunction marker
-        plt.xlabel("updates")
-        plt.ylabel("alpha", rotation="horizontal", labelpad=30)
-        plt.title("Alpha Value")
+        plt.xlabel('updates')
+        plt.ylabel('alpha', rotation='horizontal', labelpad=30)
+        plt.title('Alpha Value')
         pss.plot_settings()
-        plt.savefig(jpg_foldername + "/alpha_value.jpg")
+        plt.savefig(jpg_foldername + '/alpha_value.jpg')
         plt.close()
 
         # training: entropy vs num_updates
-        df.plot(x="num_updates", y="entropy", color="blue", legend=False)
+        df.plot(x='num_updates', y='entropy', color='blue', legend=False)
         plt.axvline(x=(self.parameters["n_time_steps"] - self.parameters["batch_size"]) * self.parameters["model_updates_per_step"], ymin=0, ymax=1, color="red", linewidth=2, alpha=0.3)  # malfunction marker
-        plt.xlabel("updates")
-        plt.ylabel("entropy", rotation="horizontal", labelpad=30)
-        plt.title("Entropy")
+        plt.xlabel('updates')
+        plt.ylabel('entropy', rotation='horizontal', labelpad=30)
+        plt.title('Entropy')
         pss.plot_settings()
-        plt.savefig(jpg_foldername + "/entropy_updates.jpg")
+        plt.savefig(jpg_foldername + '/entropy_updates.jpg')
         plt.close()
 
-        print("plotting complete")
+        print('plotting complete')
 
         print(self.LINE)
 
@@ -734,7 +688,7 @@ class AbnormalController:
         Save agent data: models, number of updates of models, and replay buffer.
         """
 
-        print("saving...")
+        print('saving...')
 
         self.save_seed_state()
 
@@ -742,13 +696,16 @@ class AbnormalController:
 
         self.save_data()
 
-        self.save_rlg_statistics()  # save rlg data
+        # save rlg data
+        self.save_rlg_statistics()
 
-        self.rlg.rl_env_message("save, {}".format(self.data_dir))  # save environment data
+        # save environment data
+        self.rlg.rl_env_message(f'save, {self.data_dir}')
 
-        self.rlg.rl_agent_message("save, {}, {}".format(self.data_dir, self.rlg.num_steps()))  # save agent data
+        # save agent data
+        self.rlg.rl_agent_message(f'save, {self.data_dir}, {self.rlg.num_steps()}')
 
-        print("saving complete")
+        print('saving complete')
 
         print(self.LINE)
 
@@ -759,36 +716,24 @@ class AbnormalController:
         File format: .csv
         """
 
-        csv_foldername = self.data_dir + "/csv"
+        csv_foldername = self.data_dir + '/csv'
         os.makedirs(csv_foldername, exist_ok=True)
 
-        eval_data_df = pd.DataFrame({"num_time_steps": self.eval_data[:, 0],
-                                     "num_updates": self.eval_data[:, 1],
-                                     "num_samples": self.eval_data[:, 2],
-                                     "average_return": self.eval_data[:, 3],
-                                     "real_time": self.eval_data[:, 4]})
-        eval_data_df.to_csv(csv_foldername + "/eval_data.csv", float_format="%f")
+        eval_data_df = pd.DataFrame({'num_time_steps': self.eval_data[:, 0],
+                                     'num_updates': self.eval_data[:, 1],
+                                     'num_samples': self.eval_data[:, 2],
+                                     'average_return': self.eval_data[:, 3],
+                                     'real_time': self.eval_data[:, 4]})
+        eval_data_df.to_csv(csv_foldername + '/eval_data.csv', float_format='%f')
 
-        # # remove zero entries
-        # index = None
-        # for i in range(self.train_data.shape[0]):
-        #     if (self.train_data[i] == np.zeros(3)).all() and (self.train_data[i+1] == np.zeros(3)).all():
-        #         index = i
-        #         break
-        # self.train_data = self.train_data[:index]
-        # train_data_df = pd.DataFrame({"num_episodes": self.train_data[:, 0],
-        #                               "num_time_steps": self.train_data[:, 1],
-        #                               "episode_return": self.train_data[:, 2]})
-        # train_data_df.to_csv(csv_foldername + "/train_data.csv", float_format="%f")
-
-        loss_data_df = pd.DataFrame({"num_updates": self.loss_data[:, 0],
-                                     "q_value_loss_1": self.loss_data[:, 1],
-                                     "q_value_loss_2": self.loss_data[:, 2],
-                                     "policy_loss": self.loss_data[:, 3],
-                                     "alpha_loss": self.loss_data[:, 4],
-                                     "alpha_value": self.loss_data[:, 5],
-                                     "entropy": self.loss_data[:, 6]})
-        loss_data_df.to_csv(csv_foldername + "/loss_data.csv", float_format="%f")
+        loss_data_df = pd.DataFrame({'num_updates': self.loss_data[:, 0],
+                                     'q_value_loss_1': self.loss_data[:, 1],
+                                     'q_value_loss_2': self.loss_data[:, 2],
+                                     'policy_loss': self.loss_data[:, 3],
+                                     'alpha_loss': self.loss_data[:, 4],
+                                     'alpha_value': self.loss_data[:, 5],
+                                     'entropy': self.loss_data[:, 6]})
+        loss_data_df.to_csv(csv_foldername + '/loss_data.csv', float_format='%f')
 
     def save_parameters(self):
         """
@@ -797,23 +742,23 @@ class AbnormalController:
         File format: .csv and .pickle
         """
 
-        csv_foldername = self.data_dir + "/csv"
+        csv_foldername = self.data_dir + '/csv'
         os.makedirs(csv_foldername, exist_ok=True)
 
-        csv_filename = csv_foldername + "/parameters.csv"
+        csv_filename = csv_foldername + '/parameters.csv'
 
-        f = open(csv_filename, "w")
+        f = open(csv_filename, 'w')
         writer = csv.writer(f)
         for key, val in self.parameters.items():
             writer.writerow([key, val])
         f.close()
 
-        pickle_foldername = self.data_dir + "/pickle"
+        pickle_foldername = self.data_dir + '/pickle'
         os.makedirs(pickle_foldername, exist_ok=True)
 
-        pickle_filename = pickle_foldername + "/parameters.pickle"
+        pickle_filename = pickle_foldername + '/parameters.pickle'
 
-        with open(pickle_filename, "wb") as f:
+        with open(pickle_filename, 'wb') as f:
             pickle.dump(self.parameters, f, protocol=pickle.HIGHEST_PROTOCOL)
 
     def save_rlg_statistics(self):
@@ -827,10 +772,10 @@ class AbnormalController:
         self.rlg_statistics["num_steps"] = self.rlg.num_steps()
         self.rlg_statistics["total_reward"] = self.rlg.total_reward()
 
-        pickle_foldername = self.data_dir + "/pickle"
+        pickle_foldername = self.data_dir + '/pickle'
         os.makedirs(pickle_foldername, exist_ok=True)
 
-        with open(pickle_foldername + "/rlg_statistics.pickle", "wb") as f:
+        with open(pickle_foldername + '/rlg_statistics.pickle', 'wb') as f:
             pickle.dump(self.rlg_statistics, f)
 
     def save_seed_state(self):
@@ -840,54 +785,27 @@ class AbnormalController:
         File format: .pickle (random and numpy) and .pt (pytorch)
         """
 
-        pickle_foldername = self.data_dir + "/pickle"
+        pickle_foldername = self.data_dir + '/pickle'
         os.makedirs(pickle_foldername, exist_ok=True)
 
         random_random_state = random.getstate()
         numpy_random_state = np.random.get_state()
 
-        with open(pickle_foldername + "/random_random_state.pickle", "wb") as f:
+        with open(pickle_foldername + '/random_random_state.pickle', 'wb') as f:
             pickle.dump(random_random_state, f)
 
-        with open(pickle_foldername + "/numpy_random_state.pickle", "wb") as f:
+        with open(pickle_foldername + '/numpy_random_state.pickle', 'wb') as f:
             pickle.dump(numpy_random_state, f)
 
-        pt_foldername = self.data_dir + "/pt"
+        pt_foldername = self.data_dir + '/pt'
         os.makedirs(pt_foldername, exist_ok=True)
 
         torch_random_state = torch.get_rng_state()
-        torch.save(torch_random_state, pt_foldername + "/torch_random_state.pt")
+        torch.save(torch_random_state, pt_foldername + '/torch_random_state.pt')
 
-        if self.parameters["device"] == "cuda":
+        if self.parameters["device"] == 'cuda':
             torch_cuda_random_state = torch.cuda.get_rng_state()
-            torch.save(torch_cuda_random_state, pt_foldername + "/torch_cuda_random_state.pt")
-
-    def send_email(self, run_time):
-        """
-        Send email to indicate that the experiment is complete.
-
-        @param run_time: string
-            the time to complete a single run of the experiment (h:m:s)
-        """
-
-        gmail_email = "mynewbfnao@gmail.com"
-        gmail_password = "k!1t8qL(YQO%labr}kS%"
-
-        recipient = "sschoepp@ualberta.ca"
-
-        from_ = gmail_email
-        to = recipient if type(recipient) is list else [recipient]
-        subject = "Experiment Complete"
-        text = "Experiment {}/seed{} complete.\n\nTime to complete: \n{} h:m:s\n\nThis message is sent from Python.".format(self.experiment, self.parameters["seed"], run_time)
-
-        message = """\From: %s\nTo: %s\nSubject: %s\n\n%s""" % (from_, ", ".join(to), subject, text)
-
-        server = smtplib.SMTP("smtp.gmail.com", 587)
-        server.ehlo()
-        server.starttls()
-        server.login(gmail_email, gmail_password)
-        server.sendmail(from_, to, message)
-        server.close()
+            torch.save(torch_cuda_random_state, pt_foldername + '/torch_cuda_random_state.pt')
 
 
 def main():
@@ -900,9 +818,9 @@ def main():
 
     except KeyboardInterrupt as e:
 
-        print("keyboard interrupt")
+        print('keyboard interrupt')
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
 
     main()

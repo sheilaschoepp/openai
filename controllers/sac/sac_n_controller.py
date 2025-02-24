@@ -183,9 +183,7 @@ class NormalController:
 
         self.data_dir = f'{os.getenv("HOME")}/Documents/openai/data/{self.experiment}/seed{self.parameters["seed"]}'
 
-        # are we restarting training?  do the data files for the
-        # selected seed already exist?
-
+        # are we restarting training?  do the data files for the selected seed already exist?
         if path.exists(self.data_dir):
 
             print(self.LINE)
@@ -304,32 +302,34 @@ class NormalController:
             else:
                 return self.parameters[argument]
 
-        print('normal environment name:', highlight_non_default_values('n_env_name'))
-        print('normal time steps:', highlight_non_default_values('n_time_steps'))
-        print('gamma:', highlight_non_default_values('gamma'))
-        print('tau:', highlight_non_default_values('tau'))
-        print('alpha:', highlight_non_default_values('alpha'))
-        print('learning rate:', highlight_non_default_values('lr'))
-        print('hidden dimension:', highlight_non_default_values('hidden_dim'))
-        print('replay buffer size:', highlight_non_default_values('replay_buffer_size'))
-        print('batch size:', highlight_non_default_values('batch_size'))
-        print('normalize rewards:', highlight_non_default_values('normalize_rewards'))
-        print('model updates per step:', highlight_non_default_values('model_updates_per_step'))
-        print('target update interval:', highlight_non_default_values('target_update_interval'))
-        print('automatic entropy tuning:', highlight_non_default_values('automatic_entropy_tuning'))
-        print('time step evaluation frequency:', highlight_non_default_values('time_step_eval_frequency'))
-        print('evaluation episodes:', highlight_non_default_values('eval_episodes'))
-        if self.parameters["device"] == 'cuda':
-            print('device:', self.parameters["device"])
+        print(f'normal environment name: {highlight_non_default_values("n_env_name")}')
+        print(f'normal time steps: {highlight_non_default_values("n_time_steps")}')
+        print(f'gamma: {highlight_non_default_values("gamma")}')
+        print(f'tau: {highlight_non_default_values("tau")}')
+        print(f'alpha: {highlight_non_default_values("alpha")}')
+        print(f'learning rate: {highlight_non_default_values("lr")}')
+        print(f'hidden dimension: {highlight_non_default_values("hidden_dim")}')
+        print(f'replay buffer size: {highlight_non_default_values("replay_buffer_size")}')
+        print(f'batch size: {highlight_non_default_values("batch_size")}')
+        print(f'normalize rewards: {highlight_non_default_values("normalize_rewards")}')
+        print(f'model updates per step: {highlight_non_default_values("model_updates_per_step")}')
+        print(f'target update interval: {highlight_non_default_values("target_update_interval")}')
+        print(f'automatic entropy tuning: {highlight_non_default_values("automatic_entropy_tuning")}')
+        print(f'time step evaluation frequency: {highlight_non_default_values("time_step_eval_frequency")}')
+        print(f'evaluation episodes: {highlight_non_default_values("eval_episodes")}')
+
+        if self.parameters['device'] == 'cuda':
+            print(f'device: {self.parameters["device"]}')
             if 'CUDA_VISIBLE_DEVICES' in os.environ:
-                print('cuda visible device(s):', colored(os.environ["CUDA_VISIBLE_DEVICES"], 'red'))
+                print(f'cuda visible device(s): {colored(os.environ["CUDA_VISIBLE_DEVICES"], "red")}')
             else:
                 print(colored('cuda visible device(s): N/A', 'red'))
         else:
-            print('device:', colored(self.parameters["device"], 'red'))
-        print('seed:', colored(self.parameters["seed"], 'red'))
-        print('wandb:', highlight_non_default_values('wandb'))
-        print('optuna:', highlight_non_default_values('optuna'))
+            print(f'device: {colored(self.parameters["device"], "red")}')
+
+        print(f'seed: {colored(self.parameters["seed"], "red")}')
+        print(f'wandb: {highlight_non_default_values("wandb")}')
+        print(f'optuna: {highlight_non_default_values("optuna")}')
 
         print(self.LINE)
         print(self.LINE)

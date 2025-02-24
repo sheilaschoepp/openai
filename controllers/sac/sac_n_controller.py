@@ -368,10 +368,6 @@ class NormalController:
                     self.rlg.rl_agent_message(f'save_model, {self.data_dir}, {self.rlg.num_steps()}')
                     self.evaluate_model(self.rlg.num_steps())
 
-                # if self.rlg.num_steps() == 4000: # todo remove
-                #     self.env = Environment(self.parameters["n_env_name"],
-                #                            self.parameters["seed"])
-
             # learning complete
             if self.rlg.num_steps() == self.parameters["n_time_steps"]:
                 break

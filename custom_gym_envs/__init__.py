@@ -7,8 +7,8 @@ register(
 )
 
 register(
-    id="AntEnv-v1",
-    entry_point="custom_gym_envs.envs.ant.AntEnv_v1_BrokenSeveredLimb:AntEnvV1",
+    id="AntEnv-F1",
+    entry_point="custom_gym_envs.envs.ant.AntEnvF1_Hip4ROM:AntEnvF1",
     max_episode_steps=1000,
 )
 

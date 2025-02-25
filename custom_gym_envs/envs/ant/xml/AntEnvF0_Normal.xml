@@ -1,6 +1,6 @@
 <!--
 modifications:
-added rgba to color the rightback_leg_geom and fourth_ankle_geom joint capsules \\
+added rgba to color the rightback_leg_geom and fourth_ankle_geom joint capsules
 -->
 
 <mujoco model="ant">

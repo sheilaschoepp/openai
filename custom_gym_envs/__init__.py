@@ -19,8 +19,8 @@ register(
 )
 
 register(
-    id="AntEnv-v3",
-    entry_point="custom_gym_envs.envs.ant.AntEnv_v3_Ankle4ROM:AntEnvV3",
+    id="AntEnv-F3",
+    entry_point="custom_gym_envs.envs.ant.AntEnvF3_BrokenUnseveredLimb:AntEnvF3",
     max_episode_steps=1000,
 )
 

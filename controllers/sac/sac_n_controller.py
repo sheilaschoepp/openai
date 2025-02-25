@@ -214,7 +214,7 @@ class NormalController:
         # data
 
         num_rows = int(self.parameters["n_time_steps"] / self.parameters["time_step_eval_frequency"]) + 1  # add 1 for evaluation before any learning (0th entry)
-        num_columns = 5
+        num_columns = 3
         self.eval_data = np.zeros((num_rows, num_columns))
 
         # num_rows = self.parameters["n_time_steps"]  # larger than needed; will remove extra entries later
@@ -451,23 +451,14 @@ class NormalController:
 
             average_return = np.average(returns)
 
-            if num_time_steps == 0:
-                num_updates = 0
-            else:
-                num_updates = (num_time_steps - self.parameters["batch_size"]) * self.parameters["model_updates_per_step"]
-
-            num_samples = num_updates * self.parameters["batch_size"]
-
             real_time = int(time.time() - self.start)
 
             index = num_time_steps // self.parameters["time_step_eval_frequency"]
             self.eval_data[index] = [num_time_steps,
-                                     num_updates,
-                                     num_samples,
                                      average_return,
                                      real_time]
 
-            cumulative_average_return = self.eval_data[:, -2].sum()
+            cumulative_average_return = self.eval_data[:, 1].sum()
 
             if self.parameters["wandb"]:
                 wandb.log(data={
@@ -512,24 +503,6 @@ class NormalController:
         plt.title('Policy Evaluation')
         pss.plot_settings()
         plt.savefig(f'{jpg_foldername}/evaluation_time_steps.jpg')
-        plt.close()
-
-        # evaluation: average_return vs num_updates
-        df.plot(x='num_updates', y='average_return', color='blue', legend=False)
-        plt.xlabel('updates')
-        plt.ylabel('average\nreturn', rotation='horizontal', labelpad=30)
-        plt.title('Policy Evaluation')
-        pss.plot_settings()
-        plt.savefig(f'{jpg_foldername}/evaluation_updates.jpg')
-        plt.close()
-
-        # evaluation: average_return vs num_samples
-        df.plot(x='num_samples', y='average_return', color='blue', legend=False)
-        plt.xlabel('samples')
-        plt.ylabel('average\nreturn', rotation='horizontal', labelpad=30)
-        plt.title('Policy Evaluation')
-        pss.plot_settings()
-        plt.savefig(f'{jpg_foldername}/evaluation_samples.jpg')
         plt.close()
 
         df = pd.read_csv(f'{csv_foldername}/loss_data.csv')
@@ -636,10 +609,8 @@ class NormalController:
         os.makedirs(csv_foldername, exist_ok=True)
 
         eval_data_df = pd.DataFrame({'num_time_steps': self.eval_data[:, 0],
-                                     'num_updates': self.eval_data[:, 1],
-                                     'num_samples': self.eval_data[:, 2],
-                                     'average_return': self.eval_data[:, 3],
-                                     'real_time': self.eval_data[:, 4]})
+                                     'average_return': self.eval_data[:, 1],
+                                     'real_time': self.eval_data[:, 2]})
         eval_data_df.to_csv(f'{csv_foldername}/eval_data.csv', float_format='%f')
 
         loss_data_df = pd.DataFrame({'num_updates': self.loss_data[:, 0],

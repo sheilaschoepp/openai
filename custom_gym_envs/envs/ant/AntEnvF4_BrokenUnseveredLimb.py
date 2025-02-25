@@ -1,8 +1,10 @@
 """
 modifications:
-changed class name from "AntEnv" to "AntEnvF4"
-changed xml_file from "ant.xml" to "{path}" in __init__ method
-modified _get_obs method by removing the last element for position
+- changed class name from "AntEnv" to "AntEnvF4"
+- changed xml_file from "ant.xml" to "{path}" in __init__ method
+- modified __init__ method by changing obs_size (subtract 1 from qpos
+and qvel and subtract 1 from cfrc_ext)
+- modified _get_obs method by removing the last element for position
 and velocity, and the last 6 elements of contact_force (Note: these
 were added because we added an extra joint but this joint is not
 controlled, so we can remove them to retain the state dimension)
@@ -312,9 +314,9 @@ class AntEnvF4(MujocoEnv, utils.EzPickle): # modification: changed class name fr
             "render_fps": int(np.round(1.0 / self.dt)),
         }
 
-        obs_size = self.data.qpos.size + self.data.qvel.size
+        obs_size = (self.data.qpos.size - 1) + (self.data.qvel.size - 1) # modification: subtract 1 from qpos and qvel
         obs_size -= 2 * exclude_current_positions_from_observation
-        obs_size += self.data.cfrc_ext[1:].size * include_cfrc_ext_in_observation
+        obs_size += self.data.cfrc_ext[1:-1].size * include_cfrc_ext_in_observation # modification: subtract 1 from cfrc_ext
 
         self.observation_space = Box(
             low=-np.inf, high=np.inf, shape=(obs_size,), dtype=np.float64

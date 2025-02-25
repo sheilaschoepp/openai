@@ -1,8 +1,8 @@
 <!--
 modifications:
-name="rightback_leg_geom", added rgba="0.4 0 0 1"
-name="fourth_ankle_geom", added rgba="0.4 0 0 1"
-name="ankle_4", range="30 70" changed to range="65 70"
+- name="rightback_leg_geom", added rgba="0.4 0 0 1"
+- name="fourth_ankle_geom", added rgba="0.4 0 0 1"
+- name="ankle_4", range="30 70" changed to range="65 70"
 -->
 
 <mujoco model="ant">

@@ -1,7 +1,7 @@
 <!--
 modifications:
-name="hip_4", range="-30 30" changed to range="-5 5"
-name="rightback_leg_geom", added rgba="0.4 0 0 1"
+- name="hip_4", range="-30 30" changed to range="-5 5"
+- name="rightback_leg_geom", added rgba="0.4 0 0 1"
 -->
 
 <mujoco model="ant">

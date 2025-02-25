@@ -1,8 +1,8 @@
 <!--
 modifications:
-name="fourth_ankle_geom", fromto="0.0 0.0 0.0 0.4 -0.4 0.0" changed to fromto="0.0 0.0 0.0 0.2 -0.2 0.0"
-name="fourth_ankle_geom", added rgba="0.4 0 0 1"
-name="ankle_4_2", add new body with range="-180 180"
+- name="fourth_ankle_geom", fromto="0.0 0.0 0.0 0.4 -0.4 0.0" changed to fromto="0.0 0.0 0.0 0.2 -0.2 0.0"
+- name="fourth_ankle_geom", added rgba="0.4 0 0 1"
+- name="ankle_4_2", add new body with range="-180 180"
 -->
 
 <mujoco model="ant">

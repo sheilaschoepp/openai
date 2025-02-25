@@ -1,7 +1,7 @@
 """
 modifications:
-changed class name from "AntEnv" to "AntEnvF3"
-changed xml_file from "ant.xml" to "{path}" in __init__ method
+- changed class name from "AntEnv" to "AntEnvF3"
+- changed xml_file from "ant.xml" to "{path}" in __init__ method
 """
 
 __credits__ = ["Kallinteris-Andreas"]

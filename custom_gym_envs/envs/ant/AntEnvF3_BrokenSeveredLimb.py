@@ -1,4 +1,7 @@
 """
+sources:
+- https://mujoco.readthedocs.io/en/latest/XMLreference.html#visual
+
 modifications:
 - changed class name from "AntEnv" to "AntEnvF3"
 - changed xml_file from "ant.xml" to "{path}" in __init__ method
@@ -17,6 +20,9 @@ from gymnasium.spaces import Box
 
 DEFAULT_CAMERA_CONFIG = {
     "distance": 4.0,
+    "elevation": -20.0,
+    "lookat": np.array([0.0, 0.0, 0.0]),
+    "trackbodyid": 1,
 }
 
 

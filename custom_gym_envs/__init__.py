@@ -18,11 +18,11 @@ register(
     max_episode_steps=1000,
 )
 
-# register(
-#     id="AntEnv-v3",
-#     entry_point="custom_gym_envs.envs.ant.AntEnv_v4_BrokenUnseveredLimb:AntEnvV3",
-#     max_episode_steps=1000,
-# )
+register(
+    id="AntEnv-F3",
+    entry_point="custom_gym_envs.envs.ant.AntEnvF3_BrokenSeveredLimb:AntEnvF3",
+    max_episode_steps=1000,
+)
 
 register(
     id="AntEnv-F4",

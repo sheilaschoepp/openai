@@ -187,7 +187,7 @@ class AbnormalController:
 
         # rl problem
 
-        # abnormal environment used for training
+        # environment used for training
         self.env = Environment(self.parameters["ab_env_name"],
                                self.parameters["seed"])
 
@@ -455,9 +455,9 @@ class AbnormalController:
 
         self.load_data()
 
-        self.rlg.rl_env_message("load, {}".format(self.load_data_dir))  # load environment data
+        self.rlg.rl_env_message(f'load, {self.load_data_dir}')  # load environment data
 
-        self.rlg.rl_agent_message("load, {}, {}".format(self.load_data_dir, self.parameters["n_time_steps"]))
+        self.rlg.rl_agent_message(f'load, {self.load_data_dir}, {self.parameters["n_time_steps"]}')
         self.agent.loss_data = self.loss_data
 
         self.load_rlg_statistics()  # load rlg data
@@ -469,24 +469,19 @@ class AbnormalController:
         File format: .csv
         """
 
-        csv_foldername = self.load_data_dir + "/csv"
+        csv_foldername = f'{self.load_data_dir}/csv'
 
         num_rows = int(self.parameters["ab_time_steps"] / self.parameters["time_step_eval_frequency"]) + 1  # add 1 for evaluation before any learning (0th entry)
         num_columns = 3
-        self.eval_data = pd.read_csv(csv_foldername + "/eval_data.csv").to_numpy().copy()[:, 1:]
+        self.eval_data = pd.read_csv(f'{csv_foldername}/eval_data.csv').to_numpy().copy()[:, 1:]
         self.eval_data = np.append(self.eval_data, np.zeros((num_rows, num_columns)), axis=0)
-
-        # num_rows = self.parameters["ab_time_steps"]  # always larger than needed; will remove extra entries later
-        # num_columns = 3
-        # self.train_data = pd.read_csv(csv_foldername + "/train_data.csv").to_numpy().copy()[:, 1:]
-        # self.train_data = np.append(self.train_data, np.zeros((num_rows, num_columns)), axis=0)
 
         if self.parameters["clear_replay_buffer"]:
             num_rows = (self.parameters["ab_time_steps"] - self.parameters["batch_size"]) * self.parameters["model_updates_per_step"]
         else:
             num_rows = self.parameters["ab_time_steps"] * self.parameters["model_updates_per_step"]
         num_columns = 7
-        self.loss_data = pd.read_csv(csv_foldername + "/loss_data.csv").to_numpy().copy()[:, 1:]
+        self.loss_data = pd.read_csv(f'{csv_foldername}/loss_data.csv').to_numpy().copy()[:, 1:]
         self.loss_data = np.append(self.loss_data, np.zeros((num_rows, num_columns)), axis=0)
 
     def load_parameters(self):
@@ -496,9 +491,9 @@ class AbnormalController:
         File format: .pickle
         """
 
-        pickle_foldername = self.load_data_dir + "/pickle"
+        pickle_foldername = f'{self.load_data_dir}/pickle'
 
-        with open(pickle_foldername + "/parameters.pickle", "rb") as f:
+        with open(f'{pickle_foldername}/parameters.pickle', 'rb') as f:
             self.parameters = pickle.load(f)
 
     def load_rlg_statistics(self):
@@ -508,9 +503,9 @@ class AbnormalController:
         File format: .pickle
         """
 
-        pickle_foldername = self.load_data_dir + "/pickle"
+        pickle_foldername = f'{self.load_data_dir}/pickle'
 
-        with open(pickle_foldername + "/rlg_statistics.pickle", "rb") as f:
+        with open('{pickle_foldername}/rlg_statistics.pickle', 'rb') as f:
             self.rlg_statistics = pickle.load(f)
 
     def load_seed_state(self):
@@ -520,25 +515,25 @@ class AbnormalController:
         File format: .pickle and .pt
         """
 
-        pickle_foldername = self.load_data_dir + "/pickle"
+        pickle_foldername = f'{self.load_data_dir}/pickle'
 
-        with open(pickle_foldername + "/random_random_state.pickle", "rb") as f:
+        with open(f'{pickle_foldername}/random_random_state.pickle', 'rb') as f:
             random_random_state = pickle.load(f)
 
-        with open(pickle_foldername + "/numpy_random_state.pickle", "rb") as f:
+        with open(f'{pickle_foldername}/numpy_random_state.pickle', 'rb') as f:
             numpy_random_state = pickle.load(f)
 
         random.setstate(random_random_state)
         np.random.set_state(numpy_random_state)
 
-        pt_filename = self.load_data_dir + "/pt"
+        pt_filename = f'{self.load_data_dir}/pt'
 
-        torch_random_state = torch.load(pt_filename + "/torch_random_state.pt")
+        torch_random_state = torch.load(f'{pt_filename}/torch_random_state.pt')
         torch.set_rng_state(torch_random_state)
 
-        if self.parameters["device"] == "cuda":
-            if os.path.exists(pt_filename + "/torch_cuda_random_state.pt"):
-                torch_cuda_random_state = torch.load(pt_filename + "/torch_cuda_random_state.pt")
+        if self.parameters["device"] == 'cuda':
+            if os.path.exists(f'{pt_filename}/torch_cuda_random_state.pt'):
+                torch_cuda_random_state = torch.load(f'{pt_filename}/torch_cuda_random_state.pt')
                 torch.cuda.set_rng_state(torch_cuda_random_state)
             else:
                 torch.cuda.manual_seed(self.parameters["seed"])

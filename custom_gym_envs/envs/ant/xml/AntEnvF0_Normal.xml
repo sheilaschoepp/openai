@@ -1,6 +1,7 @@
 <!--
 modifications:
-added rgba to color the rightback_leg_geom and fourth_ankle_geom joint capsules
+name="rightback_leg_geom", added rgba="0.4 0 0 1"
+name="fourth_ankle_geom", added rgba="0.4 0 0 1"
 -->
 
 <mujoco model="ant">
@@ -75,10 +76,10 @@ added rgba to color the rightback_leg_geom and fourth_ankle_geom joint capsules
         <geom fromto="0.0 0.0 0.0 0.2 -0.2 0.0" name="aux_4_geom" size="0.08" type="capsule"/>
         <body name="aux_4" pos="0.2 -0.2 0">
           <joint axis="0 0 1" name="hip_4" pos="0.0 0.0 0.0" range="-30 30" type="hinge"/>
-          <geom fromto="0.0 0.0 0.0 0.2 -0.2 0.0" name="rightback_leg_geom" size="0.08" type="capsule" rgba="0.4 0 0 1"/> <!-- modification: added rgba -->
+          <geom fromto="0.0 0.0 0.0 0.2 -0.2 0.0" name="rightback_leg_geom" size="0.08" type="capsule" rgba="0.4 0 0 1"/> <!-- modification: added rgba="0.4 0 0 1" -->
           <body pos="0.2 -0.2 0">
             <joint axis="1 1 0" name="ankle_4" pos="0.0 0.0 0.0" range="30 70" type="hinge"/>
-            <geom fromto="0.0 0.0 0.0 0.4 -0.4 0.0" name="fourth_ankle_geom" size="0.08" type="capsule" rgba="0.4 0 0 1"/> <!-- modification: added rgba -->
+            <geom fromto="0.0 0.0 0.0 0.4 -0.4 0.0" name="fourth_ankle_geom" size="0.08" type="capsule" rgba="0.4 0 0 1"/> <!-- modification: added rgba="0.4 0 0 1" -->
           </body>
         </body>
       </body>

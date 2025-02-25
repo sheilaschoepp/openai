@@ -8,7 +8,7 @@ register(
 
 register(
     id="AntEnv-F1",
-    entry_point="custom_gym_envs.envs.ant.AntEnvF1_Hip4ROM:AntEnvF1",
+    entry_point="custom_gym_envs.envs.ant.AntEnvF1_Ankle4ROM:AntEnvF1",
     max_episode_steps=1000,
 )
 

@@ -1,11 +1,7 @@
 """
 modifications:
-changed class name from "AntEnv" to "AntEnvF4"
+changed class name from "AntEnv" to "AntEnvF3"
 changed xml_file from "ant.xml" to "{path}" in __init__ method
-modified _get_obs method by removing the last element for position
-and velocity, and the last 6 elements of contact_force (Note: these
-were added because we added an extra joint but this joint is not
-controlled, so we can remove them to retain the state dimension)
 """
 
 __credits__ = ["Kallinteris-Andreas"]
@@ -24,7 +20,7 @@ DEFAULT_CAMERA_CONFIG = {
 }
 
 
-class AntEnvF4(MujocoEnv, utils.EzPickle): # modification: changed class name from "AntEnv" to "AntEnvF4"
+class AntEnvF3(MujocoEnv, utils.EzPickle): # modification: changed class name from "AntEnv" to "AntEnvF3"
     r"""
     ## Description
     This environment is based on the one introduced by Schulman, Moritz, Levine, Jordan, and Abbeel in ["High-Dimensional Continuous Control Using Generalized Advantage Estimation"](https://arxiv.org/abs/1506.02438).
@@ -239,7 +235,7 @@ class AntEnvF4(MujocoEnv, utils.EzPickle): # modification: changed class name fr
 
     def __init__(
         self,
-        xml_file: str = "/home/sschoepp/Documents/openai/custom_gym_envs/envs/ant/xml/AntEnvF4_BrokenUnseveredLimb.xml", # modification: changed xml_file from "ant.xml" to "{path}"
+        xml_file: str = "/home/sschoepp/Documents/openai/custom_gym_envs/envs/ant/xml/AntEnvF3_BrokenSeveredLimb.xml", # modification: changed xml_file from "ant.xml" to "{path}"
         frame_skip: int = 5,
         default_camera_config: Dict[str, Union[float, int]] = DEFAULT_CAMERA_CONFIG,
         forward_reward_weight: float = 1,
@@ -403,14 +399,14 @@ class AntEnvF4(MujocoEnv, utils.EzPickle): # modification: changed class name fr
         return reward, reward_info
 
     def _get_obs(self):
-        position = self.data.qpos.flatten()[:-1] # modification: remove last element
-        velocity = self.data.qvel.flatten()[:-1] # modification: remove last element
+        position = self.data.qpos.flatten()
+        velocity = self.data.qvel.flatten()
 
         if self._exclude_current_positions_from_observation:
             position = position[2:]
 
         if self._include_cfrc_ext_in_observation:
-            contact_force = self.contact_forces[1:].flatten()[:-6] # modification: remove last 6 elements
+            contact_force = self.contact_forces[1:].flatten()
             return np.concatenate((position, velocity, contact_force))
         else:
             return np.concatenate((position, velocity))

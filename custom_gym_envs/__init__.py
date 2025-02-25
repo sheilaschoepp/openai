@@ -13,20 +13,20 @@ register(
 )
 
 register(
-    id="AntEnv-v2",
-    entry_point="custom_gym_envs.envs.ant.AntEnv_v2_Hip4ROM:AntEnvV2",
+    id="AntEnv-F2",
+    entry_point="custom_gym_envs.envs.ant.AntEnvF2_Hip4ROM:AntEnvF2",
     max_episode_steps=1000,
 )
 
-register(
-    id="AntEnv-F3",
-    entry_point="custom_gym_envs.envs.ant.AntEnvF3_BrokenUnseveredLimb:AntEnvF3",
-    max_episode_steps=1000,
-)
+# register(
+#     id="AntEnv-v3",
+#     entry_point="custom_gym_envs.envs.ant.AntEnv_v4_BrokenUnseveredLimb:AntEnvV3",
+#     max_episode_steps=1000,
+# )
 
 register(
-    id="AntEnv-v4",
-    entry_point="custom_gym_envs.envs.ant.AntEnv_v4_BrokenUnseveredLimb:AntEnvV4",
+    id="AntEnv-F4",
+    entry_point="custom_gym_envs.envs.ant.AntEnvF4_BrokenUnseveredLimb:AntEnvF4",
     max_episode_steps=1000,
 )
 

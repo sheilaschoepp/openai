@@ -91,7 +91,6 @@ class AbnormalController:
         self.parameters["wandb"] = args.wandb # update
 
         # W&B initialization
-        # todo add in entire history
 
         if self.parameters["wandb"]:
 
@@ -127,7 +126,7 @@ class AbnormalController:
             f'_hd:{self.parameters["hidden_dim"]}'
             f'_rbs:{self.parameters["replay_buffer_size"]}'
             f'_bs:{self.parameters["batch_size"]}'
-            f'_nr:{self.parameters["normalize_rewards"]}' # todo
+            f'_nr:{self.parameters["normalize_rewards"]}'
             f'_mups:{self.parameters["model_updates_per_step"]}'
             f'_tui:{self.parameters["target_update_interval"]}'
             f'_a:{self.parameters["automatic_entropy_tuning"]}'
@@ -416,7 +415,7 @@ class AbnormalController:
 
             real_time = int(time.time() - self.start)
 
-            index = num_time_steps // self.parameters["time_step_eval_frequency"] + 1  # add 1 because we evaluate policy before learning # todo?
+            index = num_time_steps // self.parameters["time_step_eval_frequency"] + 1  # add 1 because we evaluate policy before learning
             self.eval_data[index] = [num_time_steps,
                                      average_return,
                                      real_time]

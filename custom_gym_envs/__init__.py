@@ -1,7 +1,7 @@
 from gymnasium.envs.registration import register
 
 register(
-    id="AntEnv-F0-N",
+    id="AntEnvF0-N",
     entry_point="custom_gym_envs.envs.ant.AntEnvF0_Normal:AntEnvF0",
     max_episode_steps=1000,
 )

@@ -16,7 +16,10 @@ ARGS="--n_env_name=Ant-v5 \
 
 for SEED in {0..29}; do
   CPU=$((SEED))  # simple one-to-one mapping (seed0→CPU0, seed1→CPU1, etc.)
+
+  echo "Starting tmux session: seed${SEED} on CPU ${CPU}"
   tmux new-session -d -s "seed${SEED}" \
     "taskset -c ${CPU} python ${SCRIPT} ${ARGS} --seed ${SEED}"
+
   sleep 30
 done

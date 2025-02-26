@@ -76,7 +76,7 @@ modifications:
           <geom fromto="0.0 0.0 0.0 0.2 -0.2 0.0" name="rightback_leg_geom" size="0.08" type="capsule"/>
           <body pos="0.2 -0.2 0">
             <joint axis="1 1 0" name="ankle_4" pos="0.0 0.0 0.0" range="30 70" type="hinge"/>
-            <!-- modification: added rgba="0.4 0 0 1" and fromto="0.0 0.0 0.0 0.4 -0.4 0.0" chnaged to fromto="0.0 0.0 0.0 0.2 -0.2 0.0" -->
+            <!-- modification: fromto="0.0 0.0 0.0 0.4 -0.4 0.0" chnaged to fromto="0.0 0.0 0.0 0.2 -0.2 0.0" and added rgba="0.4 0 0 1" -->
             <geom fromto="0.0 0.0 0.0 0.2 -0.2 0.0" name="fourth_ankle_geom" size="0.08" type="capsule" rgba="0.4 0 0 1"/>
           </body>
         </body>

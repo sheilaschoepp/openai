@@ -15,7 +15,8 @@ ARGS="--n_env_name=Ant-v5 \
       --time_step_eval_frequency=100
 
 for SEED in {0..29}; do
-  CPU=$((SEED))  # Simple one-to-one mapping (seed0→CPU0, seed1→CPU1, etc.)
+  CPU=$((SEED))  # simple one-to-one mapping (seed0→CPU0, seed1→CPU1, etc.)
   tmux new-session -d -s "seed${SEED}" \
     "taskset -c ${CPU} python ${SCRIPT} ${ARGS} --seed ${SEED}"
+  sleep 30
 done

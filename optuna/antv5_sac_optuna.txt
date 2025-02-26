@@ -1,0 +1,14 @@
+Best hyperparameters found:
+gamma: 0.9815
+tau: 0.0515086 -> 0.05151
+alpha: 0.0746107 -> 0.07461
+lr: 0.00022254 -> 0.0002225
+replay_buffer_size: 1000000
+batch_size: 512
+normalize_rewards: False
+target_update_interval: 8
+automatic_entropy_tuning: False
+
+
+Best average return:
+1024733.7265698118

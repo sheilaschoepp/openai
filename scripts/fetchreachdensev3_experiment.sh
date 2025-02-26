@@ -1,6 +1,6 @@
 #!/bin/bash
 
-SCRIPT="sac_n_controller.py"
+SCRIPT="/home/sschoepp/Documents/openai/controllers/sac/sac_n_controller.py"
 ARGS="--n_env_name=Ant-v5 \
       --n_time_steps=20000 \
       --gamma=0.8004 \

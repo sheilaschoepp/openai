@@ -1,8 +1,8 @@
 Best hyperparameters found:
 gamma: 0.8004
-tau: 0.047581899999999996
-alpha: 0.0355984
-lr: 0.0008757600000000001
+tau: 0.047581899999999996 -> 0.04758
+alpha: 0.0355984 -> 0.03560
+lr: 0.0008757600000000001 -> 0.0008758
 replay_buffer_size: 500000
 batch_size: 128
 normalize_rewards: True

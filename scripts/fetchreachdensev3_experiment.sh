@@ -12,7 +12,8 @@ ARGS="--n_env_name=FetchReachDense-v3 \
       --batch_size=128 \
       --normalize_rewards \
       --target_update_interval=1 \
-      --time_step_eval_frequency=100"
+      --time_step_eval_frequency=100 \
+      --wandb"
 
 for SEED in {0..29}; do
   CPU=$((SEED))  # simple one-to-one mapping (seed0→CPU0, seed1→CPU1, etc.)

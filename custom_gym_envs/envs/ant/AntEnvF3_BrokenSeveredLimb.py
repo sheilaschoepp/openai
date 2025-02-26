@@ -11,6 +11,7 @@ __credits__ = ["Kallinteris-Andreas"]
 
 from typing import Dict, Tuple, Union
 
+import mujoco
 import numpy as np
 
 from gymnasium import utils
@@ -19,10 +20,10 @@ from gymnasium.spaces import Box
 
 
 DEFAULT_CAMERA_CONFIG = {
-    "distance": 4.0,
-    "elevation": -20.0,
-    "lookat": np.array([0.0, 0.0, 0.0]),
+    "type": mujoco.mjtCamera.mjCAMERA_TRACKING,
     "trackbodyid": 1,
+    "distance": 8.0,
+    # "elevation": -90.0,
 }
 
 

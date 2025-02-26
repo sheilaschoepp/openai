@@ -20,7 +20,7 @@ DEFAULT_CAMERA_CONFIG = {
     "type": mujoco.mjtCamera.mjCAMERA_TRACKING,
     "trackbodyid": 1,
     "distance": 8.0,
-    # "elevation": -90.0,
+    "elevation": -90.0,
 }
 
 

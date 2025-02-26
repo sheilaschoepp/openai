@@ -29,6 +29,8 @@ modifications:
       <camera name="track" mode="trackcom" pos="0 -3 0.3" xyaxes="1 0 0 0 0 1"/>
       <geom name="torso_geom" pos="0 0 0" size="0.25" type="sphere"/>
       <joint armature="0" damping="0" limited="false" margin="0.01" name="root" pos="0 0 0" type="free"/>
+
+      <!-- front left leg -->
       <body name="front_left_leg" pos="0 0 0">
         <geom fromto="0.0 0.0 0.0 0.2 0.2 0.0" name="aux_1_geom" size="0.08" type="capsule"/>
         <body name="aux_1" pos="0.2 0.2 0">
@@ -40,6 +42,8 @@ modifications:
           </body>
         </body>
       </body>
+
+      <!-- front right leg -->
       <body name="front_right_leg" pos="0 0 0">
         <geom fromto="0.0 0.0 0.0 -0.2 0.2 0.0" name="aux_2_geom" size="0.08" type="capsule"/>
         <body name="aux_2" pos="-0.2 0.2 0">
@@ -51,6 +55,8 @@ modifications:
           </body>
         </body>
       </body>
+
+      <!-- back left leg -->
       <body name="back_leg" pos="0 0 0">
         <geom fromto="0.0 0.0 0.0 -0.2 -0.2 0.0" name="aux_3_geom" size="0.08" type="capsule"/>
         <body name="aux_3" pos="-0.2 -0.2 0">
@@ -62,6 +68,8 @@ modifications:
           </body>
         </body>
       </body>
+
+      <!-- back right leg -->
       <body name="right_back_leg" pos="0 0 0">
         <geom fromto="0.0 0.0 0.0 0.2 -0.2 0.0" name="aux_4_geom" size="0.08" type="capsule" rgba="0.4 0 0 1"/> <!-- modification: added rgba="0.4 0 0 1" -->
         <body name="aux_4" pos="0.2 -0.2 0">

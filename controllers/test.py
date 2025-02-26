@@ -1,17 +1,15 @@
-import os
-import optuna
+import gymnasium as gym
+import time
 
-# Fetch the database URL from the environment variable
-database_url = os.environ.get("SAC_OPTUNA_DB_URL")
+import custom_gym_envs
 
-# Check if the URL is loaded
-if not database_url:
-    raise ValueError("Database URL not found in environment. Make sure OPTUNA_DB_URL is set.")
+env = gym.make("AntEnv-F3", render_mode="human", camera_name="free")
 
-# Name of the study to delete
-study_name = "example_study"
 
-# Delete the study
-optuna.delete_study(study_name=study_name, storage=database_url)
+for episode in range(1000):
+    env.reset(seed=episode)
+    for step in range(300):
+        env.step(env.action_space.sample())
+        time.sleep(0.05)
 
-print(f"Study '{study_name}' has been successfully deleted.")
+env.close()

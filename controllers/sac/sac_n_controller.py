@@ -34,9 +34,9 @@ import custom_gym_envs  # do not delete; required for custom gym environments
 
 parser = argparse.ArgumentParser(description='PyTorch Soft Actor-Critic Arguments')
 
-parser.add_argument('-e', '--n_env_name', default='FetchReachDense-v3', # Ant-v5 or FetchReachDense-v3
+parser.add_argument('-e', '--n_env_name', default='Ant-v5', # Ant-v5 or FetchReachDense-v3
                     help='name of normal (non-malfunctioning) MuJoCo Gym environment (default: Ant-v5)')
-parser.add_argument('-t', '--n_time_steps', type=int, default=30000, metavar='N', # 3000000 (Ant) or 30000 (Fetch)
+parser.add_argument('-t', '--n_time_steps', type=int, default=3000000, metavar='N', # 3000000 (Ant) or 30000 (Fetch)
                     help='number of time steps in normal (non-malfunctioning) MuJoCo Gym environment (default: 3000000)')
 
 parser.add_argument('--gamma', type=float, default=0.99, metavar='G',
@@ -67,7 +67,7 @@ parser.add_argument('--target_update_interval', type=int, default=1, metavar='N'
 parser.add_argument('-a', '--automatic_entropy_tuning', default=False, action='store_true',
                     help='if true, automatically tune the temperature (default: False)')
 
-parser.add_argument('-tef', '--time_step_eval_frequency', type=int, default=150, metavar='N', # 15000 (Ant) or 150 (Fetch)
+parser.add_argument('-tef', '--time_step_eval_frequency', type=int, default=15000, metavar='N', # 15000 (Ant) or 150 (Fetch)
                     help='frequency of policy evaluation during learning (default: 15000)')
 parser.add_argument('-ee', '--eval_episodes', type=int, default=10, metavar='N',
                     help='number of episodes in policy evaluation roll-out (default: 10)')
@@ -183,9 +183,7 @@ class NormalController:
 
         self.data_dir = f'{os.getenv("HOME")}/Documents/openai/data/{self.experiment}/seed{self.parameters["seed"]}'
 
-        # are we restarting training?  do the data files for the
-        # selected seed already exist?
-
+        # are we restarting training?  do the data files for the selected seed already exist?
         if path.exists(self.data_dir):
 
             print(self.LINE)
@@ -216,7 +214,7 @@ class NormalController:
         # data
 
         num_rows = int(self.parameters["n_time_steps"] / self.parameters["time_step_eval_frequency"]) + 1  # add 1 for evaluation before any learning (0th entry)
-        num_columns = 5
+        num_columns = 3
         self.eval_data = np.zeros((num_rows, num_columns))
 
         # num_rows = self.parameters["n_time_steps"]  # larger than needed; will remove extra entries later
@@ -304,32 +302,34 @@ class NormalController:
             else:
                 return self.parameters[argument]
 
-        print('normal environment name:', highlight_non_default_values('n_env_name'))
-        print('normal time steps:', highlight_non_default_values('n_time_steps'))
-        print('gamma:', highlight_non_default_values('gamma'))
-        print('tau:', highlight_non_default_values('tau'))
-        print('alpha:', highlight_non_default_values('alpha'))
-        print('learning rate:', highlight_non_default_values('lr'))
-        print('hidden dimension:', highlight_non_default_values('hidden_dim'))
-        print('replay buffer size:', highlight_non_default_values('replay_buffer_size'))
-        print('batch size:', highlight_non_default_values('batch_size'))
-        print('normalize rewards:', highlight_non_default_values('normalize_rewards'))
-        print('model updates per step:', highlight_non_default_values('model_updates_per_step'))
-        print('target update interval:', highlight_non_default_values('target_update_interval'))
-        print('automatic entropy tuning:', highlight_non_default_values('automatic_entropy_tuning'))
-        print('time step evaluation frequency:', highlight_non_default_values('time_step_eval_frequency'))
-        print('evaluation episodes:', highlight_non_default_values('eval_episodes'))
-        if self.parameters["device"] == 'cuda':
-            print('device:', self.parameters["device"])
+        print(f'normal environment name: {highlight_non_default_values("n_env_name")}')
+        print(f'normal time steps: {highlight_non_default_values("n_time_steps")}')
+        print(f'gamma: {highlight_non_default_values("gamma")}')
+        print(f'tau: {highlight_non_default_values("tau")}')
+        print(f'alpha: {highlight_non_default_values("alpha")}')
+        print(f'learning rate: {highlight_non_default_values("lr")}')
+        print(f'hidden dimension: {highlight_non_default_values("hidden_dim")}')
+        print(f'replay buffer size: {highlight_non_default_values("replay_buffer_size")}')
+        print(f'batch size: {highlight_non_default_values("batch_size")}')
+        print(f'normalize rewards: {highlight_non_default_values("normalize_rewards")}')
+        print(f'model updates per step: {highlight_non_default_values("model_updates_per_step")}')
+        print(f'target update interval: {highlight_non_default_values("target_update_interval")}')
+        print(f'automatic entropy tuning: {highlight_non_default_values("automatic_entropy_tuning")}')
+        print(f'time step evaluation frequency: {highlight_non_default_values("time_step_eval_frequency")}')
+        print(f'evaluation episodes: {highlight_non_default_values("eval_episodes")}')
+
+        if self.parameters['device'] == 'cuda':
+            print(f'device: {self.parameters["device"]}')
             if 'CUDA_VISIBLE_DEVICES' in os.environ:
-                print('cuda visible device(s):', colored(os.environ["CUDA_VISIBLE_DEVICES"], 'red'))
+                print(f'cuda visible device(s): {colored(os.environ["CUDA_VISIBLE_DEVICES"], "red")}')
             else:
                 print(colored('cuda visible device(s): N/A', 'red'))
         else:
-            print('device:', colored(self.parameters["device"], 'red'))
-        print('seed:', colored(self.parameters["seed"], 'red'))
-        print('wandb:', highlight_non_default_values('wandb'))
-        print('optuna:', highlight_non_default_values('optuna'))
+            print(f'device: {colored(self.parameters["device"], "red")}')
+
+        print(f'seed: {colored(self.parameters["seed"], "red")}')
+        print(f'wandb: {highlight_non_default_values("wandb")}')
+        print(f'optuna: {highlight_non_default_values("optuna")}')
 
         print(self.LINE)
         print(self.LINE)
@@ -368,9 +368,6 @@ class NormalController:
                     self.rlg.rl_agent_message(f'save_model, {self.data_dir}, {self.rlg.num_steps()}')
                     self.evaluate_model(self.rlg.num_steps())
 
-            # index = self.rlg.num_episodes() - 1
-            # self.train_data[index] = [self.rlg.num_episodes(), self.rlg.num_steps(), self.rlg.episode_reward()]
-
             # learning complete
             if self.rlg.num_steps() == self.parameters["n_time_steps"]:
                 break
@@ -383,7 +380,6 @@ class NormalController:
         """
         Close environment.
         Compute runtime.
-        Send completion email.
         Save file with run information.
         Close wandb.
         """
@@ -392,10 +388,10 @@ class NormalController:
 
         run_time = str(timedelta(seconds=time.time() - self.start))[:-7]
 
-        print('time to complete one run:', run_time, 'h:m:s')
+        print(f'time to complete one run: {run_time} h:m:s')
         print(self.LINE)
 
-        text_file = open(self.data_dir + '/run_summary.txt', 'w')
+        text_file = open(f'{self.data_dir}/run_summary.txt', 'w')
         text_file.write(date.today().strftime('%m/%d/%y'))
         text_file.write(f'\n\nExperiment {self.experiment}/seed{self.parameters["seed"]} complete.\n\nTime to complete: {run_time} h:m:s')
         text_file.close()
@@ -455,23 +451,14 @@ class NormalController:
 
             average_return = np.average(returns)
 
-            if num_time_steps == 0:
-                num_updates = 0
-            else:
-                num_updates = (num_time_steps - self.parameters["batch_size"]) * self.parameters["model_updates_per_step"]
-
-            num_samples = num_updates * self.parameters["batch_size"]
-
             real_time = int(time.time() - self.start)
 
             index = num_time_steps // self.parameters["time_step_eval_frequency"]
             self.eval_data[index] = [num_time_steps,
-                                     num_updates,
-                                     num_samples,
                                      average_return,
                                      real_time]
 
-            cumulative_average_return = self.eval_data[:, -2].sum()
+            cumulative_average_return = self.eval_data[:, 1].sum()
 
             if self.parameters["wandb"]:
                 wandb.log(data={
@@ -484,7 +471,7 @@ class NormalController:
             print(f'evaluation at {num_time_steps} time steps: {average_return}')
 
             run_time = str(timedelta(seconds=time.time() - self.start))[:-7]
-            print('runtime:', run_time, 'h:m:s')
+            print(f'runtime: {run_time} h:m:s')
             print(self.LINE)
 
             # reload the torch RNG state(s)
@@ -501,13 +488,13 @@ class NormalController:
 
         print('plotting...')
 
-        csv_foldername = self.data_dir + '/csv'
+        csv_foldername = f'{self.data_dir}/csv'
         os.makedirs(csv_foldername, exist_ok=True)
 
-        jpg_foldername = self.data_dir + '/jpg'
+        jpg_foldername = f'{self.data_dir}/jpg'
         os.makedirs(jpg_foldername, exist_ok=True)
 
-        df = pd.read_csv(csv_foldername + '/eval_data.csv')
+        df = pd.read_csv(f'{csv_foldername}/eval_data.csv')
 
         # evaluation: average_return vs num_time_steps
         df.plot(x='num_time_steps', y='average_return', color='blue', legend=False)
@@ -515,28 +502,10 @@ class NormalController:
         plt.ylabel('average\nreturn', rotation='horizontal', labelpad=30)
         plt.title('Policy Evaluation')
         pss.plot_settings()
-        plt.savefig(jpg_foldername + '/evaluation_time_steps.jpg')
+        plt.savefig(f'{jpg_foldername}/evaluation_time_steps.jpg')
         plt.close()
 
-        # evaluation: average_return vs num_updates
-        df.plot(x='num_updates', y='average_return', color='blue', legend=False)
-        plt.xlabel('updates')
-        plt.ylabel('average\nreturn', rotation='horizontal', labelpad=30)
-        plt.title('Policy Evaluation')
-        pss.plot_settings()
-        plt.savefig(jpg_foldername + '/evaluation_updates.jpg')
-        plt.close()
-
-        # evaluation: average_return vs num_samples
-        df.plot(x='num_samples', y='average_return', color='blue', legend=False)
-        plt.xlabel('samples')
-        plt.ylabel('average\nreturn', rotation='horizontal', labelpad=30)
-        plt.title('Policy Evaluation')
-        pss.plot_settings()
-        plt.savefig(jpg_foldername + '/evaluation_samples.jpg')
-        plt.close()
-
-        df = pd.read_csv(csv_foldername + '/loss_data.csv')
+        df = pd.read_csv(f'{csv_foldername}/loss_data.csv')
 
         # training: q_value_loss_1 vs num_updates
         df.plot(x='num_updates', y='q_value_loss_1', color='blue', legend=False)
@@ -544,7 +513,7 @@ class NormalController:
         plt.ylabel('loss', rotation='horizontal', labelpad=30)
         plt.title('Q Value Loss 1')
         pss.plot_settings()
-        plt.savefig(jpg_foldername + '/q_value_loss_1.jpg')
+        plt.savefig(f'{jpg_foldername}/q_value_loss_1.jpg')
         plt.close()
 
         # training: q_value_loss_2 vs num_updates
@@ -553,7 +522,7 @@ class NormalController:
         plt.ylabel('loss', rotation='horizontal', labelpad=30)
         plt.title('Q Value Loss 2')
         pss.plot_settings()
-        plt.savefig(jpg_foldername + '/q_value_loss_2.jpg')
+        plt.savefig(f'{jpg_foldername}/q_value_loss_2.jpg')
         plt.close()
 
         # training: policy_loss vs num_updates
@@ -562,7 +531,7 @@ class NormalController:
         plt.ylabel('loss', rotation='horizontal', labelpad=30)
         plt.title('Policy Loss')
         pss.plot_settings()
-        plt.savefig(jpg_foldername + '/policy_loss.jpg')
+        plt.savefig(f'{jpg_foldername}/policy_loss.jpg')
         plt.close()
 
         # training: alpha_loss vs num_updates
@@ -571,7 +540,7 @@ class NormalController:
         plt.ylabel('loss', rotation='horizontal', labelpad=30)
         plt.title('Alpha Loss')
         pss.plot_settings()
-        plt.savefig(jpg_foldername + '/alpha_loss.jpg')
+        plt.savefig(f'{jpg_foldername}/alpha_loss.jpg')
         plt.close()
 
         # training: alpha_value vs num_updates
@@ -580,7 +549,7 @@ class NormalController:
         plt.ylabel('alpha', rotation='horizontal', labelpad=30)
         plt.title('Alpha Value')
         pss.plot_settings()
-        plt.savefig(jpg_foldername + '/alpha_value.jpg')
+        plt.savefig(f'{jpg_foldername}/alpha_value.jpg')
         plt.close()
 
         # training: entropy vs num_updates
@@ -589,7 +558,7 @@ class NormalController:
         plt.ylabel('entropy', rotation='horizontal', labelpad=30)
         plt.title('Entropy')
         pss.plot_settings()
-        plt.savefig(jpg_foldername + '/entropy_updates.jpg')
+        plt.savefig(f'{jpg_foldername}/entropy_updates.jpg')
         plt.close()
 
         print('plotting complete')
@@ -636,15 +605,13 @@ class NormalController:
         File format: .csv
         """
 
-        csv_foldername = self.data_dir + '/csv'
+        csv_foldername = f'{self.data_dir}/csv'
         os.makedirs(csv_foldername, exist_ok=True)
 
         eval_data_df = pd.DataFrame({'num_time_steps': self.eval_data[:, 0],
-                                     'num_updates': self.eval_data[:, 1],
-                                     'num_samples': self.eval_data[:, 2],
-                                     'average_return': self.eval_data[:, 3],
-                                     'real_time': self.eval_data[:, 4]})
-        eval_data_df.to_csv(csv_foldername + '/eval_data.csv', float_format='%f')
+                                     'average_return': self.eval_data[:, 1],
+                                     'real_time': self.eval_data[:, 2]})
+        eval_data_df.to_csv(f'{csv_foldername}/eval_data.csv', float_format='%f')
 
         loss_data_df = pd.DataFrame({'num_updates': self.loss_data[:, 0],
                                      'q_value_loss_1': self.loss_data[:, 1],
@@ -653,7 +620,7 @@ class NormalController:
                                      'alpha_loss': self.loss_data[:, 4],
                                      'alpha_value': self.loss_data[:, 5],
                                      'entropy': self.loss_data[:, 6]})
-        loss_data_df.to_csv(csv_foldername + '/loss_data.csv', float_format='%f')
+        loss_data_df.to_csv(f'{csv_foldername}/loss_data.csv', float_format='%f')
 
     def save_parameters(self):
         """
@@ -662,10 +629,10 @@ class NormalController:
         File format: .csv and .pickle
         """
 
-        csv_foldername = self.data_dir + '/csv'
+        csv_foldername = f'{self.data_dir}/csv'
         os.makedirs(csv_foldername, exist_ok=True)
 
-        csv_filename = csv_foldername + '/parameters.csv'
+        csv_filename = f'{csv_foldername}/parameters.csv'
 
         f = open(csv_filename, 'w')
         writer = csv.writer(f)
@@ -673,10 +640,10 @@ class NormalController:
             writer.writerow([key, val])
         f.close()
 
-        pickle_foldername = self.data_dir + '/pickle'
+        pickle_foldername = f'{self.data_dir}/pickle'
         os.makedirs(pickle_foldername, exist_ok=True)
 
-        pickle_filename = pickle_foldername + '/parameters.pickle'
+        pickle_filename = f'{pickle_foldername}/parameters.pickle'
 
         with open(pickle_filename, 'wb') as f:
             pickle.dump(self.parameters, f, protocol=pickle.HIGHEST_PROTOCOL)
@@ -692,10 +659,10 @@ class NormalController:
         self.rlg_statistics["num_steps"] = self.rlg.num_steps()
         self.rlg_statistics["total_reward"] = self.rlg.total_reward()
 
-        pickle_foldername = self.data_dir + '/pickle'
+        pickle_foldername = f'{self.data_dir}/pickle'
         os.makedirs(pickle_foldername, exist_ok=True)
 
-        with open(pickle_foldername + '/rlg_statistics.pickle', 'wb') as f:
+        with open(f'{pickle_foldername}/rlg_statistics.pickle', 'wb') as f:
             pickle.dump(self.rlg_statistics, f)
 
     def save_seed_state(self):
@@ -705,27 +672,27 @@ class NormalController:
         File format: .pickle (random and numpy) and .pt (pytorch)
         """
 
-        pickle_foldername = self.data_dir + '/pickle'
+        pickle_foldername = f'{self.data_dir}/pickle'
         os.makedirs(pickle_foldername, exist_ok=True)
 
         random_random_state = random.getstate()
         numpy_random_state = np.random.get_state()
 
-        with open(pickle_foldername + '/random_random_state.pickle', 'wb') as f:
+        with open(f'{pickle_foldername}/random_random_state.pickle', 'wb') as f:
             pickle.dump(random_random_state, f)
 
-        with open(pickle_foldername + '/numpy_random_state.pickle', 'wb') as f:
+        with open(f'{pickle_foldername}/numpy_random_state.pickle', 'wb') as f:
             pickle.dump(numpy_random_state, f)
 
-        pt_foldername = self.data_dir + '/pt'
+        pt_foldername = f'{self.data_dir}/pt'
         os.makedirs(pt_foldername, exist_ok=True)
 
         torch_random_state = torch.get_rng_state()
-        torch.save(torch_random_state, pt_foldername + '/torch_random_state.pt')
+        torch.save(torch_random_state, f'{pt_foldername}/torch_random_state.pt')
 
         if self.parameters["device"] == 'cuda':
             torch_cuda_random_state = torch.cuda.get_rng_state()
-            torch.save(torch_cuda_random_state, pt_foldername + '/torch_cuda_random_state.pt')
+            torch.save(torch_cuda_random_state, f'{pt_foldername}/torch_cuda_random_state.pt')
 
 
 def objective(trial):
@@ -788,7 +755,7 @@ def objective(trial):
 
     # Set the target update interval.
     target_update_interval_choices = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-    target_update_interval = trial.suggest_categorical(name='time_step_evaluation_frequency',
+    target_update_interval = trial.suggest_categorical(name='target_update_interval',
                                                        choices=target_update_interval_choices)
 
     # Set the automatic entropy tuning flag.

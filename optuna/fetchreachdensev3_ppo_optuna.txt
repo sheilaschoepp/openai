@@ -1,0 +1,19 @@
+Best hyperparameters found:
+lr: 0.00060556
+linear_lr_decay: True
+gamma: 0.8113
+num_samples: 1024
+mini_batch_size: 32
+num_epochs: 10
+epsilon: 0.2908
+vf_loss_coef: 0.8985
+policy_entropy_coef: 0.052648600000000004
+clipped_value_fn: False
+max_grad_norm: 0.5
+use_gae: False
+gae_lambda: 0.9945
+normalize_rewards: True
+
+
+Best average return:
+-1940.0056288144715

@@ -137,8 +137,8 @@ class NormalController:
 
         if self.parameters["wandb"]:
 
-            env = args.n_env_name.split('-')[0].lower()
-            version = args.n_env_name.split('-')[1].lower()
+            env = self.parameters["n_env_name"].split('-')[0].lower()
+            version = self.parameters["n_env_name"].split('-')[1].lower()
             prefix = f'{env}{version}'
 
             wandb.init(

@@ -94,8 +94,8 @@ class AbnormalController:
 
         if self.parameters["wandb"]:
 
-            env = args.ab_env_name.split('-')[0].lower()
-            version = args.ab_env_name.split('-')[1].lower()
+            env = self.parameters["ab_env_name"].split('-')[0].lower()
+            version = self.parameters["ab_env_name"].split('-')[1].lower()
             prefix = f'{env}{version}'
 
             wandb.init(
@@ -505,7 +505,7 @@ class AbnormalController:
 
         pickle_foldername = f'{self.load_data_dir}/pickle'
 
-        with open('{pickle_foldername}/rlg_statistics.pickle', 'rb') as f:
+        with open(f'{pickle_foldername}/rlg_statistics.pickle', 'rb') as f:
             self.rlg_statistics = pickle.load(f)
 
     def load_seed_state(self):

@@ -755,7 +755,7 @@ def objective(trial):
 
     # Set the target update interval.
     target_update_interval_choices = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-    target_update_interval = trial.suggest_categorical(name='time_step_evaluation_frequency',
+    target_update_interval = trial.suggest_categorical(name='target_update_interval',
                                                        choices=target_update_interval_choices)
 
     # Set the automatic entropy tuning flag.

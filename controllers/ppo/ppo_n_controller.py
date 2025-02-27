@@ -525,7 +525,7 @@ class NormalController:
         plt.ylabel('loss', rotation='horizontal', labelpad=30)
         plt.title('CLIP Loss')
         pss.plot_settings()
-        plt.savefig(jpg_foldername + '/clip_loss_updates.jpg')
+        plt.savefig(f'{jpg_foldername}/clip_loss_updates.jpg')
         plt.close()
 
         # training: vf_loss vs num_updates
@@ -534,7 +534,7 @@ class NormalController:
         plt.ylabel('loss', rotation='horizontal', labelpad=30)
         plt.title('VF Loss')
         pss.plot_settings()
-        plt.savefig(jpg_foldername + '/vf_loss_updates.jpg')
+        plt.savefig(f'{jpg_foldername}/vf_loss_updates.jpg')
         plt.close()
 
         # training: entropy vs num_updates
@@ -543,7 +543,7 @@ class NormalController:
         plt.ylabel('entropy', rotation='horizontal', labelpad=30)
         plt.title('Entropy')
         pss.plot_settings()
-        plt.savefig(jpg_foldername + '/entropy_updates.jpg')
+        plt.savefig(f'{jpg_foldername}/entropy_updates.jpg')
         plt.close()
 
         # training: clip_vf_s_loss vs num_updates
@@ -552,7 +552,7 @@ class NormalController:
         plt.ylabel('loss', rotation='horizontal', labelpad=30)
         plt.title('CLIP+VF+S Loss')
         pss.plot_settings()
-        plt.savefig(jpg_foldername + '/clip_vf_s_loss_updates.jpg')
+        plt.savefig(f'{jpg_foldername}/clip_vf_s_loss_updates.jpg')
         plt.close()
 
         # training: clip_fraction vs num_updates
@@ -561,7 +561,7 @@ class NormalController:
         plt.ylabel('clip fraction', rotation='horizontal', labelpad=30)
         plt.title('Clip Fraction')
         pss.plot_settings()
-        plt.savefig(jpg_foldername + '/clip_fraction_updates.jpg')
+        plt.savefig(f'{jpg_foldername}/clip_fraction_updates.jpg')
         plt.close()
 
         print('plotting complete')

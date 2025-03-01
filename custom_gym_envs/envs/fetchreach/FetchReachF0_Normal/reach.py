@@ -2,7 +2,8 @@
 modifications:
 1. changed from 'from gymnasium_robotics.envs.fetch import MujocoFetchEnv, MujocoPyFetchEnv'
    to 'from custom_gym_envs.envs.fetchreach.FetchReachF0_Normal import MujocoFetchEnv, MujocoPyFetchEnv'
-2. changed from 'distance_threshold=0.05' to 'distance_threshold=0.001' in MujocoPyFetchReachEnv
+2. changed from 'distance_threshold=0.05' to 'distance_threshold=0.001' in MujocoFetchReachEnv and
+   MujocoPyFetchReachEnv
 """
 
 
@@ -147,7 +148,7 @@ class MujocoFetchReachEnv(MujocoFetchEnv, EzPickle):
             target_offset=0.0,
             obj_range=0.15,
             target_range=0.15,
-            distance_threshold=0.05,
+            distance_threshold=0.001,  # modification 2
             initial_qpos=initial_qpos,
             reward_type=reward_type,
             **kwargs,

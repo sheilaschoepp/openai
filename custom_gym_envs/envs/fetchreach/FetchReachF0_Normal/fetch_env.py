@@ -2,7 +2,7 @@
 modifications:
 1. changed from 'from gymnasium_robotics.envs.robot_env import MujocoPyRobotEnv, MujocoRobotEnv' to
    'from custom_gym_envs.envs.fetchreach.FetchReachF0_Normal.robot_env import MujocoPyRobotEnv, MujocoRobotEnv'
-2.
+2. modified _sample_goal method to eliminate unreachable goals in table
 """
 
 from typing import Union
@@ -167,9 +167,24 @@ def get_base_fetch_env(RobotEnvClass: Union[MujocoPyRobotEnv, MujocoRobotEnv]):
                 if self.target_in_the_air and self.np_random.uniform() < 0.5:
                     goal[2] += self.np_random.uniform(0, 0.45)
             else:
-                goal = self.initial_gripper_xpos[:3] + self.np_random.uniform(
-                    -self.target_range, self.target_range, size=3
-                )
+
+                # modification 2 (start)
+
+                # goal = self.initial_gripper_xpos[:3] + self.np_random.uniform(
+                #     -self.target_range, self.target_range, size=3
+                # )
+
+                goal = None
+                reachable = False
+                while not reachable:
+                    goal = self.initial_gripper_xpos[:3] + self.np_random.uniform(
+                        -self.target_range, self.target_range, size=3
+                    )
+                    if goal[2] >= 0.42:
+                        reachable = True
+
+                # modification 2 (end)
+
             return goal.copy()
 
         def _is_success(self, achieved_goal, desired_goal):

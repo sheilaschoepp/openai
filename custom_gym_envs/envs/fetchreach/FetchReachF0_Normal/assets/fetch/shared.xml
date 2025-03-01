@@ -1,3 +1,8 @@
+<!--
+modifications:
+1. added class robot0:red
+-->
+
 <mujoco>
     <asset>
         <texture type="skybox" builtin="gradient" rgb1="0.44 0.85 0.56" rgb2="0.46 0.87 0.58" width="32" height="32"></texture>
@@ -61,6 +66,11 @@
             <default class="robot0:blue">
                 <geom rgba="0.086 0.506 0.767 1.0"></geom>
             </default>
+            <!-- modification 1 (start) -->
+            <default class="robot0:red">
+                <geom rgba="0.4 0 0 1"></geom>
+            </default>
+            <!-- modification 1 (end) -->
         </default>
     </default>
 </mujoco>

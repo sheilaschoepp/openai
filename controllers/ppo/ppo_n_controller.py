@@ -444,7 +444,7 @@ class NormalController:
 
         if self.parameters["eval_episodes"] != 0:
 
-            eval_agent = deepcopy(self.agent)
+            eval_agent = copy(self.agent)
 
             eval_rlg = RLGlue(self.eval_env, eval_agent)
 

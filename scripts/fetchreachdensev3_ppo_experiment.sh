@@ -15,6 +15,7 @@ ARGS="--n_env_name=FetchReachDense-v3 \
       --max_grad_norm=0.5 \
       --gae_lambda=0.0 \
       --normalize_rewards \
+      --time_step_eval_frequency=200 \
       --wandb"
 # set gae_lambda to 0.0 since use_gae is false
 

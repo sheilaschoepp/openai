@@ -34,9 +34,9 @@ import custom_gym_envs  # do not delete; required for custom gym environments
 
 parser = argparse.ArgumentParser(description='PyTorch Proximal Policy Optimization Arguments')
 
-parser.add_argument('-e', '--n_env_name', default='FetchReachDense-v3', # Ant-v5 or FetchReachDense-v3
+parser.add_argument('-e', '--n_env_name', default='Ant-v5',  # Ant-v5 or FetchReachDense-v3
                     help='name of normal (non-malfunctioning) MuJoCo Gym environment (default: Ant-v5)')
-parser.add_argument('-t', '--n_time_steps', type=int, default=100000, metavar='N', # 10000000 (Ant) or 100000 (Fetch)
+parser.add_argument('-t', '--n_time_steps', type=int, default=10000000, metavar='N',  # Ant-v5: 10000000 or FetchReachDense-v3: 100000
                     help='number of time steps in normal (non-malfunctioning) MuJoCo Gym environment (default: 10000000)')
 
 parser.add_argument('--lr', type=float, default=0.000275, metavar='G',
@@ -66,7 +66,7 @@ parser.add_argument('--max_grad_norm', type=float, default=0.5, metavar='G',
 
 parser.add_argument('--use_gae', default=False, action='store_true',
                     help=' if true, use generalized advantage estimation (default: False)')
-parser.add_argument('--gae_lambda', type=float, default=0.9327, metavar='G',
+parser.add_argument('--gae_lambda', type=float, default=0.9327, metavar='G', # todo: in optuna, set to 0 if use_gae is false
                     help='generalized advantage estimation smoothing parameter (default: 0.9327)')
 
 parser.add_argument('-nr', '--normalize_rewards', default=False, action='store_true',
@@ -77,7 +77,7 @@ parser.add_argument('--hidden_dim', type=int, default=64, metavar='N',
 parser.add_argument('--log_std', type=float, default=0.0, metavar='G',
                     help='log standard deviation of the policy distribution (default: 0.0)')
 
-parser.add_argument('-tef', '--time_step_eval_frequency', type=int, default=500, metavar='N', # 50000 (Ant) or 500 (Fetch)
+parser.add_argument('-tef', '--time_step_eval_frequency', type=int, default=50000, metavar='N',  # Ant-v5: 50000 or FetchReachDense-v3: 500
                     help='frequency of policy evaluation during learning (default: 50000)')
 parser.add_argument('-ee', '--eval_episodes', type=int, default=10, metavar='N',
                     help='number of episodes in policy evaluation roll-out (default: 10)')
@@ -152,8 +152,8 @@ class NormalController:
 
         if self.parameters["wandb"]:
 
-            env = args.n_env_name.split('-')[0].lower()
-            version = args.n_env_name.split('-')[1].lower()
+            env = self.parameters["n_env_name"].split('-')[0].lower()
+            version = self.parameters["n_env_name"].split('-')[1].lower()
             prefix = f'{env}{version}'
 
             wandb.init(
@@ -203,9 +203,7 @@ class NormalController:
 
         self.data_dir = f'{os.getenv("HOME")}/Documents/openai/data/{self.experiment}/seed{self.parameters["seed"]}'
 
-        # are we restarting training?  do the data files for the
-        # selected seed already exist?
-
+        # are we restarting training?  do the data files for the selected seed already exist?
         if path.exists(self.data_dir):
 
             print(self.LINE)
@@ -236,12 +234,8 @@ class NormalController:
         # data
 
         num_rows = int(self.parameters["n_time_steps"] / self.parameters["time_step_eval_frequency"]) + 1  # add 1 for evaluation before any learning (0th entry)
-        num_columns = 7
+        num_columns = 3
         self.eval_data = np.zeros((num_rows, num_columns))
-
-        # num_rows = self.parameters["n_time_steps"]  # larger than needed; will remove extra entries later
-        # num_columns = 3
-        # self.train_data = np.zeros((num_rows, num_columns))
 
         num_rows = (self.parameters["n_time_steps"] // self.parameters["num_samples"])
         num_columns = 8
@@ -330,37 +324,39 @@ class NormalController:
             else:
                 return self.parameters[argument]
 
-        print('normal environment name:', highlight_non_default_values('n_env_name'))
-        print('normal time steps:', highlight_non_default_values('n_time_steps'))
-        print('lr:', highlight_non_default_values('lr'))
-        print('linear lr decay:', highlight_non_default_values('linear_lr_decay'))
-        print('gamma:', highlight_non_default_values('gamma'))
-        print('number of samples:', highlight_non_default_values('num_samples'))
-        print('mini-batch size:', highlight_non_default_values('mini_batch_size'))
-        print('epochs:', highlight_non_default_values('epochs'))
-        print('epsilon:', highlight_non_default_values('epsilon'))
-        print('value function loss coefficient:', highlight_non_default_values('vf_loss_coef'))
-        print('policy entropy coefficient:', highlight_non_default_values('policy_entropy_coef'))
-        print('clipped value function:', highlight_non_default_values('clipped_value_fn'))
-        print('max norm of gradients:', highlight_non_default_values('max_grad_norm'))
-        print('use generalized advantage estimation:', highlight_non_default_values('use_gae'))
-        print('gae smoothing coefficient (lambda):', highlight_non_default_values('gae_lambda'))
-        print('normalize rewards:', highlight_non_default_values('normalize_rewards'))
-        print('hidden dimension:', highlight_non_default_values('hidden_dim'))
-        print('log_std:', highlight_non_default_values('log_std'))
-        print('time step evaluation frequency:', highlight_non_default_values('time_step_eval_frequency'))
-        print('evaluation episodes:', highlight_non_default_values('eval_episodes'))
+        print(f'normal environment name: {highlight_non_default_values("n_env_name")}')
+        print(f'normal time steps: {highlight_non_default_values("n_time_steps")}')
+        print(f'lr: {highlight_non_default_values("lr")}')
+        print(f'linear lr decay: {highlight_non_default_values("linear_lr_decay")}')
+        print(f'gamma: {highlight_non_default_values("gamma")}')
+        print(f'number of samples: {highlight_non_default_values("num_samples")}')
+        print(f'mini-batch size: {highlight_non_default_values("mini_batch_size")}')
+        print(f'epochs: {highlight_non_default_values("epochs")}')
+        print(f'epsilon: {highlight_non_default_values("epsilon")}')
+        print(f'value function loss coefficient: {highlight_non_default_values("vf_loss_coef")}')
+        print(f'policy entropy coefficient: {highlight_non_default_values("policy_entropy_coef")}')
+        print(f'clipped value function: {highlight_non_default_values("clipped_value_fn")}')
+        print(f'max norm of gradients: {highlight_non_default_values("max_grad_norm")}')
+        print(f'use generalized advantage estimation: {highlight_non_default_values("use_gae")}')
+        print(f'gae smoothing coefficient (lambda): {highlight_non_default_values("gae_lambda")}')
+        print(f'normalize rewards: {highlight_non_default_values("normalize_rewards")}')
+        print(f'hidden dimension: {highlight_non_default_values("hidden_dim")}')
+        print(f'log_std: {highlight_non_default_values("log_std")}')
+        print(f'time step evaluation frequency: {highlight_non_default_values("time_step_eval_frequency")}')
+        print(f'evaluation episodes: {highlight_non_default_values("eval_episodes")}')
+
         if self.parameters["device"] == 'cuda':
-            print('device:', self.parameters["device"])
+            print(f'device: {self.parameters["device"]}')
             if 'CUDA_VISIBLE_DEVICES' in os.environ:
-                print('cuda visible device(s):', colored(os.environ["CUDA_VISIBLE_DEVICES"], 'red'))
+                print(f'cuda visible device(s): {colored(os.environ["CUDA_VISIBLE_DEVICES"], "red")}')
             else:
                 print(colored('cuda visible device(s): N/A', 'red'))
         else:
-            print('device:', colored(self.parameters["device"], 'red'))
-        print('seed:', colored(self.parameters["seed"], 'red'))
-        print('wandb:', highlight_non_default_values('wandb'))
-        print('optuna:', highlight_non_default_values('optuna'))
+            print(f'device: {colored(self.parameters["device"], "red")}')
+
+        print(f'seed: {colored(self.parameters["seed"], "red")}')
+        print(f'wandb: {highlight_non_default_values("wandb")}')
+        print(f'optuna: {highlight_non_default_values("optuna")}')
 
         print(self.LINE)
         print(self.LINE)
@@ -399,9 +395,6 @@ class NormalController:
                     self.rlg.rl_agent_message(f'save_model, {self.data_dir}, {self.rlg.num_steps()}')
                     self.evaluate_model(self.rlg.num_steps())
 
-            # index = self.rlg.num_episodes() - 1
-            # self.train_data[index] = [self.rlg.num_episodes(), self.rlg.num_steps(), self.rlg.episode_reward()]
-
             # learning complete
             if self.rlg.num_steps() == self.parameters["n_time_steps"]:
                 break
@@ -414,7 +407,6 @@ class NormalController:
         """
         Close environment.
         Compute runtime.
-        Send completion email.
         Save file with run information.
         Close wandb.
         """
@@ -423,10 +415,10 @@ class NormalController:
 
         run_time = str(timedelta(seconds=time.time() - self.start))[:-7]
 
-        print('time to complete one run:', run_time, 'h:m:s')
+        print(f'time to complete one run: {run_time} h:m:s')
         print(self.LINE)
 
-        text_file = open(self.data_dir + '/run_summary.txt', 'w')
+        text_file = open(f'{self.data_dir}/run_summary.txt', 'w')
         text_file.write(date.today().strftime('%m/%d/%y'))
         text_file.write(f'\n\nExperiment {self.experiment}/seed{self.parameters["seed"]} complete.\n\nTime to complete: {run_time} h:m:s')
         text_file.close()
@@ -452,7 +444,7 @@ class NormalController:
 
         if self.parameters["eval_episodes"] != 0:
 
-            eval_agent = deepcopy(self.agent)
+            eval_agent = copy(self.agent)
 
             eval_rlg = RLGlue(self.eval_env, eval_agent)
 
@@ -476,24 +468,14 @@ class NormalController:
 
             average_return = np.average(returns)
 
-            num_updates = num_time_steps // self.parameters["num_samples"]
-            num_epoch_updates = num_updates * self.parameters["epochs"]
-            num_mini_batch_updates = num_epoch_updates * (self.parameters["num_samples"] // self.parameters["mini_batch_size"])
-
-            num_samples = num_mini_batch_updates * self.parameters["mini_batch_size"]
-
             real_time = int(time.time() - self.start)
 
             index = num_time_steps // self.parameters["time_step_eval_frequency"]
             self.eval_data[index] = [num_time_steps,
-                                     num_updates,
-                                     num_epoch_updates,
-                                     num_mini_batch_updates,
-                                     num_samples,
                                      average_return,
                                      real_time]
 
-            cumulative_average_return = self.eval_data[:, -2].sum()
+            cumulative_average_return = self.eval_data[:, 1].sum()
 
             if self.parameters["wandb"]:
                 wandb.log(data={
@@ -506,7 +488,7 @@ class NormalController:
             print(f'evaluation at {num_time_steps} time steps: {average_return}')
 
             run_time = str(timedelta(seconds=time.time() - self.start))[:-7]
-            print('runtime:', run_time, 'h:m:s')
+            print(f'runtime: {run_time} h:m:s')
             print(self.LINE)
 
     def plot(self):
@@ -518,13 +500,13 @@ class NormalController:
 
         print('plotting...')
 
-        csv_foldername = self.data_dir + '/csv'
+        csv_foldername = f'{self.data_dir}/csv'
         os.makedirs(csv_foldername, exist_ok=True)
 
-        jpg_foldername = self.data_dir + '/jpg'
+        jpg_foldername = f'{self.data_dir}/jpg'
         os.makedirs(jpg_foldername, exist_ok=True)
 
-        df = pd.read_csv(csv_foldername + '/eval_data.csv')
+        df = pd.read_csv(f'{csv_foldername}/eval_data.csv')
 
         # evaluation: average_return vs num_time_steps
         df.plot(x='num_time_steps', y='average_return', color='blue', legend=False)
@@ -532,28 +514,10 @@ class NormalController:
         plt.ylabel('average\nreturn', rotation='horizontal', labelpad=30)
         plt.title('Policy Evaluation')
         pss.plot_settings()
-        plt.savefig(jpg_foldername + '/evaluation_time_steps.jpg')
+        plt.savefig(f'{jpg_foldername}/evaluation_time_steps.jpg')
         plt.close()
 
-        # evaluation: average_return vs num_updates
-        df.plot(x='num_updates', y='average_return', color='blue', legend=False)
-        plt.xlabel('updates')
-        plt.ylabel('average\nreturn', rotation='horizontal', labelpad=30)
-        plt.title('Policy Evaluation')
-        pss.plot_settings()
-        plt.savefig(jpg_foldername + '/evaluation_updates.jpg')
-        plt.close()
-
-        # evaluation: average_return vs num_samples
-        df.plot(x='num_samples', y='average_return', color='blue', legend=False)
-        plt.xlabel('samples')
-        plt.ylabel('average\nreturn', rotation='horizontal', labelpad=30)
-        plt.title('Policy Evaluation')
-        pss.plot_settings()
-        plt.savefig(jpg_foldername + '/evaluation_samples.jpg')
-        plt.close()
-
-        df = pd.read_csv(csv_foldername + '/loss_data.csv')
+        df = pd.read_csv(f'{csv_foldername}/loss_data.csv')
 
         # training: clip_loss vs num_updates
         df.plot(x='num_updates', y='clip_loss', color='blue', legend=False)
@@ -561,7 +525,7 @@ class NormalController:
         plt.ylabel('loss', rotation='horizontal', labelpad=30)
         plt.title('CLIP Loss')
         pss.plot_settings()
-        plt.savefig(jpg_foldername + '/clip_loss_updates.jpg')
+        plt.savefig(f'{jpg_foldername}/clip_loss_updates.jpg')
         plt.close()
 
         # training: vf_loss vs num_updates
@@ -570,7 +534,7 @@ class NormalController:
         plt.ylabel('loss', rotation='horizontal', labelpad=30)
         plt.title('VF Loss')
         pss.plot_settings()
-        plt.savefig(jpg_foldername + '/vf_loss_updates.jpg')
+        plt.savefig(f'{jpg_foldername}/vf_loss_updates.jpg')
         plt.close()
 
         # training: entropy vs num_updates
@@ -579,7 +543,7 @@ class NormalController:
         plt.ylabel('entropy', rotation='horizontal', labelpad=30)
         plt.title('Entropy')
         pss.plot_settings()
-        plt.savefig(jpg_foldername + '/entropy_updates.jpg')
+        plt.savefig(f'{jpg_foldername}/entropy_updates.jpg')
         plt.close()
 
         # training: clip_vf_s_loss vs num_updates
@@ -588,7 +552,7 @@ class NormalController:
         plt.ylabel('loss', rotation='horizontal', labelpad=30)
         plt.title('CLIP+VF+S Loss')
         pss.plot_settings()
-        plt.savefig(jpg_foldername + '/clip_vf_s_loss_updates.jpg')
+        plt.savefig(f'{jpg_foldername}/clip_vf_s_loss_updates.jpg')
         plt.close()
 
         # training: clip_fraction vs num_updates
@@ -597,7 +561,7 @@ class NormalController:
         plt.ylabel('clip fraction', rotation='horizontal', labelpad=30)
         plt.title('Clip Fraction')
         pss.plot_settings()
-        plt.savefig(jpg_foldername + '/clip_fraction_updates.jpg')
+        plt.savefig(f'{jpg_foldername}/clip_fraction_updates.jpg')
         plt.close()
 
         print('plotting complete')
@@ -644,17 +608,13 @@ class NormalController:
         File format: .csv
         """
 
-        csv_foldername = self.data_dir + '/csv'
+        csv_foldername = f'{self.data_dir}/csv'
         os.makedirs(csv_foldername, exist_ok=True)
 
         eval_data_df = pd.DataFrame({'num_time_steps': self.eval_data[:, 0],
-                                     'num_updates': self.eval_data[:, 1],
-                                     'num_epoch_updates': self.eval_data[:, 2],
-                                     'num_mini_batch_updates': self.eval_data[:, 3],
-                                     'num_samples': self.eval_data[:, 4],
-                                     'average_return': self.eval_data[:, 5],
-                                     'run_time': self.eval_data[:, 6]})
-        eval_data_df.to_csv(csv_foldername + '/eval_data.csv', float_format='%f')
+                                     'average_return': self.eval_data[:, 1],
+                                     'real_time': self.eval_data[:, 2]})
+        eval_data_df.to_csv(f'{csv_foldername}/eval_data.csv', float_format='%f')
 
         loss_data_df = pd.DataFrame({'num_updates': self.loss_data[:, 0],
                                      'num_epoch_updates': self.loss_data[:, 1],
@@ -664,7 +624,7 @@ class NormalController:
                                      'entropy': self.loss_data[:, 5],
                                      'clip_vf_s_loss': self.loss_data[:, 6],
                                      'clip_fraction': self.loss_data[:, 7]})
-        loss_data_df.to_csv(csv_foldername + '/loss_data.csv', float_format='%f')
+        loss_data_df.to_csv(f'{csv_foldername}/loss_data.csv', float_format='%f')
 
     def save_parameters(self):
         """
@@ -673,10 +633,10 @@ class NormalController:
         File format: .csv and .pickle
         """
 
-        csv_foldername = self.data_dir + '/csv'
+        csv_foldername = f'{self.data_dir}/csv'
         os.makedirs(csv_foldername, exist_ok=True)
 
-        csv_filename = csv_foldername + '/parameters.csv'
+        csv_filename = f'{csv_foldername}/parameters.csv'
 
         f = open(csv_filename, 'w')
         writer = csv.writer(f)
@@ -684,10 +644,10 @@ class NormalController:
             writer.writerow([key, val])
         f.close()
 
-        pickle_foldername = self.data_dir + '/pickle'
+        pickle_foldername = f'{self.data_dir}/pickle'
         os.makedirs(pickle_foldername, exist_ok=True)
 
-        pickle_filename = pickle_foldername + '/parameters.pickle'
+        pickle_filename = f'{pickle_foldername}/parameters.pickle'
 
         with open(pickle_filename, 'wb') as f:
             pickle.dump(self.parameters, f, protocol=pickle.HIGHEST_PROTOCOL)
@@ -703,10 +663,10 @@ class NormalController:
         self.rlg_statistics["num_steps"] = self.rlg.num_steps()
         self.rlg_statistics["total_reward"] = self.rlg.total_reward()
 
-        pickle_foldername = self.data_dir + '/pickle'
+        pickle_foldername = f'{self.data_dir}/pickle'
         os.makedirs(pickle_foldername, exist_ok=True)
 
-        with open(pickle_foldername + '/rlg_statistics.pickle', 'wb') as f:
+        with open(f'{pickle_foldername}/rlg_statistics.pickle', 'wb') as f:
             pickle.dump(self.rlg_statistics, f)
 
     def save_seed_state(self):
@@ -716,27 +676,27 @@ class NormalController:
         File format: .pickle (random and numpy) and .pt (pytorch)
         """
 
-        pickle_foldername = self.data_dir + '/pickle'
+        pickle_foldername = f'{self.data_dir}/pickle'
         os.makedirs(pickle_foldername, exist_ok=True)
 
         random_random_state = random.getstate()
         numpy_random_state = np.random.get_state()
 
-        with open(pickle_foldername + '/random_random_state.pickle', 'wb') as f:
+        with open(f'{pickle_foldername}/random_random_state.pickle', 'wb') as f:
             pickle.dump(random_random_state, f)
 
-        with open(pickle_foldername + '/numpy_random_state.pickle', 'wb') as f:
+        with open(f'{pickle_foldername}/numpy_random_state.pickle', 'wb') as f:
             pickle.dump(numpy_random_state, f)
 
-        pt_foldername = self.data_dir + '/pt'
+        pt_foldername = f'{self.data_dir}/pt'
         os.makedirs(pt_foldername, exist_ok=True)
 
         torch_random_state = torch.get_rng_state()
-        torch.save(torch_random_state, pt_foldername + '/torch_random_state.pt')
+        torch.save(torch_random_state, f'{pt_foldername}/torch_random_state.pt')
 
         if self.parameters["device"] == 'cuda':
             torch_cuda_random_state = torch.cuda.get_rng_state()
-            torch.save(torch_cuda_random_state, pt_foldername + '/torch_cuda_random_state.pt')
+            torch.save(torch_cuda_random_state, f'{pt_foldername}/torch_cuda_random_state.pt')
 
 
 def objective(trial):

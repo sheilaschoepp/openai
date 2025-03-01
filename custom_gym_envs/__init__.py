@@ -34,8 +34,8 @@ register(
 # FetchReach
 
 register(
-    id="FetchReachEnv-v0",
-    entry_point="custom_gym_envs.envs.fetchreach.FetchReachEnv_v0_Normal.fetch.reach:FetchReachEnv",
+    id="FetchReach-F0",
+    entry_point="custom_gym_envs.envs.fetchreach.FetchReachF0_Normal.reach:MujocoFetchReachEnv",
     max_episode_steps=50,
 )
 register(

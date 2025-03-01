@@ -1,9 +1,11 @@
 import gymnasium as gym
 import time
 
+import gymnasium_robotics
+
 import custom_gym_envs
 
-env = gym.make("AntEnv-F3", render_mode="human", camera_name="free")
+env = gym.make("FetchReach-F0", render_mode="human")
 
 
 for episode in range(1000):

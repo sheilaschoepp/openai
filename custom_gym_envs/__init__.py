@@ -38,6 +38,7 @@ register(
     entry_point="custom_gym_envs.envs.fetchreach.FetchReachF0_Normal.reach:MujocoFetchReachEnv",
     max_episode_steps=50,
 )
+
 register(
     id="FetchReachEnv-v1",
     entry_point="custom_gym_envs.envs.fetchreach.FetchReachEnv_v1_BrokenShoulderLiftJoint.fetch.reach:FetchReachEnv",

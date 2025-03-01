@@ -33,9 +33,9 @@ import custom_gym_envs  # do not delete; required for custom gym environments
 
 parser = argparse.ArgumentParser(description='PyTorch Soft Actor-Critic Arguments')
 
-parser.add_argument('-e', '--ab_env_name', default='Ant-v5', # Ant-v5 or FetchReachDense-v3
+parser.add_argument('-e', '--ab_env_name', default='Ant-v5',
                     help='name of abnormal (malfunctioning) MuJoCo Gym environment (default: Ant-v5)')
-parser.add_argument('-t', '--ab_time_steps', type=int, default=3000000, metavar='N', # 3000000 (Ant) or 30000 (Fetch)
+parser.add_argument('-t', '--ab_time_steps', type=int, default=3000000, metavar='N',
                     help='number of time steps in abnormal (malfunctioning) MuJoCo Gym environment (default: 3000000)')
 
 parser.add_argument('-crb', '--clear_replay_buffer', default=False, action='store_true',
@@ -94,8 +94,8 @@ class AbnormalController:
 
         if self.parameters["wandb"]:
 
-            env = args.ab_env_name.split('-')[0].lower()
-            version = args.ab_env_name.split('-')[1].lower()
+            env = self.parameters["ab_env_name"].split('-')[0].lower()
+            version = self.parameters["ab_env_name"].split('-')[1].lower()
             prefix = f'{env}{version}'
 
             wandb.init(
@@ -505,7 +505,7 @@ class AbnormalController:
 
         pickle_foldername = f'{self.load_data_dir}/pickle'
 
-        with open('{pickle_foldername}/rlg_statistics.pickle', 'rb') as f:
+        with open(f'{pickle_foldername}/rlg_statistics.pickle', 'rb') as f:
             self.rlg_statistics = pickle.load(f)
 
     def load_seed_state(self):

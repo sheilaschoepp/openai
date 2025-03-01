@@ -66,7 +66,7 @@ parser.add_argument('--max_grad_norm', type=float, default=0.5, metavar='G',
 
 parser.add_argument('--use_gae', default=False, action='store_true',
                     help=' if true, use generalized advantage estimation (default: False)')
-parser.add_argument('--gae_lambda', type=float, default=0.9327, metavar='G',
+parser.add_argument('--gae_lambda', type=float, default=0.9327, metavar='G', # todo: in optuna, set to 0 if use_gae is false
                     help='generalized advantage estimation smoothing parameter (default: 0.9327)')
 
 parser.add_argument('-nr', '--normalize_rewards', default=False, action='store_true',

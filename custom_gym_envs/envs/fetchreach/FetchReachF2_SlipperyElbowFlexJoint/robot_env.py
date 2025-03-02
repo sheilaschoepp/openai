@@ -2,6 +2,7 @@
 modifications:
 1. added step() method overriding the step() method in the parent class BaseRobotEnv
    and added slippage fault code in this newly added step() method
+2 and 3 are part of section 1 but identify key parts of the step() method that were modified
 """
 
 import copy

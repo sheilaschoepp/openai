@@ -5,7 +5,7 @@ import gymnasium_robotics
 
 import custom_gym_envs
 
-env = gym.make("FetchReach-F1", render_mode="human", width=1600, height=800)
+env = gym.make("FetchReach-F2", render_mode="human", width=1600, height=800)
 
 
 for episode in range(1000):

@@ -1,7 +1,7 @@
 """
 modifications:
 1. changed from 'from gymnasium_robotics.envs.robot_env import MujocoPyRobotEnv, MujocoRobotEnv' to
-   'from custom_gym_envs.envs.fetchreach.FetchReachF0_Normal.robot_env import MujocoPyRobotEnv, MujocoRobotEnv'
+   'from custom_gym_envs.envs.fetchreach.FetchReachF2_SlipperyElbowFlexJoint.robot_env import MujocoPyRobotEnv, MujocoRobotEnv'
 2. modified _sample_goal method to eliminate unreachable goals in table
 """
 
@@ -9,7 +9,7 @@ from typing import Union
 
 import numpy as np
 
-from custom_gym_envs.envs.fetchreach.FetchReachF0_Normal.robot_env import MujocoPyRobotEnv, MujocoRobotEnv
+from custom_gym_envs.envs.fetchreach.FetchReachF2_SlipperyElbowFlexJoint.robot_env import MujocoPyRobotEnv, MujocoRobotEnv
 from gymnasium_robotics.utils import rotations
 
 DEFAULT_CAMERA_CONFIG = {

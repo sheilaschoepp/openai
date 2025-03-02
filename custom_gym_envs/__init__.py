@@ -46,27 +46,7 @@ register(
 )
 
 register(
-    id="FetchReachEnv-v2",
-    entry_point="custom_gym_envs.envs.fetchreach.FetchReachEnv_v2_BrokenElbowFlexJoint.fetch.reach:FetchReachEnv",
-    max_episode_steps=50,
-)
-register(
-    id="FetchReachEnv-v3",
-    entry_point="custom_gym_envs.envs.fetchreach.FetchReachEnv_v3_BrokenWristFlexJoint.fetch.reach:FetchReachEnv",
-    max_episode_steps=50,
-)
-register(
-    id="FetchReachEnv-v4",
-    entry_point="custom_gym_envs.envs.fetchreach.FetchReachEnv_v4_BrokenShoulderLiftSensor.fetch.reach:FetchReachEnv",
-    max_episode_steps=50,
-)
-register(
-    id="FetchReachEnv-v5",
-    entry_point="custom_gym_envs.envs.fetchreach.FetchReachEnv_v5_BrokenShoulderLiftSensor.fetch.reach:FetchReachEnv",
-    max_episode_steps=50,
-)
-register(
-    id="FetchReachEnv-v6",
-    entry_point="custom_gym_envs.envs.fetchreach.FetchReachEnv_v6_ElbowFlexNoisyMovement.fetch.reach:FetchReachEnv",
+    id="FetchReach-F2",
+    entry_point="custom_gym_envs.envs.fetchreach.FetchReachF2_SlipperyElbowFlexJoint.reach:MujocoFetchReachEnv",
     max_episode_steps=50,
 )

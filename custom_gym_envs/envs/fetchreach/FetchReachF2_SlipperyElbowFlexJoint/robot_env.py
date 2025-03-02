@@ -1,3 +1,9 @@
+"""
+modifications:
+1. added step() method overriding the step() method in the parent class BaseRobotEnv
+   and added slippage fault code in this newly added step() method
+"""
+
 import copy
 import os
 from typing import Optional, Union
@@ -323,6 +329,70 @@ class MujocoRobotEnv(BaseRobotEnv):
         """
         self._render_callback()
         return self.mujoco_renderer.render(self.render_mode)
+
+    # modification 1 (start)
+    def step(self, action):
+        """Run one timestep of the environment's dynamics using the agent actions.
+
+        Args:
+            action (np.ndarray): Control action to be applied to the agent and update the simulation. Should be of shape :attr:`action_space`.
+
+        Returns:
+            observation (dictionary): Next observation due to the agent actions .It should satisfy the `GoalEnv` :attr:`observation_space`.
+            reward (integer): The reward as a result of taking the action. This is calculated by :meth:`compute_reward` of `GoalEnv`.
+            terminated (boolean): Whether the agent reaches the terminal state. This is calculated by :meth:`compute_terminated` of `GoalEnv`.
+            truncated (boolean): Whether the truncation condition outside the scope of the MDP is satisfied. Timically, due to a timelimit, but
+            it is also calculated in :meth:`compute_truncated` of `GoalEnv`.
+            info (dictionary): Contains auxiliary diagnostic information (helpful for debugging, learning, and logging). In this case there is a single
+            key `is_success` with a boolean value, True if the `achieved_goal` is the same as the `desired_goal`.
+        """
+        if np.array(action).shape != self.action_space.shape:
+            raise ValueError("Action dimension mismatch")
+
+        action = np.clip(action, self.action_space.low, self.action_space.high)
+
+        # modification 2 (start)
+        # obtain joint value before applying action
+        old_value = self._utils.get_joint_qpos(
+            self.model, self.data, "robot0:elbow_flex_joint"
+        ).copy()
+        # modification 2 (end)
+
+        self._set_action(action)
+
+        self._mujoco_step(action)
+
+        self._step_callback()
+
+        # modification 3 (start)
+        new_value = self._utils.get_joint_qpos(
+            self.model, self.data, "robot0:elbow_flex_joint"
+        ).copy()
+        delta = new_value - old_value
+        # slippery_value = old_value + delta * self.np_random.normal(0, 0.1)
+        slippery_value = new_value + (delta != 0) * 0.05
+        self._utils.set_joint_qpos(
+            self.model, self.data, "robot0:elbow_flex_joint", slippery_value
+        )
+        self._mujoco.mj_forward(self.model, self.data)
+        # modification 3 (end)
+
+        if self.render_mode == "human":
+            self.render()
+        obs = self._get_obs()
+
+        info = {
+            "is_success": self._is_success(obs["achieved_goal"], self.goal),
+        }
+
+        terminated = self.compute_terminated(obs["achieved_goal"], self.goal, info)
+        truncated = self.compute_truncated(obs["achieved_goal"], self.goal, info)
+
+        reward = self.compute_reward(obs["achieved_goal"], self.goal, info)
+
+        return obs, reward, terminated, truncated, info
+
+    # modification 1 (end)
 
     def close(self):
         """Close contains the code necessary to "clean up" the environment.

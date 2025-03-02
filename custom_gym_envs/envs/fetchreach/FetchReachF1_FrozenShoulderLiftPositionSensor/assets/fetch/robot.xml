@@ -1,5 +1,4 @@
 <!--
-
 modifications:
 1. name="robot0:shoulder_pan_link", added class="robot0:red"
 2. name="robot0:shoulder_lift_link", class="robot0:blue" changed to class="robot0:red"

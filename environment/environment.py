@@ -42,7 +42,7 @@ class Environment(BaseEnvironment):
             self.env = gym.make(env_name, render_mode=render_mode)
         elif "Fetch" in env_name:
             gym.register_envs(gymnasium_robotics)
-            self.env = gym.make(env_name, render_mode=render_mode)
+            self.env = gym.make(env_name, render_mode=render_mode, reward_type="dense")
             self.env = CustomFetchFlattenObservation(self.env)
         else:
             exit("Environment not supported.")

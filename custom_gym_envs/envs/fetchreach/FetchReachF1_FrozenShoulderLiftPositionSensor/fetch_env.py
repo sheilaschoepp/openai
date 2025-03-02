@@ -3,13 +3,14 @@ modifications:
 1. changed from 'from gymnasium_robotics.envs.robot_env import MujocoPyRobotEnv, MujocoRobotEnv' to
    'from custom_gym_envs.envs.fetchreach.FetchReachF0_Normal.robot_env import MujocoPyRobotEnv, MujocoRobotEnv'
 2. modified _sample_goal method to eliminate unreachable goals in table
+3. added a spoofed qpos for the shoulder-lift joint to be 1.5
 """
 
 from typing import Union
 
 import numpy as np
 
-from custom_gym_envs.envs.fetchreach.FetchReachF0_Normal.robot_env import MujocoPyRobotEnv, MujocoRobotEnv
+from custom_gym_envs.envs.fetchreach.FetchReachF1_FrozenShoulderLiftPositionSensor.robot_env import MujocoPyRobotEnv, MujocoRobotEnv
 from gymnasium_robotics.utils import rotations
 
 DEFAULT_CAMERA_CONFIG = {
@@ -368,6 +369,28 @@ class MujocoFetchEnv(get_base_fetch_env(MujocoRobotEnv)):
         gripper_vel = (
             robot_qvel[-2:] * dt
         )  # change to a scalar if the gripper is made symmetric
+
+        # modification 3 (start)
+
+        # temporarily set the shoulder_lift_joint to 1.5 in the simulator
+        old_value = self._utils.get_joint_qpos(
+            self.model, self.data, "robot0:shoulder_lift_joint"
+        )
+        self._utils.set_joint_qpos(
+            self.model, self.data, "robot0:shoulder_lift_joint", 1.5
+        )
+        self._mujoco.mj_forward(self.model, self.data)
+
+        # read the “faulty” grip position while joint=1.5
+        grip_pos = self._utils.get_site_xpos(self.model, self.data, "robot0:grip")
+
+        # restore the real joint value so the physics stays correct
+        self._utils.set_joint_qpos(
+            self.model, self.data, "robot0:shoulder_lift_joint", old_value
+        )
+        self._mujoco.mj_forward(self.model, self.data)
+
+        # modification 3 (end)
 
         return (
             grip_pos,

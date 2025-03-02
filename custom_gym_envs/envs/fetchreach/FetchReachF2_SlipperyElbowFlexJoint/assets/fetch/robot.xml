@@ -1,7 +1,6 @@
 <!--
 modifications:
-1. name="robot0:upperarm_roll_link", added class="robot0:red"
-2. name="robot0:elbow_flex_link", class="robot0:blue" changed to class="robot0:red"
+1. name="robot0:elbow_flex_joint_marker", added site to serve as a marker for the elbow_flex_joint with a fault
 -->
 <mujoco>
 	<body mocap="true" name="robot0:mocap" pos="0 0 0">
@@ -57,11 +56,17 @@ modifications:
 					<body name="robot0:upperarm_roll_link" pos="0.219 0 0">
 						<inertial diaginertia="0.0047 0.0045 0.0019" mass="2.3311" pos="0.1165 0.0014 0" quat="-0.0136 0.707 0.0136 0.707"></inertial>
 						<joint axis="1 0 0" limited="false" name="robot0:upperarm_roll_joint"></joint>
-						<geom mesh="robot0:upperarm_roll_link" name="robot0:upperarm_roll_link" material="robot0:arm_mat"  class="robot0:red"></geom> <!-- modification 1 -->
+						<geom mesh="robot0:upperarm_roll_link" name="robot0:upperarm_roll_link" material="robot0:arm_mat"></geom>
 						<body name="robot0:elbow_flex_link" pos="0.133 0 0">
 							<inertial diaginertia="0.0086 0.0084 0.002" mass="2.1299" pos="0.1279 0.0073 0" quat="0.4332 0.4332 0.5589 0.5589"></inertial>
 							<joint axis="0 1 0" limited="true" name="robot0:elbow_flex_joint" range="-2.251 2.251"></joint>
-							<geom mesh="robot0:elbow_flex_link" name="robot0:elbow_flex_link" material="robot0:arm_mat" class="robot0:red"></geom> <!-- modification 2 -->
+							<geom mesh="robot0:elbow_flex_link" name="robot0:elbow_flex_link" material="robot0:arm_mat" class="robot0:blue"></geom>
+							<!-- modification 1 -->
+							<site name="robot0:elbow_flex_joint_marker"
+								  type="capsule"
+								  size="0.06"
+								  pos="0 0 0"
+								  rgba="0.4 0 0 1"/>
 							<body name="robot0:forearm_roll_link" pos="0.197 0 0">
 								<inertial diaginertia="0.0035 0.0031 0.0015" mass="1.6563" pos="0.1097 -0.0266 0" quat="-0.0715 0.7035 0.0715 0.7035"></inertial>
 								<joint armature="2.7538" axis="1 0 0" damping="3.5247" frictionloss="0" limited="false" name="robot0:forearm_roll_joint" stiffness="10"></joint>

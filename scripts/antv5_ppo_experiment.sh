@@ -2,7 +2,7 @@
 
 SCRIPT="/home/sschoepp/Documents/openai/controllers/ppo/ppo_n_controller.py"
 ARGS="--n_env_name=Ant-v5 \
-      --n_time_steps=20000000 \
+      --n_time_steps=40000000 \
       --lr=0.0001672 \
       --linear_lr_decay \
       --gamma=0.9960 \

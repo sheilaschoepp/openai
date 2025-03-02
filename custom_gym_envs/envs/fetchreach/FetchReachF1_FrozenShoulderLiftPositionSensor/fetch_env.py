@@ -382,17 +382,11 @@ class MujocoFetchEnv(get_base_fetch_env(MujocoRobotEnv)):
         self._mujoco.mj_forward(self.model, self.data)
 
         # read the “faulty” grip position while joint=1.5
-        grip_pos = self._utils.get_site_xpos(self.model, self.data, "robot0:grip")
+        # added copy to avoid returning to the original value in subsequent calls
+        grip_pos = self._utils.get_site_xpos(self.model, self.data, "robot0:grip").copy()
 
-        # restore the real joint value so the physics stays correct
-        self._utils.set_joint_qpos(
-            self.model, self.data, "robot0:shoulder_lift_joint", old_value
-        )
-        self._mujoco.mj_forward(self.model, self.data)
-
-        # modification 3 (end)
-
-        return (
+        # create observation
+        obs = (
             grip_pos,
             object_pos,
             object_rel_pos,
@@ -403,6 +397,24 @@ class MujocoFetchEnv(get_base_fetch_env(MujocoRobotEnv)):
             grip_velp,
             gripper_vel,
         )
+
+        # restore the real joint value so the physics stays correct
+        # note: this introduces a small inconsistency as setting the old
+        # value may not be exactly the same as the original value
+        # E.g., initial grip_pos=[1.34183525 0.74910104 0.53472381]
+        #       final   grip_pos=[1.34183499 0.74910103 0.53472504]
+        self._utils.set_joint_qpos(
+            self.model, self.data, "robot0:shoulder_lift_joint", old_value
+        )
+        self._mujoco.mj_forward(self.model, self.data)
+
+        # read the “faulty” grip position after old_value restored
+        # for consistency confirmation; not used in the observation
+        grip_pos = self._utils.get_site_xpos(self.model, self.data, "robot0:grip")
+
+        return obs
+
+        # modification 3 (end)
 
     def _get_gripper_xpos(self):
         body_id = self._model_names.body_name2id["robot0:gripper_link"]

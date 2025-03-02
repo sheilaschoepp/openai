@@ -6,4 +6,4 @@ modification:
 
 """
 
-from custom_gym_envs.envs.fetchreach.FetchReachF1_FrozenShoulderLiftSensor.fetch_env import MujocoFetchEnv, MujocoPyFetchEnv # modification 1
+from custom_gym_envs.envs.fetchreach.FetchReachF1_FrozenShoulderLiftPositionSensor.fetch_env import MujocoFetchEnv, MujocoPyFetchEnv # modification 1

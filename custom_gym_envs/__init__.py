@@ -41,7 +41,7 @@ register(
 
 register(
     id="FetchReach-F1",
-    entry_point="custom_gym_envs.envs.fetchreach.FetchReachF1_FrozenShoulderLiftSensor.reach:MujocoFetchReachEnv",
+    entry_point="custom_gym_envs.envs.fetchreach.FetchReachF1_FrozenShoulderLiftPositionSensor.reach:MujocoFetchReachEnv",
     max_episode_steps=50,
 )
 

@@ -1,7 +1,7 @@
 """
 modifications:
 1. changed from 'from gymnasium_robotics.envs.fetch import MujocoFetchEnv, MujocoPyFetchEnv'
-   to 'from custom_gym_envs.envs.fetchreach.FetchReachF1_FrozenShoulderLiftSensor import MujocoFetchEnv, MujocoPyFetchEnv'
+   to 'from custom_gym_envs.envs.fetchreach.FetchReachF1_FrozenShoulderLiftPositionSensor import MujocoFetchEnv, MujocoPyFetchEnv'
 2. changed from 'distance_threshold=0.05' to 'distance_threshold=0.001' in MujocoPyFetchReachEnv
 3. changed from 'def __init__(self, reward_type: str = "sparse", **kwargs)' to
    'def __init__(self, reward_type: str = "dense", **kwargs)'
@@ -12,7 +12,7 @@ import os
 
 from gymnasium.utils.ezpickle import EzPickle
 
-from custom_gym_envs.envs.fetchreach.FetchReachF1_FrozenShoulderLiftSensor import MujocoFetchEnv, MujocoPyFetchEnv # modification 1
+from custom_gym_envs.envs.fetchreach.FetchReachF1_FrozenShoulderLiftPositionSensor import MujocoFetchEnv, MujocoPyFetchEnv # modification 1
 
 # Ensure we get the path separator correct on windows
 MODEL_XML_PATH = os.path.join("fetch", "reach.xml")

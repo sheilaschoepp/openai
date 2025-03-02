@@ -10,7 +10,7 @@ from typing import Union
 
 import numpy as np
 
-from custom_gym_envs.envs.fetchreach.FetchReachF1_FrozenShoulderLiftSensor.robot_env import MujocoPyRobotEnv, MujocoRobotEnv
+from custom_gym_envs.envs.fetchreach.FetchReachF1_FrozenShoulderLiftPositionSensor.robot_env import MujocoPyRobotEnv, MujocoRobotEnv
 from gymnasium_robotics.utils import rotations
 
 DEFAULT_CAMERA_CONFIG = {

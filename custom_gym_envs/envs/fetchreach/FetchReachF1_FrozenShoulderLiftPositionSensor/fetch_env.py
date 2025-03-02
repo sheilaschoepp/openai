@@ -1,7 +1,7 @@
 """
 modifications:
 1. changed from 'from gymnasium_robotics.envs.robot_env import MujocoPyRobotEnv, MujocoRobotEnv' to
-   'from custom_gym_envs.envs.fetchreach.FetchReachF0_Normal.robot_env import MujocoPyRobotEnv, MujocoRobotEnv'
+   'from custom_gym_envs.envs.fetchreach.FetchReachF1_FrozenShoulderLiftPositionSensor.robot_env import MujocoPyRobotEnv, MujocoRobotEnv'
 2. modified _sample_goal method to eliminate unreachable goals in table
 3. added a spoofed qpos for the shoulder-lift joint to be 1.5
 """

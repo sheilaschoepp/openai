@@ -1,7 +1,7 @@
 """
 modifications:
-- changed class name from "AntEnv" to "AntEnvF2"
-- changed xml_file from "ant.xml" to "{path}" in __init__ method
+1. changed class name from "AntEnv" to "AntEnvF2"
+2. changed xml_file from "ant.xml" to "{path}" in __init__ method
 """
 
 __credits__ = ["Kallinteris-Andreas"]
@@ -24,7 +24,7 @@ DEFAULT_CAMERA_CONFIG = {
 }
 
 
-class AntEnvF2(MujocoEnv, utils.EzPickle): # modification: changed class name from "AntEnv" to "AntEnvF2"
+class AntEnvF2(MujocoEnv, utils.EzPickle): # modification 1
     r"""
     ## Description
     This environment is based on the one introduced by Schulman, Moritz, Levine, Jordan, and Abbeel in ["High-Dimensional Continuous Control Using Generalized Advantage Estimation"](https://arxiv.org/abs/1506.02438).
@@ -240,7 +240,7 @@ class AntEnvF2(MujocoEnv, utils.EzPickle): # modification: changed class name fr
 
     def __init__(
         self,
-        xml_file: str = "/home/sschoepp/Documents/openai/custom_gym_envs/envs/ant/xml/AntEnvF2_Hip4ROM.xml", # modification: changed xml_file from "ant.xml" to "{path}"
+        xml_file: str = "/home/sschoepp/Documents/openai/custom_gym_envs/envs/ant/xml/AntEnvF2_Hip4ROM.xml", # modification 2
         frame_skip: int = 5,
         default_camera_config: Dict[str, Union[float, int]] = DEFAULT_CAMERA_CONFIG,
         forward_reward_weight: float = 1,

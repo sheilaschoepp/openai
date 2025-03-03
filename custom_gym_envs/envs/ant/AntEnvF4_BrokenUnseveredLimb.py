@@ -1,10 +1,10 @@
 """
 modifications:
-- changed class name from "AntEnv" to "AntEnvF4"
-- changed xml_file from "ant.xml" to "{path}" in __init__ method
-- modified __init__ method by changing obs_size (subtract 1 from qpos
-and qvel and subtract 1 from cfrc_ext)
-- modified _get_obs method by removing the last element for position
+1. changed class name from "AntEnv" to "AntEnvF4"
+2. changed xml_file from "ant.xml" to "{path}" in __init__ method
+3. modified __init__ method by changing obs_size (subtract 1 from qpos
+and qvel and subtract 1 (6) from cfrc_ext)
+4. modified _get_obs method by removing the last element for position
 and velocity, and the last 6 elements of contact_force (Note: these
 were added because we added an extra joint but this joint is not
 controlled, so we can remove them to retain the state dimension)
@@ -30,7 +30,7 @@ DEFAULT_CAMERA_CONFIG = {
 }
 
 
-class AntEnvF4(MujocoEnv, utils.EzPickle): # modification: changed class name from "AntEnv" to "AntEnvF4"
+class AntEnvF4(MujocoEnv, utils.EzPickle): # modification 1
     r"""
     ## Description
     This environment is based on the one introduced by Schulman, Moritz, Levine, Jordan, and Abbeel in ["High-Dimensional Continuous Control Using Generalized Advantage Estimation"](https://arxiv.org/abs/1506.02438).
@@ -246,7 +246,7 @@ class AntEnvF4(MujocoEnv, utils.EzPickle): # modification: changed class name fr
 
     def __init__(
         self,
-        xml_file: str = "/home/sschoepp/Documents/openai/custom_gym_envs/envs/ant/xml/AntEnvF4_BrokenUnseveredLimb.xml", # modification: changed xml_file from "ant.xml" to "{path}"
+        xml_file: str = "/home/sschoepp/Documents/openai/custom_gym_envs/envs/ant/xml/AntEnvF4_BrokenUnseveredLimb.xml", # modification 2
         frame_skip: int = 5,
         default_camera_config: Dict[str, Union[float, int]] = DEFAULT_CAMERA_CONFIG,
         forward_reward_weight: float = 1,
@@ -319,9 +319,9 @@ class AntEnvF4(MujocoEnv, utils.EzPickle): # modification: changed class name fr
             "render_fps": int(np.round(1.0 / self.dt)),
         }
 
-        obs_size = (self.data.qpos.size - 1) + (self.data.qvel.size - 1) # modification: subtract 1 from qpos and qvel
+        obs_size = (self.data.qpos.size - 1) + (self.data.qvel.size - 1) # modification 3
         obs_size -= 2 * exclude_current_positions_from_observation
-        obs_size += self.data.cfrc_ext[1:-1].size * include_cfrc_ext_in_observation # modification: subtract 1 from cfrc_ext
+        obs_size += self.data.cfrc_ext[1:-1].size * include_cfrc_ext_in_observation # modification 3
 
         self.observation_space = Box(
             low=-np.inf, high=np.inf, shape=(obs_size,), dtype=np.float64
@@ -410,14 +410,14 @@ class AntEnvF4(MujocoEnv, utils.EzPickle): # modification: changed class name fr
         return reward, reward_info
 
     def _get_obs(self):
-        position = self.data.qpos.flatten()[:-1] # modification: remove last element
-        velocity = self.data.qvel.flatten()[:-1] # modification: remove last element
+        position = self.data.qpos.flatten()[:-1] # modification 4
+        velocity = self.data.qvel.flatten()[:-1] # modification 4
 
         if self._exclude_current_positions_from_observation:
             position = position[2:]
 
         if self._include_cfrc_ext_in_observation:
-            contact_force = self.contact_forces[1:].flatten()[:-6] # modification: remove last 6 elements
+            contact_force = self.contact_forces[1:].flatten()[:-6] # modification 4
             return np.concatenate((position, velocity, contact_force))
         else:
             return np.concatenate((position, velocity))

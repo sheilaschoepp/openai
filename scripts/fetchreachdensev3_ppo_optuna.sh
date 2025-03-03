@@ -1,12 +1,12 @@
 #!/bin/bash
 
 # Define session range and maximum active sessions
-SESSION_START=51 # start at 1
-SESSION_END=400
+SESSION_START=1 # start at 1
+SESSION_END=50
 MAX_ACTIVE_SESSIONS=21
 
 # Define command to run in each session
-COMMAND="python controllers/ppo/ppo_n_controller.py -e FetchReachDense-v3 -t 10000000 -tef 50000 -o"
+COMMAND="python controllers/ppo/ppo_n_controller.py -e FetchReach-F0 -t 57344 -tef 8192 -o"
 
 # Function to get the count of active tmux sessions
 get_active_tmux_sessions() {

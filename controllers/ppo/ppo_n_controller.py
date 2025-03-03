@@ -402,7 +402,7 @@ class NormalController:
                 # (only if this code is uncommented and 'x' is set
                 # properly)
                 # x = 4000
-                # if self.rlg.num_steps() % x == 0:
+                # if self.rlg.num_steps() / x == 2:
                 #     break
 
             # learning complete

@@ -4,8 +4,8 @@ import time
 
 import custom_gym_envs
 
-# env = gym.make("FetchReach-F1", render_mode="human", width=1600, height=800)
-env = gym.make("FetchReachDense-v3")
+env = gym.make("AntEnv-F2", render_mode="human", width=1600, height=800)
+# env = gym.make("AntEnv-F1")
 
 for episode in range(1000):
     env.reset(seed=episode)

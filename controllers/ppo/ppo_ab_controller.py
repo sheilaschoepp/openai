@@ -320,6 +320,10 @@ class AbnormalController:
                          num_steps=self.rlg_statistics["num_steps"],
                          num_episodes=self.rlg_statistics["num_episodes"])
 
+        # with the new gymnasium seeding method, we need to reload data
+        # after the call to rl_init, which resets and seeds the environment
+        self.rlg.rl_env_message(f'load, {self.load_data_dir}')
+
         # save the agent model and evaluate the model before any learning
         # self.rlg.rl_agent_message(f'save_model, {self.data_dir}, {self.parameters["n_time_steps"]}')  # not needed as we already have this model saved
         self.evaluate_model(self.rlg.num_steps())
@@ -458,6 +462,8 @@ class AbnormalController:
         self.rlg.rl_env_message(f'load, {self.load_data_dir}')  # load environment data
 
         self.rlg.rl_agent_message(f'load, {self.load_data_dir}, {self.parameters["n_time_steps"]}')
+        # consistency check: the following must be commented out for a
+        # consistency check (see n_controller)
         self.rlg.rl_agent_message("reset_lr")
         self.agent.loss_data = self.loss_data
 

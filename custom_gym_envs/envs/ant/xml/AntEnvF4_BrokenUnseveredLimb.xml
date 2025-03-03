@@ -1,8 +1,8 @@
 <!--
 modifications:
-- name="fourth_ankle_geom", fromto="0.0 0.0 0.0 0.4 -0.4 0.0" changed to fromto="0.0 0.0 0.0 0.2 -0.2 0.0"
-- name="fourth_ankle_geom", added rgba="0.4 0 0 1"
-- name="ankle_4_2", add new body
+1. name="fourth_ankle_geom", fromto="0.0 0.0 0.0 0.4 -0.4 0.0" changed to fromto="0.0 0.0 0.0 0.2 -0.2 0.0"
+2. name="fourth_ankle_geom", added rgba="0.4 0 0 1"
+3. name="ankle_4_2", add new body
 
 notes:
 - this fault adds an inconsistency (e.g., if we change the settings to simulate the normal xml,
@@ -81,12 +81,9 @@ notes:
           <geom fromto="0.0 0.0 0.0 0.2 -0.2 0.0" name="rightback_leg_geom" size="0.08" type="capsule"/>
           <body pos="0.2 -0.2 0">
             <joint axis="1 1 0" name="ankle_4" pos="0.0 0.0 0.0" range="30 70" type="hinge" damping="0.0"/>
-            <!--
-            modification:
-            fromto="0.0 0.0 0.0 0.4 -0.4 0.0" changed to fromto="0.0 0.0 0.0 0.2 -0.2 0.0" to shorten the limb segment
-            -->
+            <!-- modification 1 & 2 -->
             <geom fromto="0.0 0.0 0.0 0.2 -0.2 0.0" name="fourth_ankle_geom" size="0.08" type="capsule"/>
-            <!-- modification: add new body (start) -->
+            <!-- modification 3 -->
             <body pos="0.2 -0.2 0">
               <!--
               use a free ball joint (limited="false") so the limb can rotate freely in all directions

@@ -2,9 +2,8 @@
 modifications:
 1. changed from 'from gymnasium_robotics.envs.fetch import MujocoFetchEnv, MujocoPyFetchEnv'
    to 'from custom_gym_envs.envs.fetchreach.FetchReachF2_SlipperyElbowFlexJoint import MujocoFetchEnv, MujocoPyFetchEnv'
-2. changed from 'distance_threshold=0.05' to 'distance_threshold=0.001' in MujocoPyFetchReachEnv
-3. changed from 'def __init__(self, reward_type: str = "sparse", **kwargs)' to
-   'def __init__(self, reward_type: str = "dense", **kwargs)'
+2. changed from 'distance_threshold=0.05' to 'distance_threshold=0.001' in MujocoFetchReachEnv and
+   MujocoPyFetchReachEnv
 """
 
 
@@ -132,7 +131,7 @@ class MujocoFetchReachEnv(MujocoFetchEnv, EzPickle):
     * v1: the environment depends on `mujoco_py` which is no longer maintained.
     """
 
-    def __init__(self, reward_type: str = "dense", **kwargs): # modification 3
+    def __init__(self, reward_type: str = "sparse", **kwargs):
         initial_qpos = {
             "robot0:slide0": 0.4049,
             "robot0:slide1": 0.48,
@@ -149,7 +148,7 @@ class MujocoFetchReachEnv(MujocoFetchEnv, EzPickle):
             target_offset=0.0,
             obj_range=0.15,
             target_range=0.15,
-            distance_threshold=0.05,
+            distance_threshold=0.001,  # modification 2
             initial_qpos=initial_qpos,
             reward_type=reward_type,
             **kwargs,
@@ -158,7 +157,7 @@ class MujocoFetchReachEnv(MujocoFetchEnv, EzPickle):
 
 
 class MujocoPyFetchReachEnv(MujocoPyFetchEnv, EzPickle):
-    def __init__(self, reward_type: str = "dense", **kwargs): # modification 3
+    def __init__(self, reward_type: str = "sparse", **kwargs):
         initial_qpos = {
             "robot0:slide0": 0.4049,
             "robot0:slide1": 0.48,

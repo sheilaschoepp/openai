@@ -4,9 +4,6 @@ modifications:
    to 'from custom_gym_envs.envs.fetchreach.FetchReachF0_Normal import MujocoFetchEnv, MujocoPyFetchEnv'
 2. changed from 'distance_threshold=0.05' to 'distance_threshold=0.001' in MujocoFetchReachEnv and
    MujocoPyFetchReachEnv
-2. changed from 'distance_threshold=0.05' to 'distance_threshold=0.001' in MujocoPyFetchReachEnv
-3. changed from 'def __init__(self, reward_type: str = "sparse", **kwargs)' to
-   'def __init__(self, reward_type: str = "dense", **kwargs)'
 """
 
 
@@ -134,7 +131,7 @@ class MujocoFetchReachEnv(MujocoFetchEnv, EzPickle):
     * v1: the environment depends on `mujoco_py` which is no longer maintained.
     """
 
-    def __init__(self, reward_type: str = "dense", **kwargs): # modification 3
+    def __init__(self, reward_type: str = "sparse", **kwargs):
         initial_qpos = {
             "robot0:slide0": 0.4049,
             "robot0:slide1": 0.48,
@@ -160,7 +157,7 @@ class MujocoFetchReachEnv(MujocoFetchEnv, EzPickle):
 
 
 class MujocoPyFetchReachEnv(MujocoPyFetchEnv, EzPickle):
-    def __init__(self, reward_type: str = "dense", **kwargs): # modification 3
+    def __init__(self, reward_type: str = "sparse", **kwargs):
         initial_qpos = {
             "robot0:slide0": 0.4049,
             "robot0:slide1": 0.48,

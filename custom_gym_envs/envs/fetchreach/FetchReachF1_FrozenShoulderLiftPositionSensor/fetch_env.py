@@ -433,6 +433,9 @@ class MujocoFetchEnv(get_base_fetch_env(MujocoRobotEnv)):
         # Reset buffers for joint states, actuators, warm-start, control buffers etc.
         self._mujoco.mj_resetData(self.model, self.data)
 
+        # this was added to fetch_env code on Nov 25, 2004 (and was not part of the original code)
+        # note: with this code included, it is impossible to reproduce the results
+        # seen with FetchReachDense-v3; removing it enables reproducing the results
         self.data.time = self.initial_time
         self.data.qpos[:] = np.copy(self.initial_qpos)
         self.data.qvel[:] = np.copy(self.initial_qvel)

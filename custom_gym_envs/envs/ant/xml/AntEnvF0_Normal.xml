@@ -1,8 +1,8 @@
 <!--
 modifications:
-- name="aux_4_geom", added rgba="0.4 0 0 1"
-- name="rightback_leg_geom", added rgba="0.4 0 0 1"
-- name="fourth_ankle_geom", added rgba="0.4 0 0 1"
+1. name="aux_4_geom", added rgba="0.4 0 0 1"
+2. name="rightback_leg_geom", added rgba="0.4 0 0 1"
+3. name="fourth_ankle_geom", added rgba="0.4 0 0 1"
 -->
 
 <mujoco model="ant">
@@ -71,13 +71,13 @@ modifications:
 
       <!-- back right leg -->
       <body name="right_back_leg" pos="0 0 0">
-        <geom fromto="0.0 0.0 0.0 0.2 -0.2 0.0" name="aux_4_geom" size="0.08" type="capsule" rgba="0.4 0 0 1"/> <!-- modification: added rgba="0.4 0 0 1" -->
+        <geom fromto="0.0 0.0 0.0 0.2 -0.2 0.0" name="aux_4_geom" size="0.08" type="capsule" rgba="0.4 0 0 1"/> <!-- modification 1 -->
         <body name="aux_4" pos="0.2 -0.2 0">
           <joint axis="0 0 1" name="hip_4" pos="0.0 0.0 0.0" range="-30 30" type="hinge"/>
-          <geom fromto="0.0 0.0 0.0 0.2 -0.2 0.0" name="rightback_leg_geom" size="0.08" type="capsule" rgba="0.4 0 0 1"/> <!-- modification: added rgba="0.4 0 0 1" -->
+          <geom fromto="0.0 0.0 0.0 0.2 -0.2 0.0" name="rightback_leg_geom" size="0.08" type="capsule" rgba="0.4 0 0 1"/> <!-- modification 2 -->
           <body pos="0.2 -0.2 0">
             <joint axis="1 1 0" name="ankle_4" pos="0.0 0.0 0.0" range="30 70" type="hinge"/>
-            <geom fromto="0.0 0.0 0.0 0.4 -0.4 0.0" name="fourth_ankle_geom" size="0.08" type="capsule" rgba="0.4 0 0 1"/> <!-- modification: added rgba="0.4 0 0 1" -->
+            <geom fromto="0.0 0.0 0.0 0.4 -0.4 0.0" name="fourth_ankle_geom" size="0.08" type="capsule" rgba="0.4 0 0 1"/> <!-- modification 3 -->
           </body>
         </body>
       </body>

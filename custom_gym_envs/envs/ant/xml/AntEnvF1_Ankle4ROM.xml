@@ -1,7 +1,7 @@
 <!--
 modifications:
-- name="ankle_4", range="30 70" changed to range="65 70"
-- name="ankle_4_joint_marker", added site to serve as a marker for the ankle_4 joint with a fault
+1. name="ankle_4", range="30 70" changed to range="65 70"
+2. name="ankle_4_joint_marker", added site to serve as a marker for the ankle_4 joint with a fault
 -->
 
 <mujoco model="ant">
@@ -75,10 +75,10 @@ modifications:
           <joint axis="0 0 1" name="hip_4" pos="0.0 0.0 0.0" range="-30 30" type="hinge"/>
           <geom fromto="0.0 0.0 0.0 0.2 -0.2 0.0" name="rightback_leg_geom" size="0.08" type="capsule"/>
           <body pos="0.2 -0.2 0">
-            <!-- modification: range="30 70" changed to range="65 70" -->
+            <!-- modification 1 -->
             <joint axis="1 1 0" name="ankle_4" pos="0.0 0.0 0.0" range="65 70" type="hinge"/>
             <geom fromto="0.0 0.0 0.0 0.4 -0.4 0.0" name="fourth_ankle_geom" size="0.08" type="capsule"/>
-            <!-- modification: added site to serve as a marker for the ankle_4 joint with a fault -->
+            <!-- modification 2 -->
             <site name="ankle_4_joint_marker" type="sphere" size="0.1" pos="0.0 0.0 0.0" rgba="0.4 0 0 1"/>
             </body>
         </body>

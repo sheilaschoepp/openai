@@ -1,5 +1,6 @@
 import gymnasium as gym
 import gymnasium_robotics
+import mujoco
 import numpy as np
 import os
 import pickle
@@ -32,6 +33,7 @@ class Environment(BaseEnvironment):
 
         super(Environment, self).__init__()
 
+        self.env_name = env_name
         self.seed = seed
 
         render_mode = None
@@ -42,7 +44,7 @@ class Environment(BaseEnvironment):
             self.env = gym.make(env_name, render_mode=render_mode)
         elif "Fetch" in env_name:
             gym.register_envs(gymnasium_robotics)
-            self.env = gym.make(env_name, render_mode=render_mode)
+            self.env = gym.make(env_name, render_mode=render_mode, reward_type="dense")
             self.env = CustomFetchFlattenObservation(self.env)
         else:
             exit("Environment not supported.")
@@ -185,7 +187,12 @@ class Environment(BaseEnvironment):
         with open(pickle_foldername + "/mujoco_qvel.pickle", "rb") as handle:
             mujoco_qvel = pickle.load(handle)
 
-        self.env.unwrapped.set_state(mujoco_qpos, mujoco_qvel)
+        # set the simulator's internal state to the saved state
+        self.env.unwrapped.data.qpos[:] = mujoco_qpos
+        self.env.unwrapped.data.qvel[:] = mujoco_qvel
+
+        # advance the simulation to apply the changes
+        mujoco.mj_forward(self.env.unwrapped.model, self.env.unwrapped.data)
 
     def env_load_rng(self, dir_):
         """

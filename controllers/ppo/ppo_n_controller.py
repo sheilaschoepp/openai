@@ -395,6 +395,20 @@ class NormalController:
                     self.rlg.rl_agent_message(f'save_model, {self.data_dir}, {self.rlg.num_steps()}')
                     self.evaluate_model(self.rlg.num_steps())
 
+                # consistency check: run the n_controller for '2x' steps
+                # and compare the evaluation output to the n_controller
+                # run for 'x' steps followed by the ab_controller for
+                # 'x' steps; the evaluation output should be the same
+                # (only if this code is uncommented and 'x' is set
+                # properly)
+                # x = 4000
+                # if self.rlg.num_steps() / x == 2:
+                #     break
+                #
+                # note: there is code in the ab_controller that must
+                # also be uncommented for this check (search for
+                # 'consistency check')
+
             # learning complete
             if self.rlg.num_steps() == self.parameters["n_time_steps"]:
                 break

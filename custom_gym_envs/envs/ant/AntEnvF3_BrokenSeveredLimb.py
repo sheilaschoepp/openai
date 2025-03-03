@@ -1,10 +1,7 @@
 """
-sources:
-- https://mujoco.readthedocs.io/en/latest/XMLreference.html#visual
-
 modifications:
-- changed class name from "AntEnv" to "AntEnvF3"
-- changed xml_file from "ant.xml" to "{path}" in __init__ method
+1. changed class name from "AntEnv" to "AntEnvF3"
+2. changed xml_file from "ant.xml" to "{path}" in __init__ method
 """
 
 __credits__ = ["Kallinteris-Andreas"]
@@ -23,11 +20,11 @@ DEFAULT_CAMERA_CONFIG = {
     "type": mujoco.mjtCamera.mjCAMERA_TRACKING,
     "trackbodyid": 1,
     "distance": 8.0,
-    # "elevation": -90.0,
+    "elevation": -90.0,
 }
 
 
-class AntEnvF3(MujocoEnv, utils.EzPickle): # modification: changed class name from "AntEnv" to "AntEnvF3"
+class AntEnvF3(MujocoEnv, utils.EzPickle): # modification 1
     r"""
     ## Description
     This environment is based on the one introduced by Schulman, Moritz, Levine, Jordan, and Abbeel in ["High-Dimensional Continuous Control Using Generalized Advantage Estimation"](https://arxiv.org/abs/1506.02438).
@@ -236,13 +233,14 @@ class AntEnvF3(MujocoEnv, utils.EzPickle): # modification: changed class name fr
         "render_modes": [
             "human",
             "rgb_array",
-            "depth_array"
+            "depth_array",
+            "rgbd_tuple",
         ],
     }
 
     def __init__(
         self,
-        xml_file: str = "/home/sschoepp/Documents/openai/custom_gym_envs/envs/ant/xml/AntEnvF3_BrokenSeveredLimb.xml", # modification: changed xml_file from "ant.xml" to "{path}"
+        xml_file: str = "/home/sschoepp/Documents/openai/custom_gym_envs/envs/ant/xml/AntEnvF3_BrokenSeveredLimb.xml", # modification 2
         frame_skip: int = 5,
         default_camera_config: Dict[str, Union[float, int]] = DEFAULT_CAMERA_CONFIG,
         forward_reward_weight: float = 1,

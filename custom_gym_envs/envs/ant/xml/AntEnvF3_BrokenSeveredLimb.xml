@@ -1,7 +1,7 @@
 <!--
 modifications:
-- name="fourth_ankle_geom", fromto="0.0 0.0 0.0 0.4 -0.4 0.0" changed to fromto="0.0 0.0 0.0 0.2 -0.2 0.0"
-- name="fourth_ankle_geom", added rgba="0.4 0 0 1"
+1. name="fourth_ankle_geom", fromto="0.0 0.0 0.0 0.4 -0.4 0.0" changed to fromto="0.0 0.0 0.0 0.2 -0.2 0.0"
+2. name="fourth_ankle_geom", added rgba="0.4 0 0 1"
 -->
 
 <mujoco model="ant">
@@ -76,11 +76,7 @@ modifications:
           <geom fromto="0.0 0.0 0.0 0.2 -0.2 0.0" name="rightback_leg_geom" size="0.08" type="capsule"/>
           <body pos="0.2 -0.2 0">
             <joint axis="1 1 0" name="ankle_4" pos="0.0 0.0 0.0" range="30 70" type="hinge"/>
-            <!--
-            modification:
-            fromto="0.0 0.0 0.0 0.4 -0.4 0.0" chnaged to fromto="0.0 0.0 0.0 0.2 -0.2 0.0" to shorten the limb segment
-            added rgba="0.4 0 0 1" to colour the shortened limb segement
-            -->
+            <!-- modification 1 & 2 -->
             <geom fromto="0.0 0.0 0.0 0.2 -0.2 0.0" name="fourth_ankle_geom" size="0.08" type="capsule" rgba="0.4 0 0 1"/>
           </body>
         </body>

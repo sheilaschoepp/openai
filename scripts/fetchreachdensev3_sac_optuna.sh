@@ -6,7 +6,7 @@ SESSION_END=400
 MAX_ACTIVE_SESSIONS=21
 
 # Define command to run in each session
-COMMAND="python controllers/sac/sac_n_controller.py -o"
+COMMAND="python controllers/sac/sac_n_controller.py -e FetchReachDense-v3 -t 10000 -tef 100 -o"
 
 # Function to get the count of active tmux sessions
 get_active_tmux_sessions() {

@@ -462,6 +462,8 @@ class AbnormalController:
         self.rlg.rl_env_message(f'load, {self.load_data_dir}')  # load environment data
 
         self.rlg.rl_agent_message(f'load, {self.load_data_dir}, {self.parameters["n_time_steps"]}')
+        # consistency check: the following must be commented out for a
+        # consistency check (see n_controller)
         self.rlg.rl_agent_message("reset_lr")
         self.agent.loss_data = self.loss_data
 

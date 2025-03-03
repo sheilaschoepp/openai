@@ -404,6 +404,10 @@ class NormalController:
                 # x = 4000
                 # if self.rlg.num_steps() / x == 2:
                 #     break
+                #
+                # note: there is code in the ab_controller that must
+                # also be uncommented for this check (search for
+                # 'consistency check')
 
             # learning complete
             if self.rlg.num_steps() == self.parameters["n_time_steps"]:

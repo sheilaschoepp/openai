@@ -233,7 +233,8 @@ class AntEnvF2(MujocoEnv, utils.EzPickle): # modification: changed class name fr
         "render_modes": [
             "human",
             "rgb_array",
-            "depth_array"
+            "depth_array",
+            "rgbd_tuple",
         ],
     }
 

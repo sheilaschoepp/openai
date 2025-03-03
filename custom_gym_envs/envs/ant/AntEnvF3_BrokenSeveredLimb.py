@@ -1,7 +1,4 @@
 """
-sources:
-- https://mujoco.readthedocs.io/en/latest/XMLreference.html#visual
-
 modifications:
 - changed class name from "AntEnv" to "AntEnvF3"
 - changed xml_file from "ant.xml" to "{path}" in __init__ method
@@ -23,7 +20,7 @@ DEFAULT_CAMERA_CONFIG = {
     "type": mujoco.mjtCamera.mjCAMERA_TRACKING,
     "trackbodyid": 1,
     "distance": 8.0,
-    # "elevation": -90.0,
+    "elevation": -90.0,
 }
 
 
@@ -236,7 +233,8 @@ class AntEnvF3(MujocoEnv, utils.EzPickle): # modification: changed class name fr
         "render_modes": [
             "human",
             "rgb_array",
-            "depth_array"
+            "depth_array",
+            "rgbd_tuple",
         ],
     }
 

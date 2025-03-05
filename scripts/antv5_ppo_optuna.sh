@@ -6,7 +6,7 @@ SESSION_END=400
 MAX_ACTIVE_SESSIONS=21
 
 # Define command to run in each session
-COMMAND="python controllers/ppo/ppo_n_controller.py -e FetchReach-F0 -t 57344 -tef 8192 -o"
+COMMAND="python controllers/ppo/ppo_n_controller.py -e Ant-v5 -t 10000000 -tef 50000  -o"
 
 # Function to get the count of active tmux sessions
 get_active_tmux_sessions() {

@@ -745,7 +745,8 @@ def objective(trial):
                                 step=0.0001)
 
     # Set the number of samples.
-    num_samples_choices = [1024, 2048, 4096, 8192]
+    # num_samples_choices = [1024, 2048, 4096, 8192]
+    num_samples_choices = [256, 512, 1024]  # todo
     num_samples = trial.suggest_categorical(name='num_samples',
                                             choices=num_samples_choices)
 

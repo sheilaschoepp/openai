@@ -53,8 +53,7 @@ for i in "${!SCRIPTS[@]}"; do
       tmux new-session -d -s "${SESSION_NAME}" \
         "taskset -c ${CPU} python ${SCRIPT} \
           ${BASE_ARGS} \
-          --file=${FILE_PATH} \
-          --seed=${SEED}"
+          --file=${FILE_PATH}"
 
       # Pause 30 seconds between each new Python call
       sleep 30

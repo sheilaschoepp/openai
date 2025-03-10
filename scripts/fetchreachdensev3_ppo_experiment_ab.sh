@@ -2,7 +2,7 @@
 
 # Script(s) to run
 SCRIPTS=(
-  "/home/sschoepp/Documents/openai/controllers/ppo/ppo_n_controller.py"
+  "/home/sschoepp/Documents/openai/controllers/ppo/ppo_ab_controller.py"
 )
 
 # Argument sets (everything except the --file=... portion)

@@ -4,9 +4,6 @@ data/**
 # ignore wandb folder
 wandb/**
 
-# ignore optuna folder
-optuna/*.db
-
 # ignore conda tar files
 ~virtualenv/*
 

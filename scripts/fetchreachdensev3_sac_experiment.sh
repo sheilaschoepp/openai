@@ -1,7 +1,7 @@
 #!/bin/bash
 
 SCRIPT="/home/sschoepp/Documents/openai/controllers/sac/sac_n_controller.py"
-ARGS="--n_env_name=FetchReachDense-v3 \
+ARGS="--n_env_name=FetchReach-F0 \
       --n_time_steps=10000 \
       --gamma=0.8004 \
       --tau=0.04758 \

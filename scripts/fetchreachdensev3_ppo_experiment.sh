@@ -1,24 +1,23 @@
 #!/bin/bash
 
 SCRIPT="/home/sschoepp/Documents/openai/controllers/ppo/ppo_n_controller.py"
-ARGS="--n_env_name=FetchReachDense-v3 \
+ARGS="--n_env_name=FetchReach-F0 \
       --n_time_steps=50000 \
-      --lr=0.0006056 \
+      --lr=0.0008641 \
       --linear_lr_decay \
-      --gamma=0.8113 \
-      --num_samples=1024 \
+      --gamma=0.8301 \
+      --num_samples=256 \
       --mini_batch_size=32 \
       --epochs=10 \
-      --epsilon=0.2908 \
-      --vf_loss_coef=0.8985 \
-      --policy_entropy_coef=0.05265 \
+      --epsilon=0.2887 \
+      --vf_loss_coef=0.1410 \
+      --policy_entropy_coef=0.01380 \
       --max_grad_norm=0.5 \
-      --gae_lambda=0.0 \
+      --use_gae \
+      --gae_lambda=0.9039 \
       --normalize_rewards \
-      --time_step_eval_frequency=1250 \
+      --time_step_eval_frequency=500 \
       --wandb"
-# set gae_lambda to 0.0 since use_gae is false
-# set tef to 1250 since we only update every 1024 steps
 
 for SEED in {0..29}; do
   CPU=$((SEED))  # simple one-to-one mapping (seed0→CPU0, seed1→CPU1, etc.)

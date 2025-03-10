@@ -2,7 +2,7 @@
 
 SCRIPT="/home/sschoepp/Documents/openai/controllers/ppo/ppo_n_controller.py"
 ARGS="--n_env_name=FetchReach-F0 \
-      --n_time_steps=25000 \
+      --n_time_steps=50000 \
       --lr=0.0008641 \
       --linear_lr_decay \
       --gamma=0.8301 \

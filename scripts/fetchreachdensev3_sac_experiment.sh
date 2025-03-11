@@ -3,15 +3,15 @@
 SCRIPT="/home/sschoepp/Documents/openai/controllers/sac/sac_n_controller.py"
 ARGS="--n_env_name=FetchReach-F0 \
       --n_time_steps=10000 \
-      --gamma=0.8004 \
-      --tau=0.04758 \
-      --alpha=0.03560 \
-      --lr=0.0008758 \
+      --gamma=0.8504 \
+      --tau=0.003237 \
+      --alpha=0.1336 \
+      --lr=0.0008507 \
       --hidden_dim=256 \
-      --replay_buffer_size=500000 \
-      --batch_size=128 \
+      --replay_buffer_size=100000 \
+      --batch_size=256 \
       --normalize_rewards \
-      --target_update_interval=1 \
+      --target_update_interval=5 \
       --time_step_eval_frequency=100 \
       --wandb"
 

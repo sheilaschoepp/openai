@@ -132,15 +132,14 @@ class RLGlue:
         self._action: float64 numpy array with shape (action_dim,)
             action selected by the agent
         """
-        reward, next_state, terminal, distance = self._environment.env_step(self._action)  # returns reward, next_state, done
-
+        reward, next_state, terminal, info = self._environment.env_step(self._action)  # returns reward, next_state, done
         self._num_ep_steps += 1
         self._num_steps += 1
-
+        #distance = info['distance']
         self._total_reward += reward
-        self._total_distance_from_goal += distance
+        #self._total_distance_from_goal += distance
         self._episode_reward += reward
-        self._episode_distance_from_goal += distance
+        #self._episode_distance_from_goal += distance
 
         if terminal:
             self._action = self._agent.agent_end(reward, next_state, terminal)
@@ -148,7 +147,7 @@ class RLGlue:
         else:
             self._action = self._agent.agent_step(reward, next_state, terminal)
 
-        return reward, next_state, terminal, self._action, distance
+        return reward, next_state, terminal, self._action#, distance
 
     # repeat for each episode
     def rl_episode(self, max_steps_this_episode=0):

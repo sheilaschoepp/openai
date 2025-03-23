@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Constants
-PPO_CONTROLLER_ABSOLUTE_PATH="controllers/ppo/ppo_a_controller.py"
-ENVIRONMENTS=("FetchReachEnv-v11")
+PPO_CONTROLLER_ABSOLUTE_PATH="controllers/ppo/ppo_ab_controller.py"
+ENVIRONMENTS=("FetchReachEnv-v20")
 TOTAL_SEEDS=15
 WINDOWS=10
 
@@ -16,13 +16,13 @@ launch_window() {
     local end_seed=$(((window_index + 1) * TOTAL_SEEDS / WINDOWS))
 
     # Create a new tmux window
-    tmux new-window -t my_experiments -n "$window_name"
+    tmux new-window -t mix_exp -n "$window_name"
 
     for env in "${ENVIRONMENTS[@]}"; do
         for seed in $(seq $start_seed $end_seed); do
-            local full_command="python $PPO_CONTROLLER_ABSOLUTE_PATH -e $env -s $seed -d -ps -pss 43 -tef 5000 -t 1000000"
-            tmux send-keys -t my_experiments:"$window_name" "$full_command" C-m
-            tmux send-keys -t my_experiments:"$window_name" "echo 'Completed: $env with seed $seed'" C-m
+            local full_command="python $PPO_CONTROLLER_ABSOLUTE_PATH -e $env -t 250000 --file /home/afraz1/Documents/openai/data/PPO_FetchReachEnv-v20:100000_lr:0.000275_lrd:False_slrd:1.0_g:0.848_ns:3424_mbs:8_epo:24_eps:0.3_c1:1.0_c2:0.0007_cvl:False_mgn:0.5_gae:True_lam:0.9327_hd:64_lstd:0.0_tef:1750_ee:10_tmsf:50000000_d:cpu_ps:True_pss:43"
+            tmux send-keys -t mix_exp:"$window_name" "$full_command" C-m
+            tmux send-keys -t mix_exp:"$window_name" "echo 'Completed: $env with seed $seed'" C-m
         done
     done
 
@@ -30,11 +30,11 @@ launch_window() {
 }
 
 # Main loop to create tmux windows
-tmux new-session -d -s my_experiments
+tmux new-session -d -s mix_exp
 
 for i in $(seq 0 $((WINDOWS - 1))); do
     launch_window "$i"
 done
 
 echo "All windows are scheduled in tmux."
-tmux attach-session -t my_experiments
+tmux attach-session -t mix_exp

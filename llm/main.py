@@ -25,11 +25,11 @@ if __name__ == "__main__":
     #new_directory_name_v2 = 'FetchReachEnv_v2_BrokenElbowFlexJoint_LLM_4_v2'
 
     # Broken Sensor Fault
-    new_directory_name_v1 = 'FetchReachEnv_v4_BrokenShoulderLiftSensor_LLM_3_v1'
-    new_directory_name_v2 = 'FetchReachEnv_v4_BrokenShoulderLiftSensor_LLM_4_v2'
+    new_directory_name_v1 = 'FetchReachEnv_v4_BrokenShoulderLiftSensor_E_v15'
+    new_directory_name_v2 = 'FetchReachEnv_v4_BrokenShoulderLiftSensor_E_v16'
 
-    new_file_path_v1 = f'/home/sschoepp/Documents/openai/custom_gym_envs/envs/fetchreach/{new_directory_name_v1}/fetch_env.py'
-    new_file_path_v2 = f'/home/sschoepp/Documents/openai/custom_gym_envs/envs/fetchreach/{new_directory_name_v2}/fetch_env.py'
+    new_file_path_v1 = f'/home/afraz1/Documents/openai/custom_gym_envs/envs/fetchreach/{new_directory_name_v1}/fetch_env.py'
+    new_file_path_v2 = f'/home/afraz1/Documents/openai/custom_gym_envs/envs/fetchreach/{new_directory_name_v2}/fetch_env.py'
     method_name = 'compute_reward'
 
     src_directory = os.path.join(main_project_dir, relative_path_to_copy)

@@ -9,19 +9,16 @@ class APIHandler:
 
     def get_function_from_gpt4(self, prompt):
         messages = []
-        system_content = {
-            "role": "system",
-            "content": self.system_content1
-        }
+        # Merge system content with the prompt
+        merged_prompt = f"{self.system_content1}\n\n{prompt}"
         user_content = {
             "role": "user",
-            "content": prompt
+            "content": merged_prompt
         }
-        messages.append(system_content)
         messages.append(user_content)
         response = self.client.chat.completions.create(
-            model = "gpt-4o",
-            messages = messages
+            model="o1-preview-2024-09-12",
+            messages=messages
         )
         return response.choices[0].message.content.strip()
     
@@ -38,7 +35,7 @@ class APIHandler:
         messages.append(system_content)
         messages.append(user_content)
         response = self.client.chat.completions.create(
-            model = "gpt-3.5-turbo",
+            model = "chatgpt-4o-latest",
             messages = messages
         )
         return response.choices[0].message.content.strip()

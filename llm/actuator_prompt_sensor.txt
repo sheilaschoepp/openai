@@ -28,7 +28,7 @@ info['constraint_forces'] # a dict with keys as joint names and values as forces
 You can use this information when making your reward function.
 
 Your task is to develop an optimal reward function for the same task but in this fault environment. Remember that your reward function will be used as is and only after the fault occurs. 
-The value of qpos_dict['robot0:shoulder_lift_joint'] will always be 1.5 due the fault.
+The value of qpos_dict['robot0:shoulder_lift_joint'] will always be 1.5 due the fault and would therefore give a false reading of that part of the agent.
 
 Try to make such a reward function that gives out a smooth learning curve, learning very quickly and then plateauing well after convergence.
 Define all variables in the function itself. Your reward function should converge better and faster than the given expert reward function that was used in the fault environment.

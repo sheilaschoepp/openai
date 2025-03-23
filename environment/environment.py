@@ -84,10 +84,9 @@ class Environment(BaseEnvironment):
 
         if self.render:
             self.env.render()
+        next_state, reward, terminal, info = self.env.step(action)
 
-        next_state, reward, terminal, _, distance = self.env.step(action)
-
-        return reward, next_state, terminal, distance
+        return reward, next_state, terminal, info
 
     def env_message(self, message):
         """

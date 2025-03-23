@@ -1,8 +1,11 @@
 # ignore data folder
 data/**
-scripts/data
+scripts/data0
+scripts/data1
+scripts/data2
 # ignore conda tar file
 openai3.9.tar.gz
+openai-gym.tar.gz
 
 # ignore histogram data
 **/plot/histogram/data/*

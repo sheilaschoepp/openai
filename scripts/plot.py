@@ -5,8 +5,8 @@ from matplotlib.lines import Line2D
 
 
 root_directory = "data"
-
-colors = ['blue', 'green', 'red', 'grey', 'black']
+#add blue later
+colors = ['green', 'red', 'grey', 'black']
 
 plt.figure(figsize=(16, 6))
 
@@ -31,7 +31,7 @@ plt.ylabel("Average Dist from Goal")
 plt.title("Policy Evaluation Across 75 Experiments")
 
 plt.legend(handles=legend_handles, loc='upper left', bbox_to_anchor=(1, 1), ncol=1)
-plt.xlim(left=0, right=750000)
+plt.xlim(left=0, right=500000)
 
 
 plt.subplots_adjust(left=0.1, right=0.9, top=0.9, bottom=0.2)

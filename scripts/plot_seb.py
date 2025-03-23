@@ -4,7 +4,8 @@ import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
 
 
-root_directory = "data"
+root_directory = "data2"
+#add blue later
 colors = ['blue', 'green', 'red', 'grey', 'black']
 
 plt.figure(figsize=(12, 8))
@@ -23,7 +24,7 @@ for i, experiment_folder in enumerate(os.listdir(root_directory)):
         combined_df = pd.concat(dfs)
         
 
-        grouped = combined_df.groupby("num_time_steps")["average_distance_from_goal"]
+        grouped = combined_df.groupby("num_time_steps")["average_return"]
         mean_return = grouped.mean()
         std_return = grouped.std()
         
@@ -34,12 +35,13 @@ for i, experiment_folder in enumerate(os.listdir(root_directory)):
 
 
 plt.xlabel("Time Steps")
-plt.ylabel("Average Dist from Goal")
+plt.ylabel("Average return")
 plt.title("Policy Evaluation Across Experiments with Error Bands")
 
 
-plt.xlim(left=0, right=750000) 
-plt.legend(handles=legend_handles, loc='upper left', bbox_to_anchor=(1, 1), ncol=1)
+plt.xlim(left=0, right=500000) 
+
+plt.legend(handles=legend_handles, loc='upper left', bbox_to_anchor=(1, 1), ncol=1, fontsize=22)
 plt.tight_layout()
 
 # Save the plot

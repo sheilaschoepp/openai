@@ -7,14 +7,14 @@ SCRIPTS=(
 
 # Argument sets (everything except the --file=... portion)
 BASE_ARGS_LIST=(
-  "--ab_env_name=FetchReach-F1 --ab_time_steps=20000 --wandb"
-  "--ab_env_name=FetchReach-F1 --ab_time_steps=20000 --wandb --clear_replay_buffer"
-  "--ab_env_name=FetchReach-F1 --ab_time_steps=20000 --wandb --reinitialize_networks"
-  "--ab_env_name=FetchReach-F1 --ab_time_steps=20000 --wandb --clear_replay_buffer --reinitialize_networks"
-  "--ab_env_name=FetchReach-F2 --ab_time_steps=20000 --wandb"
-  "--ab_env_name=FetchReach-F2 --ab_time_steps=20000 --wandb --clear_replay_buffer"
-  "--ab_env_name=FetchReach-F2 --ab_time_steps=20000 --wandb --reinitialize_networks"
-  "--ab_env_name=FetchReach-F2 --ab_time_steps=20000 --wandb --clear_replay_buffer --reinitialize_networks"
+  "--ab_env_name=FetchReach-F1 --ab_time_steps=30000 --wandb"
+  "--ab_env_name=FetchReach-F1 --ab_time_steps=30000 --wandb --clear_replay_buffer"
+  "--ab_env_name=FetchReach-F1 --ab_time_steps=30000 --wandb --reinitialize_networks"
+  "--ab_env_name=FetchReach-F1 --ab_time_steps=30000 --wandb --clear_replay_buffer --reinitialize_networks"
+  "--ab_env_name=FetchReach-F2 --ab_time_steps=30000 --wandb"
+  "--ab_env_name=FetchReach-F2 --ab_time_steps=30000 --wandb --clear_replay_buffer"
+  "--ab_env_name=FetchReach-F2 --ab_time_steps=30000 --wandb --reinitialize_networks"
+  "--ab_env_name=FetchReach-F2 --ab_time_steps=30000 --wandb --clear_replay_buffer --reinitialize_networks"
 )
 
 # Base file path (without the /seed part)

@@ -7,10 +7,10 @@ SCRIPTS=(
 
 # Argument sets (everything except the --file=... portion)
 BASE_ARGS_LIST=(
-  "--ab_env_name=FetchReach-F1 --ab_time_steps=5000000 --wandb"
-  "--ab_env_name=FetchReach-F1 --ab_time_steps=5000000 --wandb --clear_memory"
-  "--ab_env_name=FetchReach-F1 --ab_time_steps=5000000 --wandb --reinitialize_networks"
-  "--ab_env_name=FetchReach-F1 --ab_time_steps=5000000 --wandb --reinitialize_networks --clear_memory"
+  "--ab_env_name=FetchReach-F1 --ab_time_steps=4000000 --wandb"
+  "--ab_env_name=FetchReach-F1 --ab_time_steps=4000000 --wandb --clear_memory"
+  "--ab_env_name=FetchReach-F1 --ab_time_steps=4000000 --wandb --reinitialize_networks"
+  "--ab_env_name=FetchReach-F1 --ab_time_steps=4000000 --wandb --reinitialize_networks --clear_memory"
 #  "--ab_env_name=FetchReach-F2 --ab_time_steps=50000 --wandb"
 #  "--ab_env_name=FetchReach-F2 --ab_time_steps=50000 --wandb --clear_memory"
 #  "--ab_env_name=FetchReach-F2 --ab_time_steps=50000 --wandb --reinitialize_networks"

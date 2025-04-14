@@ -18,7 +18,7 @@ BASE_ARGS_LIST=(
 )
 
 # Base file path (without the /seed part)
-FILE_BASE="/home/sschoepp/Documents/openai/data/SAC_FetchReach-F0:10000_g:0.8504_t:0.003237_a:0.1336_lr:0.0008507_hd:256_rbs:100000_bs:256_nr:True_mups:1_tui:5_a:False_tef:100_ee:10_d:cpu_wb"
+FILE_BASE="/local/ssd1/sschoepp/DATA/openai_DONOTDELETE/fetchreachv3/sac/data/SAC_FetchReach-F0:10000_g:0.8504_t:0.003237_a:0.1336_lr:0.0008507_hd:256_rbs:100000_bs:256_nr:True_mups:1_tui:5_a:False_tef:100_ee:10_d:cpu_wb"
 
 # Number of seeds to run for each script/arg set
 NUM_SEEDS=30

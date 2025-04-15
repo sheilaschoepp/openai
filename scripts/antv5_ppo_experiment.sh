@@ -16,7 +16,7 @@ ARGS="--n_env_name=Ant-v5 \
       --use_gae \
       --gae_lambda=0.9006 \
       --normalize_rewards \
-      --time_step_eval_frequency=100000 \
+      --time_step_eval_frequency=400000 \
       --wandb"
 
 for SEED in {0..9}; do

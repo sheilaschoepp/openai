@@ -11,7 +11,7 @@ ARGS="--n_env_name=Ant-v5 \
       --replay_buffer_size=1000000 \
       --batch_size=512 \
       --target_update_interval=8 \
-      --time_step_eval_frequency=15000 \
+      --time_step_eval_frequency=30000 \
       --wandb"
 
 for SEED in {0..9}; do

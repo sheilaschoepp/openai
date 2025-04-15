@@ -14,7 +14,7 @@ ARGS="--n_env_name=Ant-v5 \
       --time_step_eval_frequency=30000 \
       --wandb"
 
-for SEED in {0..9}; do
+for SEED in {10..29}; do
   CPU=$((SEED))  # simple one-to-one mapping (seed0→CPU0, seed1→CPU1, etc.)
 
   echo "Starting tmux session: sac_seed${SEED} on CPU ${CPU}"

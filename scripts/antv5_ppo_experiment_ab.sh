@@ -11,10 +11,10 @@ BASE_ARGS_LIST=(
   "--ab_env_name=Ant-F1 --ab_time_steps=40000000 --wandb --clear_memory"
   "--ab_env_name=Ant-F1 --ab_time_steps=40000000 --wandb --reinitialize_networks"
   "--ab_env_name=Ant-F1 --ab_time_steps=40000000 --wandb --reinitialize_networks --clear_memory"
-  "--ab_env_name=Ant-F2 --ab_time_steps=40000000 --wandb"
-  "--ab_env_name=Ant-F2 --ab_time_steps=40000000 --wandb --clear_memory"
-  "--ab_env_name=Ant-F2 --ab_time_steps=40000000 --wandb --reinitialize_networks"
-  "--ab_env_name=Ant-F2 --ab_time_steps=40000000 --wandb --reinitialize_networks --clear_memory"
+#  "--ab_env_name=Ant-F2 --ab_time_steps=40000000 --wandb"
+#  "--ab_env_name=Ant-F2 --ab_time_steps=40000000 --wandb --clear_memory"
+#  "--ab_env_name=Ant-F2 --ab_time_steps=40000000 --wandb --reinitialize_networks"
+#  "--ab_env_name=Ant-F2 --ab_time_steps=40000000 --wandb --reinitialize_networks --clear_memory"
 )
 
 # Base file path (without the /seed part)
@@ -23,7 +23,7 @@ FILE_BASE="/home/sschoepp/Documents/openai/data/PPO_Ant-v5:40000000_lr:0.0001672
 # Number of seeds to run for each script/arg set
 NUM_SEEDS=30
 # Maximum tmux sessions allowed
-MAX_SESSIONS=30
+MAX_SESSIONS=10
 
 # Iterate over all script–argument pairs
 for i in "${!SCRIPTS[@]}"; do

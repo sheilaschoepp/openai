@@ -23,7 +23,7 @@ FILE_BASE="/home/sschoepp/Documents/openai/data/PPO_Ant-v5:40000000_lr:0.0001672
 # Number of seeds to run for each script/arg set
 NUM_SEEDS=30
 # Maximum tmux sessions allowed
-MAX_SESSIONS=10
+MAX_SESSIONS=15
 
 # Iterate over all script–argument pairs
 for i in "${!SCRIPTS[@]}"; do

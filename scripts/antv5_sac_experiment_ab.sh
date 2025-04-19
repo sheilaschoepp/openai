@@ -7,18 +7,18 @@ SCRIPTS=(
 
 # Argument sets (everything except the --file=... portion)
 BASE_ARGS_LIST=(
-  "--ab_env_name=FetchReach-F1 --ab_time_steps=100000 --wandb"
-  "--ab_env_name=FetchReach-F1 --ab_time_steps=100000 --wandb --clear_replay_buffer"
-  "--ab_env_name=FetchReach-F1 --ab_time_steps=100000 --wandb --reinitialize_networks"
-  "--ab_env_name=FetchReach-F1 --ab_time_steps=100000 --wandb --reinitialize_networks --clear_replay_buffer"
-  "--ab_env_name=FetchReach-F2 --ab_time_steps=100000 --wandb"
-  "--ab_env_name=FetchReach-F2 --ab_time_steps=100000 --wandb --clear_replay_buffer"
-  "--ab_env_name=FetchReach-F2 --ab_time_steps=100000 --wandb --reinitialize_networks"
-  "--ab_env_name=FetchReach-F2 --ab_time_steps=100000 --wandb --reinitialize_networks --clear_replay_buffer"
+  "--ab_env_name=Ant-F1 --ab_time_steps=3000000 --wandb"
+  "--ab_env_name=Ant-F1 --ab_time_steps=3000000 --wandb --clear_replay_buffer"
+  "--ab_env_name=Ant-F1 --ab_time_steps=3000000 --wandb --reinitialize_networks"
+  "--ab_env_name=Ant-F1 --ab_time_steps=3000000 --wandb --reinitialize_networks --clear_replay_buffer"
+  "--ab_env_name=Ant-F2 --ab_time_steps=3000000 --wandb"
+  "--ab_env_name=Ant-F2 --ab_time_steps=3000000 --wandb --clear_replay_buffer"
+  "--ab_env_name=Ant-F2 --ab_time_steps=3000000 --wandb --reinitialize_networks"
+  "--ab_env_name=Ant-F2 --ab_time_steps=3000000 --wandb --reinitialize_networks --clear_replay_buffer"
 )
 
 # Base file path (without the /seed part)
-FILE_BASE="/local/ssd1/sschoepp/DATA/openai_DONOTDELETE/fetchreachv3/sac/data/SAC_FetchReach-F0:10000_g:0.8504_t:0.003237_a:0.1336_lr:0.0008507_hd:256_rbs:100000_bs:256_nr:True_mups:1_tui:5_a:False_tef:100_ee:10_d:cpu_wb"
+FILE_BASE="/home/sschoepp/Documents/openai/data/SAC_Ant-v5:3000000_g:0.9815_t:0.05151_a:0.07461_lr:0.0002225_hd:256_rbs:1000000_bs:512_nr:False_mups:1_tui:8_a:False_tef:30000_ee:10_d:cpu_wb"
 
 # Number of seeds to run for each script/arg set
 NUM_SEEDS=30

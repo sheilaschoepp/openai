@@ -11,10 +11,10 @@ BASE_ARGS_LIST=(
   "--ab_env_name=FetchReach-F1 --ab_time_steps=4000000 --wandb --clear_memory"
   "--ab_env_name=FetchReach-F1 --ab_time_steps=4000000 --wandb --reinitialize_networks"
   "--ab_env_name=FetchReach-F1 --ab_time_steps=4000000 --wandb --reinitialize_networks --clear_memory"
-#  "--ab_env_name=FetchReach-F2 --ab_time_steps=50000 --wandb"
-#  "--ab_env_name=FetchReach-F2 --ab_time_steps=50000 --wandb --clear_memory"
-#  "--ab_env_name=FetchReach-F2 --ab_time_steps=50000 --wandb --reinitialize_networks"
-#  "--ab_env_name=FetchReach-F2 --ab_time_steps=50000 --wandb --reinitialize_networks --clear_memory"
+  "--ab_env_name=FetchReach-F2 --ab_time_steps=50000 --wandb"
+  "--ab_env_name=FetchReach-F2 --ab_time_steps=50000 --wandb --clear_memory"
+  "--ab_env_name=FetchReach-F2 --ab_time_steps=50000 --wandb --reinitialize_networks"
+  "--ab_env_name=FetchReach-F2 --ab_time_steps=50000 --wandb --reinitialize_networks --clear_memory"
 )
 
 # Base file path (without the /seed part)
@@ -23,7 +23,7 @@ FILE_BASE="/home/sschoepp/Documents/openai/data/PPO_FetchReach-F0:50000_lr:0.000
 # Number of seeds to run for each script/arg set
 NUM_SEEDS=30
 # Maximum tmux sessions allowed
-MAX_SESSIONS=25
+MAX_SESSIONS=30
 
 # Iterate over all script–argument pairs
 for i in "${!SCRIPTS[@]}"; do

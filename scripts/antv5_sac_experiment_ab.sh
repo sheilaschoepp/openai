@@ -7,14 +7,24 @@ SCRIPTS=(
 
 # Argument sets (everything except the --file=... portion)
 BASE_ARGS_LIST=(
-  "--ab_env_name=Ant-F1 --ab_time_steps=3000000 --wandb"
-  "--ab_env_name=Ant-F1 --ab_time_steps=3000000 --wandb --clear_replay_buffer"
-  "--ab_env_name=Ant-F1 --ab_time_steps=3000000 --wandb --reinitialize_networks"
-  "--ab_env_name=Ant-F1 --ab_time_steps=3000000 --wandb --reinitialize_networks --clear_replay_buffer"
-  "--ab_env_name=Ant-F2 --ab_time_steps=3000000 --wandb"
-  "--ab_env_name=Ant-F2 --ab_time_steps=3000000 --wandb --clear_replay_buffer"
-  "--ab_env_name=Ant-F2 --ab_time_steps=3000000 --wandb --reinitialize_networks"
-  "--ab_env_name=Ant-F2 --ab_time_steps=3000000 --wandb --reinitialize_networks --clear_replay_buffer"
+# melco1
+#  "--ab_env_name=Ant-F1 --ab_time_steps=3000000 --wandb"
+#  "--ab_env_name=Ant-F1 --ab_time_steps=3000000 --wandb --clear_replay_buffer"
+#  "--ab_env_name=Ant-F1 --ab_time_steps=3000000 --wandb --reinitialize_networks"
+#  "--ab_env_name=Ant-F1 --ab_time_steps=3000000 --wandb --reinitialize_networks --clear_replay_buffer"
+#  "--ab_env_name=Ant-F2 --ab_time_steps=3000000 --wandb"
+#  "--ab_env_name=Ant-F2 --ab_time_steps=3000000 --wandb --clear_replay_buffer"
+#  "--ab_env_name=Ant-F2 --ab_time_steps=3000000 --wandb --reinitialize_networks"
+#  "--ab_env_name=Ant-F2 --ab_time_steps=3000000 --wandb --reinitialize_networks --clear_replay_buffer"
+# melco2
+  "--ab_env_name=Ant-F3 --ab_time_steps=3000000 --wandb"
+  "--ab_env_name=Ant-F3 --ab_time_steps=3000000 --wandb --clear_replay_buffer"
+  "--ab_env_name=Ant-F3 --ab_time_steps=3000000 --wandb --reinitialize_networks"
+  "--ab_env_name=Ant-F3 --ab_time_steps=3000000 --wandb --reinitialize_networks --clear_replay_buffer"
+#  "--ab_env_name=Ant-F4 --ab_time_steps=3000000 --wandb"
+#  "--ab_env_name=Ant-F4 --ab_time_steps=3000000 --wandb --clear_replay_buffer"
+#  "--ab_env_name=Ant-F4 --ab_time_steps=3000000 --wandb --reinitialize_networks"
+#  "--ab_env_name=Ant-F4 --ab_time_steps=3000000 --wandb --reinitialize_networks --clear_replay_buffer"
 )
 
 # Base file path (without the /seed part)
@@ -23,7 +33,7 @@ FILE_BASE="/home/sschoepp/Documents/openai/data/SAC_Ant-v5:3000000_g:0.9815_t:0.
 # Number of seeds to run for each script/arg set
 NUM_SEEDS=30
 # Maximum tmux sessions allowed
-MAX_SESSIONS=30
+MAX_SESSIONS=15
 
 # Iterate over all script–argument pairs
 for i in "${!SCRIPTS[@]}"; do

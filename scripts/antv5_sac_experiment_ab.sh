@@ -17,10 +17,18 @@ BASE_ARGS_LIST=(
 #  "--ab_env_name=Ant-F2 --ab_time_steps=3000000 --wandb --reinitialize_networks"
 #  "--ab_env_name=Ant-F2 --ab_time_steps=3000000 --wandb --reinitialize_networks --clear_replay_buffer"
 # melco2
-  "--ab_env_name=Ant-F3 --ab_time_steps=3000000 --wandb"
-  "--ab_env_name=Ant-F3 --ab_time_steps=3000000 --wandb --clear_replay_buffer"
-  "--ab_env_name=Ant-F3 --ab_time_steps=3000000 --wandb --reinitialize_networks"
-  "--ab_env_name=Ant-F3 --ab_time_steps=3000000 --wandb --reinitialize_networks --clear_replay_buffer"
+  "--ab_env_name=Ant-F3 --ab_time_steps=4000000 --wandb"
+  "--ab_env_name=Ant-F3 --ab_time_steps=4000000 --wandb --clear_replay_buffer"
+  "--ab_env_name=Ant-F3 --ab_time_steps=4000000 --wandb --reinitialize_networks"
+  "--ab_env_name=Ant-F3 --ab_time_steps=4000000 --wandb --reinitialize_networks --clear_replay_buffer"
+  "--ab_env_name=Ant-F3 --ab_time_steps=5000000 --wandb"
+  "--ab_env_name=Ant-F3 --ab_time_steps=5000000 --wandb --clear_replay_buffer"
+  "--ab_env_name=Ant-F3 --ab_time_steps=5000000 --wandb --reinitialize_networks"
+  "--ab_env_name=Ant-F3 --ab_time_steps=5000000 --wandb --reinitialize_networks --clear_replay_buffer"
+  "--ab_env_name=Ant-F3 --ab_time_steps=6000000 --wandb"
+  "--ab_env_name=Ant-F3 --ab_time_steps=6000000 --wandb --clear_replay_buffer"
+  "--ab_env_name=Ant-F3 --ab_time_steps=6000000 --wandb --reinitialize_networks"
+  "--ab_env_name=Ant-F3 --ab_time_steps=6000000 --wandb --reinitialize_networks --clear_replay_buffer"
 #  "--ab_env_name=Ant-F4 --ab_time_steps=3000000 --wandb"
 #  "--ab_env_name=Ant-F4 --ab_time_steps=3000000 --wandb --clear_replay_buffer"
 #  "--ab_env_name=Ant-F4 --ab_time_steps=3000000 --wandb --reinitialize_networks"
@@ -31,7 +39,7 @@ BASE_ARGS_LIST=(
 FILE_BASE="/home/sschoepp/Documents/openai/data/SAC_Ant-v5:3000000_g:0.9815_t:0.05151_a:0.07461_lr:0.0002225_hd:256_rbs:1000000_bs:512_nr:False_mups:1_tui:8_a:False_tef:30000_ee:10_d:cpu_wb"
 
 # Number of seeds to run for each script/arg set
-NUM_SEEDS=30
+NUM_SEEDS=5
 # Maximum tmux sessions allowed
 MAX_SESSIONS=15
 

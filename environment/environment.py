@@ -188,8 +188,14 @@ class Environment(BaseEnvironment):
             mujoco_qvel = pickle.load(handle)
 
         # set the simulator's internal state to the saved state
-        self.env.unwrapped.data.qpos[:] = mujoco_qpos
-        self.env.unwrapped.data.qvel[:] = mujoco_qvel
+        if self.env_name != "Ant-F4":
+            self.env.unwrapped.data.qpos[:] = mujoco_qpos
+            self.env.unwrapped.data.qvel[:] = mujoco_qvel
+        else:
+            mujoco_qpos = np.append(mujoco_qpos, [1., 0., 0., 0.])
+            self.env.unwrapped.data.qpos[:] = mujoco_qpos
+            mujoco_qvel = np.append(mujoco_qvel, [0., 0., 0.])
+            self.env.unwrapped.data.qvel[:] = mujoco_qvel
 
         # advance the simulation to apply the changes
         mujoco.mj_forward(self.env.unwrapped.model, self.env.unwrapped.data)

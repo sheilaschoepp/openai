@@ -17,6 +17,10 @@ I added this to account for the added body
 apart from its dynamics; the contact-cost term is meant to penalise
 forces produced by actions the agent can control; the new body is
 not in the observation and is unactuated
+7. in environment/environment.py, we added code to load qpos and qvel
+from file, and we set the new joint's qpos and qvel to the same
+values as the preceeding joint (all other qpos and qvel are loaded from
+the saved state in the normal environment)
 """
 
 __credits__ = ["Kallinteris-Andreas"]

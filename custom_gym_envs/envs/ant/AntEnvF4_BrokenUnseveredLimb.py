@@ -2,12 +2,16 @@
 modifications:
 1. changed class name from "AntEnv" to "AntEnvF4"
 2. changed xml_file from "ant.xml" to "{path}" in __init__ method
-3. modified __init__ method by changing obs_size (subtract 1 from qpos
-and qvel and subtract 1 (6) from cfrc_ext)
-4. modified _get_obs method by removing the last element for position
-and velocity, and the last 6 elements of contact_force (Note: these
-were added because we added an extra joint but this joint is not
-controlled, so we can remove them to retain the state dimension)
+3. modified __init__ method by changing obs_size (subtract 4 from qpos
+and 3 from qvel for added ball joint; subtract 1 (6) from cfrc_ext for
+added body)
+4. modified _get_obs method by removing the last 4 elements for
+position, last 3 elements for velocity, and the last 6 elements of
+contact_force (Note: these were added because we added an extra body and
+ joint but this body and joint is not controlled, so we can remove them
+ to retain the state dimension)
+5. modified observation_structure dictionary, subtracting 4 from qpos
+size and 3 from qvel size
 """
 
 __credits__ = ["Kallinteris-Andreas"]
@@ -319,7 +323,7 @@ class AntEnvF4(MujocoEnv, utils.EzPickle): # modification 1
             "render_fps": int(np.round(1.0 / self.dt)),
         }
 
-        obs_size = (self.data.qpos.size - 1) + (self.data.qvel.size - 1) # modification 3
+        obs_size = (self.data.qpos.size - 4) + (self.data.qvel.size - 3) # modification 3
         obs_size -= 2 * exclude_current_positions_from_observation
         obs_size += self.data.cfrc_ext[1:-1].size * include_cfrc_ext_in_observation # modification 3
 
@@ -329,9 +333,9 @@ class AntEnvF4(MujocoEnv, utils.EzPickle): # modification 1
 
         self.observation_structure = {
             "skipped_qpos": 2 * exclude_current_positions_from_observation,
-            "qpos": self.data.qpos.size
+            "qpos": self.data.qpos.size - 4 # modification 5
             - 2 * exclude_current_positions_from_observation,
-            "qvel": self.data.qvel.size,
+            "qvel": self.data.qvel.size - 3, # modification 5
             "cfrc_ext": self.data.cfrc_ext[1:].size * include_cfrc_ext_in_observation,
         }
 
@@ -410,8 +414,8 @@ class AntEnvF4(MujocoEnv, utils.EzPickle): # modification 1
         return reward, reward_info
 
     def _get_obs(self):
-        position = self.data.qpos.flatten()[:-1] # modification 4
-        velocity = self.data.qvel.flatten()[:-1] # modification 4
+        position = self.data.qpos.flatten()[:-4] # modification 4
+        velocity = self.data.qvel.flatten()[:-3] # modification 4
 
         if self._exclude_current_positions_from_observation:
             position = position[2:]

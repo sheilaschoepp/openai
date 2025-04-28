@@ -12,6 +12,8 @@ contact_force (Note: these were added because we added an extra body and
  to retain the state dimension)
 5. modified observation_structure dictionary, subtracting 4 from qpos
 size and 3 from qvel size
+6. ChatGPT noticed that I was not subtracting 1 from cfrc_ext size, so
+I added this to account for the added body
 """
 
 __credits__ = ["Kallinteris-Andreas"]
@@ -336,7 +338,7 @@ class AntEnvF4(MujocoEnv, utils.EzPickle): # modification 1
             "qpos": self.data.qpos.size - 4 # modification 5
             - 2 * exclude_current_positions_from_observation,
             "qvel": self.data.qvel.size - 3, # modification 5
-            "cfrc_ext": self.data.cfrc_ext[1:].size * include_cfrc_ext_in_observation,
+            "cfrc_ext": self.data.cfrc_ext[1:-1].size * include_cfrc_ext_in_observation, # modification 6
         }
 
     @property

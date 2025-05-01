@@ -2,7 +2,7 @@
 
 SCRIPT="/home/sschoepp/Documents/openai/controllers/ppo/ppo_n_controller.py"
 ARGS="--n_env_name=Ant-v5 \
-      --n_time_steps=40000000 \
+      --n_time_steps=20000000 \
       --lr=0.0001672 \
       --linear_lr_decay \
       --gamma=0.9960 \
@@ -19,8 +19,8 @@ ARGS="--n_env_name=Ant-v5 \
       --time_step_eval_frequency=400000 \
       --wandb"
 
-for SEED in {20..29}; do
-  CPU=$((SEED))  # simple one-to-one mapping (seed0→CPU0, seed1→CPU1, etc.)
+for SEED in {0..29}; do
+  CPU=$((SEED))
 
   echo "Starting tmux session: ppo_seed${SEED} on CPU ${CPU}"
   tmux new-session -d -s "ppo_seed${SEED}" \

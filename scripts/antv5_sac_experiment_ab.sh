@@ -8,6 +8,7 @@ SCRIPTS=(
 # Argument sets (everything except the --file=... portion)
 BASE_ARGS_LIST=(
 # melco1
+# currently running PPO normal for 20M
 #  "--ab_env_name=Ant-F1 --ab_time_steps=12000000 --wandb"
 #  "--ab_env_name=Ant-F1 --ab_time_steps=12000000 --wandb --clear_replay_buffer"
 #  "--ab_env_name=Ant-F1 --ab_time_steps=12000000 --wandb --reinitialize_networks"
@@ -22,11 +23,11 @@ BASE_ARGS_LIST=(
 #  "--ab_env_name=Ant-F3 --ab_time_steps=12000000 --wandb --reinitialize_networks"
 #  "--ab_env_name=Ant-F3 --ab_time_steps=12000000 --wandb --reinitialize_networks --clear_replay_buffer"
 # ur3
-#  "--ab_env_name=Ant-F4 --ab_time_steps=12000000 --wandb"
-#  "--ab_env_name=Ant-F4 --ab_time_steps=12000000 --wandb --clear_replay_buffer"
-#  "--ab_env_name=Ant-F4 --ab_time_steps=12000000 --wandb --reinitialize_networks"
+#  "--ab_env_name=Ant-F4 --ab_time_steps=5000000 --wandb"
+#  "--ab_env_name=Ant-F4 --ab_time_steps=5000000 --wandb --clear_replay_buffer"
+#  "--ab_env_name=Ant-F4 --ab_time_steps=5000000 --wandb --reinitialize_networks"
 # amii
-  "--ab_env_name=Ant-F4 --ab_time_steps=12000000 --wandb --reinitialize_networks --clear_replay_buffer"
+  "--ab_env_name=Ant-F4 --ab_time_steps=5000000 --wandb --reinitialize_networks --clear_replay_buffer"
 )
 
 # Base file path (without the /seed part)
@@ -56,16 +57,13 @@ for i in "${!SCRIPTS[@]}"; do
         fi
       done
 
-      CPU=$((SEED))
       SESSION_NAME="seed${SEED}_argset${j}"
       # Append "/seed${SEED}" to the file path
       FILE_PATH="${FILE_BASE}/seed${SEED}"
 
-      echo "Starting tmux session: ${SESSION_NAME} on CPU ${CPU}"
+      echo "Starting tmux session: ${SESSION_NAME}"
       tmux new-session -d -s "${SESSION_NAME}" \
-        "taskset -c ${CPU} python ${SCRIPT} \
-          ${BASE_ARGS} \
-          --file=${FILE_PATH}"
+        "taskset python ${SCRIPT} ${BASE_ARGS} --file=${FILE_PATH}"
 
       # Pause 30 seconds between each new Python call
       sleep 30

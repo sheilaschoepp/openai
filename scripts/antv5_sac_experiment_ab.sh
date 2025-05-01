@@ -23,11 +23,11 @@ BASE_ARGS_LIST=(
 #  "--ab_env_name=Ant-F3 --ab_time_steps=12000000 --wandb --reinitialize_networks"
 #  "--ab_env_name=Ant-F3 --ab_time_steps=12000000 --wandb --reinitialize_networks --clear_replay_buffer"
 # ur3
-#  "--ab_env_name=Ant-F4 --ab_time_steps=5000000 --wandb"
-#  "--ab_env_name=Ant-F4 --ab_time_steps=5000000 --wandb --clear_replay_buffer"
-#  "--ab_env_name=Ant-F4 --ab_time_steps=5000000 --wandb --reinitialize_networks"
+  "--ab_env_name=Ant-F4 --ab_time_steps=5000000 --wandb"
+  "--ab_env_name=Ant-F4 --ab_time_steps=5000000 --wandb --clear_replay_buffer"
+  "--ab_env_name=Ant-F4 --ab_time_steps=5000000 --wandb --reinitialize_networks"
 # amii
-  "--ab_env_name=Ant-F4 --ab_time_steps=5000000 --wandb --reinitialize_networks --clear_replay_buffer"
+#  "--ab_env_name=Ant-F4 --ab_time_steps=5000000 --wandb --reinitialize_networks --clear_replay_buffer"
 )
 
 # Base file path (without the /seed part)

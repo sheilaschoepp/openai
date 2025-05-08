@@ -30,7 +30,7 @@ BASE_ARGS_LIST=(
 )
 
 # Base file path (without the /seed part)
-FILE_BASE="/home/sschoepp/Documents/openai/data/PPO_Ant-v5:20000000_lr:0.0001672_lrd:True_g:0.996_ns:4096_mbs:32_epo:5_eps:0.2458_c1:0.4853_c2:0.003953_cvf:False_mgn:0.5_gae:True_lam:0.9006_nr:True_hd:64_lstd:0.0_tef:400000_ee:10_d:cpu_wb"
+FILE_BASE="/home/sschoepp/Documents/openai/data/PPO_Ant-v5:20000000_lr:0.0001672_lrd:True_g:0.996_ns:4096_mbs:32_epo:5_eps:0.2458_c1:0.4853_c2:0.003953_cvf:False_mgn:0.5_gae:True_lam:0.9006_nr:True_hd:64_lstd:0.0_tef:200000_ee:10_d:cpu_wb"
 
 # Number of seeds to run for each script/arg set
 NUM_SEEDS=5

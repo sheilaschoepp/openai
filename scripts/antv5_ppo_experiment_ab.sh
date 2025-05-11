@@ -19,6 +19,7 @@ BASE_ARGS_LIST=(
   "--ab_env_name=Ant-F2 --ab_time_steps=80000000 --wandb --reinitialize_networks --clear_memory"
   "--ab_env_name=Ant-F3 --ab_time_steps=80000000 --wandb"
   "--ab_env_name=Ant-F3 --ab_time_steps=80000000 --wandb --clear_memory"
+# amii
 #  "--ab_env_name=Ant-F3 --ab_time_steps=80000000 --wandb --reinitialize_networks"
 #  "--ab_env_name=Ant-F3 --ab_time_steps=80000000 --wandb --reinitialize_networks --clear_memory"
 #  ur3

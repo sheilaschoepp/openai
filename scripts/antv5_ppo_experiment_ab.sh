@@ -8,18 +8,17 @@ SCRIPTS=(
 # Argument sets (everything except the --file=... portion)
 BASE_ARGS_LIST=(
 #  melco2
-  "--ab_env_name=Ant-F1 --ab_time_steps=80000000 --wandb"
-  "--ab_env_name=Ant-F1 --ab_time_steps=80000000 --wandb --clear_memory"
-  "--ab_env_name=Ant-F1 --ab_time_steps=80000000 --wandb --reinitialize_networks"
-  "--ab_env_name=Ant-F1 --ab_time_steps=80000000 --wandb --reinitialize_networks --clear_memory"
-#  ur3
-  "--ab_env_name=Ant-F2 --ab_time_steps=80000000 --wandb"
-  "--ab_env_name=Ant-F2 --ab_time_steps=80000000 --wandb --clear_memory"
-#  "--ab_env_name=Ant-F2 --ab_time_steps=80000000 --wandb --reinitialize_networks"
-#  "--ab_env_name=Ant-F2 --ab_time_steps=80000000 --wandb --reinitialize_networks --clear_memory"
-#  melco2
-#  "--ab_env_name=Ant-F3 --ab_time_steps=80000000 --wandb"
-#  "--ab_env_name=Ant-F3 --ab_time_steps=80000000 --wandb --clear_memory"
+#  "--ab_env_name=Ant-F1 --ab_time_steps=80000000 --wandb"
+#  "--ab_env_name=Ant-F1 --ab_time_steps=80000000 --wandb --clear_memory"
+#  "--ab_env_name=Ant-F1 --ab_time_steps=80000000 --wandb --reinitialize_networks"
+#  "--ab_env_name=Ant-F1 --ab_time_steps=80000000 --wandb --reinitialize_networks --clear_memory"
+#  "--ab_env_name=Ant-F2 --ab_time_steps=80000000 --wandb"
+#  "--ab_env_name=Ant-F2 --ab_time_steps=80000000 --wandb --clear_memory"
+# ur3
+  "--ab_env_name=Ant-F2 --ab_time_steps=80000000 --wandb --reinitialize_networks"
+  "--ab_env_name=Ant-F2 --ab_time_steps=80000000 --wandb --reinitialize_networks --clear_memory"
+  "--ab_env_name=Ant-F3 --ab_time_steps=80000000 --wandb"
+  "--ab_env_name=Ant-F3 --ab_time_steps=80000000 --wandb --clear_memory"
 #  "--ab_env_name=Ant-F3 --ab_time_steps=80000000 --wandb --reinitialize_networks"
 #  "--ab_env_name=Ant-F3 --ab_time_steps=80000000 --wandb --reinitialize_networks --clear_memory"
 #  ur3
@@ -35,7 +34,7 @@ FILE_BASE="/home/sschoepp/Documents/openai/data/PPO_Ant-v5:20000000_lr:0.0001672
 # Number of seeds to run for each script/arg set
 NUM_SEEDS=5
 # Maximum tmux sessions allowed
-MAX_SESSIONS=31
+MAX_SESSIONS=21
 
 # Iterate over all script–argument pairs
 for i in "${!SCRIPTS[@]}"; do

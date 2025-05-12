@@ -7,9 +7,9 @@ SCRIPTS=(
 
 # Argument sets (everything except the --file=... portion)
 BASE_ARGS_LIST=(
-# melco1
-#  "--ab_env_name=Ant-F1 --ab_time_steps=12000000 --wandb"
-#  "--ab_env_name=Ant-F1 --ab_time_steps=12000000 --wandb --clear_replay_buffer"
+# melco1: seed 5 - 10
+  "--ab_env_name=Ant-F1 --ab_time_steps=12000000 --wandb"
+  "--ab_env_name=Ant-F1 --ab_time_steps=12000000 --wandb --clear_replay_buffer"
 #  "--ab_env_name=Ant-F1 --ab_time_steps=12000000 --wandb --reinitialize_networks"
 #  "--ab_env_name=Ant-F1 --ab_time_steps=12000000 --wandb --reinitialize_networks --clear_replay_buffer"
 #  "--ab_env_name=Ant-F2 --ab_time_steps=12000000 --wandb"
@@ -26,7 +26,7 @@ BASE_ARGS_LIST=(
 #  "--ab_env_name=Ant-F4 --ab_time_steps=12000000 --wandb --clear_replay_buffer"
 #  "--ab_env_name=Ant-F4 --ab_time_steps=12000000 --wandb --reinitialize_networks"
 # amii
-  "--ab_env_name=Ant-F4 --ab_time_steps=12000000 --wandb --reinitialize_networks --clear_replay_buffer"
+#  "--ab_env_name=Ant-F4 --ab_time_steps=12000000 --wandb --reinitialize_networks --clear_replay_buffer"
 )
 
 # Base file path (without the /seed part)
@@ -44,7 +44,7 @@ for i in "${!SCRIPTS[@]}"; do
   for j in "${!BASE_ARGS_LIST[@]}"; do
     BASE_ARGS="${BASE_ARGS_LIST[$j]}"
 
-    for SEED in $(seq 0 $((NUM_SEEDS - 1))); do
+    for SEED in $(seq 5 $((NUM_SEEDS - 1))); do
       # Enforce tmux session limit
       while true; do
         SESSION_COUNT=$(tmux ls 2>/dev/null | wc -l || echo 0)

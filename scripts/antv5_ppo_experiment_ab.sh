@@ -8,25 +8,25 @@ SCRIPTS=(
 # Argument sets (everything except the --file=... portion)
 BASE_ARGS_LIST=(
 #  melco2
-#  "--ab_env_name=Ant-F1 --ab_time_steps=200000000 --wandb"
-#  "--ab_env_name=Ant-F1 --ab_time_steps=200000000 --wandb --clear_memory"
-#  "--ab_env_name=Ant-F1 --ab_time_steps=200000000 --wandb --reinitialize_networks"
-#  "--ab_env_name=Ant-F1 --ab_time_steps=200000000 --wandb --reinitialize_networks --clear_memory"
-#  "--ab_env_name=Ant-F2 --ab_time_steps=200000000 --wandb"
-#  "--ab_env_name=Ant-F2 --ab_time_steps=200000000 --wandb --clear_memory"
+#  "--ab_env_name=Ant-F1 --ab_time_steps=400000000 --wandb"
+#  "--ab_env_name=Ant-F1 --ab_time_steps=400000000 --wandb --clear_memory"
+#  "--ab_env_name=Ant-F1 --ab_time_steps=400000000 --wandb --reinitialize_networks"
+#  "--ab_env_name=Ant-F1 --ab_time_steps=400000000 --wandb --reinitialize_networks --clear_memory"
+#  "--ab_env_name=Ant-F2 --ab_time_steps=400000000 --wandb"
+#  "--ab_env_name=Ant-F2 --ab_time_steps=400000000 --wandb --clear_memory"
 # amii
-#  "--ab_env_name=Ant-F2 --ab_time_steps=200000000 --wandb --reinitialize_networks"
-#  "--ab_env_name=Ant-F2 --ab_time_steps=200000000 --wandb --reinitialize_networks --clear_memory"
+#  "--ab_env_name=Ant-F2 --ab_time_steps=400000000 --wandb --reinitialize_networks"
+#  "--ab_env_name=Ant-F2 --ab_time_steps=400000000 --wandb --reinitialize_networks --clear_memory"
 # ur3
-#  "--ab_env_name=Ant-F3 --ab_time_steps=200000000 --wandb"
-#  "--ab_env_name=Ant-F3 --ab_time_steps=200000000 --wandb --clear_memory"
-#  "--ab_env_name=Ant-F3 --ab_time_steps=200000000 --wandb --reinitialize_networks"
-#  "--ab_env_name=Ant-F3 --ab_time_steps=200000000 --wandb --reinitialize_networks --clear_memory"
+#  "--ab_env_name=Ant-F3 --ab_time_steps=400000000 --wandb"
+#  "--ab_env_name=Ant-F3 --ab_time_steps=400000000 --wandb --clear_memory"
+#  "--ab_env_name=Ant-F3 --ab_time_steps=400000000 --wandb --reinitialize_networks"
+#  "--ab_env_name=Ant-F3 --ab_time_steps=400000000 --wandb --reinitialize_networks --clear_memory"
 #  melco1
-  "--ab_env_name=Ant-F4 --ab_time_steps=200000000 --wandb"
-  "--ab_env_name=Ant-F4 --ab_time_steps=200000000 --wandb --clear_memory"
-  "--ab_env_name=Ant-F4 --ab_time_steps=200000000 --wandb --reinitialize_networks"
-  "--ab_env_name=Ant-F4 --ab_time_steps=200000000 --wandb --reinitialize_networks --clear_memory"
+  "--ab_env_name=Ant-F4 --ab_time_steps=400000000 --wandb"
+  "--ab_env_name=Ant-F4 --ab_time_steps=400000000 --wandb --clear_memory"
+  "--ab_env_name=Ant-F4 --ab_time_steps=400000000 --wandb --reinitialize_networks"
+  "--ab_env_name=Ant-F4 --ab_time_steps=400000000 --wandb --reinitialize_networks --clear_memory"
 )
 
 # Base file path (without the /seed part)
